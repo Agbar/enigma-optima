@@ -1,0 +1,31 @@
+STOPCLIENTS(1)                                                    STOPCLIENTS(1)
+
+
+NAME
+        stopclients  -  stop client(s) under the supervision of
+                        task scheduler.
+
+
+SYNOPSIS  
+        stopclients
+
+
+DESCRIPTION
+        You can manually stop clients under the supervision of the task
+        scheduler using stopclients.
+
+        Use startclients to start them again.
+
+
+SEE ALSO
+        startclients(1)
+
+
+AUTHOR
+        Stefan Krah <stefan@bytereef.org>
+
+BUGS
+        Please report bugs, suggestions to <enigma-suite@bytereef.org>
+
+
+enigma-suite-0.76                      2006                       STOPCLIENTS(1)

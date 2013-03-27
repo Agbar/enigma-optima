@@ -1,0 +1,27 @@
+SHOWTASKS(1)                                                        SHOWTASKS(1)
+
+
+NAME
+        showtasks  -  shows all tasks
+
+
+SYNOPSIS  
+        showtasks
+
+
+DESCRIPTION
+        Shows all tasks, including hidden ones.
+
+
+SEE ALSO
+        showtasks(1)
+
+
+AUTHOR
+        Stefan Krah <stefan@bytereef.org>
+
+BUGS
+        Please report bugs, suggestions to <enigma-suite@bytereef.org>
+
+
+enigma-suite-0.76                      2006                         SHOWTASKS(1)
