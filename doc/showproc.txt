@@ -1,0 +1,27 @@
+SHOWPROC(1)                                                          SHOWPROC(1)
+
+
+NAME
+        showproc  -  shows all running processes
+
+
+SYNOPSIS  
+        showproc
+
+
+DESCRIPTION
+        Shows all running processes.
+
+
+SEE ALSO
+        showtasks(1)
+
+
+AUTHOR
+        Stefan Krah <stefan@bytereef.org>
+
+BUGS
+        Please report bugs, suggestions to <enigma-suite@bytereef.org>
+
+
+enigma-suite-0.76                      2006                          SHOWPROC(1)

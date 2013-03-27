@@ -1,0 +1,277 @@
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  These instructions might be outdated. The latest install instructions
+  are at http://www.bytereef.org.
+
+  Note that install.py is written for the _exe_ versions. If you
+  want to use it for the .py files, you have to change all suffixes
+  (except enigma.exe of course).
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+============================
+General install instructions
+============================
+
+===============================================================
+The following is tested only with mingw (http://www.mingw.org):
+===============================================================
+
+Edit conf-cc and conf-ld to fit your compiler
+
+Compile:
+========
+
+   make
+
+Install:
+========
+I have not included an install target in the Makefile. You have to copy
+enigma.exe, mkdict.py and SGT.exe where you want them.
+
+
+============================================================================
+Requirements for enigma-client:  Python with Mark Hammond's PyWin32 package
+============================================================================
+
+Install Python. Install the PyWin32 package.
+
+
+==================
+Run enigma-client
+==================
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+IF YOU HAVE A DIAL-UP INTERNET CONNECTION, MAKE SURE THAT DIAL-ON-DEMAND
+IS DISABLED.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Enough screaming. As probably any distributed-computing client, enigma-client
+will try to connect to the server. If you have DIAL-ON-DEMAND enabled,
+every connection attempt will result in a phone call.
+
+By contrast, if DIAL-ON-DEMAND is disabled, attempts to make a connection will
+silently fail, unless you have dialed in to you ISP anyway.
+
+I think it is a good idea to disable DIAL-ON-DEMAND in general.
+Be warned!
+
+
+==========================================================
+Start enigma-client automatically on bootup (recommended):
+==========================================================
+
+===========
+Win 98, ME:
+===========
+
+In the folder "enigma-client" edit ecrun98.bat so that it contains
+the CORRECT PATH to python.exe (Default: C:\Python23\python.exe).
+
+Run (double click) mkrundir98.bat. This creates the folder
+C:\EnigmaClient with the necessary files.
+
+Add an entry in the taskplanner:
+================================
+
+Double click the taskplanner icon in the task bar.
+Double click "Add a task".
+Click "Next".
+Browse to C:\EnigmaClient.
+Select ecrun98.bat and click on open.
+Select "When my computer starts".
+Click "Next".
+Select "Open advanced properties ...".
+Click "Finish".
+Click the "Settings" tab.
+Deselect "Stop the task if it runs for ...".
+Click "Apply".
+Click "OK"
+
+
+Check the installation:
+=======================
+
+Reboot
+
+After reboot you should see a minimized MS-DOS window in the task bar.
+
+Fire up the Task Manager:  Ctrl-Alt-Del
+
+If your internet connection is up, and the client has succeeded in getting
+a workunit from the server, you should see "ENIGMA" among the processes.
+
+You could use third party tools that list processes or CPU utilization.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+UNFORTUNATELY THE PROGRAM HANGS ON SHUTDOWN. To avoid this, open the
+MS-DOS window and stop the program with Ctrl-C.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+===========
+Win XP Pro:
+===========
+
+In the folder "enigma-client" edit ecrunXP.bat so that it contains
+the CORRECT PATH to python.exe (Default: C:\Python23\python.exe).
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Edit eclient-XP-Pro-install.bat and change "nominal" to a random
+string. "nominal" occurs on the second line and on the first line
+starting with "schtasks". The string is enigma-client's password.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+The script eclient-XP-Pro-install.bat will do the following:
+
+  - create user enigma-client with the password you supplied
+
+  - create the run folder C:\EnigmaClient
+
+  - create a task in the task scheduler to run enigma-client
+    automatically on bootup.
+
+  - start enigma-client
+
+
+You can start the script by double clicking eclient-XP-Pro-install.bat.
+
+You can fire up the Task Manager (Ctrl-Alt-Del -> Processes)
+to check on the running processes:
+
+If you are not connected to the Internet, you should see
+"python.exe" among them.
+
+If you are connected, and enigma-client.py has managed to get
+a workunit, you should also see "enigma.exe" appearing among them.
+
+
+============
+Win XP Home:
+============
+
+In the folder "enigma-client" edit ecrunXP.bat so that it contains
+the CORRECT PATH to python.exe (Default: C:\Python23\python.exe).
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Edit eclient-XP-Home-install.bat and change "nominal" to a random
+string. Write down the string. It is enigma-client's password.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+The script eclient-XP-Home-install.bat will do the following:
+
+  - create user enigma-client with the password you chose
+
+  - create the run folder C:\EnigmaClient
+
+
+You can start the script by double clicking eclient-XP-Home-install.bat.
+
+
+Now add a task in the Task Scheduler:
+=====================================
+
+
+Goto: start -> All Programs -> Accessories -> System Tools
+Click on "Scheduled Tasks"
+Double Click "Add Scheduled Task"
+In the Wizard, click "Next"
+Browse to the folder C:\EnigmaClient
+Select ecrunXP.bat
+Click "Open"
+Select "When my Computer starts"
+Click "Next"
+Enter "enigma-client" as the user name
+Enter the password you chose earlier
+Click "Next"
+Select "Open advanced properties ..."
+Click "Finish"
+Click the "Settings" tab
+Deselect "Stop the task if ..."
+Click "Apply"
+Click "OK"
+
+
+Reboot
+
+
+After reboot You can fire up the Task Manager (Ctrl-Alt-Del -> Processes)
+to check on the running processes:
+
+If you are not connected to the Internet, you should see
+"python.exe" among them.
+
+If you are connected, and enigma-client.py has managed to get
+a workunit, you should also see "enigma.exe" appearing among them.
+
+
+
+=============================
+Start enigma-client manually:
+=============================
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+IMPORTANT: Do NOT USE THE SAME run folder as for the background task!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+After compiling, copy the following files into the "run" folder:
+
+enigma.exe
+enigma-client\enigma-client.py
+dict\00trigr.cur
+dict\00bigr.cur
+
+
+===========
+Win 98, ME:
+===========
+
+Copy enigma-client\ecrun98.bat into the "run" folder. Edit ecrun98.bat to
+contain the CORRECT PATH to python.exe. (Default: C:\Python23\python.exe) 
+
+CHANGE into the run folder.
+
+Start ecrun98.bat. This opens an MS-DOS window, which is instantly
+minimized. If you open the window, you will see no status messages.
+
+To check if enigma-client.py is running successfully, fire up
+the Task Manager (Ctrl-Alt-Del):
+
+If your internet connection is up, and the client has succeeded in getting
+a workunit from the server, you should see "ENIGMA" among the processes.
+
+You could use third party tools that list processes or CPU utilization.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TO STOP THE PROGRAM, open the MS-DOS window and stop the program with Ctrl-C.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+=======
+Win XP:
+=======
+
+Copy enigma-client\ecrunXP.bat into the "run" folder. Edit ecrunXP.bat to
+contain the CORRECT PATH to python.exe. (Default: C:\Python23\python.exe) 
+
+
+CHANGE into the run folder.
+
+Start ecrunXP.bat. A DOS window opens, but otherwise nothing visible happens.
+
+You can fire up the Task Manager (Ctrl-Alt-Del -> Processes)
+to check on the running processes:
+
+If you are not connected to the Internet, you should see
+"python.exe" among them.
+
+If you are connected, and enigma-client.py has managed to get
+a workunit, you should also see "enigma.exe" appearing among them.
+
+
+

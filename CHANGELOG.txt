@@ -1,0 +1,122 @@
+Version 0.76.2
+18 July 2006
+
+  winaux.py, install.py:
+                When using a localized version of Windows, previous version
+                did not detect membership of group "Administrators". Fixed.
+
+
+Version 0.76.1
+14 July 2006
+
+  install.py:   Previous version tried to use domain controller even
+                when logged in as local user. Fixed.
+
+
+Version 0.76
+8 July 2006
+
+  eclient-rpc.py:
+                New XML-RPC client. The client is an alternative for
+                the existing client.
+
+  enigma-client.py:
+                Improved file locking with flock(). Sets default timeout
+                for sockets.
+
+  install.py:   New install script guides through the installation process.
+
+
+  uninstall.py: Helps with uninstall.
+
+
+Version 0.75
+28 March 2006
+
+  hillclimb.c, cipher.c:
+                From now on only unique scrambler states are tested.
+                The -a, -x options (and the default) have a different
+                meaning now. mr_mode is supplanted by sw_mode.
+
+  enigma.c, key.c:
+                Simulator: Defaults for M4 UKW changed to B-THIN/Beta.
+
+  enigma-client.py:
+                All log output goes to stderr. Added -r switch that
+                causes enigma to write output to the file "results".
+                Added ability to download new dictionaries automatically.
+
+                Suggestions came from (alphabetical order, sorry if I
+                forget anyone):
+
+                Ian Flanigan, Steve Hosgood, A.S., Geoff Sullivan.  
+
+
+Version 0.73.3
+27 February 2006
+
+  conf-cc:      -O3 generally leads to better performance.
+                Reported by Jeff Gilchrist.
+
+  INSTALL.txt:  Users should change "nominal" to a random password in
+                eclient-XP-Home-install.bat or eclient-XP-Pro-install.bat.
+                Reported by Jamyn.
+
+
+Version 0.73.2
+19 February 2006
+
+  hillclimb.c, enigma-client.py:
+                Set thread priority to THREAD_PRIORITY_IDLE.
+                Reported by Jeff Gilchrist.
+
+  enigma-client.py:
+                Fixed wrong treatment of return value of os.system().
+                (Luckily the script worked even with the wrong treatment.)
+
+
+Version 0.73.1
+10 February 2006
+
+  enigma.1, enigma.txt:
+                Fixed bug in explanation of 00hc.resume format.
+
+
+Version 0.73
+20 January 2006
+
+  enigma.c:     Removed bug so that -o and -R options can actually be used
+                together.
+
+  hillclimb.c:  State is now saved periodically to allow for
+                non-graceful shutdown when enigma.exe is being
+                run as a Windows service. (Graceful shutdown
+                relied on SIGTERM.) 
+
+                Status messages are displayed when enigma runs in resume mode.
+
+  enigma-client.py:
+                Added check for existence of enigma.exe.
+                Added status messages.
+                Removed lockfile mechanism.
+
+  INSTALL.txt:  Added detailed install instructions for enigma-client.
+
+
+
+Version 0.71
+7 January 2006
+
+  hillclimb.c:  Removed calls of free() and fprintf() from signal handler.
+                New version has longer shutdown time on SIGTERM. Worst case
+                is around 0.1 s on a Pentium 400MHz with a ciphertext length
+                of 250 letters.
+
+  ic.c:         Replaced instances of 250 with CT.
+
+  enigma-client.py:
+                Changed class name to Eclient.
+                Switched to 00trigr.naval/00bigr.naval
+
+  dict/ :       Added new naval statistics compiled from original
+                M4 messages.

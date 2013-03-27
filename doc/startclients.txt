@@ -1,0 +1,30 @@
+STARTCLIENTS(1)                                                  STARTCLIENTS(1)
+
+
+NAME
+        startclients  -  restart client(s) under the supervision of
+                         task scheduler.
+
+
+SYNOPSIS  
+        startclients
+
+
+DESCRIPTION
+        Restart clients previously stopped by stopclients.
+
+        For starting the clients in the foreground, use fgstart.
+
+
+SEE ALSO
+        stopclients(1), fgstart(1)
+
+
+AUTHOR
+        Stefan Krah <stefan@bytereef.org>
+
+BUGS
+        Please report bugs, suggestions to <enigma-suite@bytereef.org>
+
+
+enigma-suite-0.76                      2006                      STARTCLIENTS(1)

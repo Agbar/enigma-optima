@@ -1,0 +1,23 @@
+
+Source code:
+============
+
+
+GPL:
+====
+
+Almost all parts of enigma-suite-0.76 are distributed under the terms of
+the GNU General Public License (version 2 only) as published by the Free
+Software Foundation. A copy of this license should be included in the file
+doc/COPYING.
+
+
+For other licenses check the respective files:
+==============================================
+
+killall.py   -  derived from Mark Hammond's killproc.py.
+taskcntl.py  -  derived from Mark Hammond's test_addtask.py.
+plock.py     -  Python Cookbook and Richard Jones (http://roundup.sourceforge.net/)
+
+SGT.c        -  distributed along with the package with the kind permission of
+                Professor Geoffrey Sampson of the University of Sussex.
