@@ -89,6 +89,28 @@ void install_sighandler(void)
 }
 #endif
 
+void setup_random(void)
+{
+    unsigned int seed;
+#ifdef NORANDOM_A
+    seed = 315;
+#else
+    #ifndef WINDOWS
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        seed = (tv.tv_sec%1000)*1000000 + tv.tv_usec;
+    #else
+        seed = time(NULL);
+    #endif
+#endif // NORANDOM
+
+#ifndef WINDOWS
+  srandom(seed);
+#else
+  srand(seed);
+#endif
+}
+
 
 void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
@@ -112,19 +134,11 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
   int bestscore, jbestscore, a, globalscore;
   double bestic, ic;
   int firstloop = 1;
-  struct timeval tv;
-  unsigned int seed;
 
+  setup_random();
 
-#ifndef WINDOWS
-  gettimeofday(&tv, NULL);
-  seed = (tv.tv_sec%1000)*1000000 + tv.tv_usec; 
-  srandom(seed);
-#endif
-#ifdef WINDOWS
-  srand(time(NULL));
   lastsave = time(NULL);
-#endif
+
 
   if (resume) {
 #ifdef WINDOWS
