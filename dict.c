@@ -22,7 +22,7 @@ int load_tridict(const char *filename)
   while (fscanf(fp, "%3s%d", tri, &log) != EOF) {
     if (  code[tri[0]] == 26
        || code[tri[1]] == 26
-       || code[tri[2]] == 26  ) 
+       || code[tri[2]] == 26  )
          err_illegal_char_fatal(filename);
     tridict[code[tri[0]]][code[tri[1]]][code[tri[2]]] = log;
   }
@@ -77,5 +77,5 @@ int load_unidict(const char *filename)
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

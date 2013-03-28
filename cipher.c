@@ -9,7 +9,7 @@
 
 
 /* Eintrittswalze */
-static int etw[52] = 
+static int etw[52] =
      {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
       0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
 
@@ -67,7 +67,7 @@ static int wal[11][78] = {
 
 /* Umkehrwalzen A, B, C, B_THIN, C_THIN */
 static int ukw[5][52] = {
- 
+
      {4,9,12,25,0,11,24,23,21,1,22,5,2,17,16,20,14,13,19,18,15,8,10,7,6,3,
       4,9,12,25,0,11,24,23,21,1,22,5,2,17,16,20,14,13,19,18,15,8,10,7,6,3},
 
@@ -207,7 +207,7 @@ int scrambler_state(const Key *key, int len)
       l_offset %= 26;
       p3 = 0;
     }
-    
+
   }
 
   return SW_NONE;
@@ -277,7 +277,7 @@ void init_path_lookup_H_M3(const Key *key, int len)
       l_offset %= 26;
       p3 = 0;
     }
-    
+
     for (k = 0; k < 26; k++) {
       c = k;
       c = wal[r_slot][c+r_offset+26];
@@ -360,7 +360,7 @@ void init_path_lookup_ALL(const Key *key, int len)
       l_offset %= 26;
       p3 = 0;
     }
-    
+
     for (k = 0; k < 26; k++) {
       c = k;
       c = wal[r_slot][c+r_offset+26];
@@ -451,7 +451,7 @@ double dgetic_ALL(const Key *key, const int *ciphertext, int len)
       l_offset %= 26;
       p3 = 0;
     }
-    
+
     c = ciphertext[i];  /* no plugboard */
     c = wal[r_slot][c+r_offset+26];
     c = wal[m_slot][c-r_offset+m_offset+26];
@@ -588,11 +588,11 @@ void en_deciph_stdin_ALL(FILE *file, const Key *key)
       l_offset %= 26;
       p3 = 0;
     }
-    
+
     /* thru steckerbrett to scramblers */
     c = code[c];
     c = key->stbrett[c];
-    
+
     /* thru scramblers and back */
     c = wal[r_slot][c+r_offset+26];
     c = wal[m_slot][c-r_offset+m_offset+26];
@@ -622,5 +622,5 @@ void en_deciph_stdin_ALL(FILE *file, const Key *key)
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

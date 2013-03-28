@@ -116,7 +116,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
                 FILE *outfile, int act_on_sig, int *ciphertext, int len )
 {
-  Key ckey; 
+  Key ckey;
   Key gkey;
   Key lo;
   int hi[3][12] = {
@@ -149,7 +149,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 #endif
     hillclimb_log("enigma: working on range ...");
   }
-  
+
   if (act_on_sig) {
     state.from = from;
     state.to = to;
@@ -160,7 +160,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
     state.firstpass = &firstpass;
     state.max_score = &max_score;
     state.ciphertext = ciphertext;
-  
+
     install_sighandler();
   }
 
@@ -225,7 +225,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                    break;
                  default: /* includes SINGLE_KEY */
                    break;
-               } 
+               }
 
                /* complete ckey initialization */
                for (i = 0; i < 26; i++)
@@ -243,7 +243,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  default:
                    break;
                }
-             
+
 
                /* ic score */
                bestic = icscore(ckey.stbrett, ciphertext, len);
@@ -263,7 +263,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      action = NONE;
                      z = ckey.stbrett[var[k]];
                      swap(ckey.stbrett, var[k], z);
-                     
+
                      swap(ckey.stbrett, var[i], var[k]);
                      ic = icscore(ckey.stbrett, ciphertext, len);
                      if (ic-bestic > DBL_EPSILON) {
@@ -271,7 +271,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        action = KZ_IK;
                      }
                      swap(ckey.stbrett, var[i], var[k]);
-                     
+
                      swap(ckey.stbrett, var[i], z);
                      ic = icscore(ckey.stbrett, ciphertext, len);
                      if (ic-bestic > DBL_EPSILON) {
@@ -298,7 +298,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      action = NONE;
                      x = ckey.stbrett[var[i]];
                      swap(ckey.stbrett, var[i], x);
-                     
+
                      swap(ckey.stbrett, var[k], var[i]);
                      ic = icscore(ckey.stbrett, ciphertext, len);
                      if (ic-bestic > DBL_EPSILON) {
@@ -399,7 +399,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                while (newtop) {
 
                  newtop = 0;
-                 
+
                  bestscore = biscore(ckey.stbrett, ciphertext, len);
                  for (i = 0; i < 26; i++) {
                    for (k = i+1; k < 26; k++) {
@@ -770,7 +770,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                /* abort if max_score is reached */
                if (globalscore > max_score)
                  goto FINISHED;
-                
+
 
                ENDLOOP:
                if (firstloop) {
@@ -813,5 +813,5 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */
