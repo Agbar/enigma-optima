@@ -4,7 +4,7 @@
 
 
 int code[UCHAR_MAX+1];
-unsigned char alpha[26] = "abcdefghijklmnopqrstuvwxyz";
+unsigned char alpha[27] = "abcdefghijklmnopqrstuvwxyz";
 
 void init_charmap(void)
 {
@@ -26,5 +26,5 @@ void init_charmap(void)
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */
