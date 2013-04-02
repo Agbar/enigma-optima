@@ -9,10 +9,9 @@
 #include "global.h"
 #include "key.h"
 #include "result.h"
+#include "config\array_sizes.h"
 
-
-extern int path_lookup[][32];
-
+extern int path_lookup[][LAST_DIMENSION];
 
 FILE *open_outfile(char *s)
 {

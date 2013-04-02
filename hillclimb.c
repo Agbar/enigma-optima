@@ -16,14 +16,15 @@
 #include "score.h"
 #include "stecker.h"
 #include "state.h"
+#include "config\array_sizes.h"
 
 #ifdef WINDOWS
 #include <windows.h>
 #endif
 
 
-extern int tridict[][32][32];
-extern int path_lookup[][32];
+extern int tridict[][LAST_DIMENSION][LAST_DIMENSION];
+extern int path_lookup[][LAST_DIMENSION];
 #ifndef WINDOWS
 struct sigaction sigact;
 #endif

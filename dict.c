@@ -3,10 +3,10 @@
 #include "charmap.h"
 #include "error.h"
 #include "dict.h"
+#include "config\array_sizes.h"
 
-
-int tridict[26][32][32];
-int bidict[26][32];
+int tridict[26][LAST_DIMENSION][LAST_DIMENSION];
+int bidict[26][LAST_DIMENSION];
 int unidict[26];
 
 
