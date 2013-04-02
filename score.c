@@ -1,13 +1,14 @@
 #include "cipher.h"
 #include "key.h"
 #include "score.h"
+#include "config\array_sizes.h"
 
-extern int tridict[][32][32];
-extern int bidict[][32];
+extern int tridict[][LAST_DIMENSION][LAST_DIMENSION];
+extern int bidict[][LAST_DIMENSION];
 extern int unidict[26];
-extern int path_lookup[][32];
+extern int path_lookup[][LAST_DIMENSION];
 
-const size_t d = 32; //last dimension size
+const size_t d = LAST_DIMENSION; //last dimension size
 
 /* returns the trigram score of a key/ciphertext combination */
 int get_triscore(const Key *key, const int *ciphertext, int len)

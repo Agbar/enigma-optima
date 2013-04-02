@@ -6,6 +6,7 @@
 #include "charmap.h"
 #include "key.h"
 #include "cipher.h"
+#include "config\array_sizes.h"
 
 
 /* Eintrittswalze */
@@ -140,7 +141,7 @@ static int rev_wal[11][78] = {
 /* Turnover points:  Walzen 1-5, Walzen 6-8 (/first/ turnover points) */
 static int wal_turn[9] = {0, 16, 4, 21, 9, 25, 12, 12, 12};
 
-int path_lookup[CT][32];
+int path_lookup[CT][LAST_DIMENSION];
 
 
 /* Check for slow wheel movement */
