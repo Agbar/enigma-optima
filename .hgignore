@@ -1,5 +1,3 @@
 syntax: glob
-build/code_blocks/obj/
-build/code_blocks/bin
-build/code_blocks/enigma-opt.depend
 test
+build
