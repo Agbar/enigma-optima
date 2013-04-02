@@ -1,10 +1,13 @@
 #include <ctype.h>
 #include <limits.h>
+
+
 #include "charmap.h"
+#include "config\types.h"
 
 
-int code[UCHAR_MAX+1];
-unsigned char alpha[27] = "abcdefghijklmnopqrstuvwxyz";
+text_t code[UCHAR_MAX+1];
+const unsigned char alpha[27] = "abcdefghijklmnopqrstuvwxyz";
 
 void init_charmap(void)
 {
@@ -17,7 +20,6 @@ void init_charmap(void)
     code[alpha[i]] = i;
     code[toupper(alpha[i])] = i;
   }
-
 }
 
 

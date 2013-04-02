@@ -1,14 +1,17 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
+
 #include "global.h"
 #include "key.h"
 #include "stecker.h"
+#include "config\types.h"
 
 
 /* swaps letters */
-void swap(int stbrett[], int i, int k)
+void swap(text_t stbrett[], int i, int k)
 {
-  int store;
+  text_t store;
 
   store = stbrett[i];
   stbrett[i] = stbrett[k];
@@ -34,12 +37,12 @@ void get_stecker(Key *key)
 }
 
 /* get new order for testing stecker */
-void rand_var(int var[])
+void rand_var(text_t var[])
 {
   int count;
   int store;
   int i;
-  
+
   for (count = 25; count > 0; count--) {
 #ifndef WINDOWS
     i = random() % (count+1);
@@ -55,13 +58,13 @@ void rand_var(int var[])
 }
 
 /* arrange var[] in order of frequency of letters in ciphertext */
-void set_to_ct_freq(int var[], const int *ciphertext, int len)
+void set_to_ct_freq(text_t var[], const text_t *ciphertext, int len)
 {
   int f[26] = {0};
   int i, k, c;
   int max, pos = -1;
   int n = 0;
- 
+
   for (i = 0; i < len; i++) {
     c = ciphertext[i];
     f[c]++;
@@ -88,5 +91,5 @@ void set_to_ct_freq(int var[], const int *ciphertext, int len)
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

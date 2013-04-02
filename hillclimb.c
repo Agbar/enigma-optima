@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
@@ -17,14 +18,15 @@
 #include "stecker.h"
 #include "state.h"
 #include "config\array_sizes.h"
+#include "config\types.h"
 
 #ifdef WINDOWS
 #include <windows.h>
 #endif
 
 
-extern int tridict[][LAST_DIMENSION][LAST_DIMENSION];
-extern int path_lookup[][LAST_DIMENSION];
+extern dict_t tridict[][LAST_DIMENSION][LAST_DIMENSION];
+extern text_t path_lookup[][LAST_DIMENSION];
 #ifndef WINDOWS
 struct sigaction sigact;
 #endif
@@ -93,17 +95,17 @@ void install_sighandler(void)
 void setup_random(void)
 {
     unsigned int seed;
-#ifdef NORANDOM_A
+#ifdef CONSTANT_SEED
     seed = 315;
 #else
-    #ifndef WINDOWS
-        struct timeval tv;
-        gettimeofday(&tv, NULL);
-        seed = (tv.tv_sec%1000)*1000000 + tv.tv_usec;
-    #else
-        seed = time(NULL);
-    #endif
-#endif // NORANDOM
+# ifndef WINDOWS
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    seed = (tv.tv_sec%1000)*1000000 + tv.tv_usec;
+# else
+    seed = time(NULL);
+# endif
+#endif
 
 #ifndef WINDOWS
   srandom(seed);
@@ -115,12 +117,12 @@ void setup_random(void)
 
 void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                FILE *outfile, int act_on_sig, int *ciphertext, int len )
+                FILE *outfile, int act_on_sig, text_t *ciphertext, int len )
 {
   Key ckey;
   Key gkey;
   Key lo;
-  int hi[3][12] = {
+  text_t hi[3][12] = {
     {H, 2,0,5,5,5,25,25,0,25,25,25},
     {M3,2,0,8,8,8,25,25,0,25,25,25},
     {M4,4,10,8,8,8,25,25,25,25,25,25}
@@ -130,7 +132,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
   time_t lastsave;
   int m;
   int i, k, x, z;
-  int var[26] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
+  text_t var[26] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
   int pass, newtop, action;
   int bestscore, jbestscore, a, globalscore;
   double bestic, ic;
@@ -143,10 +145,12 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
   if (resume) {
 #ifdef WINDOWS
+#if PRIORITY == LOW
     if (SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS) == 0)
       fputs("enigma: warning: could not set process priority to idle\n", stderr);
     if (SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_IDLE) == 0)
       fputs("enigma: warning: could not set thread priority to idle\n", stderr);
+#endif
 #endif
     hillclimb_log("enigma: working on range ...");
   }

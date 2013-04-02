@@ -10,8 +10,9 @@
 #include "key.h"
 #include "result.h"
 #include "config\array_sizes.h"
+#include "config\types.h"
 
-extern int path_lookup[][LAST_DIMENSION];
+extern text_t path_lookup[][LAST_DIMENSION];
 
 FILE *open_outfile(char *s)
 {
@@ -23,10 +24,10 @@ FILE *open_outfile(char *s)
   return fp;
 }
 
-void print_plaintext(FILE *fp, const int *stbrett, const int *ciphertext, int len)
+void print_plaintext(FILE *fp, const text_t *stbrett, const text_t *ciphertext, int len)
 {
   int i;
-  int c;
+  text_t c;
   int ofd;
 
   for (i = 0; i < len; i++) {

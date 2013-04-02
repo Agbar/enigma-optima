@@ -1,6 +1,8 @@
 #ifndef STATE_H
 #define STATE_H
 
+#include "config\types.h"
+
 typedef struct {
   const Key *from;
   const Key *to;
@@ -10,7 +12,7 @@ typedef struct {
   int *pass;
   int *firstpass;
   int *max_score;
-  int *ciphertext;
+  text_t *ciphertext;
 } State;
 
 #endif
@@ -21,5 +23,5 @@ typedef struct {
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

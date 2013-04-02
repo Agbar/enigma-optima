@@ -5,7 +5,7 @@
 #include "key.h"
 
 FILE *open_outfile(char *s);
-void print_plaintext(FILE *file, const int *stbrett, const int *ciphertext, int len);
+void print_plaintext(FILE *file, const uint8_t *stbrett, const uint8_t *ciphertext, int len);
 void print_key(FILE *file, const Key *key);
 
 #endif
@@ -16,5 +16,5 @@ void print_key(FILE *file, const Key *key);
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

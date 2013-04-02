@@ -1,7 +1,9 @@
 #ifndef CIPHERTEXT_H
 #define CIPHERTEXT_H
 
-int *load_ciphertext(const char *filename, int *len, int resume);
+#include <stdint.h>
+
+uint8_t *load_ciphertext(const char *filename, int *len, int resume);
 
 #endif
 
@@ -11,5 +13,5 @@ int *load_ciphertext(const char *filename, int *len, int resume);
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */
