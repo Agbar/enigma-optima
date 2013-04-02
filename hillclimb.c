@@ -22,8 +22,8 @@
 #endif
 
 
-extern int tridict[][26][26];
-extern int path_lookup[][26];
+extern int tridict[][32][32];
+extern int path_lookup[][32];
 #ifndef WINDOWS
 struct sigaction sigact;
 #endif

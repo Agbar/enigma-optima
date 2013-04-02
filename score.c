@@ -2,13 +2,12 @@
 #include "key.h"
 #include "score.h"
 
-
-extern int tridict[][26][26];
-extern int bidict[][26];
+extern int tridict[][32][32];
+extern int bidict[][32];
 extern int unidict[26];
-extern int path_lookup[][26];
+extern int path_lookup[][32];
 
-const size_t d = 26; //last dimension size
+const size_t d = 32; //last dimension size
 
 /* returns the trigram score of a key/ciphertext combination */
 int get_triscore(const Key *key, const int *ciphertext, int len)
@@ -16,7 +15,6 @@ int get_triscore(const Key *key, const int *ciphertext, int len)
   init_path_lookup_ALL(key, len);
   return triscore(key->stbrett, ciphertext, len);
 }
-
 
 #ifdef SIMPLESCORE
 double icscore(const int *stbrett, const int *ciphertext, int len)
