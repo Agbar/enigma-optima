@@ -5,8 +5,8 @@
 #include "dict.h"
 
 
-int tridict[26][26][26];
-int bidict[26][26];
+int tridict[26][32][32];
+int bidict[26][32];
 int unidict[26];
 
 

@@ -140,7 +140,7 @@ static int rev_wal[11][78] = {
 /* Turnover points:  Walzen 1-5, Walzen 6-8 (/first/ turnover points) */
 static int wal_turn[9] = {0, 16, 4, 21, 9, 25, 12, 12, 12};
 
-int path_lookup[CT][26];
+int path_lookup[CT][32];
 
 
 /* Check for slow wheel movement */

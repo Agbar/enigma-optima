@@ -11,7 +11,7 @@
 #include "result.h"
 
 
-extern int path_lookup[][26];
+extern int path_lookup[][32];
 
 
 FILE *open_outfile(char *s)
