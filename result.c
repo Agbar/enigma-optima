@@ -11,7 +11,7 @@
 #include "result.h"
 
 
-extern int path_lookup[][26];
+extern int path_lookup[][32];
 
 
 FILE *open_outfile(char *s)
@@ -109,5 +109,5 @@ Message key: %c%c%c%c\n\n",
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */
