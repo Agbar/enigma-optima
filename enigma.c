@@ -19,13 +19,14 @@
 #include "resume_in.h"
 #include "resume_out.h"
 #include "scan.h"
-
+#include "config\types.h"
 
 int main(int argc, char **argv)
 {
   Key key;
   Key from, to, ckey_res, gkey_res;
-  int *ciphertext, len, clen;
+  text_t *ciphertext;
+  int len, clen;
   int model = H;
   int opt, first = 1, keyop = 0;
   int hc = 0, ic = 0;
@@ -161,5 +162,5 @@ int main(int argc, char **argv)
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

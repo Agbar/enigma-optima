@@ -2,6 +2,7 @@
 #define HILLCLIMB_H
 
 #include <stdio.h>
+#include <stdint.h>
 #include "key.h"
 
 
@@ -19,7 +20,7 @@ enum { NONE, KZ_IK, KZ_IZ, IX_KI, IX_KX, IXKZ_IK, IXKZ_IZ, IXKZ_IKXZ,
 
 void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                FILE *outfile, int act_on_sig, int *ciphertext, int len );
+                FILE *outfile, int act_on_sig, text_t *ciphertext, int len );
 
 #endif
 
@@ -29,5 +30,5 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

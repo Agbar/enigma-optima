@@ -1,8 +1,11 @@
 #ifndef CHARMAP_H
 #define CHARMAP_H
 
-extern int code[];
-extern unsigned char alpha[];
+#include <stdint.h>
+#include "config\types.h"
+
+extern text_t code[];
+extern const unsigned char alpha[];
 void init_charmap(void);
 
 #endif
@@ -13,5 +16,5 @@ void init_charmap(void);
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

@@ -1,6 +1,10 @@
 #ifndef KEY_H
 #define KEY_H
 
+#include <stdint.h>
+
+#include "config\types.h"
+
 typedef struct {
         int model;
         int ukwnum;
@@ -16,8 +20,8 @@ typedef struct {
         int l_mesg;     /* message settings */
         int m_mesg;
         int r_mesg;
-        int stbrett[26];
-        int sf[26];     /* swapped/free letters */
+        text_t stbrett[26];
+        text_t sf[26];     /* swapped/free letters */
         int count;      /* number of swapped letters */
         int score;      /* hillclimbing score */
 } Key;
@@ -34,5 +38,5 @@ int keycmp(const Key *k1, const Key *k2);
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

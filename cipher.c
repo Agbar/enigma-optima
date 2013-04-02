@@ -7,16 +7,16 @@
 #include "key.h"
 #include "cipher.h"
 #include "config\array_sizes.h"
-
+#include "config\types.h"
 
 /* Eintrittswalze */
-static int etw[52] =
+static text_t etw[52] =
      {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
       0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
 
 
 /* Walzen 1-8, B and G (M4): forward path */
-static int wal[11][78] = {
+static text_t wal[11][78] = {
 
      /* null substitution for no greek wheel */
      {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
@@ -67,7 +67,7 @@ static int wal[11][78] = {
 
 
 /* Umkehrwalzen A, B, C, B_THIN, C_THIN */
-static int ukw[5][52] = {
+static text_t ukw[5][52] = {
 
      {4,9,12,25,0,11,24,23,21,1,22,5,2,17,16,20,14,13,19,18,15,8,10,7,6,3,
       4,9,12,25,0,11,24,23,21,1,22,5,2,17,16,20,14,13,19,18,15,8,10,7,6,3},
@@ -88,7 +88,7 @@ static int ukw[5][52] = {
 
 
 /* Walzen 1-8, B and G (M4): reverse path */
-static int rev_wal[11][78] = {
+static text_t rev_wal[11][78] = {
 
      /* null substitution for no greek wheel */
      {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
@@ -139,9 +139,9 @@ static int rev_wal[11][78] = {
 
 
 /* Turnover points:  Walzen 1-5, Walzen 6-8 (/first/ turnover points) */
-static int wal_turn[9] = {0, 16, 4, 21, 9, 25, 12, 12, 12};
+static text_t wal_turn[9] = {0, 16, 4, 21, 9, 25, 12, 12, 12};
 
-int path_lookup[CT][LAST_DIMENSION];
+text_t path_lookup[CT][LAST_DIMENSION];
 
 
 /* Check for slow wheel movement */
@@ -300,7 +300,7 @@ void init_path_lookup_H_M3(const Key *key, int len)
 void init_path_lookup_ALL(const Key *key, int len)
 {
   int i, k;
-  int c;
+  text_t c;
 
   int ukwnum = key->ukwnum;
   int g_slot = key->g_slot;
@@ -382,13 +382,13 @@ void init_path_lookup_ALL(const Key *key, int len)
 
 
 /* deciphers and calculates ic of plaintext, all models */
-double dgetic_ALL(const Key *key, const int *ciphertext, int len)
+double dgetic_ALL(const Key *key, const uint8_t *ciphertext, int len)
 {
   int f[26] = {0};
   double S = 0;
 
   int i;
-  int c;
+  text_t c;
 
   int ukwnum = key->ukwnum;
   int g_slot = key->g_slot;

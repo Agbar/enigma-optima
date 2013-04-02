@@ -1,12 +1,15 @@
 #ifndef STECKER_H
 #define STECKER_H
 
-#include "key.h"
+#include <stdint.h>
 
-void swap(int stbrett[], int i, int k);
+#include "key.h"
+#include "config\types.h"
+
+void swap(text_t stbrett[], int i, int k);
 void get_stecker(Key *key);
-void rand_var(int var[]);
-void set_to_ct_freq(int var[], const int *ciphertext, int len);
+void rand_var(text_t var[]);
+void set_to_ct_freq(text_t var[], const text_t *ciphertext, int len);
 
 #endif
 
@@ -16,5 +19,5 @@ void set_to_ct_freq(int var[], const int *ciphertext, int len);
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

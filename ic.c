@@ -8,16 +8,17 @@
 #include "hillclimb.h"
 #include "ic.h"
 #include "key.h"
+#include "config\types.h"
 
 
 void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                FILE *outfile, int act_on_sig, int *ciphertext, int len )
+                FILE *outfile, int act_on_sig, text_t *ciphertext, int len )
 {
   Key ckey;
   Key gkey;
   Key lo;
-  int hi[3][12] = {
+  text_t hi[3][12] = {
     {H, 2,0,5,5,5,25,25,0,25,25,25},
     {M3,2,0,8,8,8,25,25,0,25,25,25},
     {M4,4,10,8,8,8,25,25,25,25,25,25}
@@ -51,7 +52,7 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
                bestic = a;
                gkey = ckey;
              }
-             
+
              if (firstloop) {
                firstloop = 0;
                init_key_low(&lo, m);
@@ -97,12 +98,12 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
                  int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                 FILE *outfile, int act_on_sig, int *ciphertext, int len )
+                 FILE *outfile, int act_on_sig, text_t *ciphertext, int len )
 {
   Key ckey;
   Key gkey;
   Key lo;
-  int hi[3][12] = {
+  text_t hi[3][12] = {
     {H, 2,0,5,5,5,25,25,0,25,25,25},
     {M3,2,0,8,8,8,25,25,0,25,25,25},
     {M4,4,10,8,8,8,25,25,25,25,25,25}
@@ -137,7 +138,7 @@ void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key 
                bestic = a;
                gkey = ckey;
              }
-             
+
              if (firstloop) {
                firstloop = 0;
                init_key_low(&lo, m);
@@ -171,5 +172,5 @@ void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key 
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */
