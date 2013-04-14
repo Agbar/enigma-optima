@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-uint8_t *load_ciphertext(const char *filename, int *len, int resume);
+void load_ciphertext(const char *filename, int *len, int resume);
 
 #endif
 

@@ -143,6 +143,7 @@ static text_t wal_turn[9] = {0, 16, 4, 21, 9, 25, 12, 12, 12};
 
 text_t path_lookup[CT][LAST_DIMENSION];
 
+extern text_t ciphertext[];
 
 /* Check for slow wheel movement */
 int scrambler_state(const Key *key, int len)
@@ -382,7 +383,7 @@ void init_path_lookup_ALL(const Key *key, int len)
 
 
 /* deciphers and calculates ic of plaintext, all models */
-double dgetic_ALL(const Key *key, const uint8_t *ciphertext, int len)
+double dgetic_ALL(const Key *key, int len)
 {
   int f[26] = {0};
   double S = 0;

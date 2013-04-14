@@ -12,14 +12,14 @@ extern text_t path_lookup[][LAST_DIMENSION];
 const size_t d = LAST_DIMENSION; //last dimension size
 
 /* returns the trigram score of a key/ciphertext combination */
-int get_triscore(const Key *key, const text_t *ciphertext, int len)
+int get_triscore(const Key *key, int len)
 {
   init_path_lookup_ALL(key, len);
-  return triscore(key->stbrett, ciphertext, len);
+  return triscore(key->stbrett, len);
 }
 
 #ifdef SIMPLESCORE
-double icscore(const text_t *stbrett, const text_t *ciphertext, int len)
+double icscore(const text_t *stbrett, int len)
 {
   int f[26] = {0};
   double S = 0;
@@ -43,7 +43,7 @@ double icscore(const text_t *stbrett, const text_t *ciphertext, int len)
 }
 
 
-int uniscore(const text_t *stbrett, const text_t *ciphertext, int len)
+int uniscore(const text_t *stbrett, int len)
 {
   int i;
   int c;
@@ -58,7 +58,7 @@ int uniscore(const text_t *stbrett, const text_t *ciphertext, int len)
 }
 
 
-int biscore(const text_t *stbrett, const text_t *ciphertext, int len)
+int biscore(const text_t *stbrett, int len)
 {
   int i;
   int c1, c2;
@@ -78,7 +78,7 @@ int biscore(const text_t *stbrett, const text_t *ciphertext, int len)
 
 }
 
-int triscore(const text_t *stbrett, const text_t *ciphertext, int len)
+int triscore(const text_t *stbrett,  int len)
 {
   int i;
   int c1, c2, c3;
@@ -103,7 +103,7 @@ int triscore(const text_t *stbrett, const text_t *ciphertext, int len)
 
 
 #ifndef SIMPLESCORE
-double icscore(const text_t *stbrett, const text_t *ciphertext, int len)
+double icscore(const text_t *stbrett, int len)
 {
   int f[26] = {0};
   int S0, S1, S2, S3;
@@ -195,7 +195,7 @@ double icscore(const text_t *stbrett, const text_t *ciphertext, int len)
 
 }
 
-int uniscore(const text_t *stbrett, const text_t *ciphertext, int len)
+int uniscore(const text_t *stbrett, int len)
 {
   int i;
   text_t c;
@@ -274,7 +274,7 @@ int uniscore(const text_t *stbrett, const text_t *ciphertext, int len)
 }
 
 
-int biscore(const text_t *stbrett, const text_t *ciphertext, int len)
+int biscore(const text_t *stbrett, int len)
 {
   int i;
   text_t c1, c2;
@@ -355,7 +355,7 @@ int biscore(const text_t *stbrett, const text_t *ciphertext, int len)
 
 }
 
-int triscore(const text_t *stbrett, const text_t *ciphertext, int len)
+int triscore(const text_t *stbrett, int len)
 {
   int i;
   text_t c1, c2, c3;

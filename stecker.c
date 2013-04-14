@@ -7,6 +7,7 @@
 #include "stecker.h"
 #include "config\types.h"
 
+extern text_t ciphertext[];
 
 /* swaps letters */
 void swap(text_t stbrett[], int i, int k)
@@ -58,7 +59,7 @@ void rand_var(text_t var[])
 }
 
 /* arrange var[] in order of frequency of letters in ciphertext */
-void set_to_ct_freq(text_t var[], const text_t *ciphertext, int len)
+void set_to_ct_freq(text_t var[], int len)
 {
   int f[26] = {0};
   int i, k, c;
