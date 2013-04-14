@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <limits.h>
+#include "cipher.h"
 #include "charmap.h"
 #include "date.h"
 #include "error.h"
@@ -31,9 +32,7 @@ void print_plaintext(FILE *fp, const text_t *stbrett, const text_t *ciphertext, 
   int ofd;
 
   for (i = 0; i < len; i++) {
-    c = stbrett[ciphertext[i]];
-    c = path_lookup[i][c];
-    c = stbrett[c];
+    DECODE(c,0,i);
     fputc(alpha[c], fp);
   }
   fputc('\n', fp);
