@@ -11,11 +11,16 @@
 int scrambler_state(const Key *key, int len);
 void init_path_lookup_H_M3(const Key *key, int len);
 void init_path_lookup_ALL(const Key *key, int len);
-double dgetic_ALL(const Key *key, const text_t *ciphertext, int len);
+double dgetic_ALL(const Key *key, int len);
 void en_deciph_stdin_ALL(FILE *file, const Key *key);
 
+
+extern text_t ciphertext[];
+
+// (&ciphertext[x])[i]; is a synonyme to: ciphertext[x+i];
+// and is useful where ciphertext[x] can be calculated at compilation time.
 #define DECODE(Cx,Offset,Index) \
-    Cx = ciphertext[(Offset)+(Index)]; \
+    Cx = (&ciphertext[(Offset)])[(Index)]; \
     Cx = stbrett[(Cx)]; \
     Cx = path_lookup[Offset][(Index)*(LAST_DIMENSION)+(Cx)];\
     Cx = stbrett[(Cx)];

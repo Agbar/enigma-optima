@@ -27,6 +27,8 @@
 
 extern dict_t tridict[][LAST_DIMENSION][LAST_DIMENSION];
 extern text_t path_lookup[][LAST_DIMENSION];
+extern text_t ciphertext[];
+
 #ifndef WINDOWS
 struct sigaction sigact;
 #endif
@@ -117,7 +119,7 @@ void setup_random(void)
 
 void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                FILE *outfile, int act_on_sig, text_t *ciphertext, int len )
+                FILE *outfile, int act_on_sig, int len )
 {
   Key ckey;
   Key gkey;
@@ -177,7 +179,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
   if (firstpass)
     /* set testing order to letter frequency in ciphertext */
-    set_to_ct_freq(var, ciphertext, len);
+    set_to_ct_freq(var, len);
   else
     /* set random testing order */
     rand_var(var);
@@ -251,13 +253,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 
                /* ic score */
-               bestic = icscore(ckey.stbrett, ciphertext, len);
+               bestic = icscore(ckey.stbrett, len);
                for (i = 0; i < 26; i++) {
                  for (k = i+1; k < 26; k++) {
                    if ( (var[i] == ckey.stbrett[var[i]] && var[k] == ckey.stbrett[var[k]])
                       ||(var[i] == ckey.stbrett[var[k]] && var[k] == ckey.stbrett[var[i]]) ) {
                      swap(ckey.stbrett, var[i], var[k]);
-                     ic = icscore(ckey.stbrett, ciphertext, len);
+                     ic = icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        continue;
@@ -270,7 +272,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[k], z);
 
                      swap(ckey.stbrett, var[i], var[k]);
-                     ic = icscore(ckey.stbrett, ciphertext, len);
+                     ic = icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = KZ_IK;
@@ -278,7 +280,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[i], var[k]);
 
                      swap(ckey.stbrett, var[i], z);
-                     ic = icscore(ckey.stbrett, ciphertext, len);
+                     ic = icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = KZ_IZ;
@@ -305,7 +307,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[i], x);
 
                      swap(ckey.stbrett, var[k], var[i]);
-                     ic = icscore(ckey.stbrett, ciphertext, len);
+                     ic = icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IX_KI;
@@ -313,7 +315,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[k], var[i]);
 
                      swap(ckey.stbrett, var[k], x);
-                     ic = icscore(ckey.stbrett, ciphertext, len);
+                     ic = icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IX_KX;
@@ -342,13 +344,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[k], z);
 
                      swap(ckey.stbrett, var[i], var[k]);
-                     ic = icscore(ckey.stbrett, ciphertext, len);
+                     ic = icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IK;
                      }
                      swap(ckey.stbrett, x, z);
-                     ic = icscore(ckey.stbrett, ciphertext, len);
+                     ic = icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IKXZ;
@@ -357,13 +359,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[i], var[k]);
 
                      swap(ckey.stbrett, var[i], z);
-                     ic = icscore(ckey.stbrett, ciphertext, len);
+                     ic = icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IZ;
                      }
                      swap(ckey.stbrett, x, var[k]);
-                     ic = icscore(ckey.stbrett, ciphertext, len);
+                     ic = icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IZXK;
@@ -399,19 +401,19 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 
                newtop = 1;
-               jbestscore = triscore(ckey.stbrett, ciphertext, len) + biscore(ckey.stbrett, ciphertext, len);
+               jbestscore = triscore(ckey.stbrett, len) + biscore(ckey.stbrett, len);
 
                while (newtop) {
 
                  newtop = 0;
 
-                 bestscore = biscore(ckey.stbrett, ciphertext, len);
+                 bestscore = biscore(ckey.stbrett, len);
                  for (i = 0; i < 26; i++) {
                    for (k = i+1; k < 26; k++) {
                      if ( (var[i] == ckey.stbrett[var[i]] && var[k] == ckey.stbrett[var[k]])
                         ||(var[i] == ckey.stbrett[var[k]] && var[k] == ckey.stbrett[var[i]]) ) {
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = biscore(ckey.stbrett, ciphertext, len);
+                       a = biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          continue;
@@ -424,7 +426,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], z);
 
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = biscore(ckey.stbrett, ciphertext, len);
+                       a = biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IK;
@@ -432,7 +434,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], var[k]);
 
                        swap(ckey.stbrett, var[i], z);
-                       a = biscore(ckey.stbrett, ciphertext, len);
+                       a = biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IZ;
@@ -459,7 +461,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], x);
 
                        swap(ckey.stbrett, var[k], var[i]);
-                       a = biscore(ckey.stbrett, ciphertext, len);
+                       a = biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KI;
@@ -467,7 +469,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], var[i]);
 
                        swap(ckey.stbrett, var[k], x);
-                       a = biscore(ckey.stbrett, ciphertext, len);
+                       a = biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KX;
@@ -496,13 +498,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], z);
 
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = biscore(ckey.stbrett, ciphertext, len);
+                       a = biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IK;
                        }
                        swap(ckey.stbrett, x, z);
-                       a = biscore(ckey.stbrett, ciphertext, len);
+                       a = biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IKXZ;
@@ -511,13 +513,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], var[k]);
 
                        swap(ckey.stbrett, var[i], z);
-                       a = biscore(ckey.stbrett, ciphertext, len);
+                       a = biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZ;
                        }
                        swap(ckey.stbrett, x, var[k]);
-                       a = biscore(ckey.stbrett, ciphertext, len);
+                       a = biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZXK;
@@ -552,13 +554,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  }
 
 
-                 bestscore = triscore(ckey.stbrett, ciphertext, len);
+                 bestscore = triscore(ckey.stbrett, len);
                  for (i = 0; i < 26; i++) {
                    for (k = i+1; k < 26; k++) {
                      if ( (var[i] == ckey.stbrett[var[i]] && var[k] == ckey.stbrett[var[k]])
                         ||(var[i] == ckey.stbrett[var[k]] && var[k] == ckey.stbrett[var[i]]) ) {
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = triscore(ckey.stbrett, ciphertext, len);
+                       a = triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          continue;
@@ -571,7 +573,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], z);
 
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = triscore(ckey.stbrett, ciphertext, len);
+                       a = triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IK;
@@ -579,7 +581,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], var[k]);
 
                        swap(ckey.stbrett, var[i], z);
-                       a = triscore(ckey.stbrett, ciphertext, len);
+                       a = triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IZ;
@@ -606,7 +608,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], x);
 
                        swap(ckey.stbrett, var[k], var[i]);
-                       a = triscore(ckey.stbrett, ciphertext, len);
+                       a = triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KI;
@@ -614,7 +616,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], var[i]);
 
                        swap(ckey.stbrett, var[k], x);
-                       a = triscore(ckey.stbrett, ciphertext, len);
+                       a = triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KX;
@@ -643,13 +645,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], z);
 
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = triscore(ckey.stbrett, ciphertext, len);
+                       a = triscore(ckey.stbrett,  len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IK;
                        }
                        swap(ckey.stbrett, x, z);
-                       a = triscore(ckey.stbrett, ciphertext, len);
+                       a = triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IKXZ;
@@ -658,13 +660,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], var[k]);
 
                        swap(ckey.stbrett, var[i], z);
-                       a = triscore(ckey.stbrett, ciphertext, len);
+                       a = triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZ;
                        }
                        swap(ckey.stbrett, x, var[k]);
-                       a = triscore(ckey.stbrett, ciphertext, len);
+                       a = triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZXK;
@@ -699,7 +701,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  }
 
 
-                 a = triscore(ckey.stbrett, ciphertext, len) + biscore(ckey.stbrett, ciphertext, len);
+                 a = triscore(ckey.stbrett, len) + biscore(ckey.stbrett, len);
                  if (a > jbestscore) {
                    jbestscore = a;
                    newtop = 1;
@@ -709,7 +711,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 
                get_stecker(&ckey);
-               bestscore = triscore(ckey.stbrett, ciphertext, len);
+               bestscore = triscore(ckey.stbrett, len);
 
                newtop = 1;
 
@@ -724,7 +726,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                    swap(ckey.stbrett, ckey.sf[i], ckey.sf[i+1]);
                    for (k = ckey.count; k < 26; k++) {
                      swap(ckey.stbrett, ckey.sf[i], ckey.sf[k]);
-                     a = triscore(ckey.stbrett, ciphertext, len);
+                     a = triscore(ckey.stbrett, len);
                      if (a > bestscore) {
                        newtop = 1;
                        action = RESWAP;
@@ -736,7 +738,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      }
                      swap(ckey.stbrett, ckey.sf[i], ckey.sf[k]);
                      swap(ckey.stbrett, ckey.sf[i+1], ckey.sf[k]);
-                     a = triscore(ckey.stbrett, ciphertext, len);
+                     a = triscore(ckey.stbrett, len);
                      if (a > bestscore) {
                        newtop = 1;
                        action = RESWAP;
@@ -766,7 +768,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  gkey = ckey;
                  gkey.score = bestscore;
                  print_key(outfile, &gkey);
-                 print_plaintext(outfile, gkey.stbrett, ciphertext, len);
+                 print_plaintext(outfile, gkey.stbrett, len);
                  if (ferror(outfile) != 0) {
                    fputs("enigma: error: writing to result file failed\n", stderr);
                    exit(EXIT_FAILURE);

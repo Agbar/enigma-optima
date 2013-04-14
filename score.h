@@ -5,11 +5,11 @@
 
 #include "key.h"
 
-int get_triscore(const Key *key, const text_t *ciphertext, int len);
-double icscore(const text_t *stbrett, const text_t *ciphertext, int len);
-int uniscore(const text_t *stbrett, const text_t *ciphertext, int len);
-int biscore(const text_t *stbrett, const text_t *ciphertext, int len);
-int triscore(const text_t *stbrett, const text_t *ciphertext, int len);
+int get_triscore(const Key *key, int len);
+double icscore(const text_t *stbrett, int len);
+int uniscore(const text_t *stbrett,  int len);
+int biscore(const text_t *stbrett, int len);
+int triscore(const text_t *stbrett, int len);
 
 #endif
 

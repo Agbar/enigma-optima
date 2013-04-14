@@ -13,7 +13,7 @@
 
 void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                FILE *outfile, int act_on_sig, text_t *ciphertext, int len )
+                FILE *outfile, int act_on_sig, int len )
 {
   Key ckey;
   Key gkey;
@@ -47,7 +47,7 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
          for (ckey.m_mesg=lo.m_mesg; ckey.m_mesg<=hi[m][10]; ckey.m_mesg++) {
           for (ckey.r_mesg=lo.r_mesg; ckey.r_mesg<=hi[m][11]; ckey.r_mesg++) {
 
-             a = dgetic_ALL(&ckey, ciphertext, len);
+             a = dgetic_ALL(&ckey, len);
              if (a-bestic > DBL_EPSILON) {
                bestic = a;
                gkey = ckey;
@@ -71,7 +71,7 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
   /* recover ring settings */
   ckey = gkey;
   for (ckey.r_ring = 0; ckey.r_ring < 26; ckey.r_ring++) {
-    a = dgetic_ALL(&ckey, ciphertext, len);
+    a = dgetic_ALL(&ckey, len);
     if (a-bestic > DBL_EPSILON) {
       bestic = a;
       gkey = ckey;
@@ -80,7 +80,7 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
   }
   ckey = gkey;
   for (ckey.m_ring = 0; ckey.m_ring < 26; ckey.m_ring++) {
-    a = dgetic_ALL(&ckey, ciphertext, len);
+    a = dgetic_ALL(&ckey, len);
     if (a-bestic > DBL_EPSILON) {
       bestic = a;
       gkey = ckey;
@@ -91,14 +91,14 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
   /* try to recover stecker of the best key (gkey) */
   clen = (len < CT) ? len : CT;
   hillclimb( &gkey, &gkey, ckey_res, gkey_res, sw_mode, max_pass, firstpass,
-             max_score, resume, outfile, act_on_sig, ciphertext, clen );
+             max_score, resume, outfile, act_on_sig, clen );
 
 }
 
 
 void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
                  int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                 FILE *outfile, int act_on_sig, text_t *ciphertext, int len )
+                 FILE *outfile, int act_on_sig, int len )
 {
   Key ckey;
   Key gkey;
@@ -133,7 +133,7 @@ void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key 
            for (ckey.m_mesg=lo.m_mesg; ckey.m_mesg<=hi[m][10]; ckey.m_mesg++) {
             for (ckey.r_mesg=lo.r_mesg; ckey.r_mesg<=hi[m][11]; ckey.r_mesg++) {
 
-             a = dgetic_ALL(&ckey, ciphertext, len);
+             a = dgetic_ALL(&ckey, len);
              if (a-bestic > DBL_EPSILON) {
                bestic = a;
                gkey = ckey;
@@ -162,7 +162,7 @@ void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key 
   HILLCLIMB:
   clen = (len < CT) ? len : CT;
   hillclimb( &gkey, &gkey, ckey_res, gkey_res, sw_mode, max_pass, firstpass,
-             max_score, resume, outfile, act_on_sig, ciphertext, clen );
+             max_score, resume, outfile, act_on_sig, clen );
 
 }
 

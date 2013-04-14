@@ -9,7 +9,7 @@
 void swap(text_t stbrett[], int i, int k);
 void get_stecker(Key *key);
 void rand_var(text_t var[]);
-void set_to_ct_freq(text_t var[], const text_t *ciphertext, int len);
+void set_to_ct_freq(text_t var[], int len);
 
 #endif
 
