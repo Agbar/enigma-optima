@@ -25,7 +25,6 @@
 #endif
 
 
-extern dict_t tridict[][LAST_DIMENSION][LAST_DIMENSION];
 extern text_t path_lookup[][LAST_DIMENSION];
 extern text_t ciphertext[];
 
