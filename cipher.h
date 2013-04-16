@@ -19,6 +19,10 @@ extern text_t ciphertext[];
 
 // (&ciphertext[x])[i]; is a synonyme to: ciphertext[x+i];
 // and is useful where ciphertext[x] can be calculated at compilation time.
+//
+// path_lookup[Offset][(Index)*(LAST_DIMENSION)+(Cx)];
+// is synonyme to
+// path_lookup[Offset+Index][(Cx)];
 #define DECODE(Cx,Offset,Index) \
     Cx = (&ciphertext[(Offset)])[(Index)]; \
     Cx = stbrett[(Cx)]; \
