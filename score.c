@@ -31,7 +31,7 @@ double icscore(const text_t *stbrett, const text_t *ciphertext, int len)
 
   for (i = 0; i < len; i++) {
     DECODE(c,0,i);
-    s += unidict[c];
+    S += unidict[c];
     f[c]++;
   }
 
@@ -64,7 +64,7 @@ int biscore(const text_t *stbrett, const text_t *ciphertext, int len)
   int c1, c2;
   int s = 0;
 
-  DECODE(c1,0,i);
+  DECODE(c1,0,0);
 
 
   for (i = 1; i < len; i++) {
@@ -84,9 +84,9 @@ int triscore(const text_t *stbrett, const text_t *ciphertext, int len)
   int c1, c2, c3;
   int s = 0;
 
-  DECODE(c1,0,i);
+  DECODE(c1,0,0);
 
-  DECODE(c2,0,i);
+  DECODE(c2,0,1);
 
   for (i = 2; i < len; i++) {
     DECODE(c3,0,i);
