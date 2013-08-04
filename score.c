@@ -4,12 +4,39 @@
 #include "config\array_sizes.h"
 #include "config\types.h"
 
+/* declaration of internal functions */
+void enigma_score_function_copy(enigma_score_function_t* to, const enigma_score_function_t* from);
+
+// simple scores
+static double icscore_simple(const text_t *stbrett, int len);
+static int uniscore_simple(const text_t *stbrett, int len);
+static int biscore_simple(const text_t *stbrett, int len);
+static int triscore_simple(const text_t *stbrett, int len);
+
+// default scores
+static double icscore(const text_t *stbrett, int len);
+static int uniscore(const text_t *stbrett,  int len);
+static int biscore(const text_t *stbrett, int len);
+static int triscore(const text_t *stbrett, int len);
+
 extern dict_t tridict[][LAST_DIMENSION][LAST_DIMENSION];
 extern dict_t bidict[][LAST_DIMENSION];
 extern dict_t unidict[26];
 extern text_t path_lookup[][LAST_DIMENSION];
 
 const size_t d = LAST_DIMENSION; //last dimension size
+
+enigma_score_function_t enigma_score_simple = { triscore_simple, biscore_simple, icscore_simple, uniscore_simple};
+enigma_score_function_t enigma_score_orig;
+enigma_score_function_t enigma_score_opt    = { triscore,        biscore,        icscore,        uniscore };
+
+void enigma_score_function_copy(enigma_score_function_t* to, const enigma_score_function_t* prototype)
+{
+    to->triscore = prototype->triscore;
+    to->biscore  = prototype->biscore;
+    to->icscore  = prototype->icscore;
+    to->uniscore = prototype->uniscore;
+}
 
 /* returns the trigram score of a key/ciphertext combination */
 int get_triscore(const Key *key, int len)
@@ -18,8 +45,16 @@ int get_triscore(const Key *key, int len)
   return triscore(key->stbrett, len);
 }
 
-#ifdef SIMPLESCORE
-double icscore(const text_t *stbrett, int len)
+void enigma_score_init(int cpu, enigma_score_function_t* sf)
+{
+    enigma_score_function_copy(sf,&enigma_score_opt);
+}
+
+
+/*
+ * simple scores
+ *************************/
+static  double icscore_simple(const text_t *stbrett, int len)
 {
   int f[26] = {0};
   double S = 0;
@@ -43,7 +78,7 @@ double icscore(const text_t *stbrett, int len)
 }
 
 
-int uniscore(const text_t *stbrett, int len)
+static int uniscore_simple(const text_t *stbrett, int len)
 {
   int i;
   int c;
@@ -57,8 +92,7 @@ int uniscore(const text_t *stbrett, int len)
   return s;
 }
 
-
-int biscore(const text_t *stbrett, int len)
+static int biscore_simple(const text_t *stbrett, int len)
 {
   int i;
   int c1, c2;
@@ -78,7 +112,7 @@ int biscore(const text_t *stbrett, int len)
 
 }
 
-int triscore(const text_t *stbrett,  int len)
+static int triscore_simple(const text_t *stbrett,  int len)
 {
   int i;
   int c1, c2, c3;
@@ -86,7 +120,7 @@ int triscore(const text_t *stbrett,  int len)
 
   DECODE(c1,0,0);
 
-  DECODE(c2,0,1);
+  DECODE(c2,1,0);
 
   for (i = 2; i < len; i++) {
     DECODE(c3,0,i);
@@ -99,11 +133,11 @@ int triscore(const text_t *stbrett,  int len)
   return s;
 }
 
-#endif
-
-
-#ifndef SIMPLESCORE
-double icscore(const text_t *stbrett, int len)
+/*
+ * opti scores
+ ************************/
+__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
+static double icscore(const text_t *stbrett, int len)
 {
   int f[26] = {0};
   int S0, S1, S2, S3;
@@ -195,7 +229,7 @@ double icscore(const text_t *stbrett, int len)
 
 }
 
-int uniscore(const text_t *stbrett, int len)
+static int uniscore(const text_t *stbrett, int len)
 {
   int i;
   text_t c;
@@ -273,7 +307,7 @@ int uniscore(const text_t *stbrett, int len)
 
 }
 
-
+__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
 int biscore(const text_t *stbrett, int len)
 {
   int i;
@@ -355,6 +389,7 @@ int biscore(const text_t *stbrett, int len)
 
 }
 
+__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
 int triscore(const text_t *stbrett, int len)
 {
   int i;
@@ -446,9 +481,6 @@ int triscore(const text_t *stbrett, int len)
   return s;
 
 }
-
-#endif
-
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
