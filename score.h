@@ -5,11 +5,25 @@
 
 #include "key.h"
 
+typedef struct _enigma_score_function_t{
+    int    (*triscore)(const text_t *stbrett, int len);
+    int    (*biscore) (const text_t *stbrett, int len);
+    double (*icscore) (const text_t *stbrett, int len);
+    int    (*uniscore)(const text_t *stbrett, int len);
+} enigma_score_function_t;
+
+// Initializes sf based on current cpu features.
+void enigma_score_init(int cpu, enigma_score_function_t* sf);
+
+extern enigma_score_function_t enigma_score_simple;
+extern enigma_score_function_t enigma_score_orig;
+extern enigma_score_function_t enigma_score_opt;
+
 int get_triscore(const Key *key, int len);
-double icscore(const text_t *stbrett, int len);
-int uniscore(const text_t *stbrett,  int len);
-int biscore(const text_t *stbrett, int len);
-int triscore(const text_t *stbrett, int len);
+//double icscore(const text_t *stbrett, int len);
+//int uniscore(const text_t *stbrett,  int len);
+//int biscore(const text_t *stbrett, int len);
+//int triscore(const text_t *stbrett, int len);
 
 #endif
 

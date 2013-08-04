@@ -139,6 +139,14 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
   double bestic, ic;
   int firstloop = 1;
 
+  enigma_score_function_t sf;
+
+  enigma_score_init(0, &sf);
+
+  enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup;
+
+  enigma_cipher_init(0, from->model, &prepare_decoder_lookup);
+
   setup_random();
 
   lastsave = time(NULL);
@@ -239,26 +247,17 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                ckey.count = 0;
 
                /* initialize path_lookup */
-               switch (m) {
-                 case H: case M3:
-                   init_path_lookup_H_M3(&ckey, len);
-                   break;
-                 case M4:
-                   init_path_lookup_ALL(&ckey, len);
-                   break;
-                 default:
-                   break;
-               }
+               prepare_decoder_lookup(&ckey, len);
 
 
                /* ic score */
-               bestic = icscore(ckey.stbrett, len);
+               bestic = sf.icscore(ckey.stbrett, len);
                for (i = 0; i < 26; i++) {
                  for (k = i+1; k < 26; k++) {
                    if ( (var[i] == ckey.stbrett[var[i]] && var[k] == ckey.stbrett[var[k]])
                       ||(var[i] == ckey.stbrett[var[k]] && var[k] == ckey.stbrett[var[i]]) ) {
                      swap(ckey.stbrett, var[i], var[k]);
-                     ic = icscore(ckey.stbrett, len);
+                     ic = sf.icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        continue;
@@ -271,7 +270,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[k], z);
 
                      swap(ckey.stbrett, var[i], var[k]);
-                     ic = icscore(ckey.stbrett, len);
+                     ic = sf.icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = KZ_IK;
@@ -279,7 +278,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[i], var[k]);
 
                      swap(ckey.stbrett, var[i], z);
-                     ic = icscore(ckey.stbrett, len);
+                     ic = sf.icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = KZ_IZ;
@@ -306,7 +305,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[i], x);
 
                      swap(ckey.stbrett, var[k], var[i]);
-                     ic = icscore(ckey.stbrett, len);
+                     ic = sf.icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IX_KI;
@@ -314,7 +313,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[k], var[i]);
 
                      swap(ckey.stbrett, var[k], x);
-                     ic = icscore(ckey.stbrett, len);
+                     ic = sf.icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IX_KX;
@@ -343,13 +342,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[k], z);
 
                      swap(ckey.stbrett, var[i], var[k]);
-                     ic = icscore(ckey.stbrett, len);
+                     ic = sf.icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IK;
                      }
                      swap(ckey.stbrett, x, z);
-                     ic = icscore(ckey.stbrett, len);
+                     ic = sf.icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IKXZ;
@@ -358,13 +357,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      swap(ckey.stbrett, var[i], var[k]);
 
                      swap(ckey.stbrett, var[i], z);
-                     ic = icscore(ckey.stbrett, len);
+                     ic = sf.icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IZ;
                      }
                      swap(ckey.stbrett, x, var[k]);
-                     ic = icscore(ckey.stbrett, len);
+                     ic = sf.icscore(ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IZXK;
@@ -400,19 +399,19 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 
                newtop = 1;
-               jbestscore = triscore(ckey.stbrett, len) + biscore(ckey.stbrett, len);
+               jbestscore = sf.triscore(ckey.stbrett, len) + sf.biscore(ckey.stbrett, len);
 
                while (newtop) {
 
                  newtop = 0;
 
-                 bestscore = biscore(ckey.stbrett, len);
+                 bestscore = sf.biscore(ckey.stbrett, len);
                  for (i = 0; i < 26; i++) {
                    for (k = i+1; k < 26; k++) {
                      if ( (var[i] == ckey.stbrett[var[i]] && var[k] == ckey.stbrett[var[k]])
                         ||(var[i] == ckey.stbrett[var[k]] && var[k] == ckey.stbrett[var[i]]) ) {
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = biscore(ckey.stbrett, len);
+                       a = sf.biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          continue;
@@ -425,7 +424,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], z);
 
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = biscore(ckey.stbrett, len);
+                       a = sf.biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IK;
@@ -433,7 +432,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], var[k]);
 
                        swap(ckey.stbrett, var[i], z);
-                       a = biscore(ckey.stbrett, len);
+                       a = sf.biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IZ;
@@ -460,7 +459,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], x);
 
                        swap(ckey.stbrett, var[k], var[i]);
-                       a = biscore(ckey.stbrett, len);
+                       a = sf.biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KI;
@@ -468,7 +467,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], var[i]);
 
                        swap(ckey.stbrett, var[k], x);
-                       a = biscore(ckey.stbrett, len);
+                       a = sf.biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KX;
@@ -497,13 +496,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], z);
 
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = biscore(ckey.stbrett, len);
+                       a = sf.biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IK;
                        }
                        swap(ckey.stbrett, x, z);
-                       a = biscore(ckey.stbrett, len);
+                       a = sf.biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IKXZ;
@@ -512,13 +511,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], var[k]);
 
                        swap(ckey.stbrett, var[i], z);
-                       a = biscore(ckey.stbrett, len);
+                       a = sf.biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZ;
                        }
                        swap(ckey.stbrett, x, var[k]);
-                       a = biscore(ckey.stbrett, len);
+                       a = sf.biscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZXK;
@@ -553,13 +552,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  }
 
 
-                 bestscore = triscore(ckey.stbrett, len);
+                 bestscore = sf.triscore(ckey.stbrett, len);
                  for (i = 0; i < 26; i++) {
                    for (k = i+1; k < 26; k++) {
                      if ( (var[i] == ckey.stbrett[var[i]] && var[k] == ckey.stbrett[var[k]])
                         ||(var[i] == ckey.stbrett[var[k]] && var[k] == ckey.stbrett[var[i]]) ) {
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = triscore(ckey.stbrett, len);
+                       a = sf.triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          continue;
@@ -572,7 +571,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], z);
 
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = triscore(ckey.stbrett, len);
+                       a = sf.triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IK;
@@ -580,7 +579,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], var[k]);
 
                        swap(ckey.stbrett, var[i], z);
-                       a = triscore(ckey.stbrett, len);
+                       a = sf.triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IZ;
@@ -607,7 +606,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], x);
 
                        swap(ckey.stbrett, var[k], var[i]);
-                       a = triscore(ckey.stbrett, len);
+                       a = sf.triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KI;
@@ -615,7 +614,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], var[i]);
 
                        swap(ckey.stbrett, var[k], x);
-                       a = triscore(ckey.stbrett, len);
+                       a = sf.triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KX;
@@ -644,13 +643,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[k], z);
 
                        swap(ckey.stbrett, var[i], var[k]);
-                       a = triscore(ckey.stbrett,  len);
+                       a = sf.triscore(ckey.stbrett,  len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IK;
                        }
                        swap(ckey.stbrett, x, z);
-                       a = triscore(ckey.stbrett, len);
+                       a = sf.triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IKXZ;
@@ -659,13 +658,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        swap(ckey.stbrett, var[i], var[k]);
 
                        swap(ckey.stbrett, var[i], z);
-                       a = triscore(ckey.stbrett, len);
+                       a = sf.triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZ;
                        }
                        swap(ckey.stbrett, x, var[k]);
-                       a = triscore(ckey.stbrett, len);
+                       a = sf.triscore(ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZXK;
@@ -700,7 +699,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  }
 
 
-                 a = triscore(ckey.stbrett, len) + biscore(ckey.stbrett, len);
+                 a = sf.triscore(ckey.stbrett, len) + sf.biscore(ckey.stbrett, len);
                  if (a > jbestscore) {
                    jbestscore = a;
                    newtop = 1;
@@ -710,7 +709,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 
                get_stecker(&ckey);
-               bestscore = triscore(ckey.stbrett, len);
+               bestscore = sf.triscore(ckey.stbrett, len);
 
                newtop = 1;
 
@@ -725,7 +724,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                    swap(ckey.stbrett, ckey.sf[i], ckey.sf[i+1]);
                    for (k = ckey.count; k < 26; k++) {
                      swap(ckey.stbrett, ckey.sf[i], ckey.sf[k]);
-                     a = triscore(ckey.stbrett, len);
+                     a = sf.triscore(ckey.stbrett, len);
                      if (a > bestscore) {
                        newtop = 1;
                        action = RESWAP;
@@ -737,7 +736,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                      }
                      swap(ckey.stbrett, ckey.sf[i], ckey.sf[k]);
                      swap(ckey.stbrett, ckey.sf[i+1], ckey.sf[k]);
-                     a = triscore(ckey.stbrett, len);
+                     a = sf.triscore(ckey.stbrett, len);
                      if (a > bestscore) {
                        newtop = 1;
                        action = RESWAP;

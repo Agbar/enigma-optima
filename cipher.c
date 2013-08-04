@@ -145,6 +145,30 @@ text_t path_lookup[CT][LAST_DIMENSION];
 
 extern text_t ciphertext[];
 
+enigma_cipher_function_t enigma_cipher_decoder_lookup = {init_path_lookup_H_M3, init_path_lookup_ALL};
+
+void enigma_cipher_funcion_copy(enigma_cipher_function_t* to, const enigma_cipher_function_t* prototype)
+{
+    to->prepare_decoder_lookup_M_H3 = prototype->prepare_decoder_lookup_M_H3;
+    to->prepare_decoder_lookup_ALL  = prototype->prepare_decoder_lookup_ALL;
+}
+
+void enigma_cipher_init(int cpu, int machine_type, enigma_prepare_decoder_lookup_function_pt* cf)
+{
+    enigma_cipher_function_t* f = &enigma_cipher_decoder_lookup;
+
+    switch(machine_type)
+    {
+    case H:
+    case M3:
+        *cf = f->prepare_decoder_lookup_M_H3;
+        break;
+    case M4:
+        *cf = f->prepare_decoder_lookup_ALL;
+    }
+
+}
+
 /* Check for slow wheel movement */
 int scrambler_state(const Key *key, int len)
 {
@@ -216,6 +240,23 @@ int scrambler_state(const Key *key, int len)
 
 }
 
+
+void init_path_lookup(int cpu, int machine_type ,const Key *key, int len)
+{
+    switch(machine_type)
+    {
+    case H:
+    case M3:
+        init_path_lookup_H_M3(key, len);
+        break;
+    case M4:
+        init_path_lookup_ALL(key, len);
+        break;
+    default:
+        //FIXME: error
+        break;
+    }
+}
 
 /* initialize lookup table for paths through scramblers, models H, M3 */
 void init_path_lookup_H_M3(const Key *key, int len)
