@@ -5,14 +5,14 @@
 #include "cipher.h"
 
 
-double icscore_simple(const decode_mapping_t* stbrett, int len);
-int   uniscore_simple(const decode_mapping_t* stbrett, int len);
-int    biscore_simple(const decode_mapping_t* stbrett, int len);
-int   triscore_simple(const decode_mapping_t* stbrett, int len);
+double icscore_simple(const Key* key, int len);
+int   uniscore_simple(const Key* key, int len);
+int    biscore_simple(const Key* key, int len);
+int   triscore_simple(const Key* key, int len);
 
 enigma_score_function_t enigma_score_simple = { triscore_simple, biscore_simple, icscore_simple, uniscore_simple};
 
-double icscore_simple(const decode_mapping_t* stbrett, int len)
+double icscore_simple(const Key* key, int len)
 {
   int f[26] = {0};
   double S = 0;
@@ -21,6 +21,8 @@ double icscore_simple(const decode_mapping_t* stbrett, int len)
 
   if (len < 2)
     return 0;
+
+  const decode_mapping_t* const stbrett = &key->stbrett;
 
   for (i = 0; i < len; i++) {
     c = decode(0,i,stbrett);
@@ -35,11 +37,12 @@ double icscore_simple(const decode_mapping_t* stbrett, int len)
   return S;
 }
 
-int uniscore_simple(const decode_mapping_t* stbrett, int len)
+int uniscore_simple(const Key* key, int len)
 {
   int i;
   int c;
   int s = 0;
+  const decode_mapping_t* const stbrett = &key->stbrett;
 
   for (i = 0; i < len; i++) {
     c = decode(0,i,stbrett);
@@ -49,11 +52,12 @@ int uniscore_simple(const decode_mapping_t* stbrett, int len)
   return s;
 }
 
-int biscore_simple(const decode_mapping_t* stbrett, int len)
+int biscore_simple(const Key* key, int len)
 {
   int i;
   int c1, c2;
   int s = 0;
+  const decode_mapping_t* const stbrett = &key->stbrett;
 
   c1 = decode(0,0,stbrett);
 
@@ -68,11 +72,12 @@ int biscore_simple(const decode_mapping_t* stbrett, int len)
 
 }
 
-int triscore_simple(const decode_mapping_t* stbrett,  int len)
+int triscore_simple(const Key* key,  int len)
 {
   int i;
   int c1, c2, c3;
   int s = 0;
+  const decode_mapping_t* const stbrett = &key->stbrett;
 
   c1 = decode(0,0,stbrett);
 
