@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include "cipher.h"
+#include "ciphertext.h"
 #include "charmap.h"
 #include "date.h"
 #include "error.h"

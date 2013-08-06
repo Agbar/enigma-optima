@@ -2,12 +2,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "ciphertext.h"
 #include "global.h"
 #include "key.h"
 #include "stecker.h"
 #include "config\types.h"
 
-extern text_t ciphertext[];
 
 /* swaps letters */
 void swap(decode_mapping_t *stbrett, int i, int k)
@@ -67,7 +67,7 @@ void set_to_ct_freq(text_t var[], int len)
   int n = 0;
 
   for (i = 0; i < len; i++) {
-    c = ciphertext[i];
+    c = ciphertext.plain[i];
     f[c]++;
   }
 
