@@ -14,10 +14,10 @@
 void enigma_score_function_copy(enigma_score_function_t* to, const enigma_score_function_t* from);
 
 // default scores
-static double icscore(const decode_mapping_t* stbrett, int len);
-static int uniscore(const decode_mapping_t* stbrett,  int len);
-static int biscore(const decode_mapping_t* stbrett, int len);
-static int triscore(const decode_mapping_t* stbrett, int len);
+static double icscore(const Key* key, int len);
+static int   uniscore(const Key* key, int len);
+static int    biscore(const Key* key, int len);
+static int   triscore(const Key* key, int len);
 
 enigma_score_function_t enigma_score_orig;
 enigma_score_function_t enigma_score_opt    = { triscore, biscore, icscore, uniscore };
@@ -39,10 +39,10 @@ typedef struct _enigma_score_testing_t
  *
  */
 #define SCORE_TESTING_FUNCTION_ALWAYS_TEST_BOTH(TESTING_FUNCTION_NAME, TESTING_OBJECT_INSTANCE, FUNCTION_NAME, RETURN_T)\
-static RETURN_T TESTING_FUNCTION_NAME(const decode_mapping_t* stbrett, int len)\
+static RETURN_T TESTING_FUNCTION_NAME(const Key* key, int len)\
 {\
-    RETURN_T score = TESTING_OBJECT_INSTANCE.tested->FUNCTION_NAME(stbrett, len);\
-    RETURN_T reference_score = TESTING_OBJECT_INSTANCE.reference->FUNCTION_NAME(stbrett, len);\
+    RETURN_T score = TESTING_OBJECT_INSTANCE.tested->FUNCTION_NAME(key, len);\
+    RETURN_T reference_score = TESTING_OBJECT_INSTANCE.reference->FUNCTION_NAME(key, len);\
     if ( score != reference_score )\
     {\
     }\
@@ -114,7 +114,7 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
  * opti scores
  ************************/
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static double icscore(const decode_mapping_t* stbrett, int len)
+static double icscore(const Key* key, int len)
 {
   int f[26] = {0};
   int S0, S1, S2, S3;
@@ -123,6 +123,8 @@ static double icscore(const decode_mapping_t* stbrett, int len)
 
   if (len < 2)
     return 0;
+
+  const decode_mapping_t* stbrett = &key->stbrett;
 
   for (i = 0; i < len-15; i += 16) {
     c1 = decode(0,i,stbrett);
@@ -206,11 +208,13 @@ static double icscore(const decode_mapping_t* stbrett, int len)
 
 }
 
-static int uniscore(const decode_mapping_t* stbrett, int len)
+static int uniscore(const Key* key, int len)
 {
   int i;
   text_t c;
   int s;
+
+  const decode_mapping_t* stbrett = &key->stbrett;
 
   s = 0;
   for (i = 0; i < len-15; i += 16) {
@@ -285,11 +289,13 @@ static int uniscore(const decode_mapping_t* stbrett, int len)
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int biscore(const decode_mapping_t* stbrett, int len)
+int biscore(const Key* key, int len)
 {
   int i;
   text_t c1, c2;
   int s = 0;
+
+  const decode_mapping_t* const stbrett = &key->stbrett;
 
   c1 = decode(0,0,stbrett);
 
@@ -367,11 +373,13 @@ int biscore(const decode_mapping_t* stbrett, int len)
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int triscore(const decode_mapping_t* stbrett, int len)
+int triscore(const Key* key, int len)
 {
   int i;
   text_t c1, c2, c3;
   int s;
+
+  const decode_mapping_t* const stbrett = &key->stbrett;
 
   s=0;
 

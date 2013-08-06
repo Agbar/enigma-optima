@@ -7,10 +7,10 @@
 #include "key.h"
 
 typedef struct _enigma_score_function_t{
-    int    (*triscore)(const decode_mapping_t *stbrett, int len);
-    int    (*biscore) (const decode_mapping_t *stbrett, int len);
-    double (*icscore) (const decode_mapping_t *stbrett, int len);
-    int    (*uniscore)(const decode_mapping_t *stbrett, int len);
+    int    (*triscore) (const Key * key, int len);
+    int    (* biscore) (const Key * key, int len);
+    double (* icscore) (const Key * key, int len);
+    int    (*uniscore) (const Key * key, int len);
 } enigma_score_function_t;
 
 // Initializes sf based on current cpu features.
