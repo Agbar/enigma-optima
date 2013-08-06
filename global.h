@@ -1,7 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define WINDOWS 
+#define WINDOWS
 
 #define H 0
 #define M3 1
@@ -28,6 +28,18 @@
 enum { SW_ONSTART, SW_OTHER, SW_ALL, SW_NONE, SINGLE_KEY };
 
 
+// copy from x264
+#ifdef __ICL
+#define DECLARE_ALIGNED( var, n ) __declspec(align(n)) var
+#else
+#define DECLARE_ALIGNED( var, n ) var __attribute__((aligned(n)))
+#endif
+#define ALIGNED_32( var ) DECLARE_ALIGNED( var, 32 )
+#define ALIGNED_16( var ) DECLARE_ALIGNED( var, 16 )
+#define ALIGNED_8( var )  DECLARE_ALIGNED( var, 8 )
+#define ALIGNED_4( var )  DECLARE_ALIGNED( var, 4 )
+
+
 #endif
 
 
@@ -36,5 +48,5 @@ enum { SW_ONSTART, SW_OTHER, SW_ALL, SW_NONE, SINGLE_KEY };
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

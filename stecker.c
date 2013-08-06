@@ -10,13 +10,13 @@
 extern text_t ciphertext[];
 
 /* swaps letters */
-void swap(text_t stbrett[], int i, int k)
+void swap(decode_mapping_t *stbrett, int i, int k)
 {
   text_t store;
 
-  store = stbrett[i];
-  stbrett[i] = stbrett[k];
-  stbrett[k] = store;
+  store = stbrett->letters[i];
+  stbrett->letters[i] = stbrett->letters[k];
+  stbrett->letters[k] = store;
 }
 
 /* extracts stecker from key->stbrett to key->sf */
@@ -26,11 +26,11 @@ void get_stecker(Key *key)
 
   key->count = 0;
   for (i = 0; i < 26; i++) {
-    if (key->stbrett[i] > i) {
+    if (key->stbrett.letters[i] > i) {
       key->sf[key->count++] = i;
-      key->sf[key->count++] = key->stbrett[i];
+      key->sf[key->count++] = key->stbrett.letters[i];
     }
-    else if (key->stbrett[i] == i) {
+    else if (key->stbrett.letters[i] == i) {
       key->sf[k--] = i;
     }
   }

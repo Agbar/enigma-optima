@@ -2,8 +2,11 @@
 #define CIPHERTEXT_H
 
 #include <stdint.h>
+#include "config/types.h"
 
 void load_ciphertext(const char *filename, int *len, int resume);
+
+extern text_t ciphertext[1024];
 
 #endif
 

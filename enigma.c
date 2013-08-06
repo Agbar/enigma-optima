@@ -4,9 +4,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+
 #include "charmap.h"
 #include "cipher.h"
 #include "ciphertext.h"
+#include "cpu.h"
 #include "dict.h"
 #include "display.h"
 #include "error.h"
@@ -45,6 +47,7 @@ int main(int argc, char **argv)
     "C:G876:MM:ZZZZ"
   };
 
+  enigma_cpu_flags_init(enigma_cpu_all);
 
   init_key_default(&key, model);
   init_charmap();
