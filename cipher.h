@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "ciphertext.h"
 #include "cpu.h"
 #include "global.h"
 #include "key.h"
@@ -42,11 +43,26 @@ extern text_t etw[52];
 // path_lookup[Offset][(Index)*(LAST_DIMENSION)+(Cx)];
 // is synonyme to
 // path_lookup[Offset+Index][(Cx)];
+#ifdef INLINE_IS_FAST
+inline
+text_t decode(size_t offset,size_t index, const decode_mapping_t* const stbrett)
+{
+    text_t c;
+    c = (&ciphertext.plain[offset])[index];
+    c = stbrett->letters[c];
+    c = path_lookup[offset][index*LAST_DIMENSION+c];
+    return stbrett->letters[c];
+}
+#else
+
+#error DECODE macro needs refactoring
 #define DECODE(Cx,Offset,Index) \
     Cx = (&ciphertext.plain[(Offset)])[(Index)]; \
     Cx = stbrett[(Cx)]; \
     Cx = path_lookup[Offset][(Index)*(LAST_DIMENSION)+(Cx)];\
     Cx = stbrett[(Cx)];
+
+#endif
 
 #endif
 

@@ -114,82 +114,80 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
  * opti scores
  ************************/
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static double icscore(const decode_mapping_t* _stbrett, int len)
+static double icscore(const decode_mapping_t* stbrett, int len)
 {
   int f[26] = {0};
   int S0, S1, S2, S3;
   text_t c1;
   int i;
 
-  const text_t* stbrett = _stbrett->letters;
-
   if (len < 2)
     return 0;
 
   for (i = 0; i < len-15; i += 16) {
-    DECODE(c1,0,i);
+    c1 = decode(0,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,1,i);
+    c1 = decode(1,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,2,i);
+    c1 = decode(2,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,3,i);
+    c1 = decode(3,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,4,i);
+    c1 = decode(4,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,5,i);
+    c1 = decode(5,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,6,i);
+    c1 = decode(6,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,7,i);
+    c1 = decode(7,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,8,i);
+    c1 = decode(8,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,9,i);
+    c1 = decode(9,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,10,i);
+    c1 = decode(10,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,11,i);
+    c1 = decode(11,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,12,i);
+    c1 = decode(12,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,13,i);
+    c1 = decode(13,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,14,i);
+    c1 = decode(14,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,15,i);
+    c1 = decode(15,i,stbrett);
     f[c1]++;
   }
   for (; i < len-3; i += 4) {
-    DECODE(c1,0,i);
+    c1 = decode(0,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,1,i);
+    c1 = decode(1,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,2,i);
+    c1 = decode(2,i,stbrett);
     f[c1]++;
 
-    DECODE(c1,3,i);
+    c1 = decode(3,i,stbrett);
     f[c1]++;
   }
   for (; i < len; i++) {
-    DECODE(c1,0,i);
+    c1 = decode(0,i,stbrett);
     f[c1]++;
   }
 
@@ -208,79 +206,77 @@ static double icscore(const decode_mapping_t* _stbrett, int len)
 
 }
 
-static int uniscore(const decode_mapping_t* _stbrett, int len)
+static int uniscore(const decode_mapping_t* stbrett, int len)
 {
   int i;
   text_t c;
   int s;
 
-  const text_t* stbrett = _stbrett->letters;
-
   s = 0;
   for (i = 0; i < len-15; i += 16) {
-    DECODE(c,0,i);
+    c = decode(0,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,1,i);
+    c = decode(1,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,2,i);
+    c = decode(2,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,3,i);
+    c = decode(3,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,4,i);
+    c = decode(4,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,5,i);
+    c = decode(5,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,6,i);
+    c = decode(6,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,7,i);
+    c = decode(7,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,8,i);
+    c = decode(8,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,9,i);
+    c = decode(9,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,10,i);
+    c = decode(10,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,11,i);
+    c = decode(11,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,12,i);
+    c = decode(12,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,13,i);
+    c = decode(13,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,14,i);
+    c = decode(14,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,15,i);
+    c = decode(15,i,stbrett);
     s += unidict[c];
   }
   for (; i < len-3; i += 4) {
-    DECODE(c,0,i);
+    c = decode(0,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,1,i);
+    c = decode(1,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,2,i);
+    c = decode(2,i,stbrett);
     s += unidict[c];
 
-    DECODE(c,3,i);
+    c = decode(3,i,stbrett);
     s += unidict[c];
   }
   for (; i < len; i++) {
-    DECODE(c,0,i);
+    c = decode(0,i,stbrett);
     s += unidict[c];
   }
 
@@ -289,80 +285,78 @@ static int uniscore(const decode_mapping_t* _stbrett, int len)
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int biscore(const decode_mapping_t* _stbrett, int len)
+int biscore(const decode_mapping_t* stbrett, int len)
 {
   int i;
   text_t c1, c2;
   int s = 0;
 
-  const text_t* stbrett = _stbrett->letters;
-
-  DECODE(c1,0,0)
+  c1 = decode(0,0,stbrett);
 
   for (i = 1; i < len-15; i += 16) {
-    DECODE(c2,0,i);
+    c2 = decode(0,i,stbrett);
     s += bidict[c1][c2];
 
-    DECODE(c1,1,i);
+    c1 = decode(1,i,stbrett);
     s += bidict[c2][c1];
 
-    DECODE(c2,2,i);
+    c2 = decode(2,i,stbrett);
     s += bidict[c1][c2];
 
-    DECODE(c1,3,i);
+    c1 = decode(3,i,stbrett);
     s += bidict[c2][c1];
 
-    DECODE(c2,4,i);
+    c2 = decode(4,i,stbrett);
     s += bidict[c1][c2];
 
-    DECODE(c1,5,i);
+    c1 = decode(5,i,stbrett);
     s += bidict[c2][c1];
 
-    DECODE(c2,6,i);
+    c2 = decode(6,i,stbrett);
     s += bidict[c1][c2];
 
-    DECODE(c1,7,i);
+    c1 = decode(7,i,stbrett);
     s += bidict[c2][c1];
 
-    DECODE(c2,8,i);
+    c2 = decode(8,i,stbrett);
     s += bidict[c1][c2];
 
-    DECODE(c1,9,i);
+    c1 = decode(9,i,stbrett);
     s += bidict[c2][c1];
 
-    DECODE(c2,10,i);
+    c2 = decode(10,i,stbrett);
     s += bidict[c1][c2];
 
-    DECODE(c1,11,i);
+    c1 = decode(11,i,stbrett);
     s += bidict[c2][c1];
 
-    DECODE(c2,12,i);
+    c2 = decode(12,i,stbrett);
     s += bidict[c1][c2];
 
-    DECODE(c1,13,i);
+    c1 = decode(13,i,stbrett);
     s += bidict[c2][c1];
 
-    DECODE(c2,14,i);
+    c2 = decode(14,i,stbrett);
     s += bidict[c1][c2];
 
-    DECODE(c1,15,i);
+    c1 = decode(15,i,stbrett);
     s += bidict[c2][c1];
   }
   for (; i < len-3; i += 4) {
-    DECODE(c2,0,i);
+    c2 = decode(0,i,stbrett);
     s += bidict[c1][c2];
 
-    DECODE(c1,1,i);
+    c1 = decode(1,i,stbrett);
     s += bidict[c2][c1];
 
-    DECODE(c2,2,i);
+    c2 = decode(2,i,stbrett);
     s += bidict[c1][c2];
 
-    DECODE(c1,3,i);
+    c1 = decode(3,i,stbrett);
     s += bidict[c2][c1];
   }
   for (; i < len; i++) {
-    DECODE(c2,0,i);
+    c2 = decode(0,i,stbrett);
     s += bidict[c1][c2];
 
     c1 = c2;
@@ -373,90 +367,88 @@ int biscore(const decode_mapping_t* _stbrett, int len)
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int triscore(const decode_mapping_t* _stbrett, int len)
+int triscore(const decode_mapping_t* stbrett, int len)
 {
   int i;
   text_t c1, c2, c3;
   int s;
 
-  const text_t* stbrett =  _stbrett->letters;
-
   s=0;
 
-  DECODE(c1,0,0);
+  c1 = decode(0,0,stbrett);
 
-  DECODE(c2,1,0);
+  c2 = decode(1,0,stbrett);
 
   for (i = 2; i < len-15; i += 16) {
-    DECODE(c3,0,i);
+    c3 = decode(0,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    DECODE(c1,1,i);
+    c1 = decode(1,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    DECODE(c2,2,i);
+    c2 = decode(2,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    DECODE(c3,3,i);
+    c3 = decode(3,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    DECODE(c1,4,i);
+    c1 = decode(4,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    DECODE(c2,5,i)
+    c2 = decode(5,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    DECODE(c3,6,i);
+    c3 = decode(6,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    DECODE(c1,7,i);
+    c1 = decode(7,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    DECODE(c2,8,i);
+    c2 = decode(8,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    DECODE(c3,9,i);
+    c3 = decode(9,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    DECODE(c1,10,i);
+    c1 = decode(10,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    DECODE(c2,11,i);
+    c2 = decode(11,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    DECODE(c3,12,i);
+    c3 = decode(12,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    DECODE(c1,13,i);
+    c1 = decode(13,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    DECODE(c2,14,i);
+    c2 = decode(14,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    DECODE(c3,15,i);
+    c3 = decode(15,i,stbrett);
     s += tridict[c1][c2][c3];
 
     c1 = c2;
     c2 = c3;
   }
   for (; i < len-3; i += 4) {
-    DECODE(c3,0,i);
+    c3 = decode(0,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    DECODE(c1,1,i);
+    c1 = decode(1,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    DECODE(c2,2,i);
+    c2 = decode(2,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    DECODE(c3,3,i);
+    c3 = decode(3,i,stbrett);
     s += tridict[c1][c2][c3];
 
     c1 = c2;
     c2 = c3;
   }
   for (; i < len; i++) {
-    DECODE(c3,0,i);
+    c3 = decode(0,i,stbrett);
     s += tridict[c1][c2][c3];
 
     c1 = c2;
