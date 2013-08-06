@@ -5,14 +5,14 @@
 #include "cipher.h"
 
 
-double icscore_simple(const Key* key, int len);
-int   uniscore_simple(const Key* key, int len);
-int    biscore_simple(const Key* key, int len);
-int   triscore_simple(const Key* key, int len);
+double icscore_simple(const Key* const restrict key, int len);
+int   uniscore_simple(const Key* const restrict key, int len);
+int    biscore_simple(const Key* const restrict key, int len);
+int   triscore_simple(const Key* const restrict key, int len);
 
 enigma_score_function_t enigma_score_simple = { triscore_simple, biscore_simple, icscore_simple, uniscore_simple};
 
-double icscore_simple(const Key* key, int len)
+double icscore_simple(const Key* const restrict key, int len)
 {
   int f[26] = {0};
   double S = 0;
@@ -37,7 +37,7 @@ double icscore_simple(const Key* key, int len)
   return S;
 }
 
-int uniscore_simple(const Key* key, int len)
+int uniscore_simple(const Key* const restrict key, int len)
 {
   int i;
   int c;
@@ -52,7 +52,7 @@ int uniscore_simple(const Key* key, int len)
   return s;
 }
 
-int biscore_simple(const Key* key, int len)
+int biscore_simple(const Key* const restrict key, int len)
 {
   int i;
   int c1, c2;
@@ -72,7 +72,7 @@ int biscore_simple(const Key* key, int len)
 
 }
 
-int triscore_simple(const Key* key,  int len)
+int triscore_simple(const Key* const restrict key,  int len)
 {
   int i;
   int c1, c2, c3;
