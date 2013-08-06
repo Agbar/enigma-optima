@@ -11,13 +11,13 @@
 #include "x86\score_ssse3.h"
 
 /* declaration of internal functions */
-void enigma_score_function_copy(enigma_score_function_t* to, const enigma_score_function_t* from);
+void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict from);
 
 // default scores
-static double icscore(const Key* key, int len);
-static int   uniscore(const Key* key, int len);
-static int    biscore(const Key* key, int len);
-static int   triscore(const Key* key, int len);
+static double icscore(const Key* const restrict key, int len);
+static int   uniscore(const Key* const restrict key, int len);
+static int    biscore(const Key* const restrict key, int len);
+static int   triscore(const Key* const restrict key, int len);
 
 enigma_score_function_t enigma_score_orig;
 enigma_score_function_t enigma_score_opt    = { triscore, biscore, icscore, uniscore };
@@ -39,7 +39,7 @@ typedef struct _enigma_score_testing_t
  *
  */
 #define SCORE_TESTING_FUNCTION_ALWAYS_TEST_BOTH(TESTING_FUNCTION_NAME, TESTING_OBJECT_INSTANCE, FUNCTION_NAME, RETURN_T)\
-static RETURN_T TESTING_FUNCTION_NAME(const Key* key, int len)\
+static RETURN_T TESTING_FUNCTION_NAME(const Key* const restrict key, int len)\
 {\
     RETURN_T score = TESTING_OBJECT_INSTANCE.tested->FUNCTION_NAME(key, len);\
     RETURN_T reference_score = TESTING_OBJECT_INSTANCE.reference->FUNCTION_NAME(key, len);\
@@ -73,7 +73,7 @@ enigma_score_testing_t NAME_PREFIX##NAME_SUFFIX = {\
 SCORE_TESTING_FUNCTION(enigma_score_testing, _always_both, SCORE_TESTING_FUNCTION_ALWAYS_TEST_BOTH);
 
 inline
-void enigma_score_function_copy(enigma_score_function_t* to, const enigma_score_function_t* prototype)
+void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict prototype)
 {
     to->triscore = prototype->triscore;
     to->biscore  = prototype->biscore;
@@ -114,7 +114,7 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
  * opti scores
  ************************/
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static double icscore(const Key* key, int len)
+static double icscore(const Key* const restrict key, int len)
 {
   int f[26] = {0};
   int S0, S1, S2, S3;
@@ -289,7 +289,7 @@ static int uniscore(const Key* key, int len)
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int biscore(const Key* key, int len)
+int biscore(const Key* const restrict key, int len)
 {
   int i;
   text_t c1, c2;
@@ -373,7 +373,7 @@ int biscore(const Key* key, int len)
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int triscore(const Key* key, int len)
+int triscore(const Key* const restrict key, int len)
 {
   int i;
   text_t c1, c2, c3;
