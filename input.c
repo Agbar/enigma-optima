@@ -69,12 +69,12 @@ int set_walze(Key *key, char *s, int model)
   while (*x != '\0') {
     switch (model) {
       case H: /* digits 1-5, no repetitions */
-        if ( !isdigit((unsigned char)*x) || *x < '1' || *x > '5'
+        if ( !isdigit((unsigned char)*x) || *x < '0' || *x > '5'
            || strrchr(x, *x) != x )
              return 0;
         break;
       case M3: case M4: /* digits 1-8, no repetitions */
-        if ( !isdigit((unsigned char)*x) || *x < '1' || *x > '8'
+        if ( !isdigit((unsigned char)*x) || *x < '0' || *x > '8'
            || strrchr(x, *x) != x )
              return 0;
         break;
