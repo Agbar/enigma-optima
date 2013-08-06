@@ -24,16 +24,14 @@ FILE *open_outfile(char *s)
   return fp;
 }
 
-void print_plaintext(FILE *fp, const decode_mapping_t *_stbrett, int len)
+void print_plaintext(FILE *fp, const decode_mapping_t *stbrett, int len)
 {
   int i;
   text_t c;
   int ofd;
 
-  const text_t* stbrett = _stbrett->letters;
-
   for (i = 0; i < len; i++) {
-    DECODE(c,0,i);
+    c = decode(0,i,stbrett);
     fputc(alpha[c], fp);
   }
   fputc('\n', fp);
