@@ -335,18 +335,17 @@ void init_path_lookup_H_M3(const Key *key, int len)
 
     for (k = 0; k < 26; k++) {
       c = k;
-      c = wal[r_slot][c+r_offset+26];
-      c = wal[m_slot][c-r_offset+m_offset+26];
-      c = wal[l_slot][c-m_offset+l_offset+26];
-      c = ukw[ukwnum][c-l_offset+26];
-      c = rev_wal[l_slot][c+l_offset+26];
-      c = rev_wal[m_slot][c+m_offset-l_offset+26];
-      c = rev_wal[r_slot][c+r_offset-m_offset+26];
-      c = etw[c-r_offset+26];
+      c = wal[r_slot][c+r_offset]-r_offset+26;
+      c = wal[m_slot][c+m_offset]-m_offset+26;
+      c = wal[l_slot][c+l_offset]-l_offset+26;
+      c = ukw[ukwnum][c];
+      c = rev_wal[l_slot][c+l_offset]-l_offset+26;
+      c = rev_wal[m_slot][c+m_offset]-m_offset+26;
+      c = rev_wal[r_slot][c+r_offset]-r_offset+26;
+      c = etw[c];
       path_lookup[i][k] = c;
     }
   }
-
 }
 
 
@@ -418,16 +417,16 @@ void init_path_lookup_ALL(const Key *key, int len)
 
     for (k = 0; k < 26; k++) {
       c = k;
-      c = wal[r_slot][c+r_offset+26];
-      c = wal[m_slot][c-r_offset+m_offset+26];
-      c = wal[l_slot][c-m_offset+l_offset+26];
-      c = wal[g_slot][c-l_offset+g_offset+26];
-      c = ukw[ukwnum][c-g_offset+26];
-      c = rev_wal[g_slot][c+g_offset+26];
-      c = rev_wal[l_slot][c+l_offset-g_offset+26];
-      c = rev_wal[m_slot][c+m_offset-l_offset+26];
-      c = rev_wal[r_slot][c+r_offset-m_offset+26];
-      c = etw[c-r_offset+26];
+      c = wal[r_slot][c+r_offset]-r_offset+26;
+      c = wal[m_slot][c+m_offset]-m_offset+26;
+      c = wal[l_slot][c+l_offset]-l_offset+26;
+      c = wal[g_slot][c+g_offset]-g_offset+26;
+      c = ukw[ukwnum][c];
+      c = rev_wal[g_slot][c+g_offset]-g_offset+26;
+      c = rev_wal[l_slot][c+l_offset]-l_offset+26;
+      c = rev_wal[m_slot][c+m_offset]-m_offset+26;
+      c = rev_wal[r_slot][c+r_offset]-r_offset+26;
+      c = etw[c];
       path_lookup[i][k] = c;
     }
   }
