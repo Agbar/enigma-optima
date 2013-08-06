@@ -1,5 +1,6 @@
 #include "cpu.h"
 #include "cipher.h"
+#include "dict.h"
 #include "key.h"
 #include "score.h"
 #include "ciphertext.h"
@@ -17,13 +18,6 @@ static double icscore(const decode_mapping_t* stbrett, int len);
 static int uniscore(const decode_mapping_t* stbrett,  int len);
 static int biscore(const decode_mapping_t* stbrett, int len);
 static int triscore(const decode_mapping_t* stbrett, int len);
-
-extern dict_t tridict[][LAST_DIMENSION][LAST_DIMENSION];
-extern dict_t bidict[][LAST_DIMENSION];
-extern dict_t unidict[26];
-extern text_t path_lookup[][LAST_DIMENSION];
-
-const size_t d = LAST_DIMENSION; //last dimension size
 
 enigma_score_function_t enigma_score_orig;
 enigma_score_function_t enigma_score_opt    = { triscore, biscore, icscore, uniscore };

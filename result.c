@@ -14,8 +14,6 @@
 #include "config\array_sizes.h"
 #include "config\types.h"
 
-extern text_t path_lookup[][LAST_DIMENSION];
-
 FILE *open_outfile(char *s)
 {
   FILE *fp = NULL;
