@@ -7,6 +7,7 @@
 #include <sys/time.h>
 #include <signal.h>
 #include "cipher.h"
+#include "ciphertext.h"
 #include "dict.h"
 #include "error.h"
 #include "global.h"
@@ -26,7 +27,6 @@
 
 
 extern text_t path_lookup[][LAST_DIMENSION];
-extern text_t ciphertext[];
 
 #ifndef WINDOWS
 struct sigaction sigact;
@@ -173,7 +173,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
     state.pass = &pass;
     state.firstpass = &firstpass;
     state.max_score = &max_score;
-    state.ciphertext = ciphertext;
+    state.ciphertext = ciphertext.plain;
 
     install_sighandler();
   }

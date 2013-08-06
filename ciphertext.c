@@ -12,9 +12,10 @@
 // Limit imposed by highest value in dictionary 71964 (bidict.naval) and size
 // of scoring variable (32-bit signed) gives limit of ciphertext
 // length of about 29800 (very pessimistically).
-// I assume that 1024 characters should be enough in any realistic scenario,
+// I assume that 2048 characters should be enough in any realistic scenario,
 // especially that message is trimmed to 250 characters (CT in global.h).
-text_t ciphertext[1024];
+// Allegedly there exist messages longer than 1000 chars.
+ciphertext_t ciphertext;
 
 
 /* loads ciphertext into array, [A-Za-z] are converted to 0-25 */
@@ -40,7 +41,7 @@ void load_ciphertext(const char * const filename, int *const len, int resume)
       err_illegal_char_fatal(filename);
 
   rewind(fp);
-  p_ct = ciphertext;
+  p_ct = ciphertext.plain;
   while ((c = fgetc(fp)) != EOF)
     if (isalpha(c))
       *p_ct++ = code[c];

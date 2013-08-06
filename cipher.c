@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <ctype.h>
+#include "ciphertext.h"
 #include "global.h"
 #include "charmap.h"
 #include "key.h"
@@ -148,8 +149,6 @@ text_t rev_wal[11][78] = {
 text_t wal_turn[9] = {0, 16, 4, 21, 9, 25, 12, 12, 12};
 
 text_t path_lookup[CT][LAST_DIMENSION];
-
-extern text_t ciphertext[];
 
 enigma_cipher_function_t enigma_cipher_decoder_lookup = {init_path_lookup_H_M3, init_path_lookup_ALL};
 
@@ -506,7 +505,7 @@ double dgetic_ALL(const Key *key, int len)
       p3 = 0;
     }
 
-    c = ciphertext[i];  /* no plugboard */
+    c = ciphertext.plain[i];  /* no plugboard */
     c = wal[r_slot][c+r_offset+26];
     c = wal[m_slot][c-r_offset+m_offset+26];
     c = wal[l_slot][c-m_offset+l_offset+26];

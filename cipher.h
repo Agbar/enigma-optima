@@ -25,7 +25,6 @@ typedef struct _enigma_cipher_function_t
 void enigma_cipher_init(enigma_cpu_flags_t cpu, int machine_type, enigma_prepare_decoder_lookup_function_pt* cf);
 
 extern enigma_cipher_function_t enigma_cipher_decoder_lookup;
-extern text_t ciphertext[];
 extern text_t path_lookup[CT][LAST_DIMENSION];
 
 /*
@@ -44,7 +43,7 @@ extern text_t etw[52];
 // is synonyme to
 // path_lookup[Offset+Index][(Cx)];
 #define DECODE(Cx,Offset,Index) \
-    Cx = (&ciphertext[(Offset)])[(Index)]; \
+    Cx = (&ciphertext.plain[(Offset)])[(Index)]; \
     Cx = stbrett[(Cx)]; \
     Cx = path_lookup[Offset][(Index)*(LAST_DIMENSION)+(Cx)];\
     Cx = stbrett[(Cx)];
