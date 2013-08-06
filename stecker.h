@@ -6,7 +6,7 @@
 #include "key.h"
 #include "config\types.h"
 
-void swap(text_t stbrett[], int i, int k);
+void swap(decode_mapping_t *stbrett, int i, int k);
 void get_stecker(Key *key);
 void rand_var(text_t var[]);
 void set_to_ct_freq(text_t var[], int len);

@@ -180,7 +180,7 @@ int set_stecker(Key *key, char *s)
   /* swap appropriate letters */
   x = s;
   while (*x != '\0') {
-    swap(key->stbrett, code[(unsigned char)*x], code[(unsigned char)*(x+1)]);
+    swap(&key->stbrett, code[(unsigned char)*x], code[(unsigned char)*(x+1)]);
     x += 2;
   }
 
@@ -277,7 +277,7 @@ int set_key(Key *key, const char *keystring, int model, int adjust)
       else
         err_input_fatal(ERR_RING_SHORTCUT);
     }
- 
+
     return 1;
 }
 
@@ -289,7 +289,7 @@ int set_range(Key *from, Key *to, const char *kf, const char *kt, int model)
   if (keycmp(from, to) == 1) return 0;
 
   return 1;
-  
+
 }
 
 
@@ -298,5 +298,5 @@ int set_range(Key *from, Key *to, const char *kf, const char *kt, int model)
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

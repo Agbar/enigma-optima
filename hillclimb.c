@@ -141,11 +141,11 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
   enigma_score_function_t sf;
 
-  enigma_score_init(0, &sf);
+  enigma_score_init(enigma_cpu_flags, &sf);
 
   enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup;
 
-  enigma_cipher_init(0, from->model, &prepare_decoder_lookup);
+  enigma_cipher_init(enigma_cpu_flags, from->model, &prepare_decoder_lookup);
 
   setup_random();
 
@@ -243,7 +243,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
                /* complete ckey initialization */
                for (i = 0; i < 26; i++)
-                 ckey.sf[i] = ckey.stbrett[i] = i;
+                 ckey.sf[i] = ckey.stbrett.letters[i] = i;
                ckey.count = 0;
 
                /* initialize path_lookup */
@@ -251,144 +251,144 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 
                /* ic score */
-               bestic = sf.icscore(ckey.stbrett, len);
+               bestic = sf.icscore(&ckey.stbrett, len);
                for (i = 0; i < 26; i++) {
                  for (k = i+1; k < 26; k++) {
-                   if ( (var[i] == ckey.stbrett[var[i]] && var[k] == ckey.stbrett[var[k]])
-                      ||(var[i] == ckey.stbrett[var[k]] && var[k] == ckey.stbrett[var[i]]) ) {
-                     swap(ckey.stbrett, var[i], var[k]);
-                     ic = sf.icscore(ckey.stbrett, len);
+                   if ( (var[i] == ckey.stbrett.letters[var[i]] && var[k] == ckey.stbrett.letters[var[k]])
+                      ||(var[i] == ckey.stbrett.letters[var[k]] && var[k] == ckey.stbrett.letters[var[i]]) ) {
+                     swap(&ckey.stbrett, var[i], var[k]);
+                     ic = sf.icscore(&ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        continue;
                      }
-                     swap(ckey.stbrett, var[i], var[k]);
+                     swap(&ckey.stbrett, var[i], var[k]);
                    }
-                   else if (var[i] == ckey.stbrett[var[i]] && var[k] != ckey.stbrett[var[k]]) {
+                   else if (var[i] == ckey.stbrett.letters[var[i]] && var[k] != ckey.stbrett.letters[var[k]]) {
                      action = NONE;
-                     z = ckey.stbrett[var[k]];
-                     swap(ckey.stbrett, var[k], z);
+                     z = ckey.stbrett.letters[var[k]];
+                     swap(&ckey.stbrett, var[k], z);
 
-                     swap(ckey.stbrett, var[i], var[k]);
-                     ic = sf.icscore(ckey.stbrett, len);
+                     swap(&ckey.stbrett, var[i], var[k]);
+                     ic = sf.icscore(&ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = KZ_IK;
                      }
-                     swap(ckey.stbrett, var[i], var[k]);
+                     swap(&ckey.stbrett, var[i], var[k]);
 
-                     swap(ckey.stbrett, var[i], z);
-                     ic = sf.icscore(ckey.stbrett, len);
+                     swap(&ckey.stbrett, var[i], z);
+                     ic = sf.icscore(&ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = KZ_IZ;
                      }
-                     swap(ckey.stbrett, var[i], z);
+                     swap(&ckey.stbrett, var[i], z);
 
                      switch (action) {
                        case KZ_IK:
-                         swap(ckey.stbrett, var[i], var[k]);
+                         swap(&ckey.stbrett, var[i], var[k]);
                          break;
                        case KZ_IZ:
-                         swap(ckey.stbrett, var[i], z);
+                         swap(&ckey.stbrett, var[i], z);
                          break;
                        case NONE:
-                         swap(ckey.stbrett, var[k], z);
+                         swap(&ckey.stbrett, var[k], z);
                          break;
                        default:
                          break;
                      }
                    }
-                   else if (var[k] == ckey.stbrett[var[k]] && var[i] != ckey.stbrett[var[i]]) {
+                   else if (var[k] == ckey.stbrett.letters[var[k]] && var[i] != ckey.stbrett.letters[var[i]]) {
                      action = NONE;
-                     x = ckey.stbrett[var[i]];
-                     swap(ckey.stbrett, var[i], x);
+                     x = ckey.stbrett.letters[var[i]];
+                     swap(&ckey.stbrett, var[i], x);
 
-                     swap(ckey.stbrett, var[k], var[i]);
-                     ic = sf.icscore(ckey.stbrett, len);
+                     swap(&ckey.stbrett, var[k], var[i]);
+                     ic = sf.icscore(&ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IX_KI;
                      }
-                     swap(ckey.stbrett, var[k], var[i]);
+                     swap(&ckey.stbrett, var[k], var[i]);
 
-                     swap(ckey.stbrett, var[k], x);
-                     ic = sf.icscore(ckey.stbrett, len);
+                     swap(&ckey.stbrett, var[k], x);
+                     ic = sf.icscore(&ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IX_KX;
                      }
-                     swap(ckey.stbrett, var[k], x);
+                     swap(&ckey.stbrett, var[k], x);
 
                      switch (action) {
                        case IX_KI:
-                         swap(ckey.stbrett, var[k], var[i]);
+                         swap(&ckey.stbrett, var[k], var[i]);
                          break;
                        case IX_KX:
-                         swap(ckey.stbrett, var[k], x);
+                         swap(&ckey.stbrett, var[k], x);
                          break;
                        case NONE:
-                         swap(ckey.stbrett, var[i], x);
+                         swap(&ckey.stbrett, var[i], x);
                          break;
                        default:
                          break;
                      }
                    }
-                   else if (var[i] != ckey.stbrett[var[i]] && var[k] != ckey.stbrett[var[k]]) {
+                   else if (var[i] != ckey.stbrett.letters[var[i]] && var[k] != ckey.stbrett.letters[var[k]]) {
                      action = NONE;
-                     x = ckey.stbrett[var[i]];
-                     z = ckey.stbrett[var[k]];
-                     swap(ckey.stbrett, var[i], x);
-                     swap(ckey.stbrett, var[k], z);
+                     x = ckey.stbrett.letters[var[i]];
+                     z = ckey.stbrett.letters[var[k]];
+                     swap(&ckey.stbrett, var[i], x);
+                     swap(&ckey.stbrett, var[k], z);
 
-                     swap(ckey.stbrett, var[i], var[k]);
-                     ic = sf.icscore(ckey.stbrett, len);
+                     swap(&ckey.stbrett, var[i], var[k]);
+                     ic = sf.icscore(&ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IK;
                      }
-                     swap(ckey.stbrett, x, z);
-                     ic = sf.icscore(ckey.stbrett, len);
+                     swap(&ckey.stbrett, x, z);
+                     ic = sf.icscore(&ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IKXZ;
                      }
-                     swap(ckey.stbrett, x, z);
-                     swap(ckey.stbrett, var[i], var[k]);
+                     swap(&ckey.stbrett, x, z);
+                     swap(&ckey.stbrett, var[i], var[k]);
 
-                     swap(ckey.stbrett, var[i], z);
-                     ic = sf.icscore(ckey.stbrett, len);
+                     swap(&ckey.stbrett, var[i], z);
+                     ic = sf.icscore(&ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IZ;
                      }
-                     swap(ckey.stbrett, x, var[k]);
-                     ic = sf.icscore(ckey.stbrett, len);
+                     swap(&ckey.stbrett, x, var[k]);
+                     ic = sf.icscore(&ckey.stbrett, len);
                      if (ic-bestic > DBL_EPSILON) {
                        bestic = ic;
                        action = IXKZ_IZXK;
                      }
-                     swap(ckey.stbrett, x, var[k]);
-                     swap(ckey.stbrett, var[i], z);
+                     swap(&ckey.stbrett, x, var[k]);
+                     swap(&ckey.stbrett, var[i], z);
 
                      switch (action) {
                        case IXKZ_IK:
-                         swap(ckey.stbrett, var[i], var[k]);
+                         swap(&ckey.stbrett, var[i], var[k]);
                          break;
                        case IXKZ_IZ:
-                         swap(ckey.stbrett, var[i], z);
+                         swap(&ckey.stbrett, var[i], z);
                          break;
                        case IXKZ_IKXZ:
-                         swap(ckey.stbrett, var[i], var[k]);
-                         swap(ckey.stbrett, x, z);
+                         swap(&ckey.stbrett, var[i], var[k]);
+                         swap(&ckey.stbrett, x, z);
                        break;
                        case IXKZ_IZXK:
-                         swap(ckey.stbrett, var[i], z);
-                         swap(ckey.stbrett, x, var[k]);
+                         swap(&ckey.stbrett, var[i], z);
+                         swap(&ckey.stbrett, x, var[k]);
                        break;
                        case NONE:
-                         swap(ckey.stbrett, var[i], x);
-                         swap(ckey.stbrett, var[k], z);
+                         swap(&ckey.stbrett, var[i], x);
+                         swap(&ckey.stbrett, var[k], z);
                          break;
                        default:
                          break;
@@ -399,150 +399,150 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 
                newtop = 1;
-               jbestscore = sf.triscore(ckey.stbrett, len) + sf.biscore(ckey.stbrett, len);
+               jbestscore = sf.triscore(&ckey.stbrett, len) + sf.biscore(&ckey.stbrett, len);
 
                while (newtop) {
 
                  newtop = 0;
 
-                 bestscore = sf.biscore(ckey.stbrett, len);
+                 bestscore = sf.biscore(&ckey.stbrett, len);
                  for (i = 0; i < 26; i++) {
                    for (k = i+1; k < 26; k++) {
-                     if ( (var[i] == ckey.stbrett[var[i]] && var[k] == ckey.stbrett[var[k]])
-                        ||(var[i] == ckey.stbrett[var[k]] && var[k] == ckey.stbrett[var[i]]) ) {
-                       swap(ckey.stbrett, var[i], var[k]);
-                       a = sf.biscore(ckey.stbrett, len);
+                     if ( (var[i] == ckey.stbrett.letters[var[i]] && var[k] == ckey.stbrett.letters[var[k]])
+                        ||(var[i] == ckey.stbrett.letters[var[k]] && var[k] == ckey.stbrett.letters[var[i]]) ) {
+                       swap(&ckey.stbrett, var[i], var[k]);
+                       a = sf.biscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          continue;
                        }
-                       swap(ckey.stbrett, var[i], var[k]);
+                       swap(&ckey.stbrett, var[i], var[k]);
                      }
-                     else if (var[i] == ckey.stbrett[var[i]] && var[k] != ckey.stbrett[var[k]]) {
+                     else if (var[i] == ckey.stbrett.letters[var[i]] && var[k] != ckey.stbrett.letters[var[k]]) {
                        action = NONE;
-                       z = ckey.stbrett[var[k]];
-                       swap(ckey.stbrett, var[k], z);
+                       z = ckey.stbrett.letters[var[k]];
+                       swap(&ckey.stbrett, var[k], z);
 
-                       swap(ckey.stbrett, var[i], var[k]);
-                       a = sf.biscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[i], var[k]);
+                       a = sf.biscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IK;
                        }
-                       swap(ckey.stbrett, var[i], var[k]);
+                       swap(&ckey.stbrett, var[i], var[k]);
 
-                       swap(ckey.stbrett, var[i], z);
-                       a = sf.biscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[i], z);
+                       a = sf.biscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IZ;
                        }
-                       swap(ckey.stbrett, var[i], z);
+                       swap(&ckey.stbrett, var[i], z);
 
                        switch (action) {
                          case KZ_IK:
-                           swap(ckey.stbrett, var[i], var[k]);
+                           swap(&ckey.stbrett, var[i], var[k]);
                            break;
                          case KZ_IZ:
-                           swap(ckey.stbrett, var[i], z);
+                           swap(&ckey.stbrett, var[i], z);
                            break;
                          case NONE:
-                           swap(ckey.stbrett, var[k], z);
+                           swap(&ckey.stbrett, var[k], z);
                            break;
                          default:
                            break;
                        }
                      }
-                     else if (var[k] == ckey.stbrett[var[k]] && var[i] != ckey.stbrett[var[i]]) {
+                     else if (var[k] == ckey.stbrett.letters[var[k]] && var[i] != ckey.stbrett.letters[var[i]]) {
                        action = NONE;
-                       x = ckey.stbrett[var[i]];
-                       swap(ckey.stbrett, var[i], x);
+                       x = ckey.stbrett.letters[var[i]];
+                       swap(&ckey.stbrett, var[i], x);
 
-                       swap(ckey.stbrett, var[k], var[i]);
-                       a = sf.biscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[k], var[i]);
+                       a = sf.biscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KI;
                        }
-                       swap(ckey.stbrett, var[k], var[i]);
+                       swap(&ckey.stbrett, var[k], var[i]);
 
-                       swap(ckey.stbrett, var[k], x);
-                       a = sf.biscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[k], x);
+                       a = sf.biscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KX;
                        }
-                       swap(ckey.stbrett, var[k], x);
+                       swap(&ckey.stbrett, var[k], x);
 
                        switch (action) {
                          case IX_KI:
-                           swap(ckey.stbrett, var[k], var[i]);
+                           swap(&ckey.stbrett, var[k], var[i]);
                            break;
                          case IX_KX:
-                           swap(ckey.stbrett, var[k], x);
+                           swap(&ckey.stbrett, var[k], x);
                            break;
                          case NONE:
-                           swap(ckey.stbrett, var[i], x);
+                           swap(&ckey.stbrett, var[i], x);
                            break;
                          default:
                            break;
                        }
                      }
-                     else if (var[i] != ckey.stbrett[var[i]] && var[k] != ckey.stbrett[var[k]]) {
+                     else if (var[i] != ckey.stbrett.letters[var[i]] && var[k] != ckey.stbrett.letters[var[k]]) {
                        action = NONE;
-                       x = ckey.stbrett[var[i]];
-                       z = ckey.stbrett[var[k]];
-                       swap(ckey.stbrett, var[i], x);
-                       swap(ckey.stbrett, var[k], z);
+                       x = ckey.stbrett.letters[var[i]];
+                       z = ckey.stbrett.letters[var[k]];
+                       swap(&ckey.stbrett, var[i], x);
+                       swap(&ckey.stbrett, var[k], z);
 
-                       swap(ckey.stbrett, var[i], var[k]);
-                       a = sf.biscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[i], var[k]);
+                       a = sf.biscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IK;
                        }
-                       swap(ckey.stbrett, x, z);
-                       a = sf.biscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, x, z);
+                       a = sf.biscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IKXZ;
                        }
-                       swap(ckey.stbrett, x, z);
-                       swap(ckey.stbrett, var[i], var[k]);
+                       swap(&ckey.stbrett, x, z);
+                       swap(&ckey.stbrett, var[i], var[k]);
 
-                       swap(ckey.stbrett, var[i], z);
-                       a = sf.biscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[i], z);
+                       a = sf.biscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZ;
                        }
-                       swap(ckey.stbrett, x, var[k]);
-                       a = sf.biscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, x, var[k]);
+                       a = sf.biscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZXK;
                        }
-                       swap(ckey.stbrett, x, var[k]);
-                       swap(ckey.stbrett, var[i], z);
+                       swap(&ckey.stbrett, x, var[k]);
+                       swap(&ckey.stbrett, var[i], z);
 
                        switch (action) {
                          case IXKZ_IK:
-                           swap(ckey.stbrett, var[i], var[k]);
+                           swap(&ckey.stbrett, var[i], var[k]);
                            break;
                          case IXKZ_IZ:
-                           swap(ckey.stbrett, var[i], z);
+                           swap(&ckey.stbrett, var[i], z);
                            break;
                          case IXKZ_IKXZ:
-                           swap(ckey.stbrett, var[i], var[k]);
-                           swap(ckey.stbrett, x, z);
+                           swap(&ckey.stbrett, var[i], var[k]);
+                           swap(&ckey.stbrett, x, z);
                            break;
                          case IXKZ_IZXK:
-                           swap(ckey.stbrett, var[i], z);
-                           swap(ckey.stbrett, x, var[k]);
+                           swap(&ckey.stbrett, var[i], z);
+                           swap(&ckey.stbrett, x, var[k]);
                            break;
                          case NONE:
-                           swap(ckey.stbrett, var[i], x);
-                           swap(ckey.stbrett, var[k], z);
+                           swap(&ckey.stbrett, var[i], x);
+                           swap(&ckey.stbrett, var[k], z);
                            break;
                          default:
                            break;
@@ -552,144 +552,144 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  }
 
 
-                 bestscore = sf.triscore(ckey.stbrett, len);
+                 bestscore = sf.triscore(&ckey.stbrett, len);
                  for (i = 0; i < 26; i++) {
                    for (k = i+1; k < 26; k++) {
-                     if ( (var[i] == ckey.stbrett[var[i]] && var[k] == ckey.stbrett[var[k]])
-                        ||(var[i] == ckey.stbrett[var[k]] && var[k] == ckey.stbrett[var[i]]) ) {
-                       swap(ckey.stbrett, var[i], var[k]);
-                       a = sf.triscore(ckey.stbrett, len);
+                     if ( (var[i] == ckey.stbrett.letters[var[i]] && var[k] == ckey.stbrett.letters[var[k]])
+                        ||(var[i] == ckey.stbrett.letters[var[k]] && var[k] == ckey.stbrett.letters[var[i]]) ) {
+                       swap(&ckey.stbrett, var[i], var[k]);
+                       a = sf.triscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          continue;
                        }
-                       swap(ckey.stbrett, var[i], var[k]);
+                       swap(&ckey.stbrett, var[i], var[k]);
                      }
-                     else if (var[i] == ckey.stbrett[var[i]] && var[k] != ckey.stbrett[var[k]]) {
+                     else if (var[i] == ckey.stbrett.letters[var[i]] && var[k] != ckey.stbrett.letters[var[k]]) {
                        action = NONE;
-                       z = ckey.stbrett[var[k]];
-                       swap(ckey.stbrett, var[k], z);
+                       z = ckey.stbrett.letters[var[k]];
+                       swap(&ckey.stbrett, var[k], z);
 
-                       swap(ckey.stbrett, var[i], var[k]);
-                       a = sf.triscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[i], var[k]);
+                       a = sf.triscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IK;
                        }
-                       swap(ckey.stbrett, var[i], var[k]);
+                       swap(&ckey.stbrett, var[i], var[k]);
 
-                       swap(ckey.stbrett, var[i], z);
-                       a = sf.triscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[i], z);
+                       a = sf.triscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = KZ_IZ;
                        }
-                       swap(ckey.stbrett, var[i], z);
+                       swap(&ckey.stbrett, var[i], z);
 
                        switch (action) {
                          case KZ_IK:
-                           swap(ckey.stbrett, var[i], var[k]);
+                           swap(&ckey.stbrett, var[i], var[k]);
                            break;
                          case KZ_IZ:
-                           swap(ckey.stbrett, var[i], z);
+                           swap(&ckey.stbrett, var[i], z);
                            break;
                          case NONE:
-                           swap(ckey.stbrett, var[k], z);
+                           swap(&ckey.stbrett, var[k], z);
                            break;
                          default:
                            break;
                        }
                      }
-                     else if (var[k] == ckey.stbrett[var[k]] && var[i] != ckey.stbrett[var[i]]) {
+                     else if (var[k] == ckey.stbrett.letters[var[k]] && var[i] != ckey.stbrett.letters[var[i]]) {
                        action = NONE;
-                       x = ckey.stbrett[var[i]];
-                       swap(ckey.stbrett, var[i], x);
+                       x = ckey.stbrett.letters[var[i]];
+                       swap(&ckey.stbrett, var[i], x);
 
-                       swap(ckey.stbrett, var[k], var[i]);
-                       a = sf.triscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[k], var[i]);
+                       a = sf.triscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KI;
                        }
-                       swap(ckey.stbrett, var[k], var[i]);
+                       swap(&ckey.stbrett, var[k], var[i]);
 
-                       swap(ckey.stbrett, var[k], x);
-                       a = sf.triscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[k], x);
+                       a = sf.triscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IX_KX;
                        }
-                       swap(ckey.stbrett, var[k], x);
+                       swap(&ckey.stbrett, var[k], x);
 
                        switch (action) {
                          case IX_KI:
-                           swap(ckey.stbrett, var[k], var[i]);
+                           swap(&ckey.stbrett, var[k], var[i]);
                            break;
                          case IX_KX:
-                           swap(ckey.stbrett, var[k], x);
+                           swap(&ckey.stbrett, var[k], x);
                            break;
                          case NONE:
-                           swap(ckey.stbrett, var[i], x);
+                           swap(&ckey.stbrett, var[i], x);
                            break;
                          default:
                            break;
                        }
                      }
-                     else if (var[i] != ckey.stbrett[var[i]] && var[k] != ckey.stbrett[var[k]]) {
+                     else if (var[i] != ckey.stbrett.letters[var[i]] && var[k] != ckey.stbrett.letters[var[k]]) {
                        action = NONE;
-                       x = ckey.stbrett[var[i]];
-                       z = ckey.stbrett[var[k]];
-                       swap(ckey.stbrett, var[i], x);
-                       swap(ckey.stbrett, var[k], z);
+                       x = ckey.stbrett.letters[var[i]];
+                       z = ckey.stbrett.letters[var[k]];
+                       swap(&ckey.stbrett, var[i], x);
+                       swap(&ckey.stbrett, var[k], z);
 
-                       swap(ckey.stbrett, var[i], var[k]);
-                       a = sf.triscore(ckey.stbrett,  len);
+                       swap(&ckey.stbrett, var[i], var[k]);
+                       a = sf.triscore(&ckey.stbrett,  len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IK;
                        }
-                       swap(ckey.stbrett, x, z);
-                       a = sf.triscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, x, z);
+                       a = sf.triscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IKXZ;
                        }
-                       swap(ckey.stbrett, x, z);
-                       swap(ckey.stbrett, var[i], var[k]);
+                       swap(&ckey.stbrett, x, z);
+                       swap(&ckey.stbrett, var[i], var[k]);
 
-                       swap(ckey.stbrett, var[i], z);
-                       a = sf.triscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, var[i], z);
+                       a = sf.triscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZ;
                        }
-                       swap(ckey.stbrett, x, var[k]);
-                       a = sf.triscore(ckey.stbrett, len);
+                       swap(&ckey.stbrett, x, var[k]);
+                       a = sf.triscore(&ckey.stbrett, len);
                        if (a > bestscore) {
                          bestscore = a;
                          action = IXKZ_IZXK;
                        }
-                       swap(ckey.stbrett, x, var[k]);
-                       swap(ckey.stbrett, var[i], z);
+                       swap(&ckey.stbrett, x, var[k]);
+                       swap(&ckey.stbrett, var[i], z);
 
                        switch (action) {
                          case IXKZ_IK:
-                           swap(ckey.stbrett, var[i], var[k]);
+                           swap(&ckey.stbrett, var[i], var[k]);
                            break;
                          case IXKZ_IZ:
-                           swap(ckey.stbrett, var[i], z);
+                           swap(&ckey.stbrett, var[i], z);
                            break;
                          case IXKZ_IKXZ:
-                           swap(ckey.stbrett, var[i], var[k]);
-                           swap(ckey.stbrett, x, z);
+                           swap(&ckey.stbrett, var[i], var[k]);
+                           swap(&ckey.stbrett, x, z);
                            break;
                          case IXKZ_IZXK:
-                           swap(ckey.stbrett, var[i], z);
-                           swap(ckey.stbrett, x, var[k]);
+                           swap(&ckey.stbrett, var[i], z);
+                           swap(&ckey.stbrett, x, var[k]);
                            break;
                          case NONE:
-                           swap(ckey.stbrett, var[i], x);
-                           swap(ckey.stbrett, var[k], z);
+                           swap(&ckey.stbrett, var[i], x);
+                           swap(&ckey.stbrett, var[k], z);
                            break;
                          default:
                            break;
@@ -699,7 +699,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  }
 
 
-                 a = sf.triscore(ckey.stbrett, len) + sf.biscore(ckey.stbrett, len);
+                 a = sf.triscore(&ckey.stbrett, len) + sf.biscore(&ckey.stbrett, len);
                  if (a > jbestscore) {
                    jbestscore = a;
                    newtop = 1;
@@ -709,7 +709,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 
                get_stecker(&ckey);
-               bestscore = sf.triscore(ckey.stbrett, len);
+               bestscore = sf.triscore(&ckey.stbrett, len);
 
                newtop = 1;
 
@@ -721,10 +721,10 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  /* try reswapping each self-steckered with each pair,
                   * steepest ascent */
                  for (i = 0; i < ckey.count; i += 2) {
-                   swap(ckey.stbrett, ckey.sf[i], ckey.sf[i+1]);
+                   swap(&ckey.stbrett, ckey.sf[i], ckey.sf[i+1]);
                    for (k = ckey.count; k < 26; k++) {
-                     swap(ckey.stbrett, ckey.sf[i], ckey.sf[k]);
-                     a = sf.triscore(ckey.stbrett, len);
+                     swap(&ckey.stbrett, ckey.sf[i], ckey.sf[k]);
+                     a = sf.triscore(&ckey.stbrett, len);
                      if (a > bestscore) {
                        newtop = 1;
                        action = RESWAP;
@@ -734,9 +734,9 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        ch.s1 = k;
                        ch.s2 = i;
                      }
-                     swap(ckey.stbrett, ckey.sf[i], ckey.sf[k]);
-                     swap(ckey.stbrett, ckey.sf[i+1], ckey.sf[k]);
-                     a = sf.triscore(ckey.stbrett, len);
+                     swap(&ckey.stbrett, ckey.sf[i], ckey.sf[k]);
+                     swap(&ckey.stbrett, ckey.sf[i+1], ckey.sf[k]);
+                     a = sf.triscore(&ckey.stbrett, len);
                      if (a > bestscore) {
                        newtop = 1;
                        action = RESWAP;
@@ -746,13 +746,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        ch.s1 = k;
                        ch.s2 = i+1;
                      }
-                     swap(ckey.stbrett, ckey.sf[i+1], ckey.sf[k]);
+                     swap(&ckey.stbrett, ckey.sf[i+1], ckey.sf[k]);
                    }
-                   swap(ckey.stbrett, ckey.sf[i], ckey.sf[i+1]);
+                   swap(&ckey.stbrett, ckey.sf[i], ckey.sf[i+1]);
                  }
                  if (action == RESWAP) {
-                   swap(ckey.stbrett, ckey.sf[ch.u1], ckey.sf[ch.u2]);
-                   swap(ckey.stbrett, ckey.sf[ch.s1], ckey.sf[ch.s2]);
+                   swap(&ckey.stbrett, ckey.sf[ch.u1], ckey.sf[ch.u2]);
+                   swap(&ckey.stbrett, ckey.sf[ch.s1], ckey.sf[ch.s2]);
                    get_stecker(&ckey);
                  }
                  action = NONE;
@@ -766,7 +766,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  gkey = ckey;
                  gkey.score = bestscore;
                  print_key(outfile, &gkey);
-                 print_plaintext(outfile, gkey.stbrett, len);
+                 print_plaintext(outfile, &gkey.stbrett, len);
                  if (ferror(outfile) != 0) {
                    fputs("enigma: error: writing to result file failed\n", stderr);
                    exit(EXIT_FAILURE);

@@ -3,9 +3,20 @@
 
 #include <stdint.h>
 
+#include "global.h"
 #include "config\types.h"
 
-typedef struct {
+typedef union _DecodeMapping
+{
+    v32qi whole;
+
+    v16qi half[2];
+
+    text_t letters[32];
+} decode_mapping_t;
+
+typedef struct _key_t
+{
         int model;
         int ukwnum;
         int g_slot;
@@ -20,7 +31,7 @@ typedef struct {
         int l_mesg;     /* message settings */
         int m_mesg;
         int r_mesg;
-        text_t stbrett[26];
+        ALIGNED_16(decode_mapping_t stbrett);
         text_t sf[26];     /* swapped/free letters */
         int count;      /* number of swapped letters */
         int score;      /* hillclimbing score */

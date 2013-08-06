@@ -4,14 +4,13 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "cpu.h"
 #include "global.h"
 #include "key.h"
 #include "config\array_sizes.h"
 #include "config\types.h"
 
 int scrambler_state(const Key *key, int len);
-void init_path_lookup_H_M3(const Key *key, int len);
-void init_path_lookup_ALL(const Key *key, int len);
 double dgetic_ALL(const Key *key, int len);
 void en_deciph_stdin_ALL(FILE *file, const Key *key);
 
@@ -23,10 +22,20 @@ typedef struct _enigma_cipher_function_t
     enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup_ALL;
 } enigma_cipher_function_t;
 
-void enigma_cipher_init(int cpu, int machine_type, enigma_prepare_decoder_lookup_function_pt* cf);
+void enigma_cipher_init(enigma_cpu_flags_t cpu, int machine_type, enigma_prepare_decoder_lookup_function_pt* cf);
 
+extern enigma_cipher_function_t enigma_cipher_decoder_lookup;
 extern text_t ciphertext[];
 extern text_t path_lookup[CT][LAST_DIMENSION];
+
+/*
+ * decoders common data
+ *************************/
+extern text_t wal_turn[9];
+extern text_t     wal[11][78] ;
+extern text_t rev_wal[11][78];
+extern text_t ukw[5][52];
+extern text_t etw[52];
 
 // (&ciphertext[x])[i]; is a synonyme to: ciphertext[x+i];
 // and is useful where ciphertext[x] can be calculated at compilation time.

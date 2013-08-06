@@ -5,9 +5,9 @@
 /* initialize key to defaults */
 int init_key_default(Key *key, int model)
 {
-  Key def_H  = {H, 1,0,1,2,3,0,0,0,0,0,0,0,0,{0},{0},0,0};
-  Key def_M3 = {M3,1,0,1,2,3,0,0,0,0,0,0,0,0,{0},{0},0,0};
-  Key def_M4 = {M4,3,9,1,2,3,0,0,0,0,0,0,0,0,{0},{0},0,0};
+  Key def_H  = {H, 1,0,1,2,3,0,0,0,0,0,0,0,0,{{0}},{0},0,0};
+  Key def_M3 = {M3,1,0,1,2,3,0,0,0,0,0,0,0,0,{{0}},{0},0,0};
+  Key def_M4 = {M4,3,9,1,2,3,0,0,0,0,0,0,0,0,{{0}},{0},0,0};
 
   int i;
 
@@ -17,20 +17,20 @@ int init_key_default(Key *key, int model)
     case M4: *key = def_M4; break;
     default: return 0;
   }
-  
+
   for (i = 0; i < 26; i++)
-    key->stbrett[i] = key->sf[i] = i;
+    key->stbrett.letters[i] = key->sf[i] = i;
 
   return 1;
 
-}  
+}
 
 /* initializes each key element to the lowest possible value */
 int init_key_low(Key *key, int model)
 {
-    Key low_H  = {H, 0,0,1,1,1,0,0,0,0,0,0,0,0,{0},{0},0,0};
-    Key low_M3 = {M3,1,0,1,1,1,0,0,0,0,0,0,0,0,{0},{0},0,0};
-    Key low_M4 = {M4,3,9,1,1,1,0,0,0,0,0,0,0,0,{0},{0},0,0};
+    Key low_H  = {H, 0,0,1,1,1,0,0,0,0,0,0,0,0,{{0}},{0},0,0};
+    Key low_M3 = {M3,1,0,1,1,1,0,0,0,0,0,0,0,0,{{0}},{0},0,0};
+    Key low_M4 = {M4,3,9,1,1,1,0,0,0,0,0,0,0,0,{{0}},{0},0,0};
 
     int i;
 
@@ -43,7 +43,7 @@ int init_key_low(Key *key, int model)
     }
 
     for (i = 0; i < 26; i++)
-      key->stbrett[i] = key->sf[i] = i;
+      key->stbrett.letters[i] = key->sf[i] = i;
 
     return 1;
 
@@ -108,5 +108,5 @@ int keycmp(const Key *k1, const Key *k2)
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */
