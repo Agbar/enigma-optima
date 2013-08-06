@@ -25,9 +25,6 @@
 #include <windows.h>
 #endif
 
-
-extern text_t path_lookup[][LAST_DIMENSION];
-
 #ifndef WINDOWS
 struct sigaction sigact;
 #endif
