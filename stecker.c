@@ -9,15 +9,8 @@
 #include "config\types.h"
 
 
-/* swaps letters */
-void swap(decode_mapping_t *stbrett, int i, int k)
-{
-  text_t store;
-
-  store = stbrett->letters[i];
-  stbrett->letters[i] = stbrett->letters[k];
-  stbrett->letters[k] = store;
-}
+// extern definition for external linkage.
+extern void swap(decode_mapping_t *stbrett, int i, int k);
 
 /* extracts stecker from key->stbrett to key->sf */
 void get_stecker(Key *key)
