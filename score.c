@@ -1,3 +1,5 @@
+#include <stdbool.h>
+#include <string.h>
 #include "cpu.h"
 #include "cipher.h"
 #include "dict.h"
@@ -9,6 +11,10 @@
 
 #include "score_simple.h"
 #include "x86\score_ssse3.h"
+
+#ifdef TESTING_SCORE
+# include "ScoreTesting.h"
+#endif
 
 /* declaration of internal functions */
 void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict from);
@@ -24,55 +30,6 @@ enigma_score_function_t enigma_score_opt    = { triscore, biscore, icscore, unis
 
 union ScoringDecodedMessage decodedMessageStandard_d;
 
-typedef struct _enigma_score_testing_t
-{
-    enigma_score_function_t functions;
-    enigma_score_function_t* reference;
-    enigma_score_function_t* tested;
-} enigma_score_testing_t ;
-
-/** \brief Defines function used to testing one implementation of score function against the other.
- *
- * \param TESTING_FUNCTION_NAME Name of function implemented by this macro.
- * \param TESTING_OBJECT_INSTANCE instance of enigma_score_testing_t used by implementation.
- * \param FUNCTION_NAME tested function selected from enigma_score_function_t (triscore, biscore...).
- * \param RETURN_T type returned by tested function: int or double.
- *
- */
-#define SCORE_TESTING_FUNCTION_ALWAYS_TEST_BOTH(TESTING_FUNCTION_NAME, TESTING_OBJECT_INSTANCE, FUNCTION_NAME, RETURN_T)\
-static RETURN_T TESTING_FUNCTION_NAME(const Key* const restrict key, int len)\
-{\
-    RETURN_T score = TESTING_OBJECT_INSTANCE.tested->FUNCTION_NAME(key, len);\
-    RETURN_T reference_score = TESTING_OBJECT_INSTANCE.reference->FUNCTION_NAME(key, len);\
-    if ( score != reference_score )\
-    {\
-    }\
-    return reference_score;\
-}
-
-#define SCORE_TESTING_FUNCTION(NAME_PREFIX,NAME_SUFFIX,IMPL_MACRO )\
-extern enigma_score_testing_t NAME_PREFIX##NAME_SUFFIX;\
-\
-IMPL_MACRO(NAME_PREFIX##_triscore##NAME_SUFFIX, CCAT(NAME_PREFIX,NAME_SUFFIX), triscore, int)\
-IMPL_MACRO(NAME_PREFIX## _biscore##NAME_SUFFIX, CCAT(NAME_PREFIX,NAME_SUFFIX),  biscore, int)\
-IMPL_MACRO(NAME_PREFIX## _icscore##NAME_SUFFIX, CCAT(NAME_PREFIX,NAME_SUFFIX),  icscore, double)\
-IMPL_MACRO(NAME_PREFIX##_uniscore##NAME_SUFFIX, CCAT(NAME_PREFIX,NAME_SUFFIX), uniscore, int)\
-\
-enigma_score_testing_t NAME_PREFIX##NAME_SUFFIX = {\
-    {\
-        NAME_PREFIX##_triscore##NAME_SUFFIX,\
-        NAME_PREFIX## _biscore##NAME_SUFFIX,\
-        NAME_PREFIX## _icscore##NAME_SUFFIX,\
-        NAME_PREFIX##_uniscore##NAME_SUFFIX,\
-    },\
-    0,0\
-};
-
-#define SCORE_TESTING_PREFIX enigma_score_testing
-#define CCAT(A,B) A##B
-
-SCORE_TESTING_FUNCTION(enigma_score_testing, _always_both, SCORE_TESTING_FUNCTION_ALWAYS_TEST_BOTH);
-
 inline
 void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict prototype)
 {
@@ -80,14 +37,6 @@ void enigma_score_function_copy(enigma_score_function_t* restrict to, const enig
     to->biscore  = prototype->biscore;
     to->icscore  = prototype->icscore;
     to->uniscore = prototype->uniscore;
-}
-
-//inline
-void enigma_score_testing_create(enigma_score_testing_t* this, enigma_score_function_t* reference, enigma_score_function_t* tested)
-{
-    // this->funciotns is set up automagically by macro
-    this->reference = reference;
-    this->tested  = tested;
 }
 
 void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
@@ -104,12 +53,11 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
         enigma_score_function_copy(sf,&enigma_score_ssse3);
 
 # ifdef TESTING_SCORE
-        enigma_score_testing_create(&CCAT(SCORE_TESTING_PREFIX,_always_both), &enigma_score_opt, &enigma_score_ssse3);
-        enigma_score_function_copy(sf,&CCAT(SCORE_TESTING_PREFIX,_always_both).functions);
+        enigma_score_function_t* test = enigma_score_testing_create( EnigmaSF_Optimized, EnigmaSF_SSSE3 );
+        enigma_score_function_copy(sf,test);
 # endif
     }
 }
-
 
 /*
  * opti scores
@@ -473,6 +421,20 @@ void DecodeScoredMessagePartStandard(const Key* const restrict key, int len, uni
     for( ; i < len; ++i ){
         output->plain[i] = decode( 0, i, &key->stbrett );
     }
+}
+
+bool GetDifferences( union ScoringDecodedMessage* restrict reference, union ScoringDecodedMessage* restrict tested, char* restrict output, int len ){
+    char* ref = (char*)reference->plain;
+    char* tes = (char*)tested->plain;
+    int   i   = 0;
+    bool  differenceSpotted = false;
+    for( ; i < len; ++i ){
+        if( ref[i] != tes[i] ){
+            output[i] = '^';
+            differenceSpotted = true;
+        }
+    }
+    return differenceSpotted;
 }
 
 /*
