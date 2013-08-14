@@ -1,11 +1,18 @@
 #ifndef SCORE_H
 #define SCORE_H
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 
 #include "cpu.h"
 #include "key.h"
+#include "cipher.h"
+
+// skip 'restrict' C keyword in C++
+#ifdef __cplusplus
+# define restrict
+#endif
 
 typedef struct _enigma_score_function_t{
     int    (*triscore) (const Key* const restrict key, int len);
@@ -13,6 +20,15 @@ typedef struct _enigma_score_function_t{
     double (* icscore) (const Key* const restrict key, int len);
     int    (*uniscore) (const Key* const restrict key, int len);
 } enigma_score_function_t;
+
+// Flags are used to allow combining.
+enum EnigmaScoreFunctions_t {
+    EnigmaSF_Default    = 0, ///< Default means not set.
+    EnigmaSF_Original   = 1,
+    EnigmaSF_Simple     = 2,
+    EnigmaSF_Optimized  = 4,
+    EnigmaSF_SSSE3      = 8,
+};
 
 // Initializes sf based on current cpu features.
 /** \brief
@@ -55,8 +71,9 @@ void PrintDecodedMessage( FILE* stream, union ScoringDecodedMessage* message, in
 
 void DecodeScoredMessagePartStandard(const Key* const restrict key, int len, union ScoringDecodedMessage* restrict output);
 
-#endif
+bool GetDifferences( union ScoringDecodedMessage* restrict reference, union ScoringDecodedMessage* restrict tested, char* restrict output, int len );
 
+#endif
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
