@@ -26,7 +26,6 @@ double icscore_simple(const Key* const restrict key, int len)
 
   for (i = 0; i < len; i++) {
     c = decode(0,i,stbrett);
-    S += unidict[c];
     f[c]++;
   }
 
