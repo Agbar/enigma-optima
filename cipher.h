@@ -45,7 +45,7 @@ extern text_t etw[52];
 // path_lookup[Offset+Index][(Cx)];
 #ifdef INLINE_IS_FAST
 inline
-text_t decode(size_t offset,size_t index, const decode_mapping_t* const stbrett)
+text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett)
 {
     text_t c;
     c = (&ciphertext.plain[offset])[index];

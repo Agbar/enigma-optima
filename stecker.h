@@ -11,7 +11,7 @@ void rand_var(text_t var[]);
 void set_to_ct_freq(text_t var[], int len);
 
 /* swaps letters */
-inline void swap(decode_mapping_t *stbrett, int i, int k)
+inline void swap(PermutationMap_t *stbrett, int i, int k)
 {
   text_t store;
 

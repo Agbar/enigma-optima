@@ -124,7 +124,7 @@ static double icscore(const Key* const restrict key, int len)
   if (len < 2)
     return 0;
 
-  const decode_mapping_t* stbrett = &key->stbrett;
+  const PermutationMap_t* stbrett = &key->stbrett;
 
   for (i = 0; i < len-15; i += 16) {
     c1 = decode(0,i,stbrett);
@@ -214,7 +214,7 @@ static int uniscore(const Key* key, int len)
   text_t c;
   int s;
 
-  const decode_mapping_t* stbrett = &key->stbrett;
+  const PermutationMap_t* stbrett = &key->stbrett;
 
   s = 0;
   for (i = 0; i < len-15; i += 16) {
@@ -295,7 +295,7 @@ int biscore(const Key* const restrict key, int len)
   text_t c1, c2;
   int s = 0;
 
-  const decode_mapping_t* const stbrett = &key->stbrett;
+  const PermutationMap_t* const stbrett = &key->stbrett;
 
   c1 = decode(0,0,stbrett);
 
@@ -379,7 +379,7 @@ int triscore(const Key* const restrict key, int len)
   text_t c1, c2, c3;
   int s;
 
-  const decode_mapping_t* const stbrett = &key->stbrett;
+  const PermutationMap_t* const stbrett = &key->stbrett;
 
   s=0;
 

@@ -6,14 +6,14 @@
 #include "global.h"
 #include "config\types.h"
 
-typedef union _DecodeMapping
+typedef union _PermutationMap_t
 {
     v32qi whole;
 
     v16qi half[2];
 
     text_t letters[32];
-} decode_mapping_t;
+} PermutationMap_t;
 
 typedef struct _key_t
 {
@@ -43,7 +43,7 @@ typedef struct _key_t
             text_t m_mesg;
             text_t r_mesg;
         };
-        ALIGNED_16(decode_mapping_t stbrett);
+        ALIGNED_16(PermutationMap_t stbrett);
         text_t sf[26];     /* swapped/free letters */
         int count;      /* number of swapped letters */
         int score;      /* hillclimbing score */
