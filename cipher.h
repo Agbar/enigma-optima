@@ -8,8 +8,16 @@
 #include "cpu.h"
 #include "global.h"
 #include "key.h"
+#include "ModMath.h"
 #include "config\array_sizes.h"
 #include "config\types.h"
+
+struct Turnovers_t {
+    int8_t r,
+     r2,
+     m,
+     m2;
+};
 
 int scrambler_state(const Key *key, int len);
 double dgetic_ALL(const Key *key, int len);
@@ -37,6 +45,8 @@ extern text_t rev_wal[11][78];
 extern text_t ukw[5][52];
 extern text_t etw[52];
 
+extern union ScoringDecodedMessage decodedMessageStandard_d;
+
 // (&ciphertext[x])[i]; is a synonyme to: ciphertext[x+i];
 // and is useful where ciphertext[x] can be calculated at compilation time.
 //
@@ -63,6 +73,12 @@ text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett)
     Cx = stbrett[(Cx)];
 
 #endif
+
+inline
+void Step1( int8_t* ringOffset )
+{
+    IncrementMod( ringOffset, 26 );
+}
 
 #endif
 

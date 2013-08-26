@@ -6,6 +6,8 @@
 #include "global.h"
 #include "config\types.h"
 
+/* PermutationMap
+ * * * * * * * * */
 typedef union _PermutationMap_t
 {
     v32qi whole;
@@ -15,6 +17,24 @@ typedef union _PermutationMap_t
     text_t letters[32];
 } PermutationMap_t;
 
+inline
+void FixPermutationMapTail(PermutationMap_t* mapping){
+    int k = 26;
+    for(; k < 32; k++)
+    {
+        mapping->letters[k] = mapping->letters[k-26];
+    }
+}
+
+/* RingsState
+ * * * * * * */
+struct RingsState
+{
+    int8_t g, l, m, r;
+};
+
+/* Key
+ * * * */
 typedef struct _key_t
 {
         int model;

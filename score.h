@@ -1,6 +1,7 @@
 #ifndef SCORE_H
 #define SCORE_H
 
+#include <stdio.h>
 #include <stdint.h>
 
 #include "cpu.h"
@@ -34,6 +35,25 @@ extern enigma_score_function_t enigma_score_orig;
 extern enigma_score_function_t enigma_score_opt;
 
 int get_triscore(const Key *key, int len);
+
+union ScoringDecodedMessage
+{
+#if ((((CT)+15)/16) * 16) != (((CT)+15)&~15)
+# error Wrong ScoringDecodedMessage member sizes.
+#endif
+    v16qi vector16[(CT+15)/16];
+    text_t plain[(CT+15)&~15];
+};
+
+inline
+void PrintDecodedMessage( FILE* stream, union ScoringDecodedMessage* message, int length ){
+    int i = 0;
+    for ( ; i< length; ++i ){
+        fputc( message->plain[i] + 'A', stream );
+    }
+}
+
+void DecodeScoredMessagePartStandard(const Key* const restrict key, int len, union ScoringDecodedMessage* restrict output);
 
 #endif
 

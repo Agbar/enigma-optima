@@ -22,6 +22,7 @@ static int   triscore(const Key* const restrict key, int len);
 enigma_score_function_t enigma_score_orig;
 enigma_score_function_t enigma_score_opt    = { triscore, biscore, icscore, uniscore };
 
+union ScoringDecodedMessage decodedMessageStandard_d;
 
 typedef struct _enigma_score_testing_t
 {
@@ -465,6 +466,13 @@ int triscore(const Key* const restrict key, int len)
 
   return s;
 
+}
+
+void DecodeScoredMessagePartStandard(const Key* const restrict key, int len, union ScoringDecodedMessage* restrict output){
+    int i = 0;
+    for( ; i < len; ++i ){
+        output->plain[i] = decode( 0, i, &key->stbrett );
+    }
 }
 
 /*
