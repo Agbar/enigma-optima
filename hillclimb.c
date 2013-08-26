@@ -151,7 +151,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
   if (resume) {
 #ifdef WINDOWS
-#if PRIORITY == LOW
+#ifdef LOW_PRIORITY
     if (SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS) == 0)
       fputs("enigma: warning: could not set process priority to idle\n", stderr);
     if (SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_IDLE) == 0)

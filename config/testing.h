@@ -14,7 +14,7 @@
 #endif
 
 #if !defined PROFILING && !defined TESTING && !defined DEBUG
-#  define PRIORITY LOW
+#  define  LOW_PRIORITY
 #endif
 
 #endif // TESTING_H_INCLUDED
