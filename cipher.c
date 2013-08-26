@@ -670,6 +670,7 @@ void en_deciph_stdin_ALL(FILE *file, const Key *key)
 
 }
 
+extern void Step1( int8_t* ringOffset );
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
