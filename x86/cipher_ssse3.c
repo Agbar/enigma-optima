@@ -104,16 +104,9 @@ inline extern void StepAllRings( struct RingsState* restrict rings, struct Turno
 
 inline extern void CopyRRing2Lookup( const Key* const restrict key )
 {
-    int i;
     // setup r_rings forward and backward.
-    for( i = 0; i < 32; i++ )
-    {
-        PathLookupSsse3.r_ring[0].letters[i] = wal[key->r_slot][i];
-    }
-    for( i = 0; i < 32; i++ )
-    {
-        PathLookupSsse3.r_ring[1].letters[i] = rev_wal[key->r_slot][i];
-    }
+    memcpy( PathLookupSsse3.r_ring[0].letters, wal[key->r_slot], 32 );
+    memcpy( PathLookupSsse3.r_ring[1].letters, rev_wal[key->r_slot], 32 );
 }
 
 
