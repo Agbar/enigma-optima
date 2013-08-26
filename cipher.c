@@ -16,7 +16,7 @@
 void init_path_lookup_H_M3(const Key *key, int len);
 void init_path_lookup_ALL(const Key *key, int len);
 
-extern text_t decode(size_t offset,size_t index, const decode_mapping_t* const stbrett);
+extern text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett);
 
 /* Eintrittswalze */
 text_t etw[52] =
