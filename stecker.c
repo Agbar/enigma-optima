@@ -2,21 +2,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "ciphertext.h"
 #include "global.h"
 #include "key.h"
 #include "stecker.h"
 #include "config\types.h"
 
 
-/* swaps letters */
-void swap(text_t stbrett[], int i, int k)
-{
-  text_t store;
-
-  store = stbrett[i];
-  stbrett[i] = stbrett[k];
-  stbrett[k] = store;
-}
+// extern definition for external linkage.
+extern void swap(decode_mapping_t *stbrett, int i, int k);
 
 /* extracts stecker from key->stbrett to key->sf */
 void get_stecker(Key *key)
@@ -25,11 +19,11 @@ void get_stecker(Key *key)
 
   key->count = 0;
   for (i = 0; i < 26; i++) {
-    if (key->stbrett[i] > i) {
+    if (key->stbrett.letters[i] > i) {
       key->sf[key->count++] = i;
-      key->sf[key->count++] = key->stbrett[i];
+      key->sf[key->count++] = key->stbrett.letters[i];
     }
-    else if (key->stbrett[i] == i) {
+    else if (key->stbrett.letters[i] == i) {
       key->sf[k--] = i;
     }
   }
@@ -58,7 +52,7 @@ void rand_var(text_t var[])
 }
 
 /* arrange var[] in order of frequency of letters in ciphertext */
-void set_to_ct_freq(text_t var[], const text_t *ciphertext, int len)
+void set_to_ct_freq(text_t var[], int len)
 {
   int f[26] = {0};
   int i, k, c;
@@ -66,7 +60,7 @@ void set_to_ct_freq(text_t var[], const text_t *ciphertext, int len)
   int n = 0;
 
   for (i = 0; i < len; i++) {
-    c = ciphertext[i];
+    c = ciphertext.plain[i];
     f[c]++;
   }
 

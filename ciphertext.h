@@ -2,8 +2,18 @@
 #define CIPHERTEXT_H
 
 #include <stdint.h>
+#include "config/types.h"
 
-uint8_t *load_ciphertext(const char *filename, int *len, int resume);
+void load_ciphertext(const char *filename, int *len, int resume);
+
+typedef union _Ciphertext
+{
+    text_t plain[2048];
+    v16qi  vector16[128];
+    v32qi  vector32[64];
+} ciphertext_t;
+
+extern ciphertext_t ciphertext;
 
 #endif
 

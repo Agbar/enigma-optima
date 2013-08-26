@@ -1,121 +1,120 @@
+#include "cpu.h"
 #include "cipher.h"
+#include "dict.h"
 #include "key.h"
 #include "score.h"
+#include "ciphertext.h"
 #include "config\array_sizes.h"
 #include "config\types.h"
 
-extern dict_t tridict[][LAST_DIMENSION][LAST_DIMENSION];
-extern dict_t bidict[][LAST_DIMENSION];
-extern dict_t unidict[26];
-extern text_t path_lookup[][LAST_DIMENSION];
+#include "score_simple.h"
+#include "x86\score_ssse3.h"
 
-const size_t d = LAST_DIMENSION; //last dimension size
+/* declaration of internal functions */
+void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict from);
 
-/* returns the trigram score of a key/ciphertext combination */
-int get_triscore(const Key *key, const text_t *ciphertext, int len)
+// default scores
+static double icscore(const Key* const restrict key, int len);
+static int   uniscore(const Key* const restrict key, int len);
+static int    biscore(const Key* const restrict key, int len);
+static int   triscore(const Key* const restrict key, int len);
+
+enigma_score_function_t enigma_score_orig;
+enigma_score_function_t enigma_score_opt    = { triscore, biscore, icscore, uniscore };
+
+
+typedef struct _enigma_score_testing_t
 {
-  init_path_lookup_ALL(key, len);
-  return triscore(key->stbrett, ciphertext, len);
+    enigma_score_function_t functions;
+    enigma_score_function_t* reference;
+    enigma_score_function_t* tested;
+} enigma_score_testing_t ;
+
+/** \brief Defines function used to testing one implementation of score function against the other.
+ *
+ * \param TESTING_FUNCTION_NAME Name of function implemented by this macro.
+ * \param TESTING_OBJECT_INSTANCE instance of enigma_score_testing_t used by implementation.
+ * \param FUNCTION_NAME tested function selected from enigma_score_function_t (triscore, biscore...).
+ * \param RETURN_T type returned by tested function: int or double.
+ *
+ */
+#define SCORE_TESTING_FUNCTION_ALWAYS_TEST_BOTH(TESTING_FUNCTION_NAME, TESTING_OBJECT_INSTANCE, FUNCTION_NAME, RETURN_T)\
+static RETURN_T TESTING_FUNCTION_NAME(const Key* const restrict key, int len)\
+{\
+    RETURN_T score = TESTING_OBJECT_INSTANCE.tested->FUNCTION_NAME(key, len);\
+    RETURN_T reference_score = TESTING_OBJECT_INSTANCE.reference->FUNCTION_NAME(key, len);\
+    if ( score != reference_score )\
+    {\
+    }\
+    return reference_score;\
 }
 
-#ifdef SIMPLESCORE
-double icscore(const text_t *stbrett, const text_t *ciphertext, int len)
+#define SCORE_TESTING_FUNCTION(NAME_PREFIX,NAME_SUFFIX,IMPL_MACRO )\
+extern enigma_score_testing_t NAME_PREFIX##NAME_SUFFIX;\
+\
+IMPL_MACRO(NAME_PREFIX##_triscore##NAME_SUFFIX, CCAT(NAME_PREFIX,NAME_SUFFIX), triscore, int)\
+IMPL_MACRO(NAME_PREFIX## _biscore##NAME_SUFFIX, CCAT(NAME_PREFIX,NAME_SUFFIX),  biscore, int)\
+IMPL_MACRO(NAME_PREFIX## _icscore##NAME_SUFFIX, CCAT(NAME_PREFIX,NAME_SUFFIX),  icscore, double)\
+IMPL_MACRO(NAME_PREFIX##_uniscore##NAME_SUFFIX, CCAT(NAME_PREFIX,NAME_SUFFIX), uniscore, int)\
+\
+enigma_score_testing_t NAME_PREFIX##NAME_SUFFIX = {\
+    {\
+        NAME_PREFIX##_triscore##NAME_SUFFIX,\
+        NAME_PREFIX## _biscore##NAME_SUFFIX,\
+        NAME_PREFIX## _icscore##NAME_SUFFIX,\
+        NAME_PREFIX##_uniscore##NAME_SUFFIX,\
+    },\
+    0,0\
+};
+
+#define SCORE_TESTING_PREFIX enigma_score_testing
+#define CCAT(A,B) A##B
+
+SCORE_TESTING_FUNCTION(enigma_score_testing, _always_both, SCORE_TESTING_FUNCTION_ALWAYS_TEST_BOTH);
+
+inline
+void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict prototype)
 {
-  int f[26] = {0};
-  double S = 0;
-  int i;
-  int c;
+    to->triscore = prototype->triscore;
+    to->biscore  = prototype->biscore;
+    to->icscore  = prototype->icscore;
+    to->uniscore = prototype->uniscore;
+}
 
-  if (len < 2)
-    return 0;
+//inline
+void enigma_score_testing_create(enigma_score_testing_t* this, enigma_score_function_t* reference, enigma_score_function_t* tested)
+{
+    // this->funciotns is set up automagically by macro
+    this->reference = reference;
+    this->tested  = tested;
+}
 
-  for (i = 0; i < len; i++) {
-    c = stbrett[ciphertext[i]];
-    c = path_lookup[i][c];
-    c = stbrett[c];
-    f[c]++;
-  }
+void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
+{
+#ifdef ENIGMA_CPU_SPECIFIC
+    cpu = ENIGMA_CPU_SPECIFIC;
+#endif // ENIGMA_CPU_SPECIFIC
 
-  for (i = 0; i < 26; i++)
-    S += f[i]*(f[i]-1);
-  S /= len*(len-1);
+    enigma_score_function_copy(sf,&enigma_score_opt);
 
-  return S;
+
+    if (cpu & enigma_cpu_ssse3)
+    {
+        enigma_score_function_copy(sf,&enigma_score_ssse3);
+
+# ifdef TESTING_SCORE
+        enigma_score_testing_create(&CCAT(SCORE_TESTING_PREFIX,_always_both), &enigma_score_opt, &enigma_score_ssse3);
+        enigma_score_function_copy(sf,&CCAT(SCORE_TESTING_PREFIX,_always_both).functions);
+# endif
+    }
 }
 
 
-int uniscore(const text_t *stbrett, const text_t *ciphertext, int len)
-{
-  int i;
-  int c;
-  int s = 0;
-
-  for (i = 0; i < len; i++) {
-    c = stbrett[ciphertext[i]];
-    c = path_lookup[i][c];
-    c = stbrett[c];
-    s += unidict[c];
-  }
-
-  return s;
-}
-
-
-int biscore(const text_t *stbrett, const text_t *ciphertext, int len)
-{
-  int i;
-  int c1, c2;
-  int s = 0;
-
-  c1 = stbrett[ciphertext[0]];
-  c1 = path_lookup[0][c1];
-  c1 = stbrett[c1];
-
-  for (i = 1; i < len; i++) {
-    c2 = stbrett[ciphertext[i]];
-    c2 = path_lookup[i][c2];
-    c2 = stbrett[c2];
-    s += bidict[c1][c2];
-
-    c1 = c2;
-  }
-
-  return s;
-
-}
-
-int triscore(const text_t *stbrett, const text_t *ciphertext, int len)
-{
-  int i;
-  int c1, c2, c3;
-  int s = 0;
-
-  c1 = stbrett[ciphertext[0]];
-  c1 = path_lookup[0][c1];
-  c1 = stbrett[c1];
-
-  c2 = stbrett[ciphertext[1]];
-  c2 = path_lookup[1][c2];
-  c2 = stbrett[c2];
-
-  for (i = 2; i < len; i++) {
-    c3 = stbrett[ciphertext[i]];
-    c3 = path_lookup[i][c3];
-    c3 = stbrett[c3];
-    s += tridict[c1][c2][c3];
-
-    c1 = c2;
-    c2 = c3;
-  }
-
-  return s;
-}
-
-#endif
-
-
-#ifndef SIMPLESCORE
-double icscore(const text_t *stbrett, const text_t *ciphertext, int len)
+/*
+ * opti scores
+ ************************/
+__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
+static double icscore(const Key* const restrict key, int len)
 {
   int f[26] = {0};
   int S0, S1, S2, S3;
@@ -125,112 +124,72 @@ double icscore(const text_t *stbrett, const text_t *ciphertext, int len)
   if (len < 2)
     return 0;
 
+  const decode_mapping_t* stbrett = &key->stbrett;
+
   for (i = 0; i < len-15; i += 16) {
-    c1 = stbrett[ciphertext[i]];
-    c1 = path_lookup[i][c1];
-    c1 = stbrett[c1];
+    c1 = decode(0,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+1]];
-    c1 = path_lookup[1][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(1,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+2]];
-    c1 = path_lookup[2][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(2,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+3]];
-    c1 = path_lookup[3][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(3,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+4]];
-    c1 = path_lookup[4][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(4,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+5]];
-    c1 = path_lookup[5][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(5,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+6]];
-    c1 = path_lookup[6][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(6,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+7]];
-    c1 = path_lookup[7][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(7,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+8]];
-    c1 = path_lookup[8][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(8,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+9]];
-    c1 = path_lookup[9][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(9,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+10]];
-    c1 = path_lookup[10][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(10,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+11]];
-    c1 = path_lookup[11][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(11,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+12]];
-    c1 = path_lookup[12][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(12,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+13]];
-    c1 = path_lookup[13][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(13,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+14]];
-    c1 = path_lookup[14][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(14,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+15]];
-    c1 = path_lookup[15][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(15,i,stbrett);
     f[c1]++;
   }
   for (; i < len-3; i += 4) {
-    c1 = stbrett[ciphertext[i]];
-    c1 = path_lookup[i][c1];
-    c1 = stbrett[c1];
+    c1 = decode(0,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+1]];
-    c1 = path_lookup[1][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(1,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+2]];
-    c1 = path_lookup[2][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(2,i,stbrett);
     f[c1]++;
 
-    c1 = stbrett[ciphertext[i+3]];
-    c1 = path_lookup[3][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(3,i,stbrett);
     f[c1]++;
   }
   for (; i < len; i++) {
-    c1 = stbrett[ciphertext[i]];
-    c1 = path_lookup[i][c1];
-    c1 = stbrett[c1];
+    c1 = decode(0,i,stbrett);
     f[c1]++;
   }
 
@@ -249,244 +208,161 @@ double icscore(const text_t *stbrett, const text_t *ciphertext, int len)
 
 }
 
-int uniscore(const text_t *stbrett, const text_t *ciphertext, int len)
+static int uniscore(const Key* key, int len)
 {
   int i;
-  text_t c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16;
-  int s0, s1, s2, s3;
+  text_t c;
+  int s;
 
+  const decode_mapping_t* stbrett = &key->stbrett;
 
-  s0 = s1 = s2 = s3 = 0;
+  s = 0;
   for (i = 0; i < len-15; i += 16) {
-    c1 = stbrett[ciphertext[i]];
-    c1 = path_lookup[i][c1];
-    c1 = stbrett[c1];
-    s0 += unidict[c1];
+    c = decode(0,i,stbrett);
+    s += unidict[c];
 
-    c2 = stbrett[ciphertext[i+1]];
-    c2 = path_lookup[i+1][c2];
-    c2 = stbrett[c2];
-    s1 += unidict[c2];
+    c = decode(1,i,stbrett);
+    s += unidict[c];
 
-    c3 = stbrett[ciphertext[i+2]];
-    c3 = path_lookup[i+2][c3];
-    c3 = stbrett[c3];
-    s2 += unidict[c3];
+    c = decode(2,i,stbrett);
+    s += unidict[c];
 
-    c4 = stbrett[ciphertext[i+3]];
-    c4 = path_lookup[i+3][c4];
-    c4 = stbrett[c4];
-    s3 += unidict[c4];
+    c = decode(3,i,stbrett);
+    s += unidict[c];
 
-    c5 = stbrett[ciphertext[i+4]];
-    c5 = path_lookup[i+4][c5];
-    c5 = stbrett[c5];
-    s0 += unidict[c5];
+    c = decode(4,i,stbrett);
+    s += unidict[c];
 
-    c6 = stbrett[ciphertext[i+5]];
-    c6 = path_lookup[i+5][c6];
-    c6 = stbrett[c6];
-    s1 += unidict[c6];
+    c = decode(5,i,stbrett);
+    s += unidict[c];
 
-    c7 = stbrett[ciphertext[i+6]];
-    c7 = path_lookup[i+6][c7];
-    c7 = stbrett[c7];
-    s2 += unidict[c7];
+    c = decode(6,i,stbrett);
+    s += unidict[c];
 
-    c8 = stbrett[ciphertext[i+7]];
-    c8 = path_lookup[i+7][c8];
-    c8 = stbrett[c8];
-    s3 += unidict[c8];
+    c = decode(7,i,stbrett);
+    s += unidict[c];
 
-    c9 = stbrett[ciphertext[i+8]];
-    c9 = path_lookup[i+8][c9];
-    c9 = stbrett[c9];
-    s0 += unidict[c9];
+    c = decode(8,i,stbrett);
+    s += unidict[c];
 
-    c10 = stbrett[ciphertext[i+9]];
-    c10 = path_lookup[i+9][c10];
-    c10 = stbrett[c10];
-    s1 += unidict[c10];
+    c = decode(9,i,stbrett);
+    s += unidict[c];
 
-    c11 = stbrett[ciphertext[i+10]];
-    c11 = path_lookup[i+10][c11];
-    c11 = stbrett[c11];
-    s2 += unidict[c11];
+    c = decode(10,i,stbrett);
+    s += unidict[c];
 
-    c12 = stbrett[ciphertext[i+11]];
-    c12 = path_lookup[i+11][c12];
-    c12 = stbrett[c12];
-    s3 += unidict[c12];
+    c = decode(11,i,stbrett);
+    s += unidict[c];
 
-    c13 = stbrett[ciphertext[i+12]];
-    c13 = path_lookup[i+12][c13];
-    c13 = stbrett[c13];
-    s0 += unidict[c13];
+    c = decode(12,i,stbrett);
+    s += unidict[c];
 
-    c14 = stbrett[ciphertext[i+13]];
-    c14 = path_lookup[i+13][c14];
-    c14 = stbrett[c14];
-    s1 += unidict[c14];
+    c = decode(13,i,stbrett);
+    s += unidict[c];
 
-    c15 = stbrett[ciphertext[i+14]];
-    c15 = path_lookup[i+14][c15];
-    c15 = stbrett[c15];
-    s2 += unidict[c15];
+    c = decode(14,i,stbrett);
+    s += unidict[c];
 
-    c16 = stbrett[ciphertext[i+15]];
-    c16 = path_lookup[i+15][c16];
-    c16 = stbrett[c16];
-    s3 += unidict[c16];
+    c = decode(15,i,stbrett);
+    s += unidict[c];
   }
   for (; i < len-3; i += 4) {
-    c1 = stbrett[ciphertext[i]];
-    c1 = path_lookup[i][c1];
-    c1 = stbrett[c1];
-    s0 += unidict[c1];
+    c = decode(0,i,stbrett);
+    s += unidict[c];
 
-    c2 = stbrett[ciphertext[i+1]];
-    c2 = path_lookup[i+1][c2];
-    c2 = stbrett[c2];
-    s1 += unidict[c2];
+    c = decode(1,i,stbrett);
+    s += unidict[c];
 
-    c3 = stbrett[ciphertext[i+2]];
-    c3 = path_lookup[i+2][c3];
-    c3 = stbrett[c3];
-    s2 += unidict[c3];
+    c = decode(2,i,stbrett);
+    s += unidict[c];
 
-    c4 = stbrett[ciphertext[i+3]];
-    c4 = path_lookup[i+3][c4];
-    c4 = stbrett[c4];
-    s3 += unidict[c4];
+    c = decode(3,i,stbrett);
+    s += unidict[c];
   }
   for (; i < len; i++) {
-    c1 = stbrett[ciphertext[i]];
-    c1 = path_lookup[i][c1];
-    c1 = stbrett[c1];
-    s0 += unidict[c1];
+    c = decode(0,i,stbrett);
+    s += unidict[c];
   }
 
-  return (s0+s1) + (s2+s3);
+  return s;
 
 }
 
-
-int biscore(const text_t *stbrett, const text_t *ciphertext, int len)
+__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
+int biscore(const Key* const restrict key, int len)
 {
   int i;
   text_t c1, c2;
   int s = 0;
 
-  c1 = stbrett[ciphertext[0]];
-  c1 = path_lookup[0][c1];
-  c1 = stbrett[c1];
+  const decode_mapping_t* const stbrett = &key->stbrett;
+
+  c1 = decode(0,0,stbrett);
 
   for (i = 1; i < len-15; i += 16) {
-    c2 = stbrett[ciphertext[i]];
-    c2 = path_lookup[i][c2];
-    c2 = stbrett[c2];
+    c2 = decode(0,i,stbrett);
     s += bidict[c1][c2];
 
-    c1 = stbrett[ciphertext[i+1]];
-    c1 = path_lookup[1][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(1,i,stbrett);
     s += bidict[c2][c1];
 
-    c2 = stbrett[ciphertext[i+2]];
-    c2 = path_lookup[2][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(2,i,stbrett);
     s += bidict[c1][c2];
 
-    c1 = stbrett[ciphertext[i+3]];
-    c1 = path_lookup[3][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(3,i,stbrett);
     s += bidict[c2][c1];
 
-    c2 = stbrett[ciphertext[i+4]];
-    c2 = path_lookup[4][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(4,i,stbrett);
     s += bidict[c1][c2];
 
-    c1 = stbrett[ciphertext[i+5]];
-    c1 = path_lookup[5][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(5,i,stbrett);
     s += bidict[c2][c1];
 
-    c2 = stbrett[ciphertext[i+6]];
-    c2 = path_lookup[6][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(6,i,stbrett);
     s += bidict[c1][c2];
 
-    c1 = stbrett[ciphertext[i+7]];
-    c1 = path_lookup[7][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(7,i,stbrett);
     s += bidict[c2][c1];
 
-    c2 = stbrett[ciphertext[i+8]];
-    c2 = path_lookup[8][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(8,i,stbrett);
     s += bidict[c1][c2];
 
-    c1 = stbrett[ciphertext[i+9]];
-    c1 = path_lookup[9][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(9,i,stbrett);
     s += bidict[c2][c1];
 
-    c2 = stbrett[ciphertext[i+10]];
-    c2 = path_lookup[10][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(10,i,stbrett);
     s += bidict[c1][c2];
 
-    c1 = stbrett[ciphertext[i+11]];
-    c1 = path_lookup[11][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(11,i,stbrett);
     s += bidict[c2][c1];
 
-    c2 = stbrett[ciphertext[i+12]];
-    c2 = path_lookup[12][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(12,i,stbrett);
     s += bidict[c1][c2];
 
-    c1 = stbrett[ciphertext[i+13]];
-    c1 = path_lookup[13][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(13,i,stbrett);
     s += bidict[c2][c1];
 
-    c2 = stbrett[ciphertext[i+14]];
-    c2 = path_lookup[14][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(14,i,stbrett);
     s += bidict[c1][c2];
 
-    c1 = stbrett[ciphertext[i+15]];
-    c1 = path_lookup[15][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(15,i,stbrett);
     s += bidict[c2][c1];
   }
   for (; i < len-3; i += 4) {
-    c2 = stbrett[ciphertext[i]];
-    c2 = path_lookup[i][c2];
-    c2 = stbrett[c2];
+    c2 = decode(0,i,stbrett);
     s += bidict[c1][c2];
 
-    c1 = stbrett[ciphertext[i+1]];
-    c1 = path_lookup[1][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(1,i,stbrett);
     s += bidict[c2][c1];
 
-    c2 = stbrett[ciphertext[i+2]];
-    c2 = path_lookup[2][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(2,i,stbrett);
     s += bidict[c1][c2];
 
-    c1 = stbrett[ciphertext[i+3]];
-    c1 = path_lookup[3][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(3,i,stbrett);
     s += bidict[c2][c1];
   }
   for (; i < len; i++) {
-    c2 = stbrett[ciphertext[i]];
-    c2 = path_lookup[i][c2];
-    c2 = stbrett[c2];
+    c2 = decode(0,i,stbrett);
     s += bidict[c1][c2];
 
     c1 = c2;
@@ -496,134 +372,91 @@ int biscore(const text_t *stbrett, const text_t *ciphertext, int len)
 
 }
 
-int triscore(const text_t *stbrett, const text_t *ciphertext, int len)
+__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
+int triscore(const Key* const restrict key, int len)
 {
   int i;
   text_t c1, c2, c3;
   int s;
 
+  const decode_mapping_t* const stbrett = &key->stbrett;
+
   s=0;
 
-  c1 = stbrett[ciphertext[0]];
-  c1 = path_lookup[0][c1];
-  c1 = stbrett[c1];
+  c1 = decode(0,0,stbrett);
 
-  c2 = stbrett[ciphertext[1]];
-  c2 = path_lookup[1][c2];
-  c2 = stbrett[c2];
+  c2 = decode(1,0,stbrett);
 
   for (i = 2; i < len-15; i += 16) {
-    c3 = stbrett[ciphertext[i]];
-    c3 = path_lookup[0][i*d+c3];
-    c3 = stbrett[c3];
+    c3 = decode(0,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    c1 = stbrett[ciphertext[i+1]];
-    c1 = path_lookup[1][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(1,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    c2 = stbrett[ciphertext[i+2]];
-    c2 = path_lookup[2][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(2,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    c3 = stbrett[ciphertext[i+3]];
-    c3 = path_lookup[3][i*d+c3];
-    c3 = stbrett[c3];
+    c3 = decode(3,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    c1 = stbrett[ciphertext[i+4]];
-    c1 = path_lookup[4][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(4,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    c2 = stbrett[ciphertext[i+5]];
-    c2 = path_lookup[5][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(5,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    c3 = stbrett[ciphertext[i+6]];
-    c3 = path_lookup[6][i*d+c3];
-    c3 = stbrett[c3];
+    c3 = decode(6,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    c1 = stbrett[ciphertext[i+7]];
-    c1 = path_lookup[7][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(7,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    c2 = stbrett[ciphertext[i+8]];
-    c2 = path_lookup[8][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(8,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    c3 = stbrett[ciphertext[i+9]];
-    c3 = path_lookup[9][i*d+c3];
-    c3 = stbrett[c3];
+    c3 = decode(9,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    c1 = stbrett[ciphertext[i+10]];
-    c1 = path_lookup[10][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(10,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    c2 = stbrett[ciphertext[i+11]];
-    c2 = path_lookup[11][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(11,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    c3 = stbrett[ciphertext[i+12]];
-    c3 = path_lookup[12][i*d+c3];
-    c3 = stbrett[c3];
+    c3 = decode(12,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    c1 = stbrett[ciphertext[i+13]];
-    c1 = path_lookup[13][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(13,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    c2 = stbrett[ciphertext[i+14]];
-    c2 = path_lookup[14][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(14,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    c3 = stbrett[ciphertext[i+15]];
-    c3 = path_lookup[15][i*d+c3];
-    c3 = stbrett[c3];
+    c3 = decode(15,i,stbrett);
     s += tridict[c1][c2][c3];
 
     c1 = c2;
     c2 = c3;
   }
   for (; i < len-3; i += 4) {
-    c3 = stbrett[ciphertext[i]];
-    c3 = path_lookup[i][c3];
-    c3 = stbrett[c3];
+    c3 = decode(0,i,stbrett);
     s += tridict[c1][c2][c3];
 
-    c1 = stbrett[ciphertext[i+1]];
-    c1 = path_lookup[1][i*d+c1];
-    c1 = stbrett[c1];
+    c1 = decode(1,i,stbrett);
     s += tridict[c2][c3][c1];
 
-    c2 = stbrett[ciphertext[i+2]];
-    c2 = path_lookup[2][i*d+c2];
-    c2 = stbrett[c2];
+    c2 = decode(2,i,stbrett);
     s += tridict[c3][c1][c2];
 
-    c3 = stbrett[ciphertext[i+3]];
-    c3 = path_lookup[3][i*d+c3];
-    c3 = stbrett[c3];
+    c3 = decode(3,i,stbrett);
     s += tridict[c1][c2][c3];
 
     c1 = c2;
     c2 = c3;
   }
   for (; i < len; i++) {
-    c3 = stbrett[ciphertext[i]];
-    c3 = path_lookup[i][c3];
-    c3 = stbrett[c3];
+    c3 = decode(0,i,stbrett);
     s += tridict[c1][c2][c3];
 
     c1 = c2;
@@ -633,9 +466,6 @@ int triscore(const text_t *stbrett, const text_t *ciphertext, int len)
   return s;
 
 }
-
-#endif
-
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms

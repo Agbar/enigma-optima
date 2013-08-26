@@ -3,24 +3,47 @@
 
 #include <stdint.h>
 
+#include "global.h"
 #include "config\types.h"
 
-typedef struct {
+typedef union _DecodeMapping
+{
+    v32qi whole;
+
+    v16qi half[2];
+
+    text_t letters[32];
+} decode_mapping_t;
+
+typedef struct _key_t
+{
         int model;
-        int ukwnum;
-        int g_slot;
-        int l_slot;     /* greek, left, middle, right slot */
-        int m_slot;
-        int r_slot;
-        int g_ring;
-        int l_ring;     /* ringstellungen */
-        int m_ring;
-        int r_ring;
-        int g_mesg;
-        int l_mesg;     /* message settings */
-        int m_mesg;
-        int r_mesg;
-        text_t stbrett[26];
+        int8_t ukwnum;
+        /* greek, left, middle, right slot */
+        struct
+        {
+            int8_t g_slot;
+            int8_t l_slot;
+            int8_t m_slot;
+            int8_t r_slot;
+        };
+        /* ringstellungen */
+        struct
+        {
+            text_t g_ring;
+            text_t l_ring;
+            text_t m_ring;
+            text_t r_ring;
+        };
+        /* message settings */
+        struct
+        {
+            text_t g_mesg;
+            text_t l_mesg;
+            text_t m_mesg;
+            text_t r_mesg;
+        };
+        ALIGNED_16(decode_mapping_t stbrett);
         text_t sf[26];     /* swapped/free letters */
         int count;      /* number of swapped letters */
         int score;      /* hillclimbing score */

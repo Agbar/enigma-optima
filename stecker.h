@@ -6,10 +6,19 @@
 #include "key.h"
 #include "config\types.h"
 
-void swap(text_t stbrett[], int i, int k);
 void get_stecker(Key *key);
 void rand_var(text_t var[]);
-void set_to_ct_freq(text_t var[], const text_t *ciphertext, int len);
+void set_to_ct_freq(text_t var[], int len);
+
+/* swaps letters */
+inline void swap(decode_mapping_t *stbrett, int i, int k)
+{
+  text_t store;
+
+  store = stbrett->letters[i];
+  stbrett->letters[i] = stbrett->letters[k];
+  stbrett->letters[k] = store;
+}
 
 #endif
 

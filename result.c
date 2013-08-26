@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <limits.h>
+#include "cipher.h"
+#include "ciphertext.h"
 #include "charmap.h"
 #include "date.h"
 #include "error.h"
@@ -11,8 +13,6 @@
 #include "result.h"
 #include "config\array_sizes.h"
 #include "config\types.h"
-
-extern text_t path_lookup[][LAST_DIMENSION];
 
 FILE *open_outfile(char *s)
 {
@@ -24,16 +24,14 @@ FILE *open_outfile(char *s)
   return fp;
 }
 
-void print_plaintext(FILE *fp, const text_t *stbrett, const text_t *ciphertext, int len)
+void print_plaintext(FILE *fp, const decode_mapping_t *stbrett, int len)
 {
   int i;
   text_t c;
   int ofd;
 
   for (i = 0; i < len; i++) {
-    c = stbrett[ciphertext[i]];
-    c = path_lookup[i][c];
-    c = stbrett[c];
+    c = decode(0,i,stbrett);
     fputc(alpha[c], fp);
   }
   fputc('\n', fp);

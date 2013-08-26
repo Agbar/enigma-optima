@@ -4,9 +4,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+
 #include "charmap.h"
 #include "cipher.h"
 #include "ciphertext.h"
+#include "cpu.h"
 #include "dict.h"
 #include "display.h"
 #include "error.h"
@@ -25,7 +27,6 @@ int main(int argc, char **argv)
 {
   Key key;
   Key from, to, ckey_res, gkey_res;
-  text_t *ciphertext;
   int len, clen;
   int model = H;
   int opt, first = 1, keyop = 0;
@@ -46,6 +47,7 @@ int main(int argc, char **argv)
     "C:G876:MM:ZZZZ"
   };
 
+  enigma_cpu_flags_init(enigma_cpu_all);
 
   init_key_default(&key, model);
   init_charmap();
@@ -88,7 +90,7 @@ int main(int argc, char **argv)
   if (argc-optind != 3) usage();
   load_tridict(argv[optind++]);
   load_bidict(argv[optind++]);
-  ciphertext = load_ciphertext(argv[optind], &len, resume);
+  load_ciphertext(argv[optind], &len, resume);
   if (len < 3) exit(EXIT_FAILURE);
 
 
@@ -103,8 +105,8 @@ int main(int argc, char **argv)
       if (!set_range(&from, &to, f, t, model)) usage();
 
       /* no range given, first try fast noring option */
-      ic_noring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, ciphertext, len);
-      ic_allring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, ciphertext, len);
+      ic_noring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, len);
+      ic_allring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, len);
     }
     else {
       if (f == NULL) f = fmin[model];
@@ -113,7 +115,7 @@ int main(int argc, char **argv)
       if (!set_range(&from, &to, f, t, model)) usage();
 
       /* 300 passes hard wired */
-      ic_allring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, ciphertext, len);
+      ic_allring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, len);
     }
   }
 
@@ -145,13 +147,13 @@ int main(int argc, char **argv)
     clen = (len < CT) ? len : CT;
 
     hillclimb( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
-                max_score, resume, outfile, 1, ciphertext, clen );
+                max_score, resume, outfile, 1, clen );
 
   }
 
   if (outfile != stdout)
     fclose(outfile);
-  free(ciphertext);
+//  free(ciphertext);
   return 0;
 
 }

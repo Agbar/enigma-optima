@@ -2,21 +2,30 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <ctype.h>
+#include "ciphertext.h"
 #include "global.h"
 #include "charmap.h"
 #include "key.h"
+#include "cpu.h"
 #include "cipher.h"
 #include "config\array_sizes.h"
 #include "config\types.h"
 
+#include "x86/cipher_ssse3.h"
+
+void init_path_lookup_H_M3(const Key *key, int len);
+void init_path_lookup_ALL(const Key *key, int len);
+
+extern text_t decode(size_t offset,size_t index, const decode_mapping_t* const stbrett);
+
 /* Eintrittswalze */
-static text_t etw[52] =
+text_t etw[52] =
      {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
       0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
 
 
 /* Walzen 1-8, B and G (M4): forward path */
-static text_t wal[11][78] = {
+text_t wal[11][78] = {
 
      /* null substitution for no greek wheel */
      {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
@@ -67,7 +76,7 @@ static text_t wal[11][78] = {
 
 
 /* Umkehrwalzen A, B, C, B_THIN, C_THIN */
-static text_t ukw[5][52] = {
+text_t ukw[5][52] = {
 
      {4,9,12,25,0,11,24,23,21,1,22,5,2,17,16,20,14,13,19,18,15,8,10,7,6,3,
       4,9,12,25,0,11,24,23,21,1,22,5,2,17,16,20,14,13,19,18,15,8,10,7,6,3},
@@ -88,7 +97,7 @@ static text_t ukw[5][52] = {
 
 
 /* Walzen 1-8, B and G (M4): reverse path */
-static text_t rev_wal[11][78] = {
+text_t rev_wal[11][78] = {
 
      /* null substitution for no greek wheel */
      {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
@@ -139,10 +148,56 @@ static text_t rev_wal[11][78] = {
 
 
 /* Turnover points:  Walzen 1-5, Walzen 6-8 (/first/ turnover points) */
-static text_t wal_turn[9] = {0, 16, 4, 21, 9, 25, 12, 12, 12};
+text_t wal_turn[9] = {0, 16, 4, 21, 9, 25, 12, 12, 12};
 
 text_t path_lookup[CT][LAST_DIMENSION];
 
+enigma_cipher_function_t enigma_cipher_decoder_lookup = {init_path_lookup_H_M3, init_path_lookup_ALL};
+
+void enigma_cipher_funcion_copy(enigma_cipher_function_t* to, const enigma_cipher_function_t* prototype)
+{
+    to->prepare_decoder_lookup_M_H3 = prototype->prepare_decoder_lookup_M_H3;
+    to->prepare_decoder_lookup_ALL  = prototype->prepare_decoder_lookup_ALL;
+}
+
+enigma_prepare_decoder_lookup_function_pt enigma_cipher_decoder_lookups_list[4];
+
+void enigma_prepare_decoder_lookups(const Key* key, int len)
+{
+    enigma_prepare_decoder_lookup_function_pt *f = enigma_cipher_decoder_lookups_list;
+    for(; *f ; f++)
+    {
+        (*f)(key,len);
+    }
+}
+
+void enigma_cipher_init(enigma_cpu_flags_t cpu, int machine_type, enigma_prepare_decoder_lookup_function_pt* cf)
+{
+    enigma_cipher_function_t* fs[4];
+    int i = 0;
+
+    fs[i++] = &enigma_cipher_decoder_lookup;
+
+    if (cpu & enigma_cpu_ssse3) {
+        fs[i++] = &enigma_cipher_decoder_lookup_ssse3;
+    }
+
+    int j=0;
+    for (; j<i; j++)
+    {
+        switch(machine_type)
+        {
+        case H:
+        case M3:
+            enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_M_H3;
+            break;
+        case M4:
+            enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_ALL;
+        }
+    }
+
+    *cf = enigma_prepare_decoder_lookups;
+}
 
 /* Check for slow wheel movement */
 int scrambler_state(const Key *key, int len)
@@ -215,7 +270,6 @@ int scrambler_state(const Key *key, int len)
 
 }
 
-
 /* initialize lookup table for paths through scramblers, models H, M3 */
 void init_path_lookup_H_M3(const Key *key, int len)
 {
@@ -281,18 +335,17 @@ void init_path_lookup_H_M3(const Key *key, int len)
 
     for (k = 0; k < 26; k++) {
       c = k;
-      c = wal[r_slot][c+r_offset+26];
-      c = wal[m_slot][c-r_offset+m_offset+26];
-      c = wal[l_slot][c-m_offset+l_offset+26];
-      c = ukw[ukwnum][c-l_offset+26];
-      c = rev_wal[l_slot][c+l_offset+26];
-      c = rev_wal[m_slot][c+m_offset-l_offset+26];
-      c = rev_wal[r_slot][c+r_offset-m_offset+26];
-      c = etw[c-r_offset+26];
+      c = wal[r_slot][c+r_offset]-r_offset+26;
+      c = wal[m_slot][c+m_offset]-m_offset+26;
+      c = wal[l_slot][c+l_offset]-l_offset+26;
+      c = ukw[ukwnum][c];
+      c = rev_wal[l_slot][c+l_offset]-l_offset+26;
+      c = rev_wal[m_slot][c+m_offset]-m_offset+26;
+      c = rev_wal[r_slot][c+r_offset]-r_offset+26;
+      c = etw[c];
       path_lookup[i][k] = c;
     }
   }
-
 }
 
 
@@ -364,16 +417,16 @@ void init_path_lookup_ALL(const Key *key, int len)
 
     for (k = 0; k < 26; k++) {
       c = k;
-      c = wal[r_slot][c+r_offset+26];
-      c = wal[m_slot][c-r_offset+m_offset+26];
-      c = wal[l_slot][c-m_offset+l_offset+26];
-      c = wal[g_slot][c-l_offset+g_offset+26];
-      c = ukw[ukwnum][c-g_offset+26];
-      c = rev_wal[g_slot][c+g_offset+26];
-      c = rev_wal[l_slot][c+l_offset-g_offset+26];
-      c = rev_wal[m_slot][c+m_offset-l_offset+26];
-      c = rev_wal[r_slot][c+r_offset-m_offset+26];
-      c = etw[c-r_offset+26];
+      c = wal[r_slot][c+r_offset]-r_offset+26;
+      c = wal[m_slot][c+m_offset]-m_offset+26;
+      c = wal[l_slot][c+l_offset]-l_offset+26;
+      c = wal[g_slot][c+g_offset]-g_offset+26;
+      c = ukw[ukwnum][c];
+      c = rev_wal[g_slot][c+g_offset]-g_offset+26;
+      c = rev_wal[l_slot][c+l_offset]-l_offset+26;
+      c = rev_wal[m_slot][c+m_offset]-m_offset+26;
+      c = rev_wal[r_slot][c+r_offset]-r_offset+26;
+      c = etw[c];
       path_lookup[i][k] = c;
     }
   }
@@ -382,7 +435,7 @@ void init_path_lookup_ALL(const Key *key, int len)
 
 
 /* deciphers and calculates ic of plaintext, all models */
-double dgetic_ALL(const Key *key, const uint8_t *ciphertext, int len)
+double dgetic_ALL(const Key *key, int len)
 {
   int f[26] = {0};
   double S = 0;
@@ -453,7 +506,7 @@ double dgetic_ALL(const Key *key, const uint8_t *ciphertext, int len)
       p3 = 0;
     }
 
-    c = ciphertext[i];  /* no plugboard */
+    c = ciphertext.plain[i];  /* no plugboard */
     c = wal[r_slot][c+r_offset+26];
     c = wal[m_slot][c-r_offset+m_offset+26];
     c = wal[l_slot][c-m_offset+l_offset+26];
@@ -592,7 +645,7 @@ void en_deciph_stdin_ALL(FILE *file, const Key *key)
 
     /* thru steckerbrett to scramblers */
     c = code[c];
-    c = key->stbrett[c];
+    c = key->stbrett.letters[c];
 
     /* thru scramblers and back */
     c = wal[r_slot][c+r_offset+26];
@@ -607,7 +660,7 @@ void en_deciph_stdin_ALL(FILE *file, const Key *key)
     c = etw[c-r_offset+26];
 
     /* thru steckerbrett to lamp */
-    fputc(alpha[key->stbrett[c]], file);
+    fputc(alpha[key->stbrett.letters[c]], file);
 
   }
 
