@@ -69,12 +69,12 @@ Rings: %c%c%c\n\
 Message key: %c%c%c\n\n",
     key->score,
     toupper(alpha[key->ukwnum]),
-    key->l_slot, key->m_slot, key->r_slot,
+    key->slot.l, key->slot.m, key->slot.r,
     stecker,
-    toupper(alpha[key->l_ring]), toupper(alpha[key->m_ring]),
-    toupper(alpha[key->r_ring]),
-    toupper(alpha[key->l_mesg]), toupper(alpha[key->m_mesg]),
-    toupper(alpha[key->r_mesg]));
+    toupper(alpha[key->ring.l]), toupper(alpha[key->ring.m]),
+    toupper(alpha[key->ring.r]),
+    toupper(alpha[key->mesg.l]), toupper(alpha[key->mesg.m]),
+    toupper(alpha[key->mesg.r]));
   }
   else {
     fprintf(fp,
@@ -86,12 +86,12 @@ Rings: %c%c%c%c\n\
 Message key: %c%c%c%c\n\n",
     key->score,
     key->ukwnum == 3 ? 'B' : 'C',
-    key->g_slot == 9 ? 'B' : 'G', key->l_slot, key->m_slot, key->r_slot,
+    key->slot.g == 9 ? 'B' : 'G', key->slot.l, key->slot.m, key->slot.r,
     stecker,
-    toupper(alpha[key->g_ring]), toupper(alpha[key->l_ring]),
-    toupper(alpha[key->m_ring]), toupper(alpha[key->r_ring]),
-    toupper(alpha[key->g_mesg]), toupper(alpha[key->l_mesg]),
-    toupper(alpha[key->m_mesg]), toupper(alpha[key->r_mesg]));
+    toupper(alpha[key->ring.g]), toupper(alpha[key->ring.l]),
+    toupper(alpha[key->ring.m]), toupper(alpha[key->ring.r]),
+    toupper(alpha[key->mesg.g]), toupper(alpha[key->mesg.l]),
+    toupper(alpha[key->mesg.m]), toupper(alpha[key->mesg.r]));
   }
 
   fflush(fp);

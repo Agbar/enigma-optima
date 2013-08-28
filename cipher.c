@@ -204,15 +204,15 @@ int scrambler_state(const Key *key, int len)
 {
   int i;
 
-  int m_slot = key->m_slot;
-  int r_slot = key->r_slot;
+  int m_slot = key->slot.m;
+  int r_slot = key->slot.r;
 
-  int l_ring = key->l_ring;
-  int m_ring = key->m_ring;
-  int r_ring = key->r_ring;
-  int l_mesg = key->l_mesg;
-  int m_mesg = key->m_mesg;
-  int r_mesg = key->r_mesg;
+  int l_ring = key->ring.l;
+  int m_ring = key->ring.m;
+  int r_ring = key->ring.r;
+  int l_mesg = key->mesg.l;
+  int m_mesg = key->mesg.m;
+  int r_mesg = key->mesg.r;
 
   int l_offset, m_offset, r_offset;
   int m_turn, r_turn;
@@ -276,15 +276,15 @@ void init_path_lookup_H_M3(const Key *key, int len)
   int i, k;
   int c;
 
-  int l_slot = key->l_slot;
-  int m_slot = key->m_slot;
-  int r_slot = key->r_slot;
-  int l_ring = key->l_ring;
-  int m_ring = key->m_ring;
-  int r_ring = key->r_ring;
-  int l_mesg = key->l_mesg;
-  int m_mesg = key->m_mesg;
-  int r_mesg = key->r_mesg;
+  int l_slot = key->slot.l;
+  int m_slot = key->slot.m;
+  int r_slot = key->slot.r;
+  int l_ring = key->ring.l;
+  int m_ring = key->ring.m;
+  int r_ring = key->ring.r;
+  int l_mesg = key->mesg.l;
+  int m_mesg = key->mesg.m;
+  int r_mesg = key->mesg.r;
   int ukwnum = key->ukwnum;
 
   int l_offset, m_offset, r_offset;
@@ -356,18 +356,18 @@ void init_path_lookup_ALL(const Key *key, int len)
   text_t c;
 
   int ukwnum = key->ukwnum;
-  int g_slot = key->g_slot;
-  int l_slot = key->l_slot;
-  int m_slot = key->m_slot;
-  int r_slot = key->r_slot;
-  int g_ring = key->g_ring;
-  int l_ring = key->l_ring;
-  int m_ring = key->m_ring;
-  int r_ring = key->r_ring;
-  int g_mesg = key->g_mesg;
-  int l_mesg = key->l_mesg;
-  int m_mesg = key->m_mesg;
-  int r_mesg = key->r_mesg;
+  int g_slot = key->slot.g;
+  int l_slot = key->slot.l;
+  int m_slot = key->slot.m;
+  int r_slot = key->slot.r;
+  int g_ring = key->ring.g;
+  int l_ring = key->ring.l;
+  int m_ring = key->ring.m;
+  int r_ring = key->ring.r;
+  int g_mesg = key->mesg.g;
+  int l_mesg = key->mesg.l;
+  int m_mesg = key->mesg.m;
+  int r_mesg = key->mesg.r;
 
   int g_offset, l_offset, m_offset, r_offset;
   int m_turn, r_turn;
@@ -444,18 +444,18 @@ double dgetic_ALL(const Key *key, int len)
   text_t c;
 
   int ukwnum = key->ukwnum;
-  int g_slot = key->g_slot;
-  int l_slot = key->l_slot;
-  int m_slot = key->m_slot;
-  int r_slot = key->r_slot;
-  int g_ring = key->g_ring;
-  int l_ring = key->l_ring;
-  int m_ring = key->m_ring;
-  int r_ring = key->r_ring;
-  int g_mesg = key->g_mesg;
-  int l_mesg = key->l_mesg;
-  int m_mesg = key->m_mesg;
-  int r_mesg = key->r_mesg;
+  int g_slot = key->slot.g;
+  int l_slot = key->slot.l;
+  int m_slot = key->slot.m;
+  int r_slot = key->slot.r;
+  int g_ring = key->ring.g;
+  int l_ring = key->ring.l;
+  int m_ring = key->ring.m;
+  int r_ring = key->ring.r;
+  int g_mesg = key->mesg.g;
+  int l_mesg = key->mesg.l;
+  int m_mesg = key->mesg.m;
+  int r_mesg = key->mesg.r;
 
   int g_offset, l_offset, m_offset, r_offset;
   int m_turn, r_turn;
@@ -538,18 +538,18 @@ void en_deciph_stdin_ALL(FILE *file, const Key *key)
   int c;
 
   int ukwnum = key->ukwnum;
-  int g_slot = key->g_slot;
-  int l_slot = key->l_slot;
-  int m_slot = key->m_slot;
-  int r_slot = key->r_slot;
-  int g_ring = key->g_ring;
-  int l_ring = key->l_ring;
-  int m_ring = key->m_ring;
-  int r_ring = key->r_ring;
-  int g_mesg = key->g_mesg;
-  int l_mesg = key->l_mesg;
-  int m_mesg = key->m_mesg;
-  int r_mesg = key->r_mesg;
+  int g_slot = key->slot.g;
+  int l_slot = key->slot.l;
+  int m_slot = key->slot.m;
+  int r_slot = key->slot.r;
+  int g_ring = key->ring.g;
+  int l_ring = key->ring.l;
+  int m_ring = key->ring.m;
+  int r_ring = key->ring.r;
+  int g_mesg = key->mesg.g;
+  int l_mesg = key->mesg.l;
+  int m_mesg = key->mesg.m;
+  int r_mesg = key->mesg.r;
 
   int g_offset, l_offset, m_offset, r_offset;
   int m_turn, r_turn;

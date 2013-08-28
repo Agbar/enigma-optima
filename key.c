@@ -57,44 +57,44 @@ int keycmp(const Key *k1, const Key *k2)
     if ( k1->ukwnum > k2->ukwnum ) return 1;
     else return -1;
   }
-  if (  k1->g_slot != k2->g_slot ) {
-    if ( k1->g_slot > k2->g_slot ) return 1;
+  if (  k1->slot.g != k2->slot.g ) {
+    if ( k1->slot.g > k2->slot.g ) return 1;
     else return -1;
   }
-  if (  k1->l_slot != k2->l_slot ) {
-    if ( k1->l_slot > k2->l_slot ) return 1;
+  if (  k1->slot.l != k2->slot.l ) {
+    if ( k1->slot.l > k2->slot.l ) return 1;
     else return -1;
   }
-  if (  k1->m_slot != k2->m_slot ) {
-    if ( k1->m_slot > k2->m_slot ) return 1;
+  if (  k1->slot.m != k2->slot.m ) {
+    if ( k1->slot.m > k2->slot.m ) return 1;
     else return -1;
   }
-  if (  k1->r_slot != k2->r_slot ) {
-    if ( k1->r_slot > k2->r_slot ) return 1;
+  if (  k1->slot.r != k2->slot.r ) {
+    if ( k1->slot.r > k2->slot.r ) return 1;
     else return -1;
   }
-  if (  k1->m_ring != k2->m_ring ) {
-    if ( k1->m_ring > k2->m_ring ) return 1;
+  if (  k1->ring.m != k2->ring.m ) {
+    if ( k1->ring.m > k2->ring.m ) return 1;
     else return -1;
   }
-  if (  k1->r_ring != k2->r_ring ) {
-    if ( k1->r_ring > k2->r_ring ) return 1;
+  if (  k1->ring.r != k2->ring.r ) {
+    if ( k1->ring.r > k2->ring.r ) return 1;
     else return -1;
   }
-  if (  k1->g_mesg != k2->g_mesg ) {
-    if ( k1->g_mesg > k2->g_mesg ) return 1;
+  if (  k1->mesg.g != k2->mesg.g ) {
+    if ( k1->mesg.g > k2->mesg.g ) return 1;
     else return -1;
   }
-  if (  k1->l_mesg != k2->l_mesg ) {
-    if ( k1->l_mesg > k2->l_mesg ) return 1;
+  if (  k1->mesg.l != k2->mesg.l ) {
+    if ( k1->mesg.l > k2->mesg.l ) return 1;
     else return -1;
   }
-  if (  k1->m_mesg != k2->m_mesg ) {
-    if ( k1->m_mesg > k2->m_mesg ) return 1;
+  if (  k1->mesg.m != k2->mesg.m ) {
+    if ( k1->mesg.m > k2->mesg.m ) return 1;
     else return -1;
   }
-  if (  k1->r_mesg != k2->r_mesg ) {
-    if ( k1->r_mesg > k2->r_mesg ) return 1;
+  if (  k1->mesg.r != k2->mesg.r ) {
+    if ( k1->mesg.r > k2->mesg.r ) return 1;
     else return -1;
   }
 

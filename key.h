@@ -39,30 +39,9 @@ typedef struct _key_t
 {
         int model;
         int8_t ukwnum;
-        /* greek, left, middle, right slot */
-        struct
-        {
-            int8_t g_slot;
-            int8_t l_slot;
-            int8_t m_slot;
-            int8_t r_slot;
-        };
-        /* ringstellungen */
-        struct
-        {
-            text_t g_ring;
-            text_t l_ring;
-            text_t m_ring;
-            text_t r_ring;
-        };
-        /* message settings */
-        struct
-        {
-            text_t g_mesg;
-            text_t l_mesg;
-            text_t m_mesg;
-            text_t r_mesg;
-        };
+        struct RingsState slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
+        struct RingsState ring; ///< ringstellungen
+        struct RingsState mesg; ///< message settings
         ALIGNED_16(PermutationMap_t stbrett);
         text_t sf[26];     /* swapped/free letters */
         int count;      /* number of swapped letters */

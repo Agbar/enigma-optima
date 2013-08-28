@@ -37,11 +37,11 @@ void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struc
     int k;
     for( k = 0; k < 26; k++ ) {
         int8_t c = k;
-        c = wal[key->m_slot][c + rings.m] - rings.m + 26;
-        c = wal[key->l_slot][c + rings.l] - rings.l + 26;
+        c = wal[key->slot.m][c + rings.m] - rings.m + 26;
+        c = wal[key->slot.l][c + rings.l] - rings.l + 26;
         c = ukw[key->ukwnum][c];
-        c = rev_wal[key->l_slot][c + rings.l] - rings.l + 26;
-        c = rev_wal[key->m_slot][c + rings.m] - rings.m;
+        c = rev_wal[key->slot.l][c + rings.l] - rings.l + 26;
+        c = rev_wal[key->slot.m][c + rings.m] - rings.m;
         if( c < 0 ) {
             c += 26;
         }
@@ -55,13 +55,13 @@ void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struc
     int k;
     for( k = 0; k < 26; k++ ) {
         int8_t c = k;
-        c = wal[key->m_slot][c + rings.m] - rings.m + 26;
-        c = wal[key->l_slot][c + rings.l] - rings.l + 26;
-        c = wal[key->g_slot][c + rings.g] - rings.g + 26;
+        c = wal[key->slot.m][c + rings.m] - rings.m + 26;
+        c = wal[key->slot.l][c + rings.l] - rings.l + 26;
+        c = wal[key->slot.g][c + rings.g] - rings.g + 26;
         c = ukw[key->ukwnum][c];
-        c = rev_wal[key->g_slot][c + rings.g] - rings.g + 26;
-        c = rev_wal[key->l_slot][c + rings.l] - rings.l + 26;
-        c = rev_wal[key->m_slot][c + rings.m] - rings.m;
+        c = rev_wal[key->slot.g][c + rings.g] - rings.g + 26;
+        c = rev_wal[key->slot.l][c + rings.l] - rings.l + 26;
+        c = rev_wal[key->slot.m][c + rings.m] - rings.m;
         if( c < 0 ) {
             c += 26;
         }
@@ -105,8 +105,8 @@ inline extern void StepAllRings( struct RingsState* restrict rings, struct Turno
 inline extern void CopyRRing2Lookup( const Key* const restrict key )
 {
     // setup r_rings forward and backward.
-    memcpy( PathLookupSsse3.r_ring[0].letters, wal[key->r_slot], 32 );
-    memcpy( PathLookupSsse3.r_ring[1].letters, rev_wal[key->r_slot], 32 );
+    memcpy( PathLookupSsse3.r_ring[0].letters, wal[key->slot.r], 32 );
+    memcpy( PathLookupSsse3.r_ring[1].letters, rev_wal[key->slot.r], 32 );
 }
 
 
@@ -126,27 +126,27 @@ void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const Key *c
 
     // rings.r will be a position of R-ring for current lookup chunk
     struct RingsState rings = {
-        .r = SubMod26( key->r_mesg, key->r_ring ),
-        .m = SubMod26( key->m_mesg, key->m_ring ),
-        .l = SubMod26( key->l_mesg, key->l_ring ),
-        .g = SubMod26( key->g_mesg, key->g_ring ),
+        .r = SubMod26( key->mesg.r, key->ring.r ),
+        .m = SubMod26( key->mesg.m, key->ring.m ),
+        .l = SubMod26( key->mesg.l, key->ring.l ),
+        .g = SubMod26( key->mesg.g, key->ring.g ),
     };
 
     /* calculate turnover points from ring settings */
     struct Turnovers_t turns = {
-        .r = SubMod26( wal_turn[key->r_slot], key->r_ring ),
-        .m = SubMod26( wal_turn[key->m_slot], key->m_ring ),
+        .r = SubMod26( wal_turn[key->slot.r], key->ring.r ),
+        .m = SubMod26( wal_turn[key->slot.m], key->ring.m ),
     };
 
     /* second turnover points for wheels 6,7,8 */
-    if( key->r_slot > 5 ) {
-        turns.r2 = SubMod26( SECOND_TURNOVER_POINT, key->r_ring );
+    if( key->slot.r > 5 ) {
+        turns.r2 = SubMod26( SECOND_TURNOVER_POINT, key->ring.r );
     }
     else {
         turns.r2 = -1;
     }
-    if( key->m_slot > 5 ) {
-        turns.m2 = SubMod26( SECOND_TURNOVER_POINT, key->m_ring );
+    if( key->slot.m > 5 ) {
+        turns.m2 = SubMod26( SECOND_TURNOVER_POINT, key->ring.m );
     }
     else {
         turns.m2 = -1;
@@ -162,7 +162,7 @@ void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const Key *c
     int bitesLimit = ( len + 15 )/ 16;
     for( i = 0; i < 24; i++ ) //fixme
     {
-        CalculateLookup( i , rings, rAtFirstPos, key, calculateMap );
+        CalculateLookup( i, rings, rAtFirstPos, key, calculateMap );
 
         // check wether next M-ring turn is within current text bite
         int charsToNextTurnover = SubMod26( GetNextTurnover( rings, turns ), rings.r ) + 1;

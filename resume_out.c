@@ -28,50 +28,50 @@ void print_state(FILE *fp, const State *state)
   if (from->model == H) fprintf(fp, "H=");
   else if (from->model == M3) fprintf(fp, "M3=");
   else if (from->model== M4) fprintf(fp, "M4=");
- 
+
   if (from->model != M4) {
     fprintf(fp,
     "%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=",
     toupper(alpha[from->ukwnum]),
-    from->l_slot, from->m_slot, from->r_slot,
-    toupper(alpha[from->m_ring]), toupper(alpha[from->r_ring]),
-    toupper(alpha[from->l_mesg]), toupper(alpha[from->m_mesg]),
-    toupper(alpha[from->r_mesg]),
+    from->slot.l, from->slot.m, from->slot.r,
+    toupper(alpha[from->ring.m]), toupper(alpha[from->ring.r]),
+    toupper(alpha[from->mesg.l]), toupper(alpha[from->mesg.m]),
+    toupper(alpha[from->mesg.r]),
     toupper(alpha[to->ukwnum]),
-    to->l_slot, to->m_slot, to->r_slot,
-    toupper(alpha[to->m_ring]), toupper(alpha[to->r_ring]),
-    toupper(alpha[to->l_mesg]), toupper(alpha[to->m_mesg]),
-    toupper(alpha[to->r_mesg]),
+    to->slot.l, to->slot.m, to->slot.r,
+    toupper(alpha[to->ring.m]), toupper(alpha[to->ring.r]),
+    toupper(alpha[to->mesg.l]), toupper(alpha[to->mesg.m]),
+    toupper(alpha[to->mesg.r]),
     toupper(alpha[ckey->ukwnum]),
-    ckey->l_slot, ckey->m_slot, ckey->r_slot,
-    toupper(alpha[ckey->m_ring]), toupper(alpha[ckey->r_ring]),
-    toupper(alpha[ckey->l_mesg]), toupper(alpha[ckey->m_mesg]),
-    toupper(alpha[ckey->r_mesg]));
+    ckey->slot.l, ckey->slot.m, ckey->slot.r,
+    toupper(alpha[ckey->ring.m]), toupper(alpha[ckey->ring.r]),
+    toupper(alpha[ckey->mesg.l]), toupper(alpha[ckey->mesg.m]),
+    toupper(alpha[ckey->mesg.r]));
   }
   else {
     fprintf(fp,
     "%c:%c%d%d%d:%c%c:%c%c%c%c=%c:%c%d%d%d:%c%c:%c%c%c%c=%c:%c%d%d%d:%c%c:%c%c%c%c=",
     from->ukwnum == 3 ? 'B' : 'C',
-    from->g_slot == 9 ? 'B' : 'G', from->l_slot, from->m_slot, from->r_slot,
-    toupper(alpha[from->m_ring]), toupper(alpha[from->r_ring]),
-    toupper(alpha[from->g_mesg]), toupper(alpha[from->l_mesg]),
-    toupper(alpha[from->m_mesg]), toupper(alpha[from->r_mesg]),
+    from->slot.g == 9 ? 'B' : 'G', from->slot.l, from->slot.m, from->slot.r,
+    toupper(alpha[from->ring.m]), toupper(alpha[from->ring.r]),
+    toupper(alpha[from->mesg.g]), toupper(alpha[from->mesg.l]),
+    toupper(alpha[from->mesg.m]), toupper(alpha[from->mesg.r]),
     to->ukwnum == 3 ? 'B' : 'C',
-    to->g_slot == 9 ? 'B' : 'G', to->l_slot, to->m_slot, to->r_slot,
-    toupper(alpha[to->m_ring]), toupper(alpha[to->r_ring]),
-    toupper(alpha[to->g_mesg]), toupper(alpha[to->l_mesg]),
-    toupper(alpha[to->m_mesg]), toupper(alpha[to->r_mesg]),
+    to->slot.g == 9 ? 'B' : 'G', to->slot.l, to->slot.m, to->slot.r,
+    toupper(alpha[to->ring.m]), toupper(alpha[to->ring.r]),
+    toupper(alpha[to->mesg.g]), toupper(alpha[to->mesg.l]),
+    toupper(alpha[to->mesg.m]), toupper(alpha[to->mesg.r]),
     ckey->ukwnum == 3 ? 'B' : 'C',
-    ckey->g_slot == 9 ? 'B' : 'G', ckey->l_slot, ckey->m_slot, ckey->r_slot,
-    toupper(alpha[ckey->m_ring]), toupper(alpha[ckey->r_ring]),
-    toupper(alpha[ckey->g_mesg]), toupper(alpha[ckey->l_mesg]),
-    toupper(alpha[ckey->m_mesg]), toupper(alpha[ckey->r_mesg]));
+    ckey->slot.g == 9 ? 'B' : 'G', ckey->slot.l, ckey->slot.m, ckey->slot.r,
+    toupper(alpha[ckey->ring.m]), toupper(alpha[ckey->ring.r]),
+    toupper(alpha[ckey->mesg.g]), toupper(alpha[ckey->mesg.l]),
+    toupper(alpha[ckey->mesg.m]), toupper(alpha[ckey->mesg.r]));
   }
 
   fprintf(fp, "%d=", *sw_mode);
   fprintf(fp, "%d=", *pass);
   fprintf(fp, "%d=", *firstpass);
-  fprintf(fp, "%d\n", *max_score); 
+  fprintf(fp, "%d\n", *max_score);
 
 
   /* global key */
@@ -83,19 +83,19 @@ void print_state(FILE *fp, const State *state)
     fprintf(fp,
     "%c:%d%d%d:%c%c:%c%c%c=",
     toupper(alpha[gkey->ukwnum]),
-    gkey->l_slot, gkey->m_slot, gkey->r_slot,
-    toupper(alpha[gkey->m_ring]), toupper(alpha[gkey->r_ring]),
-    toupper(alpha[gkey->l_mesg]), toupper(alpha[gkey->m_mesg]),
-    toupper(alpha[gkey->r_mesg]));
+    gkey->slot.l, gkey->slot.m, gkey->slot.r,
+    toupper(alpha[gkey->ring.m]), toupper(alpha[gkey->ring.r]),
+    toupper(alpha[gkey->mesg.l]), toupper(alpha[gkey->mesg.m]),
+    toupper(alpha[gkey->mesg.r]));
   }
   else {
     fprintf(fp,
     "%c:%c%d%d%d:%c%c:%c%c%c%c=",
     gkey->ukwnum == 3 ? 'B' : 'C',
-    gkey->g_slot == 9 ? 'B' : 'G', gkey->l_slot, gkey->m_slot, gkey->r_slot,
-    toupper(alpha[gkey->m_ring]), toupper(alpha[gkey->r_ring]),
-    toupper(alpha[gkey->g_mesg]), toupper(alpha[gkey->l_mesg]),
-    toupper(alpha[gkey->m_mesg]), toupper(alpha[gkey->r_mesg]));
+    gkey->slot.g == 9 ? 'B' : 'G', gkey->slot.l, gkey->slot.m, gkey->slot.r,
+    toupper(alpha[gkey->ring.m]), toupper(alpha[gkey->ring.r]),
+    toupper(alpha[gkey->mesg.g]), toupper(alpha[gkey->mesg.l]),
+    toupper(alpha[gkey->mesg.m]), toupper(alpha[gkey->mesg.r]));
   }
 
   for (i = 0; i < gkey->count; i++)
@@ -119,5 +119,5 @@ void print_state(FILE *fp, const State *state)
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */
