@@ -24,11 +24,11 @@ void print_state(FILE *fp, const State *state)
 
 
   /* general state */
-  if (from->model == H) fprintf(fp, "H=");
-  else if (from->model == M3) fprintf(fp, "M3=");
-  else if (from->model== M4) fprintf(fp, "M4=");
+  if (from->model == EnigmaModel_H) fprintf(fp, "H=");
+  else if (from->model == EnigmaModel_M3) fprintf(fp, "M3=");
+  else if (from->model == EnigmaModel_M4) fprintf(fp, "M4=");
 
-  if (from->model != M4) {
+  if (from->model != EnigmaModel_M4) {
     fprintf(fp,
     "%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=",
     toupper(alpha[from->ukwnum]),
@@ -74,11 +74,11 @@ void print_state(FILE *fp, const State *state)
 
 
   /* global key */
-  if (from->model == H) fprintf(fp, "H=");
-  else if (from->model == M3) fprintf(fp, "M3=");
-  else if (from->model== M4) fprintf(fp, "M4=");
+  if (from->model == EnigmaModel_H) fprintf(fp, "H=");
+  else if (from->model == EnigmaModel_M3) fprintf(fp, "M3=");
+  else if (from->model== EnigmaModel_M4) fprintf(fp, "M4=");
 
-  if (from->model != M4) {
+  if (from->model != EnigmaModel_M4) {
     fprintf(fp,
     "%c:%d%d%d:%c%c:%c%c%c=",
     toupper(alpha[gkey->ukwnum]),

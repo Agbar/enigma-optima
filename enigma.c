@@ -28,7 +28,7 @@ int main(int argc, char **argv)
   Key key;
   Key from, to, ckey_res, gkey_res;
   int len, clen;
-  int model = H;
+  enum ModelType_t model = EnigmaModel_H;
   int opt, first = 1, keyop = 0;
   int hc = 0, ic = 0;
   int sw_mode = SW_ONSTART;
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
       case 'n': if ((max_pass = scan_posint(optarg)) == -1) usage(); break;
       case 'z': if ((max_score = scan_posint(optarg)) == -1) usage(); break;
       case 'o': if (!(outfile = open_outfile(optarg))) usage(); break;
-      case 'M': if ((model = get_model(optarg)) == -1 || !first) usage();
+      case 'M': if ((model = get_model(optarg)) == EnigmaModel_Error || !first) usage();
                 if (!init_key_default(&key, model)) usage(); break;
       default: usage();
     }

@@ -3,16 +3,16 @@
 
 #include "key.h"
 
-int get_model(char *s);
-int set_ukw(Key *key, char *s, int model);
-int set_walze(Key *key, char *s, int model);
-int set_ring(Key *key, char *s, int model);
-int set_mesg(Key *key, char *s, int model);
+enum ModelType_t get_model(char *s);
+int set_ukw(Key *key, char *s, enum ModelType_t model);
+int set_walze(Key *key, char *s, enum ModelType_t model);
+int set_ring(Key *key, char *s, enum ModelType_t model);
+int set_mesg(Key *key, char *s, enum ModelType_t model);
 int set_stecker(Key *key, char *s);
 int get_sw_mode(char *s);
 int get_firstpass(char *s);
-int set_key(Key *key, const char *keystring, int model, int adjust);
-int set_range(Key *from, Key *to, const char *kf, const char *kt, int model);
+int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust);
+int set_range(Key *from, Key *to, const char *kf, const char *kt, enum ModelType_t model);
 
 #endif
 
@@ -22,5 +22,5 @@ int set_range(Key *from, Key *to, const char *kf, const char *kt, int model);
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

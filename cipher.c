@@ -187,11 +187,11 @@ void enigma_cipher_init(enigma_cpu_flags_t cpu, int machine_type, enigma_prepare
     {
         switch(machine_type)
         {
-        case H:
-        case M3:
+        case EnigmaModel_H:
+        case EnigmaModel_M3:
             enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_M_H3;
             break;
-        case M4:
+        case EnigmaModel_M4:
             enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_ALL;
         }
     }

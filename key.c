@@ -3,21 +3,19 @@
 
 
 /* initialize key to defaults */
-int init_key_default(Key *key, int model)
+int init_key_default(Key *key, enum ModelType_t model)
 {
-  Key def_H  = {H, 1,{0,1,2,3},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
-  Key def_M3 = {M3,1,{0,1,2,3},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
-  Key def_M4 = {M4,3,{9,1,2,3},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
-
-  int i;
+  Key def_H  = {EnigmaModel_H, 1,{0,1,2,3},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
+  Key def_M3 = {EnigmaModel_M3,1,{0,1,2,3},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
+  Key def_M4 = {EnigmaModel_M4,3,{9,1,2,3},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
 
   switch (model) {
-    case H : *key = def_H; break;
-    case M3: *key = def_M3; break;
-    case M4: *key = def_M4; break;
+    case EnigmaModel_H : *key = def_H; break;
+    case EnigmaModel_M3: *key = def_M3; break;
+    case EnigmaModel_M4: *key = def_M4; break;
     default: return 0;
   }
-
+  int i;
   for (i = 0; i < 26; i++)
     key->stbrett.letters[i] = key->sf[i] = i;
 
@@ -26,27 +24,24 @@ int init_key_default(Key *key, int model)
 }
 
 /* initializes each key element to the lowest possible value */
-int init_key_low(Key *key, int model)
+int init_key_low(Key *key, enum ModelType_t model)
 {
-    Key low_H  = {H, 0,{0,1,1,1},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
-    Key low_M3 = {M3,1,{0,1,1,1},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
-    Key low_M4 = {M4,3,{9,1,1,1},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
-
-    int i;
-
+    Key low_H  = {EnigmaModel_H, 0,{0,1,1,1},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
+    Key low_M3 = {EnigmaModel_M3,1,{0,1,1,1},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
+    Key low_M4 = {EnigmaModel_M4,3,{9,1,1,1},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
 
     switch (model) {
-      case H : *key = low_H; break;
-      case M3: *key = low_M3; break;
-      case M4: *key = low_M4; break;
+      case EnigmaModel_H : *key = low_H; break;
+      case EnigmaModel_M3: *key = low_M3; break;
+      case EnigmaModel_M4: *key = low_M4; break;
       default: return 0;
     }
 
+    int i;
     for (i = 0; i < 26; i++)
       key->stbrett.letters[i] = key->sf[i] = i;
 
     return 1;
-
 }
 
 /* compares ukwnum thru r_mesg, omits g_ring, l_ring        */

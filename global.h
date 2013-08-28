@@ -3,10 +3,6 @@
 
 #define WINDOWS
 
-#define H 0
-#define M3 1
-#define M4 2
-
 #define NLINE1 76
 #define NLINE2 58
 #define CT 250
