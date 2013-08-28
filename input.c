@@ -87,14 +87,14 @@ int set_walze(Key *key, char *s, int model)
   x = s;
   if (model == M4) {
     if (*x == 'B' || *x == 'b')
-      key->g_slot = 9;
+      key->slot.g = 9;
     if (*x == 'G' || *x == 'g')
-      key->g_slot = 10;
+      key->slot.g = 10;
     x++;
   }
-  key->l_slot = *x++ - '0';
-  key->m_slot = *x++ - '0';
-  key->r_slot = *x - '0';
+  key->slot.l = *x++ - '0';
+  key->slot.m = *x++ - '0';
+  key->slot.r = *x - '0';
 
   return 1;
 }
@@ -118,10 +118,10 @@ int set_ring(Key *key, char *s, int model)
 
   x = s;
   if (model == M4)
-    key->g_ring = code[(unsigned char)*x++];
-  key->l_ring = code[(unsigned char)*x++];
-  key->m_ring = code[(unsigned char)*x++];
-  key->r_ring = code[(unsigned char)*x];
+    key->ring.g = code[(unsigned char)*x++];
+  key->ring.l = code[(unsigned char)*x++];
+  key->ring.m = code[(unsigned char)*x++];
+  key->ring.r = code[(unsigned char)*x];
 
   return 1;
 }
@@ -145,10 +145,10 @@ int set_mesg(Key *key, char *s, int model)
 
   x = s;
   if (model == M4)
-    key->g_mesg = code[(unsigned char)*x++];
-  key->l_mesg = code[(unsigned char)*x++];
-  key->m_mesg = code[(unsigned char)*x++];
-  key->r_mesg = code[(unsigned char)*x];
+    key->mesg.g = code[(unsigned char)*x++];
+  key->mesg.l = code[(unsigned char)*x++];
+  key->mesg.m = code[(unsigned char)*x++];
+  key->mesg.r = code[(unsigned char)*x];
 
   return 1;
 }
@@ -261,18 +261,18 @@ int set_key(Key *key, const char *keystring, int model, int adjust)
 
 
     /* error checking for rings */
-    if ( key->m_slot > 5 && key->m_ring > 12 ) {
+    if ( key->slot.m > 5 && key->ring.m > 12 ) {
       if (adjust) {
-        key->m_ring = (key->m_ring + 13) % 26;
-        key->m_mesg = (key->m_mesg + 13) % 26;
+        key->ring.m = (key->ring.m + 13) % 26;
+        key->mesg.m = (key->mesg.m + 13) % 26;
       }
       else
         err_input_fatal(ERR_RING_SHORTCUT);
     }
-    if ( key->r_slot > 5 && key->r_ring > 12 ) {
+    if ( key->slot.r > 5 && key->ring.r > 12 ) {
       if (adjust) {
-        key->r_ring = (key->r_ring + 13) % 26;
-        key->r_mesg = (key->r_mesg + 13) % 26;
+        key->ring.r = (key->ring.r + 13) % 26;
+        key->mesg.r = (key->mesg.r + 13) % 26;
       }
       else
         err_input_fatal(ERR_RING_SHORTCUT);

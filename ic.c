@@ -33,19 +33,19 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
   /* iterate thru all but ring settings */
   ckey = gkey = lo = *from;
-  ckey.m_ring = ckey.r_ring = 0;
+  ckey.ring.m = ckey.ring.r = 0;
   bestic = 0;
   for (ckey.ukwnum=lo.ukwnum; ckey.ukwnum<=hi[m][1]; ckey.ukwnum++) {
-   for (ckey.g_slot=lo.g_slot; ckey.g_slot<=hi[m][2]; ckey.g_slot++) {
-    for (ckey.l_slot=lo.l_slot; ckey.l_slot<=hi[m][3]; ckey.l_slot++) {
-     for (ckey.m_slot=lo.m_slot; ckey.m_slot<=hi[m][4]; ckey.m_slot++) {
-       if (ckey.m_slot == ckey.l_slot) continue;
-      for (ckey.r_slot=lo.r_slot; ckey.r_slot<=hi[m][5]; ckey.r_slot++) {
-        if (ckey.r_slot == ckey.l_slot || ckey.r_slot == ckey.m_slot) continue;
-       for (ckey.g_mesg=lo.g_mesg; ckey.g_mesg<=hi[m][8]; ckey.g_mesg++) {
-        for (ckey.l_mesg=lo.l_mesg; ckey.l_mesg<=hi[m][9]; ckey.l_mesg++) {
-         for (ckey.m_mesg=lo.m_mesg; ckey.m_mesg<=hi[m][10]; ckey.m_mesg++) {
-          for (ckey.r_mesg=lo.r_mesg; ckey.r_mesg<=hi[m][11]; ckey.r_mesg++) {
+   for (ckey.slot.g=lo.slot.g; ckey.slot.g<=hi[m][2]; ckey.slot.g++) {
+    for (ckey.slot.l=lo.slot.l; ckey.slot.l<=hi[m][3]; ckey.slot.l++) {
+     for (ckey.slot.m=lo.slot.m; ckey.slot.m<=hi[m][4]; ckey.slot.m++) {
+       if (ckey.slot.m == ckey.slot.l) continue;
+      for (ckey.slot.r=lo.slot.r; ckey.slot.r<=hi[m][5]; ckey.slot.r++) {
+        if (ckey.slot.r == ckey.slot.l || ckey.slot.r == ckey.slot.m) continue;
+       for (ckey.mesg.g=lo.mesg.g; ckey.mesg.g<=hi[m][8]; ckey.mesg.g++) {
+        for (ckey.mesg.l=lo.mesg.l; ckey.mesg.l<=hi[m][9]; ckey.mesg.l++) {
+         for (ckey.mesg.m=lo.mesg.m; ckey.mesg.m<=hi[m][10]; ckey.mesg.m++) {
+          for (ckey.mesg.r=lo.mesg.r; ckey.mesg.r<=hi[m][11]; ckey.mesg.r++) {
 
              a = dgetic_ALL(&ckey, len);
              if (a-bestic > DBL_EPSILON) {
@@ -70,22 +70,22 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
   /* recover ring settings */
   ckey = gkey;
-  for (ckey.r_ring = 0; ckey.r_ring < 26; ckey.r_ring++) {
+  for (ckey.ring.r = 0; ckey.ring.r < 26; ckey.ring.r++) {
     a = dgetic_ALL(&ckey, len);
     if (a-bestic > DBL_EPSILON) {
       bestic = a;
       gkey = ckey;
     }
-    ckey.r_mesg = (ckey.r_mesg+1) % 26;
+    ckey.mesg.r = (ckey.mesg.r+1) % 26;
   }
   ckey = gkey;
-  for (ckey.m_ring = 0; ckey.m_ring < 26; ckey.m_ring++) {
+  for (ckey.ring.m = 0; ckey.ring.m < 26; ckey.ring.m++) {
     a = dgetic_ALL(&ckey, len);
     if (a-bestic > DBL_EPSILON) {
       bestic = a;
       gkey = ckey;
     }
-    ckey.m_mesg = (ckey.m_mesg+1) % 26;
+    ckey.mesg.m = (ckey.mesg.m+1) % 26;
   }
 
   /* try to recover stecker of the best key (gkey) */
@@ -120,18 +120,18 @@ void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key 
   ckey = gkey = lo = *from;
   bestic = 0;
   for (ckey.ukwnum=lo.ukwnum; ckey.ukwnum<=hi[m][1]; ckey.ukwnum++) {
-   for (ckey.g_slot=lo.g_slot; ckey.g_slot<=hi[m][2]; ckey.g_slot++) {
-    for (ckey.l_slot=lo.l_slot; ckey.l_slot<=hi[m][3]; ckey.l_slot++) {
-     for (ckey.m_slot=lo.m_slot; ckey.m_slot<=hi[m][4]; ckey.m_slot++) {
-       if (ckey.m_slot == ckey.l_slot) continue;
-      for (ckey.r_slot=lo.r_slot; ckey.r_slot<=hi[m][5]; ckey.r_slot++) {
-        if (ckey.r_slot == ckey.l_slot || ckey.r_slot == ckey.m_slot) continue;
-       for (ckey.m_ring=lo.m_ring; ckey.m_ring<=hi[m][6]; ckey.m_ring++) {
-        for (ckey.r_ring=lo.r_ring; ckey.r_ring<=hi[m][7]; ckey.r_ring++) {
-         for (ckey.g_mesg=lo.g_mesg; ckey.g_mesg<=hi[m][8]; ckey.g_mesg++) {
-          for (ckey.l_mesg=lo.l_mesg; ckey.l_mesg<=hi[m][9]; ckey.l_mesg++) {
-           for (ckey.m_mesg=lo.m_mesg; ckey.m_mesg<=hi[m][10]; ckey.m_mesg++) {
-            for (ckey.r_mesg=lo.r_mesg; ckey.r_mesg<=hi[m][11]; ckey.r_mesg++) {
+   for (ckey.slot.g=lo.slot.g; ckey.slot.g<=hi[m][2]; ckey.slot.g++) {
+    for (ckey.slot.l=lo.slot.l; ckey.slot.l<=hi[m][3]; ckey.slot.l++) {
+     for (ckey.slot.m=lo.slot.m; ckey.slot.m<=hi[m][4]; ckey.slot.m++) {
+       if (ckey.slot.m == ckey.slot.l) continue;
+      for (ckey.slot.r=lo.slot.r; ckey.slot.r<=hi[m][5]; ckey.slot.r++) {
+        if (ckey.slot.r == ckey.slot.l || ckey.slot.r == ckey.slot.m) continue;
+       for (ckey.ring.m=lo.ring.m; ckey.ring.m<=hi[m][6]; ckey.ring.m++) {
+        for (ckey.ring.r=lo.ring.r; ckey.ring.r<=hi[m][7]; ckey.ring.r++) {
+         for (ckey.mesg.g=lo.mesg.g; ckey.mesg.g<=hi[m][8]; ckey.mesg.g++) {
+          for (ckey.mesg.l=lo.mesg.l; ckey.mesg.l<=hi[m][9]; ckey.mesg.l++) {
+           for (ckey.mesg.m=lo.mesg.m; ckey.mesg.m<=hi[m][10]; ckey.mesg.m++) {
+            for (ckey.mesg.r=lo.mesg.r; ckey.mesg.r<=hi[m][11]; ckey.mesg.r++) {
 
              a = dgetic_ALL(&ckey, len);
              if (a-bestic > DBL_EPSILON) {
