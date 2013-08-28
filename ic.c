@@ -11,7 +11,7 @@
 #include "config\types.h"
 
 
-void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
+void ic_noring( const Key *from, const Key *to __attribute__((unused)), const Key *ckey_res, const Key *gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
                 FILE *outfile, int act_on_sig, int len )
 {
