@@ -33,11 +33,20 @@ struct RingsState
     int8_t g, l, m, r;
 };
 
+/* Model
+ * * * * */
+ enum ModelType_t{
+    EnigmaModel_Error   = -1,
+    EnigmaModel_H       =  0,
+    EnigmaModel_M3      =  1,
+    EnigmaModel_M4      =  2,
+ };
+
 /* Key
  * * * */
 typedef struct _key_t
 {
-        int model;
+        enum ModelType_t model;
         int8_t ukwnum;
         struct RingsState slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
         struct RingsState ring; ///< ringstellungen
@@ -48,8 +57,8 @@ typedef struct _key_t
         int score;      /* hillclimbing score */
 } Key;
 
-int init_key_default(Key *key, int model);
-int init_key_low(Key *key, int model);
+int init_key_default(Key *key, enum ModelType_t model);
+int init_key_low(Key *key, enum ModelType_t model);
 int keycmp(const Key *k1, const Key *k2);
 
 #endif

@@ -58,7 +58,7 @@ void print_key(FILE *fp, const Key *key)
     stecker[i] = toupper(alpha[key->sf[i]]);
   stecker[i] = '\0';
 
-  if (key->model != M4) {
+  if (key->model != EnigmaModel_M4) {
     fprintf(fp,
 "Score: %d\n\
 UKW: %c\n\

@@ -10,38 +10,38 @@
 
 
 /* determine model */
-int get_model(char *s)
+enum ModelType_t get_model(char *s)
 {
   if (strcmp(s, "H") == 0 || strcmp(s, "h") == 0)
-    return H;
+    return EnigmaModel_H;
   if (strcmp(s, "M3") == 0 || strcmp(s, "m3") == 0)
-    return M3;
+    return EnigmaModel_M3;
   if (strcmp(s, "M4") == 0 || strcmp(s, "m4") == 0)
-    return M4;
+    return EnigmaModel_M4;
 
-  return -1;
+  return EnigmaModel_Error;
 }
 
 /* set UKW */
-int set_ukw(Key *key, char *s, int model)
+int set_ukw(Key *key, char *s, enum ModelType_t model)
 {
   if (strcmp(s, "A") == 0 || strcmp(s, "a") == 0) {
     switch (model) {
-      case H: key->ukwnum = 0; break;
+      case EnigmaModel_H: key->ukwnum = 0; break;
       default: return 0;
     }
     return 1;
   }
   if (strcmp(s, "B") == 0 || strcmp(s, "b") == 0) {
     switch (model) {
-      case M4: key->ukwnum = 3; break;
+      case EnigmaModel_M4: key->ukwnum = 3; break;
       default: key->ukwnum = 1; break;
     }
     return 1;
   }
   if (strcmp(s, "C") == 0 || strcmp(s, "c") == 0) {
     switch (model) {
-      case M4: key->ukwnum = 4; break;
+      case EnigmaModel_M4: key->ukwnum = 4; break;
       default: key->ukwnum = 2; break;
     }
     return 1;
@@ -51,29 +51,29 @@ int set_ukw(Key *key, char *s, int model)
 }
 
 /* set walzen */
-int set_walze(Key *key, char *s, int model)
+int set_walze(Key *key, char *s, enum ModelType_t model)
 {
   char *x;
 
   switch (model) {
-    case M4: if (strlen(s) != 4) return 0; break;
+    case EnigmaModel_M4: if (strlen(s) != 4) return 0; break;
     default: if (strlen(s) != 3) return 0; break;
   }
 
   x = s;
-  if (model == M4) { /* greek wheel */
+  if (model == EnigmaModel_M4) { /* greek wheel */
     if ( !(*x == 'B' || *x == 'b' || *x == 'G' || *x == 'g') )
       return 0;
     x++;
   }
   while (*x != '\0') {
     switch (model) {
-      case H: /* digits 1-5, no repetitions */
+      case EnigmaModel_H: /* digits 1-5, no repetitions */
         if ( !isdigit((unsigned char)*x) || *x < '0' || *x > '5'
            || strrchr(x, *x) != x )
              return 0;
         break;
-      case M3: case M4: /* digits 1-8, no repetitions */
+      case EnigmaModel_M3: case EnigmaModel_M4: /* digits 1-8, no repetitions */
         if ( !isdigit((unsigned char)*x) || *x < '0' || *x > '8'
            || strrchr(x, *x) != x )
              return 0;
@@ -85,7 +85,7 @@ int set_walze(Key *key, char *s, int model)
   }
 
   x = s;
-  if (model == M4) {
+  if (model == EnigmaModel_M4) {
     if (*x == 'B' || *x == 'b')
       key->slot.g = 9;
     if (*x == 'G' || *x == 'g')
@@ -100,12 +100,12 @@ int set_walze(Key *key, char *s, int model)
 }
 
 /* set rings */
-int set_ring(Key *key, char *s, int model)
+int set_ring(Key *key, char *s, enum ModelType_t model)
 {
   char *x;
 
   switch (model) {
-    case M4: if (strlen(s) != 4) return 0; break;
+    case EnigmaModel_M4: if (strlen(s) != 4) return 0; break;
     default: if (strlen(s) != 3) return 0; break;
   }
 
@@ -117,7 +117,7 @@ int set_ring(Key *key, char *s, int model)
   }
 
   x = s;
-  if (model == M4)
+  if (model == EnigmaModel_M4)
     key->ring.g = code[(unsigned char)*x++];
   key->ring.l = code[(unsigned char)*x++];
   key->ring.m = code[(unsigned char)*x++];
@@ -127,12 +127,12 @@ int set_ring(Key *key, char *s, int model)
 }
 
 /* set message keys */
-int set_mesg(Key *key, char *s, int model)
+int set_mesg(Key *key, char *s, enum ModelType_t model)
 {
   char *x;
 
   switch (model) {
-    case M4: if (strlen(s) != 4) return 0; break;
+    case EnigmaModel_M4: if (strlen(s) != 4) return 0; break;
     default: if (strlen(s) != 3) return 0; break;
   }
 
@@ -144,7 +144,7 @@ int set_mesg(Key *key, char *s, int model)
   }
 
   x = s;
-  if (model == M4)
+  if (model == EnigmaModel_M4)
     key->mesg.g = code[(unsigned char)*x++];
   key->mesg.l = code[(unsigned char)*x++];
   key->mesg.m = code[(unsigned char)*x++];
@@ -212,7 +212,7 @@ int get_firstpass(char *s)
 }
 
 /* set *key according to *keystring, model */
-int set_key(Key *key, const char *keystring, int model, int adjust)
+int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust)
 {
     int i, d;
     unsigned int len;
@@ -224,8 +224,8 @@ int set_key(Key *key, const char *keystring, int model, int adjust)
     if (!init_key_low(key, model)) return 0;
 
     switch (model) {
-      case H: case M3: len = 12; d = 4; break;
-      case M4: len = 14; d = 5; break;
+      case EnigmaModel_H: case EnigmaModel_M3: len = 12; d = 4; break;
+      case EnigmaModel_M4: len = 14; d = 5; break;
       default: return 0;
     }
 
@@ -249,7 +249,7 @@ int set_key(Key *key, const char *keystring, int model, int adjust)
     if (!set_walze(key, x, model)) return 0;
 
     x += d;
-    if (model == M4)
+    if (model == EnigmaModel_M4)
       sprintf(ring, "AA");
     else
       sprintf(ring, "A");
@@ -282,7 +282,7 @@ int set_key(Key *key, const char *keystring, int model, int adjust)
 }
 
 /* set keys *from, *to according to [keystrings kf, kt], model */
-int set_range(Key *from, Key *to, const char *kf, const char *kt, int model)
+int set_range(Key *from, Key *to, const char *kf, const char *kt, enum ModelType_t model)
 {
   if (!set_key(from, kf, model, 0)) return 0;
   if (!set_key(to, kt, model, 0)) return 0;
