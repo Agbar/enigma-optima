@@ -28,7 +28,6 @@ void print_plaintext(FILE *fp, const PermutationMap_t *stbrett, int len)
 {
   int i;
   text_t c;
-  int ofd;
 
   for (i = 0; i < len; i++) {
     c = decode(0,i,stbrett);
@@ -40,6 +39,7 @@ void print_plaintext(FILE *fp, const PermutationMap_t *stbrett, int len)
 
   fflush(fp);
 #ifndef WINDOWS
+  int ofd;
   ofd = fileno(fp);
   fsync(ofd);
 #endif
@@ -50,7 +50,6 @@ void print_key(FILE *fp, const Key *key)
   char date[DATELEN];
   char stecker[27];
   int i;
-  int ofd;
 
   datestring(date);
   fprintf(fp, "Date: %s\n", date);
@@ -96,6 +95,7 @@ Message key: %c%c%c%c\n\n",
 
   fflush(fp);
 #ifndef WINDOWS
+  int ofd;
   ofd = fileno(fp);
   fsync(ofd);
 #endif

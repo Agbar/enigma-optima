@@ -60,7 +60,7 @@ void save_state_exit(State state, int retval)
   exit(retval);
 }
 
-void handle_signal(int signum)
+void handle_signal(int signum __attribute__ ((unused)))
 {
   do_shutdown = 1;
 }

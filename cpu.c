@@ -20,7 +20,10 @@ void enigma_cpu_flags_init(enigma_cpu_flags_t allowed)
 
 static enigma_cpu_flags_t get_hardware_supported_cpu_flags(void)
 {
-    unsigned int eax, ebx, ecx, edx;
+    unsigned int eax,
+                 ebx = 0,
+                 ecx = 0,
+                 edx = 0;
     enigma_cpu_flags_t cpu_flags = enigma_cpu_generic;
 
     __get_cpuid( 1, &eax, &ebx, &ecx, &edx );
