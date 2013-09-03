@@ -1,13 +1,12 @@
 #include "global.h"
 #include "key.h"
 
-
 /* initialize key to defaults */
 int init_key_default(Key *key, enum ModelType_t model)
 {
-  Key def_H  = {EnigmaModel_H, 1,{0,1,2,3},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
-  Key def_M3 = {EnigmaModel_M3,1,{0,1,2,3},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
-  Key def_M4 = {EnigmaModel_M4,3,{9,1,2,3},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
+  Key def_H  = {{{0}},{0,1,2,3},{0,0,0,0},{0,0,0,0},1,EnigmaModel_H, {0},0,0};
+  Key def_M3 = {{{0}},{0,1,2,3},{0,0,0,0},{0,0,0,0},1,EnigmaModel_M3,{0},0,0};
+  Key def_M4 = {{{0}},{9,1,2,3},{0,0,0,0},{0,0,0,0},3,EnigmaModel_M4,{0},0,0};
 
   switch (model) {
     case EnigmaModel_H : *key = def_H; break;
@@ -26,9 +25,9 @@ int init_key_default(Key *key, enum ModelType_t model)
 /* initializes each key element to the lowest possible value */
 int init_key_low(Key *key, enum ModelType_t model)
 {
-    Key low_H  = {EnigmaModel_H, 0,{0,1,1,1},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
-    Key low_M3 = {EnigmaModel_M3,1,{0,1,1,1},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
-    Key low_M4 = {EnigmaModel_M4,3,{9,1,1,1},{0,0,0,0},{0,0,0,0},{{0}},{0},0,0};
+    Key low_H  = {{{0}},{0,1,1,1},{0,0,0,0},{0,0,0,0},0,EnigmaModel_H, {0},0,0};
+    Key low_M3 = {{{0}},{0,1,1,1},{0,0,0,0},{0,0,0,0},1,EnigmaModel_M3,{0},0,0};
+    Key low_M4 = {{{0}},{9,1,1,1},{0,0,0,0},{0,0,0,0},3,EnigmaModel_M4,{0},0,0};
 
     switch (model) {
       case EnigmaModel_H : *key = low_H; break;
