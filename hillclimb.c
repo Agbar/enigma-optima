@@ -241,8 +241,8 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                }
 
                /* complete ckey initialization */
-               for (i = 0; i < 26; i++)
-                 ckey.sf[i] = ckey.stbrett.letters[i] = i;
+               Fill0To25(ckey.sf);
+               Fill0To25(ckey.stbrett.letters);
                ckey.count = 0;
 
                /* initialize path_lookup */
