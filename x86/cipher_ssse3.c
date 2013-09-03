@@ -7,6 +7,10 @@
 
 void prepare_decoder_lookup_M_H3_ssse3( const Key *key, int len );
 void prepare_decoder_lookup_ALL_ssse3( const Key *key, int len );
+inline extern
+v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, const Key* const restrict key );
+inline extern
+v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec );
 
 enigma_cipher_function_t enigma_cipher_decoder_lookup_ssse3 = {prepare_decoder_lookup_M_H3_ssse3, prepare_decoder_lookup_ALL_ssse3};
 
@@ -210,6 +214,3 @@ void PrintLookup( FILE* file, v32qi vec, const char* const restrict name )
     fprintf( file, "%2i\n", vec[25] );
     fflush( file );
 }
-
-inline extern
-v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, const Key* const restrict key );
