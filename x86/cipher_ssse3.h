@@ -13,7 +13,6 @@ struct PathLookupSsse3_t
 {
     struct LookupChunk_t lookups[24];
     uint_least16_t nextBite[24];
-    uint_least8_t lookupsCounter;
     // mapping forward and reverse
     PermutationMap_t r_ring[2];
 };
