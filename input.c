@@ -8,8 +8,8 @@
 #include "stecker.h"
 #include "input.h"
 
-
-/* determine model */
+/** \brief Determine model.
+ */
 enum ModelType_t get_model(char *s)
 {
   if (strcmp(s, "H") == 0 || strcmp(s, "h") == 0)
@@ -50,7 +50,14 @@ int set_ukw(Key *key, char *s, enum ModelType_t model)
   return 0;
 }
 
-/* set walzen */
+/** \brief Set walzen.
+ *
+ * \param key Key*
+ * \param s char*
+ * \param model enum ModelType_t
+ * \return int
+ *
+ */
 int set_walze(Key *key, char *s, enum ModelType_t model)
 {
   char *x;
@@ -99,7 +106,14 @@ int set_walze(Key *key, char *s, enum ModelType_t model)
   return 1;
 }
 
-/* set rings */
+/** \brief Set rings.
+ *
+ * \param key Key*
+ * \param s char*
+ * \param model enum ModelType_t
+ * \return int
+ *
+ */
 int set_ring(Key *key, char *s, enum ModelType_t model)
 {
   char *x;
@@ -126,7 +140,14 @@ int set_ring(Key *key, char *s, enum ModelType_t model)
   return 1;
 }
 
-/* set message keys */
+/** \brief Set message keys.
+ *
+ * \param key Key*
+ * \param s char*
+ * \param model enum ModelType_t
+ * \return int
+ *
+ */
 int set_mesg(Key *key, char *s, enum ModelType_t model)
 {
   char *x;
@@ -153,7 +174,13 @@ int set_mesg(Key *key, char *s, enum ModelType_t model)
   return 1;
 }
 
-/* set steckerbrett */
+/** \brief Set steckerbrett.
+ *
+ * \param key Key*
+ * \param s char*
+ * \return int
+ *
+ */
 int set_stecker(Key *key, char *s)
 {
   int len;
@@ -187,7 +214,12 @@ int set_stecker(Key *key, char *s)
   return 1;
 }
 
-/* determine mode for slow ring */
+/** \brief Determine mode for slow ring.
+ *
+ * \param s char*
+ * \return int
+ *
+ */
 int get_sw_mode(char *s)
 {
   if (strcmp(s, "0") == 0)
@@ -200,7 +232,12 @@ int get_sw_mode(char *s)
   return -1;
 }
 
-/* get firstpass */
+/** \brief Get firstpass.
+ *
+ * \param s char*
+ * \return int
+ *
+ */
 int get_firstpass(char *s)
 {
   if (strcmp(s, "0") == 0)
@@ -211,7 +248,15 @@ int get_firstpass(char *s)
   return -1;
 }
 
-/* set *key according to *keystring, model */
+/** \brief Set *key according to *keystring, model.
+ *
+ * \param key Key*
+ * \param keystring const char*
+ * \param model enum ModelType_t
+ * \param adjust int
+ * \return int
+ *
+ */
 int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust)
 {
     int i, d;
@@ -281,7 +326,16 @@ int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust)
     return 1;
 }
 
-/* set keys *from, *to according to [keystrings kf, kt], model */
+/** \brief Set keys *from, *to according to [keystrings kf, kt], model.
+ *
+ * \param from Key*
+ * \param to Key*
+ * \param kf const char*
+ * \param kt const char*
+ * \param model enum ModelType_t
+ * \return int
+ *
+ */
 int set_range(Key *from, Key *to, const char *kf, const char *kt, enum ModelType_t model)
 {
   if (!set_key(from, kf, model, 0)) return 0;
