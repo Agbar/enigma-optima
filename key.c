@@ -20,10 +20,8 @@ int init_key_default( Key *key, enum ModelType_t model )
     default:
         return 0;
     }
-    int i;
-    for( i = 0; i < 26; i++ ) {
-        key->stbrett.letters[i] = key->sf[i] = i;
-    }
+    Fill0To25(key->stbrett.letters);
+    Fill0To25(key->sf);
     return 1;
 }
 
@@ -46,10 +44,8 @@ int init_key_low( Key *key, enum ModelType_t model )
     default:
         return 0;
     }
-    int i;
-    for( i = 0; i < 26; i++ ) {
-        key->stbrett.letters[i] = key->sf[i] = i;
-    }
+    Fill0To25(key->stbrett.letters);
+    Fill0To25(key->sf);
     return 1;
 }
 
@@ -107,6 +103,9 @@ int keycmp(const Key *k1, const Key *k2)
 
 extern
 void FixPermutationMapTail(PermutationMap_t* mapping);
+
+extern
+void Fill0To25(text_t array[26]);
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms

@@ -26,6 +26,22 @@ void FixPermutationMapTail(PermutationMap_t* mapping){
     }
 }
 
+__attribute__((optimize("unroll-loops")))
+inline
+void Fill0To25(text_t array[26])
+{
+    int32_t* arrayInt = (int32_t*)array;
+    int i = 0;
+    int val  = 0x03020100;
+    int step = 0x04040404;
+    for( ; i * 4 < 26 - 3; i++ ){
+        arrayInt[i] = val;
+        val += step;
+    }
+    int16_t* arrayShort = (int16_t*)array;
+    arrayShort[12] = 0x1918;
+}
+
 /* RingsState
  * * * * * * */
 struct RingsState
