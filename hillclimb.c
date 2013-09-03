@@ -19,7 +19,9 @@
 #include "stecker.h"
 #include "state.h"
 #include "config\array_sizes.h"
+#include "config\testing.h"
 #include "config\types.h"
+
 
 #ifdef WINDOWS
 #include <windows.h>

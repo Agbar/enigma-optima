@@ -9,7 +9,7 @@
 //# define TESTING
 #endif
 
-#ifdef TESTING
+#if defined TESTING || defined PROFILING
 # define CONSTANT_SEED
 #endif
 
