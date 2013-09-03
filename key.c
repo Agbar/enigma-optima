@@ -2,44 +2,54 @@
 #include "key.h"
 
 /* initialize key to defaults */
-int init_key_default(Key *key, enum ModelType_t model)
+int init_key_default( Key *key, enum ModelType_t model )
 {
-  Key def_H  = {{{0}},{0,1,2,3},{0,0,0,0},{0,0,0,0},1,EnigmaModel_H, {0},0,0};
-  Key def_M3 = {{{0}},{0,1,2,3},{0,0,0,0},{0,0,0,0},1,EnigmaModel_M3,{0},0,0};
-  Key def_M4 = {{{0}},{9,1,2,3},{0,0,0,0},{0,0,0,0},3,EnigmaModel_M4,{0},0,0};
-
-  switch (model) {
-    case EnigmaModel_H : *key = def_H; break;
-    case EnigmaModel_M3: *key = def_M3; break;
-    case EnigmaModel_M4: *key = def_M4; break;
-    default: return 0;
-  }
-  int i;
-  for (i = 0; i < 26; i++)
-    key->stbrett.letters[i] = key->sf[i] = i;
-
-  return 1;
-
+    Key def_H  = {{{0}}, {0, 1, 2, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, 1, EnigmaModel_H, {0}, 0, 0};
+    Key def_M3 = {{{0}}, {0, 1, 2, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, 1, EnigmaModel_M3, {0}, 0, 0};
+    Key def_M4 = {{{0}}, {9, 1, 2, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, 3, EnigmaModel_M4, {0}, 0, 0};
+    switch( model ) {
+    case EnigmaModel_H :
+        *key = def_H;
+        break;
+    case EnigmaModel_M3:
+        *key = def_M3;
+        break;
+    case EnigmaModel_M4:
+        *key = def_M4;
+        break;
+    default:
+        return 0;
+    }
+    int i;
+    for( i = 0; i < 26; i++ ) {
+        key->stbrett.letters[i] = key->sf[i] = i;
+    }
+    return 1;
 }
 
 /* initializes each key element to the lowest possible value */
-int init_key_low(Key *key, enum ModelType_t model)
+int init_key_low( Key *key, enum ModelType_t model )
 {
-    Key low_H  = {{{0}},{0,1,1,1},{0,0,0,0},{0,0,0,0},0,EnigmaModel_H, {0},0,0};
-    Key low_M3 = {{{0}},{0,1,1,1},{0,0,0,0},{0,0,0,0},1,EnigmaModel_M3,{0},0,0};
-    Key low_M4 = {{{0}},{9,1,1,1},{0,0,0,0},{0,0,0,0},3,EnigmaModel_M4,{0},0,0};
-
-    switch (model) {
-      case EnigmaModel_H : *key = low_H; break;
-      case EnigmaModel_M3: *key = low_M3; break;
-      case EnigmaModel_M4: *key = low_M4; break;
-      default: return 0;
+    Key low_H  = {{{0}}, {0, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, 0, EnigmaModel_H, {0}, 0, 0};
+    Key low_M3 = {{{0}}, {0, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, 1, EnigmaModel_M3, {0}, 0, 0};
+    Key low_M4 = {{{0}}, {9, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, 3, EnigmaModel_M4, {0}, 0, 0};
+    switch( model ) {
+    case EnigmaModel_H :
+        *key = low_H;
+        break;
+    case EnigmaModel_M3:
+        *key = low_M3;
+        break;
+    case EnigmaModel_M4:
+        *key = low_M4;
+        break;
+    default:
+        return 0;
     }
-
     int i;
-    for (i = 0; i < 26; i++)
-      key->stbrett.letters[i] = key->sf[i] = i;
-
+    for( i = 0; i < 26; i++ ) {
+        key->stbrett.letters[i] = key->sf[i] = i;
+    }
     return 1;
 }
 
@@ -91,7 +101,6 @@ int keycmp(const Key *k1, const Key *k2)
     if ( k1->mesg.r > k2->mesg.r ) return 1;
     else return -1;
   }
-
   return 0;
 
 }
