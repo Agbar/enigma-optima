@@ -44,17 +44,16 @@ struct RingsState
 
 /* Key
  * * * */
-typedef struct _key_t
-{
-        enum ModelType_t model;
-        int8_t ukwnum;
-        struct RingsState slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
-        struct RingsState ring; ///< ringstellungen
-        struct RingsState mesg; ///< message settings
-        ALIGNED_16(PermutationMap_t stbrett);
-        text_t sf[26];     /* swapped/free letters */
-        int count;      /* number of swapped letters */
-        int score;      /* hillclimbing score */
+typedef struct _key_t {
+    ALIGNED_16(PermutationMap_t stbrett);
+    struct RingsState slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
+    struct RingsState ring; ///< ringstellungen
+    struct RingsState mesg; ///< message settings
+    int8_t ukwnum;
+    enum ModelType_t model;
+    text_t sf[26];     /* swapped/free letters */
+    int count;      /* number of swapped letters */
+    int score;      /* hillclimbing score */
 } Key;
 
 int init_key_default(Key *key, enum ModelType_t model);
