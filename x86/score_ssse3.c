@@ -5,6 +5,7 @@
 #include "..\ciphertext.h"
 #include "score_ssse3.h"
 #include "cipher_ssse3.h"
+#include "cipher_ssse3_inlines.h"
 
 // SSSE3 scores
 static double icscore_ssse3( const Key* const restrict key, int len );
