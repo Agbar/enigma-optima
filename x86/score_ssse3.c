@@ -45,15 +45,14 @@ static void DecodeScoredMessagePart( const const Key* const restrict key, int le
         v16qi cBite = {0};
         lookupNumber += lookupsToNextBite;
         switch( lookupsToNextBite ) {
+        case 4:
+            cBite  = enigma_cipher_decode_ssse3( messageBite, lookupNumber - 4, key );
         case 3:
-            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber-3, key );
+            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 3, key );
         case 2:
-            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber-2, key );
+            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 2, key );
         case 1:
-            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber-1, key );
-        case 0:
-            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber, key );
-            ++lookupNumber;
+            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 1, key );
             break;
         default:
             exit(5);

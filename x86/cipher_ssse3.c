@@ -191,7 +191,7 @@ void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const Key *c
             // next chunk of message, but only R ring was turning
             messagePosition = ( messagePosition + 16 ) & ~15;
             // update turnovers
-            PathLookupSsse3.nextBite[biteCounter++] = i;
+            PathLookupSsse3.nextBite[biteCounter++] = i + 1;
             if ( biteCounter >= bitesLimit ){
                 break;
             }
