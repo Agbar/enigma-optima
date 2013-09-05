@@ -21,29 +21,46 @@ enigma_score_function_t enigma_score_ssse3  = { triscore_ssse3,  biscore_ssse3 ,
 
 union ScoringDecodedMessage decodedMessageSsse3;
 
-__attribute__ ((optimize("unroll-loops")))
+__attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
 static void DecodeScoredMessagePart( const const Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
-    int messageBite  = 0;
-    int lookupNumber = 0;
-    int nextBiteCounter = 0;
+    uint16_t messageBite  = 0;
+    uint_least16_t lookupNumber = 0;
 
-    v16qi cBite = {0};
     while( messageBite < ( len + 15 ) / 16 )
     {
-        v16qi cBitePart = enigma_cipher_decode_ssse3( messageBite, lookupNumber, key );
-
-        cBite |= cBitePart;
-
-        ++lookupNumber;
-        if( lookupNumber > PathLookupSsse3.nextBite[nextBiteCounter] ) {
-            // store whole decoded bite
-            output -> vector16[messageBite] = cBite;
-            cBite ^= cBite;
-            nextBiteCounter++;
-            messageBite++;
+        /* Worst case:
+         *  P0123456789ABCDE    R-ring position (turnovers on 12 & 25, coded C & P)
+         *  0123456789ABCDEF    characters in bite
+         *  |||           |
+         *  |||           +-  turnover on second notch of R ring
+         *  ||+- turnover caused by M-ring (turning L- & M- rings).
+         *  |+-- turnover setting M-ring to turnover position
+         *  +--- last character from previous bite
+         *
+         *  In the worst case there are 4 lookups per bite.
+         */
+        uint_least16_t lookupsToNextBite = PathLookupSsse3.nextBite[messageBite] - lookupNumber;
+        v16qi cBite = {0};
+        lookupNumber += lookupsToNextBite;
+        switch( lookupsToNextBite ) {
+        case 3:
+            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber-3, key );
+        case 2:
+            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber-2, key );
+        case 1:
+            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber-1, key );
+        case 0:
+            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber, key );
+            ++lookupNumber;
+            break;
+        default:
+            exit(5);
         }
+        // store whole decoded bite
+        output -> vector16[messageBite] = cBite;
+        messageBite++;
     }
 }
 
