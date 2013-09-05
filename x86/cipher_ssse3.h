@@ -12,7 +12,7 @@ struct LookupChunk_t {
 struct PathLookupSsse3_t
 {
     struct LookupChunk_t lookups[24];
-    uint_least16_t nextBite[24];
+    uint_least16_t nextBite[24];///< Last lookup number in a bite.
     // mapping forward and reverse
     PermutationMap_t r_ring[2];
 };
