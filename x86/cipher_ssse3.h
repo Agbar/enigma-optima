@@ -18,7 +18,7 @@ struct PathLookupSsse3_t
 };
 
 /// Last message decoded by SSSE3 path.
-union ScoringDecodedMessage decodedMessageSsse3;
+extern union ScoringDecodedMessage decodedMessageSsse3;
 
 extern struct PathLookupSsse3_t PathLookupSsse3;
 
