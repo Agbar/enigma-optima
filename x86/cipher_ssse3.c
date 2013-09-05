@@ -6,6 +6,10 @@
 #include "cipher_ssse3.h"
 #include "cipher_ssse3_inlines.h"
 
+#ifndef __SSSE3__
+# error SSSE3 not defined
+#endif
+
 void prepare_decoder_lookup_M_H3_ssse3( const Key *key, int len );
 void prepare_decoder_lookup_ALL_ssse3( const Key *key, int len );
 inline extern
