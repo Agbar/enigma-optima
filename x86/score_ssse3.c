@@ -7,6 +7,10 @@
 #include "cipher_ssse3.h"
 #include "cipher_ssse3_inlines.h"
 
+#ifndef __SSSE3__
+# error SSSE3 not defined
+#endif
+
 // SSSE3 scores
 static double icscore_ssse3( const Key* const restrict key, int len );
 static int   uniscore_ssse3( const Key* const restrict key, int len );
