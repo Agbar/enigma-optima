@@ -32,7 +32,7 @@ namespace Enigma
         }
     };
 
-    ScoringParams ParamsForScoringOptimized( &enigma_score_opt,   &decodedMessageStandard_d );
+    ScoringParams ParamsForScoringOptimized( &enigma_score_opt,   &decodedMessageStandard );
     ScoringParams ParamsForScoringSsse3    ( &enigma_score_ssse3, &decodedMessageSsse3 );
 
     /** \brief Function needed to differentiate between printing int and double.

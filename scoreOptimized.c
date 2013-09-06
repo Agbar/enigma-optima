@@ -24,7 +24,7 @@ static int   triscore(const Key* const restrict key, int len);
 
 enigma_score_function_t enigma_score_opt = { triscore, biscore, icscore, uniscore };
 
-union ScoringDecodedMessage decodedMessageStandard_d;
+union ScoringDecodedMessage decodedMessageStandard;
 
 /*
  * opti scores
