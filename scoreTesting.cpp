@@ -9,6 +9,7 @@
 extern "C" {
 #include "result.h"
 #include "cipher.h"
+#include "scoreOptimized.h"
 #include "x86\cipher_ssse3.h"
 #include "x86\score_ssse3.h"
 }
