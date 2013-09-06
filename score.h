@@ -40,15 +40,9 @@ enum EnigmaScoreFunctions_t {
  */
 void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* restrict sf);
 
-
 /** \brief Uses original code. Used as the best tested reference.
   */
 extern enigma_score_function_t enigma_score_orig;
-
-
-/** \brief Uses optimized version of original code. Gives minor performance improvement.
- */
-extern enigma_score_function_t enigma_score_opt;
 
 int get_triscore(const Key *key, int len);
 
