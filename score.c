@@ -38,6 +38,7 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
     enigma_score_function_copy(sf,&enigma_score_opt);
 
 
+
     if (cpu & enigma_cpu_ssse3)
     {
         enigma_score_function_copy(sf,&enigma_score_ssse3);
@@ -47,6 +48,11 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
         enigma_score_function_copy(sf,test);
 # endif
     }
+
+#ifdef TESTING_SCORE
+    enigma_score_function_t* test = enigma_score_testing_create( EnigmaSF_Optimized, EnigmaSF_OptNoInterleave );
+    enigma_score_function_copy( sf, test );
+#endif
 }
 
 void DecodeScoredMessagePartStandard(const Key* const restrict key, int len, union ScoringDecodedMessage* restrict output){
