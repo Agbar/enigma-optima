@@ -9,10 +9,10 @@
 extern "C" {
 #include "result.h"
 #include "cipher.h"
-#include "scoreOptimized.h"
-#include "scoreOptimizedNoInterleave.h"
-#include "x86\cipher_ssse3.h"
-#include "x86\score_ssse3.h"
+#include "scoreBasic.h"
+#include "scoreNoInterleave.h"
+#include "x86\cipherSsse3.h"
+#include "x86\scoreSsse3.h"
 }
 
 template<typename TRet>
@@ -33,10 +33,10 @@ namespace Enigma
         }
     };
 
-    ScoringParams ParamsForScoringOptimized( &enigma_score_opt,   &decodedMessageStandard );
-    ScoringParams ParamsForScoringSsse3    ( &enigma_score_ssse3, &decodedMessageSsse3 );
+    ScoringParams ParamsForScoringOptimized( &enigmaScoreBasic, &decodedMsgPartBasic );
+    ScoringParams ParamsForScoringSsse3    ( &enigmaScoreSsse3, &decodedMsgPartSsse3 );
     ScoringParams ParamsForScoringOptNoInterleave
-                                           ( &enigmaScoreOptNoInterleave, &decodedMessageNoInterleave );
+                                           ( &enigmaScoreOptNoInterleave, &decodedMsgPartNoInterleave );
 
     /** \brief Function needed to differentiate between printing int and double.
      *

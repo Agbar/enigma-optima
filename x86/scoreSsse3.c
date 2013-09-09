@@ -3,23 +3,23 @@
 
 #include "..\dict.h"
 #include "..\ciphertext.h"
-#include "score_ssse3.h"
-#include "cipher_ssse3.h"
-#include "cipher_ssse3_inlines.h"
+#include "scoreSsse3.h"
+#include "cipherSsse3.h"
+#include "cipherSsse3_inlines.h"
 
 #ifndef __SSSE3__
 # error SSSE3 not defined
 #endif
 
 // SSSE3 scores
-static double icscore_ssse3( const Key* const restrict key, int len );
-static int   uniscore_ssse3( const Key* const restrict key, int len );
-static int    biscore_ssse3( const Key* const restrict key, int len );
-static int   triscore_ssse3( const Key* const restrict key, int len );
+static double icscoreSsse3( const Key* const restrict key, int len );
+static int   uniscoreSsse3( const Key* const restrict key, int len );
+static int    biscoreSsse3( const Key* const restrict key, int len );
+static int   triscoreSsse3( const Key* const restrict key, int len );
 
-enigma_score_function_t enigma_score_ssse3  = { triscore_ssse3,  biscore_ssse3 , icscore_ssse3,  uniscore_ssse3 } ;
+enigma_score_function_t enigmaScoreSsse3 = { triscoreSsse3,  biscoreSsse3 , icscoreSsse3,  uniscoreSsse3 } ;
 
-union ScoringDecodedMessage decodedMessageSsse3;
+union ScoringDecodedMessage decodedMsgPartSsse3;
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
@@ -64,14 +64,14 @@ static void DecodeScoredMessagePart( const const Key* const restrict key, int le
 }
 
 __attribute__ ((optimize("unroll-loops")))
-static double icscore_ssse3( const Key* const restrict key, int len )
+static double icscoreSsse3( const Key* const restrict key, int len )
 {
-    DecodeScoredMessagePart( key, len, &decodedMessageSsse3 );
+    DecodeScoredMessagePart( key, len, &decodedMsgPartSsse3 );
 
     int f[26] = {0};
     int i;
     for( i = 0; i < len; i++ ) {
-        f[decodedMessageSsse3.plain[i]]++;
+        f[decodedMsgPartSsse3.plain[i]]++;
     }
 
     int S = 0;
@@ -82,9 +82,9 @@ static double icscore_ssse3( const Key* const restrict key, int len )
 }
 
 __attribute__ ((optimize("unroll-loops")))
-static int uniscore_ssse3( const Key* const restrict key, int len )
+static int uniscoreSsse3( const Key* const restrict key, int len )
 {
-    DecodeScoredMessagePart( key, len, &decodedMessageSsse3 );
+    DecodeScoredMessagePart( key, len, &decodedMsgPartSsse3 );
 
     int score = 0, i;
     for( i = 0; i < len; i++ ) {
@@ -94,30 +94,30 @@ static int uniscore_ssse3( const Key* const restrict key, int len )
 }
 
 __attribute__ ((optimize("unroll-loops")))
-static int biscore_ssse3( const Key* const restrict key, int len )
+static int biscoreSsse3( const Key* const restrict key, int len )
 {
-    DecodeScoredMessagePart( key, len, &decodedMessageSsse3 );
+    DecodeScoredMessagePart( key, len, &decodedMsgPartSsse3 );
 
     int score = 0;
     int x;
     //uint8_t length = len;
     for( x = 0; x < len - 1; ++x )
     {
-        score += bidict[decodedMessageSsse3.plain[x]][decodedMessageSsse3.plain[x + 1]];
+        score += bidict[decodedMsgPartSsse3.plain[x]][decodedMsgPartSsse3.plain[x + 1]];
     }
 
     return score;
 }
 
 __attribute__ ((optimize("unroll-loops")))
-static int triscore_ssse3( const Key* const restrict key, int len )
+static int triscoreSsse3( const Key* const restrict key, int len )
 {
-    DecodeScoredMessagePart( key, len, &decodedMessageSsse3 );
+    DecodeScoredMessagePart( key, len, &decodedMsgPartSsse3 );
 
     int x, score = 0;
     for( x = 0; x < len - 2; ++x )
     {
-        score += tridict[decodedMessageSsse3.plain[x]][decodedMessageSsse3.plain[x + 1]][decodedMessageSsse3.plain[x + 2]];
+        score += tridict[decodedMsgPartSsse3.plain[x]][decodedMsgPartSsse3.plain[x + 1]][decodedMsgPartSsse3.plain[x + 2]];
     }
 
     return score;

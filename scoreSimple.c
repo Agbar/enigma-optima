@@ -1,18 +1,18 @@
-#include "score_simple.h"
+#include "scoreSimple.h"
 #include "score.h"
 #include "ciphertext.h"
 #include "dict.h"
 #include "cipher.h"
 
 
-double icscore_simple(const Key* const restrict key, int len);
-int   uniscore_simple(const Key* const restrict key, int len);
-int    biscore_simple(const Key* const restrict key, int len);
-int   triscore_simple(const Key* const restrict key, int len);
+double icscoreSimple(const Key* const restrict key, int len);
+int   uniscoreSimple(const Key* const restrict key, int len);
+int    biscoreSimple(const Key* const restrict key, int len);
+int   triscoreSimple(const Key* const restrict key, int len);
 
-enigma_score_function_t enigma_score_simple = { triscore_simple, biscore_simple, icscore_simple, uniscore_simple};
+enigma_score_function_t enigmaScoreSimple = { triscoreSimple, biscoreSimple, icscoreSimple, uniscoreSimple};
 
-double icscore_simple(const Key* const restrict key, int len)
+double icscoreSimple(const Key* const restrict key, int len)
 {
   int f[26] = {0};
   double S = 0;
@@ -36,7 +36,7 @@ double icscore_simple(const Key* const restrict key, int len)
   return S;
 }
 
-int uniscore_simple(const Key* const restrict key, int len)
+int uniscoreSimple(const Key* const restrict key, int len)
 {
   int i;
   int c;
@@ -51,7 +51,7 @@ int uniscore_simple(const Key* const restrict key, int len)
   return s;
 }
 
-int biscore_simple(const Key* const restrict key, int len)
+int biscoreSimple(const Key* const restrict key, int len)
 {
   int i;
   int c1, c2;
@@ -71,7 +71,7 @@ int biscore_simple(const Key* const restrict key, int len)
 
 }
 
-int triscore_simple(const Key* const restrict key,  int len)
+int triscoreSimple(const Key* const restrict key,  int len)
 {
   int i;
   int c1, c2, c3;
