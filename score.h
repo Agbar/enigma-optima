@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 #include "cpu.h"
+#include "global.h"
 #include "key.h"
 #include "cipher.h"
 
@@ -14,11 +15,20 @@
 # define restrict
 #endif
 
+/** Best-fit type for length of part of the message used to compute scores.
+ *  Size of scoreLength_t depends on value of CT macro. Selecting lowest possible
+ *  allows compiler do better optimization choices ie. while unrolling.
+ */
+typedef uint8_t scoreLength_t;
+
+STATIC_ASSERT ( ( scoreLength_t ) -1 > 0 , "scoreLength_t should be unsigned, so next assert can be correct." );
+STATIC_ASSERT (  1 << ( sizeof( scoreLength_t ) * 8 ) > CT , "scoreLength_t is to narrow." );
+
 typedef struct _enigma_score_function_t{
-    int    (*triscore) (const Key* const restrict key, int len);
-    int    (* biscore) (const Key* const restrict key, int len);
-    double (* icscore) (const Key* const restrict key, int len);
-    int    (*uniscore) (const Key* const restrict key, int len);
+    int    (*triscore) ( const Key* const restrict key, scoreLength_t length );
+    int    (* biscore) ( const Key* const restrict key, scoreLength_t length );
+    double (* icscore) ( const Key* const restrict key, scoreLength_t length );
+    int    (*uniscore) ( const Key* const restrict key, scoreLength_t length );
 } enigma_score_function_t;
 
 // Flags are used to allow combining.

@@ -3,10 +3,10 @@
 #include "score.h"
 
 // default scores
-static int   uniscoreNoInterleave( const Key* const restrict key, int len );
-static int    biscoreNoInterleave( const Key* const restrict key, int len );
-static int   triscoreNoInterleave( const Key* const restrict key, int len );
-static double icscoreNoInterleave( const Key* const restrict key, int len );
+static int   uniscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
+static int    biscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
+static int   triscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
+static double icscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
 
 union ScoringDecodedMessage decodedMsgPartNoInterleave;
 
@@ -18,7 +18,7 @@ enigma_score_function_t enigmaScoreOptNoInterleave = {
 
 __attribute__ (( optimize( "sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops" ) ))
 static inline
-void DecodeScoredMessagePartNoInterleave( const const Key* const restrict key, int len, union ScoringDecodedMessage* output ){
+void DecodeScoredMessagePartNoInterleave( const const Key* const restrict key, scoreLength_t len, union ScoringDecodedMessage* output ){
     const PermutationMap_t* const restrict stbrett = &key->stbrett;
     int i;
     for( i = 0; i < len - 15; i += 16 ) {
@@ -51,7 +51,7 @@ void DecodeScoredMessagePartNoInterleave( const const Key* const restrict key, i
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int triscoreNoInterleave( const Key* const restrict key, int len ) {
+int triscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
     uint8_t length = len;
     int s = 0;
@@ -63,7 +63,7 @@ int triscoreNoInterleave( const Key* const restrict key, int len ) {
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static double icscoreNoInterleave( const Key* const restrict key, int len ) {
+static double icscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
     if (len < 2) {
         return 0;
     }
@@ -91,7 +91,7 @@ static double icscoreNoInterleave( const Key* const restrict key, int len ) {
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static int uniscoreNoInterleave( const Key* key, int len ) {
+static int uniscoreNoInterleave( const Key* key, scoreLength_t len ) {
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
     int s = 0;
     uint8_t i;
@@ -103,7 +103,7 @@ static int uniscoreNoInterleave( const Key* key, int len ) {
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static int biscoreNoInterleave( const Key* const restrict key, int len ) {
+static int biscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
     uint8_t i;
     uint8_t length = len;

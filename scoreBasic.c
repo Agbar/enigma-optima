@@ -14,10 +14,10 @@
 #endif
 
 // default scores
-static double icscoreBasic( const Key* const restrict key, int len );
-static int   uniscoreBasic( const Key* const restrict key, int len );
-static int    biscoreBasic( const Key* const restrict key, int len );
-static int   triscoreBasic( const Key* const restrict key, int len );
+static double icscoreBasic( const Key* const restrict key, scoreLength_t length );
+static int   uniscoreBasic( const Key* const restrict key, scoreLength_t length );
+static int    biscoreBasic( const Key* const restrict key, scoreLength_t length );
+static int   triscoreBasic( const Key* const restrict key, scoreLength_t length );
 
 enigma_score_function_t enigmaScoreBasic = { triscoreBasic, biscoreBasic, icscoreBasic, uniscoreBasic };
 
@@ -27,7 +27,7 @@ union ScoringDecodedMessage decodedMsgPartBasic;
  * opti scores
  ************************/
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static double icscoreBasic( const Key* const restrict key, int len )
+static double icscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
   int f[26] = {0};
   int S0, S1, S2, S3;
@@ -121,7 +121,7 @@ static double icscoreBasic( const Key* const restrict key, int len )
 
 }
 
-static int uniscoreBasic( const Key* key, int len )
+static int uniscoreBasic( const Key* key, scoreLength_t len )
 {
   int i;
   text_t c;
@@ -202,7 +202,7 @@ static int uniscoreBasic( const Key* key, int len )
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int biscoreBasic( const Key* const restrict key, int len )
+int biscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
   int i;
   text_t c1, c2;
@@ -286,7 +286,7 @@ int biscoreBasic( const Key* const restrict key, int len )
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int triscoreBasic( const Key* const restrict key, int len )
+int triscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
   int i;
   text_t c1, c2, c3;

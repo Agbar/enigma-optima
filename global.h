@@ -39,6 +39,13 @@ enum { SW_ONSTART, SW_OTHER, SW_ALL, SW_NONE, SINGLE_KEY };
 # define INLINE_IS_FAST
 #endif
 
+#ifdef __cplusplus
+# define STATIC_ASSERT static_assert
+#else
+# define STATIC_ASSERT _Static_assert
+#endif
+
+
 #endif
 
 

@@ -4,7 +4,7 @@
 #include <cstring>
 #include <cfloat>
 #include <cinttypes>
-#include "ScoreTesting.hpp"
+#include "scoreTesting.hpp"
 
 extern "C" {
 #include "result.h"
@@ -16,7 +16,7 @@ extern "C" {
 }
 
 template<typename TRet>
-using  Scoring_f = TRet( const Key* const restrict key, int len );
+using  Scoring_f = TRet( const Key* const restrict key, scoreLength_t len );
 
 namespace Enigma
 {
@@ -95,7 +95,7 @@ namespace Enigma
         static TScore TestScore(
             Scoring_f<TScore>* enigma_score_function_t::* scoreFunction,
             const Key* const                            key,
-            int                                         len ) {
+            scoreLength_t                               len ) {
             TScore referenceScore = ( reference.scoreImpl->*scoreFunction )( key, len );
             TScore score          = ( tested   .scoreImpl->*scoreFunction )( key, len );
             if( !AreEqual( score, referenceScore ) ) {
@@ -142,16 +142,16 @@ namespace Enigma
     class ScoreTesting {
         static enigma_score_function_t ScoreTestingFunction;
 
-        static int GetTriscore( const Key* const key, int len ) {
+        static int GetTriscore( const Key* const key, scoreLength_t len ) {
             return TestingStrategy::TestScore( &enigma_score_function_t::triscore, key, len );
         }
-        static int GetBiscore( const Key* const key, int len ) {
+        static int GetBiscore( const Key* const key, scoreLength_t len ) {
             return TestingStrategy::TestScore( &enigma_score_function_t::biscore, key, len );
         }
-        static int GetUniscore( const Key* const key, int len ) {
+        static int GetUniscore( const Key* const key, scoreLength_t len ) {
             return TestingStrategy::TestScore( &enigma_score_function_t::uniscore, key, len );
         }
-        static double GetIcScore( const Key* const key, int len ) {
+        static double GetIcScore( const Key* const key, scoreLength_t len ) {
             return TestingStrategy::TestScore( &enigma_score_function_t::icscore, key, len );
         }
     public:
