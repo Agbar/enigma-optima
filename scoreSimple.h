@@ -5,6 +5,6 @@
 
 /** \brief Uses original code, but no unrolled version.
  */
-extern enigma_score_function_t enigma_score_simple;
+extern enigma_score_function_t enigmaScoreSimple;
 
 #endif // SCORE_SIMPLE_H

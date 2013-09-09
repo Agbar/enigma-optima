@@ -8,7 +8,7 @@ static int    biscoreNoInterleave( const Key* const restrict key, int len );
 static int   triscoreNoInterleave( const Key* const restrict key, int len );
 static double icscoreNoInterleave( const Key* const restrict key, int len );
 
-union ScoringDecodedMessage decodedMessageNoInterleave;
+union ScoringDecodedMessage decodedMsgPartNoInterleave;
 
 enigma_score_function_t enigmaScoreOptNoInterleave = {
     triscoreNoInterleave,
@@ -52,12 +52,12 @@ void DecodeScoredMessagePartNoInterleave( const const Key* const restrict key, i
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
 int triscoreNoInterleave( const Key* const restrict key, int len ) {
-    DecodeScoredMessagePartNoInterleave( key, len, &decodedMessageNoInterleave );
+    DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
     uint8_t length = len;
     int s = 0;
     uint8_t i;
     for ( i = 0; i < length - 2; ++i ){
-        s += tridict[decodedMessageNoInterleave.plain[i]][decodedMessageNoInterleave.plain[i+1]][decodedMessageNoInterleave.plain[i+2]];
+        s += tridict[decodedMsgPartNoInterleave.plain[i]][decodedMsgPartNoInterleave.plain[i+1]][decodedMsgPartNoInterleave.plain[i+2]];
     }
     return s;
 }
@@ -67,13 +67,13 @@ static double icscoreNoInterleave( const Key* const restrict key, int len ) {
     if (len < 2) {
         return 0;
     }
-    DecodeScoredMessagePartNoInterleave( key, len, &decodedMessageNoInterleave );
+    DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
 
     uint8_t f[26] = {0};
     uint8_t i;
     uint8_t length = len;
     for( i = 0; i < length; ++i ){
-        f[decodedMessageNoInterleave.plain[i]]++;
+        f[decodedMsgPartNoInterleave.plain[i]]++;
     }
 
     int S0, S1, S2, S3;
@@ -92,24 +92,24 @@ static double icscoreNoInterleave( const Key* const restrict key, int len ) {
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
 static int uniscoreNoInterleave( const Key* key, int len ) {
-    DecodeScoredMessagePartNoInterleave( key, len, &decodedMessageNoInterleave );
+    DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
     int s = 0;
     uint8_t i;
     uint8_t length = len;
     for ( i = 0; i < length; i++) {
-        s += unidict[decodedMessageNoInterleave.plain[i]];
+        s += unidict[decodedMsgPartNoInterleave.plain[i]];
     }
     return s;
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
 static int biscoreNoInterleave( const Key* const restrict key, int len ) {
-    DecodeScoredMessagePartNoInterleave( key, len, &decodedMessageNoInterleave );
+    DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
     uint8_t i;
     uint8_t length = len;
     int s = 0;
     for( i = 0; i < length - 1; i++ ) {
-        s += bidict[decodedMessageNoInterleave.plain[i]][decodedMessageNoInterleave.plain[i + 1]];
+        s += bidict[decodedMsgPartNoInterleave.plain[i]][decodedMsgPartNoInterleave.plain[i + 1]];
     }
     return s;
 }

@@ -9,9 +9,9 @@
 #include "config\array_sizes.h"
 #include "config\types.h"
 
-#include "scoreOptimized.h"
-#include "score_simple.h"
-#include "x86\score_ssse3.h"
+#include "scoreBasic.h"
+#include "scoreSimple.h"
+#include "x86\scoreSsse3.h"
 
 #ifdef TESTING_SCORE
 # include "ScoreTesting.h"
@@ -35,13 +35,10 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
     cpu = ENIGMA_CPU_SPECIFIC;
 #endif // ENIGMA_CPU_SPECIFIC
 
-    enigma_score_function_copy(sf,&enigma_score_opt);
-
-
-
+    enigma_score_function_copy( sf, &enigmaScoreBasic );
     if (cpu & enigma_cpu_ssse3)
     {
-        enigma_score_function_copy(sf,&enigma_score_ssse3);
+        enigma_score_function_copy( sf,&enigmaScoreSsse3 );
 
 # ifdef TESTING_SCORE
         enigma_score_function_t* test = enigma_score_testing_create( EnigmaSF_Optimized, EnigmaSF_SSSE3 );

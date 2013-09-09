@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "cipher_ssse3.h"
-#include "cipher_ssse3_inlines.h"
+#include "cipherSsse3.h"
+#include "cipherSsse3_inlines.h"
 
 #ifndef __SSSE3__
 # error SSSE3 not defined

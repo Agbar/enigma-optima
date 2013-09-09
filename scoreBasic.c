@@ -9,28 +9,25 @@
 #include "config\array_sizes.h"
 #include "config\types.h"
 
-#include "score_simple.h"
-#include "x86\score_ssse3.h"
-
 #ifdef TESTING_SCORE
 # include "ScoreTesting.h"
 #endif
 
 // default scores
-static double icscore(const Key* const restrict key, int len);
-static int   uniscore(const Key* const restrict key, int len);
-static int    biscore(const Key* const restrict key, int len);
-static int   triscore(const Key* const restrict key, int len);
+static double icscoreBasic( const Key* const restrict key, int len );
+static int   uniscoreBasic( const Key* const restrict key, int len );
+static int    biscoreBasic( const Key* const restrict key, int len );
+static int   triscoreBasic( const Key* const restrict key, int len );
 
-enigma_score_function_t enigma_score_opt = { triscore, biscore, icscore, uniscore };
+enigma_score_function_t enigmaScoreBasic = { triscoreBasic, biscoreBasic, icscoreBasic, uniscoreBasic };
 
-union ScoringDecodedMessage decodedMessageStandard;
+union ScoringDecodedMessage decodedMsgPartBasic;
 
 /*
  * opti scores
  ************************/
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static double icscore(const Key* const restrict key, int len)
+static double icscoreBasic( const Key* const restrict key, int len )
 {
   int f[26] = {0};
   int S0, S1, S2, S3;
@@ -124,7 +121,7 @@ static double icscore(const Key* const restrict key, int len)
 
 }
 
-static int uniscore(const Key* key, int len)
+static int uniscoreBasic( const Key* key, int len )
 {
   int i;
   text_t c;
@@ -205,7 +202,7 @@ static int uniscore(const Key* key, int len)
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int biscore(const Key* const restrict key, int len)
+int biscoreBasic( const Key* const restrict key, int len )
 {
   int i;
   text_t c1, c2;
@@ -289,7 +286,7 @@ int biscore(const Key* const restrict key, int len)
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int triscore(const Key* const restrict key, int len)
+int triscoreBasic( const Key* const restrict key, int len )
 {
   int i;
   text_t c1, c2, c3;

@@ -11,7 +11,7 @@
 #include "config\array_sizes.h"
 #include "config\types.h"
 
-#include "x86/cipher_ssse3.h"
+#include "x86/cipherSsse3.h"
 
 void init_path_lookup_H_M3(const Key *key, int len);
 void init_path_lookup_ALL(const Key *key, int len);
