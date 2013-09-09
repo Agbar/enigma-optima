@@ -45,8 +45,6 @@ extern text_t rev_wal[11][78];
 extern text_t ukw[5][52];
 extern text_t etw[52];
 
-extern union ScoringDecodedMessage decodedMessageStandard;
-
 // (&ciphertext[x])[i]; is a synonyme to: ciphertext[x+i];
 // and is useful where ciphertext[x] can be calculated at compilation time.
 //

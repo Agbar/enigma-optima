@@ -4,6 +4,6 @@
 /** \brief Uses optimized version of original code. Gives minor performance improvement.
  */
 extern enigma_score_function_t enigma_score_opt;
-
+extern union ScoringDecodedMessage decodedMessageStandard;
 
 #endif
