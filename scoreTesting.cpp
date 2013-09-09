@@ -10,6 +10,7 @@ extern "C" {
 #include "result.h"
 #include "cipher.h"
 #include "scoreOptimized.h"
+#include "scoreOptimizedNoInterleave.h"
 #include "x86\cipher_ssse3.h"
 #include "x86\score_ssse3.h"
 }
@@ -34,6 +35,8 @@ namespace Enigma
 
     ScoringParams ParamsForScoringOptimized( &enigma_score_opt,   &decodedMessageStandard );
     ScoringParams ParamsForScoringSsse3    ( &enigma_score_ssse3, &decodedMessageSsse3 );
+    ScoringParams ParamsForScoringOptNoInterleave
+                                           ( &enigmaScoreOptNoInterleave, &decodedMessageNoInterleave );
 
     /** \brief Function needed to differentiate between printing int and double.
      *
@@ -178,6 +181,9 @@ enigma_score_function_t* enigma_score_testing_create( EnigmaScoreFunctions_t ref
     case EnigmaSF_Optimized | EnigmaSF_SSSE3:
         return Enigma::ScoreTesting < Enigma::SimpleTestingStrategy < Enigma::ParamsForScoringOptimized,
                                                                       Enigma::ParamsForScoringSsse3 > >::GetScoreTestingFunction();
+    case EnigmaSF_Optimized | EnigmaSF_OptNoInterleave:
+        return Enigma::ScoreTesting < Enigma::SimpleTestingStrategy < Enigma::ParamsForScoringOptimized,
+                                                                      Enigma::ParamsForScoringOptNoInterleave> >::GetScoreTestingFunction();
     default:
         exit( 4 );
     }
