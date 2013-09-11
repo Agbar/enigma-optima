@@ -1,7 +1,11 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define WINDOWS
+// _WIN32 is defined on both win32 and win64 platforms. More info:
+// http://msdn.microsoft.com/en-us/library/b0084kay.aspx
+#if defined _WIN32
+# define WINDOWS
+#endif
 
 #define NLINE1 76
 #define NLINE2 58
