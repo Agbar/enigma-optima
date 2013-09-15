@@ -6,6 +6,7 @@
 #include "global.h"
 #include "key.h"
 #include "stecker.h"
+#include "OS\Os.h"
 #include "config\types.h"
 
 
@@ -38,12 +39,7 @@ void rand_var(text_t var[])
   int i;
 
   for (count = 25; count > 0; count--) {
-#ifndef WINDOWS
-    i = random() % (count+1);
-#endif
-#ifdef WINDOWS
-    i = rand() % (count+1);
-#endif
+    i = GetRandomNumber() % ( count + 1 );
     store = var[count];
     var[count] = var[i];
     var[i] = store;
