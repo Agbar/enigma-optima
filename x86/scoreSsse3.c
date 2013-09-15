@@ -68,13 +68,14 @@ static double icscoreSsse3( const Key* const restrict key, scoreLength_t len )
 {
     DecodeScoredMessagePart( key, len, &decodedMsgPartSsse3 );
 
-    int f[26] = {0};
+    uint16_t f[26] = {0};
     int i;
     for( i = 0; i < len; i++ ) {
         f[decodedMsgPartSsse3.plain[i]]++;
     }
 
-    int S = 0;
+    STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
+    uint16_t S = 0;
     for( i = 0; i < 26; i++ ) {
         S += f[i] * ( f[i] - 1 );
     }
