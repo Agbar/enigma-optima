@@ -17,4 +17,9 @@
 #  define  LOW_PRIORITY
 #endif
 
+// set default value for CONSTANT_SEED_VALUE
+#if !defined CONSTANT_SEED_VALUE
+# define CONSTANT_SEED_VALUE 315
+#endif
+
 #endif // TESTING_H_INCLUDED

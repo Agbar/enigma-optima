@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
-#include <signal.h>
 #include "cipher.h"
 #include "ciphertext.h"
 #include "dict.h"
@@ -21,16 +20,7 @@
 #include "config\array_sizes.h"
 #include "config\testing.h"
 #include "config\types.h"
-
-
-#ifdef WINDOWS
-#include <windows.h>
-#endif
-
-#ifndef WINDOWS
-struct sigaction sigact;
-#endif
-volatile sig_atomic_t do_shutdown = 0;
+#include "OS\Os.h"
 
 
 void save_state(State state)
@@ -61,59 +51,6 @@ void save_state_exit(State state, int retval)
   free(state.ciphertext);
   exit(retval);
 }
-
-void handle_signal(int signum __attribute__ ((unused)))
-{
-  do_shutdown = 1;
-}
-
-#ifndef WINDOWS
-void install_sighandler(void)
-{
-  int catchsig[3] = {SIGINT, SIGQUIT, SIGTERM};
-  int i;
-
-  sigact.sa_handler = handle_signal;
-  for (i = 0; i < 3; i++)
-    if (sigaction(catchsig[i], &sigact, NULL) != 0)
-      err_sigaction_fatal(catchsig[i]);
-}
-#endif
-
-#ifdef WINDOWS
-void install_sighandler(void)
-{
-  int catchsig[2] = {SIGINT, SIGTERM};
-  int i;
-
-  for (i = 0; i < 2; i++)
-    if (signal(catchsig[i], handle_signal) == SIG_ERR)
-      err_sigaction_fatal(catchsig[i]);
-}
-#endif
-
-void setup_random(void)
-{
-    unsigned int seed;
-#ifdef CONSTANT_SEED
-    seed = 315;
-#else
-# ifndef WINDOWS
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    seed = (tv.tv_sec%1000)*1000000 + tv.tv_usec;
-# else
-    seed = time(NULL);
-# endif
-#endif
-
-#ifndef WINDOWS
-  srandom(seed);
-#else
-  srand(seed);
-#endif
-}
-
 
 void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
@@ -146,20 +83,12 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
   enigma_cipher_init(enigma_cpu_flags, from->model, &prepare_decoder_lookup);
 
-  setup_random();
+  SetupRandomGenerator();
 
   lastsave = time(NULL);
 
 
   if (resume) {
-#ifdef WINDOWS
-#ifdef LOW_PRIORITY
-    if (SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS) == 0)
-      fputs("enigma: warning: could not set process priority to idle\n", stderr);
-    if (SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_IDLE) == 0)
-      fputs("enigma: warning: could not set thread priority to idle\n", stderr);
-#endif
-#endif
     hillclimb_log("enigma: working on range ...");
   }
 
@@ -174,7 +103,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
     state.max_score = &max_score;
     state.ciphertext = ciphertext.plain;
 
-    install_sighandler();
+    InstallSighandler();
   }
 
   m = from->model;
@@ -214,7 +143,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
             for (ckey.mesg.m=lo.mesg.m; ckey.mesg.m<=hi[m][10]; ckey.mesg.m++) {
              for (ckey.mesg.r=lo.mesg.r; ckey.mesg.r<=hi[m][11]; ckey.mesg.r++) {
 
-               if (do_shutdown)
+               if (doShutdown)
                  save_state_exit(state, 111);
                if (difftime(time(NULL), lastsave) > 119) {
                  lastsave = time(NULL);

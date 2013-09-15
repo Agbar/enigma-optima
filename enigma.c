@@ -4,7 +4,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-
 #include "charmap.h"
 #include "cipher.h"
 #include "ciphertext.h"
@@ -22,6 +21,15 @@
 #include "resume_out.h"
 #include "scan.h"
 #include "config\types.h"
+#include "OS\Os.h"
+
+
+void SetupOsThingsAndStuff( void ) {
+
+    // Linked to one of OS\os* modules
+    SetupProcessProperties();
+
+}
 
 int main(int argc, char **argv)
 {
@@ -86,6 +94,7 @@ int main(int argc, char **argv)
     return 0;
   }
 
+  SetupOsThingsAndStuff();
 
   if (argc-optind != 3) usage();
   load_tridict(argv[optind++]);
