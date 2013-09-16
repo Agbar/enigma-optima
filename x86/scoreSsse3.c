@@ -1,15 +1,14 @@
-#pragma GCC target ("ssse3")
 #include <immintrin.h>
+
+#ifndef __SSSE3__
+# error SSSE3 not defined
+#endif
 
 #include "..\dict.h"
 #include "..\ciphertext.h"
 #include "scoreSsse3.h"
 #include "cipherSsse3.h"
 #include "cipherSsse3_inlines.h"
-
-#ifndef __SSSE3__
-# error SSSE3 not defined
-#endif
 
 // SSSE3 scores
 static double icscoreSsse3( const Key* const restrict key, scoreLength_t len );
