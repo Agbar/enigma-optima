@@ -1,14 +1,13 @@
-#pragma GCC target ("ssse3")
+#ifndef __SSSE3__
+# error SSSE3 not defined
+#endif
+
 #include <immintrin.h>
 #include <stdbool.h>
 #include <string.h>
 
 #include "cipherSsse3.h"
 #include "cipherSsse3_inlines.h"
-
-#ifndef __SSSE3__
-# error SSSE3 not defined
-#endif
 
 void prepare_decoder_lookup_M_H3_ssse3( const Key *key, int len );
 void prepare_decoder_lookup_ALL_ssse3( const Key *key, int len );
