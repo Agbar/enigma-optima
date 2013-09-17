@@ -38,6 +38,7 @@ enum EnigmaScoreFunctions_t {
     EnigmaSF_Simple     = 2,
     EnigmaSF_Optimized  = 4,
     EnigmaSF_SSSE3      = 8,
+    EnigmaSF_Avx        = 1 << 4,
     // for experimental versions go from top
     EnigmaSF_OptNoInterleave = 1 << 31,
 };
