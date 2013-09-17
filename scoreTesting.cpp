@@ -13,6 +13,7 @@ extern "C" {
 #include "scoreNoInterleave.h"
 #include "x86\cipherSsse3.h"
 #include "x86\scoreSsse3.h"
+#include "x86\scoreAvx.h"
 }
 
 template<typename TRet>
@@ -36,7 +37,8 @@ namespace Enigma
     ScoringParams ParamsForScoringOptimized( &enigmaScoreBasic, &decodedMsgPartBasic );
     ScoringParams ParamsForScoringSsse3    ( &enigmaScoreSsse3, &decodedMsgPartSsse3 );
     ScoringParams ParamsForScoringOptNoInterleave
-                                           ( &enigmaScoreOptNoInterleave, &decodedMsgPartNoInterleave );
+                                               ( &enigmaScoreOptNoInterleave, &decodedMsgPartNoInterleave );
+    ScoringParams ParamsForScoringAvx       ( &enigmaScoreAvx,  &decodedMsgPartAvx );
 
     /** \brief Function needed to differentiate between printing int and double.
      *
@@ -184,6 +186,9 @@ enigma_score_function_t* enigma_score_testing_create( EnigmaScoreFunctions_t ref
     case EnigmaSF_Optimized | EnigmaSF_OptNoInterleave:
         return Enigma::ScoreTesting < Enigma::SimpleTestingStrategy < Enigma::ParamsForScoringOptimized,
                                                                       Enigma::ParamsForScoringOptNoInterleave> >::GetScoreTestingFunction();
+    case EnigmaSF_Optimized | EnigmaSF_Avx:
+        return Enigma::ScoreTesting < Enigma::SimpleTestingStrategy < Enigma::ParamsForScoringOptimized,
+                                                                      Enigma::ParamsForScoringAvx > >::GetScoreTestingFunction();
     default:
         exit( 4 );
     }
