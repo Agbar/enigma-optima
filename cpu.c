@@ -1,5 +1,4 @@
 #include <cpuid.h>
-
 #include "cpu.h"
 
 enigma_cpu_flags_t enigma_cpu_flags;
@@ -38,7 +37,7 @@ static enigma_cpu_flags_t get_hardware_supported_cpu_flags(void)
     {
         // confirm OS support for AVX
         ecx =0;
-        asm("xgetbv" : "=d"(edx) , "=a"(ebx) : "c" (ecx) );
+        asm("xgetbv" : "=d"(edx) , "=a"(eax) : "c" (ecx) );
 
         if ((eax & 0x6) == 0x6) //enabled state support for XMM and YMM registers
         {
@@ -51,6 +50,5 @@ static enigma_cpu_flags_t get_hardware_supported_cpu_flags(void)
                 cpu_flags |= enigma_cpu_avx2;
         }
     }
-
     return cpu_flags;
 }
