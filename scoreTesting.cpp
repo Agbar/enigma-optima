@@ -25,6 +25,10 @@ namespace Enigma
     /** \brief Represents what is needed to test given implementation.
      */
     class ScoringParams {
+        static ScoringParams ParamsForScoringOptimized;
+        static ScoringParams ParamsForScoringSsse3;
+        static ScoringParams ParamsForScoringOptNoInterleave;
+        static ScoringParams ParamsForScoringAvx;
     public:
         enigma_score_function_t* const scoreImpl;
         union ScoringDecodedMessage* const decodedMessage;
@@ -32,13 +36,30 @@ namespace Enigma
             scoreImpl     ( scoreFunction ),
             decodedMessage( decodedMessage ) {
         }
+
+        static ScoringParams* SelectScoringParams( EnigmaScoreFunctions_t esf ){
+            switch( esf ){
+            case EnigmaSF_Avx:
+                return &ParamsForScoringAvx;
+            case EnigmaSF_Optimized:
+                return &ParamsForScoringOptimized;
+            case EnigmaSF_OptNoInterleave:
+                return &ParamsForScoringOptNoInterleave;
+            case EnigmaSF_SSSE3:
+                return &ParamsForScoringSsse3;
+            case EnigmaSF_Original:
+            case EnigmaSF_Simple:
+            case EnigmaSF_Default:
+                ;
+            }
+            exit ( 4 );
+        }
     };
 
-    ScoringParams ParamsForScoringOptimized( &enigmaScoreBasic, &decodedMsgPartBasic );
-    ScoringParams ParamsForScoringSsse3    ( &enigmaScoreSsse3, &decodedMsgPartSsse3 );
-    ScoringParams ParamsForScoringOptNoInterleave
-                                               ( &enigmaScoreOptNoInterleave, &decodedMsgPartNoInterleave );
-    ScoringParams ParamsForScoringAvx       ( &enigmaScoreAvx,  &decodedMsgPartAvx );
+    ScoringParams ScoringParams::ParamsForScoringOptimized         ( &enigmaScoreBasic,            &decodedMsgPartBasic );
+    ScoringParams ScoringParams::ParamsForScoringSsse3             ( &enigmaScoreSsse3,            &decodedMsgPartSsse3 );
+    ScoringParams ScoringParams::ParamsForScoringOptNoInterleave   ( &enigmaScoreOptNoInterleave,  &decodedMsgPartNoInterleave );
+    ScoringParams ScoringParams::ParamsForScoringAvx               ( &enigmaScoreAvx,              &decodedMsgPartAvx );
 
     /** \brief Function needed to differentiate between printing int and double.
      *
@@ -88,18 +109,25 @@ namespace Enigma
         return a1.ln == b1.ln;
     }
 
-    template <  ScoringParams&    reference,
-                ScoringParams&    tested >
-    class SimpleTestingStrategy
-    {
+    class SimpleTestingStrategy {
+        ScoringParams*          reference;
+        ScoringParams*          tested;
     public:
+        SimpleTestingStrategy () {
+        }
+
+        SimpleTestingStrategy( EnigmaScoreFunctions_t reference, EnigmaScoreFunctions_t tested ) :
+            reference(  ScoringParams::SelectScoringParams( reference ) ),
+            tested(     ScoringParams::SelectScoringParams( tested ) ) {
+        }
+
         template < typename TScore >
-        static TScore TestScore(
+        TScore TestScore(
             Scoring_f<TScore>* enigma_score_function_t::* scoreFunction,
             const Key* const                            key,
-            scoreLength_t                               len ) {
-            TScore referenceScore = ( reference.scoreImpl->*scoreFunction )( key, len );
-            TScore score          = ( tested   .scoreImpl->*scoreFunction )( key, len );
+            scoreLength_t                               len ) const {
+            TScore referenceScore = ( reference->scoreImpl->*scoreFunction )( key, len );
+            TScore score          = ( tested   ->scoreImpl->*scoreFunction )( key, len );
             if( !AreEqual( score, referenceScore ) ) {
                 FILE* scoreTestingLog = fopen( "scoreTesting.log", "a" );
                 PrintDifferenceInfo( scoreTestingLog, score, referenceScore, key, len );
@@ -110,51 +138,55 @@ namespace Enigma
         }
 
         template < typename TScore >
-        static void PrintDifferenceInfo( FILE* output, TScore score, TScore referenceScore, const Key* const key, int len );
+        void PrintDifferenceInfo( FILE* output, TScore score, TScore referenceScore, const Key* const key, int len ) const;
+
+        void SetScoringParams( EnigmaScoreFunctions_t reference, EnigmaScoreFunctions_t tested ) {
+            this->reference = ScoringParams::SelectScoringParams( reference );
+            this->tested    = ScoringParams::SelectScoringParams( tested );
+        }
     };
 
-    template < ScoringParams&   reference,
-               ScoringParams&   tested >
-    template < typename         TScore >
-    void SimpleTestingStrategy<reference, tested>
-    ::PrintDifferenceInfo( FILE* output, TScore score, TScore referenceScore, const Key* const key, int len ) {
+    template < typename TScore >
+    void SimpleTestingStrategy
+    ::PrintDifferenceInfo( FILE* output, TScore score, TScore referenceScore, const Key* const key, int len ) const {
         print_key( output, key );
         PrintScore( output, referenceScore );
         fputs( "\n", output );
         PrintScore( output, score );
         fputs( "\n", output );
         // Standard scoring and its derivatives don't leave decodedMessage filled.
-        if( &reference == &ParamsForScoringOptimized ) {
-            DecodeScoredMessagePartStandard( key, len, reference.decodedMessage );
+        if( reference == ScoringParams::SelectScoringParams( EnigmaSF_Optimized ) ) {
+            DecodeScoredMessagePartStandard( key, len, reference->decodedMessage );
         }
-        PrintDecodedMessage( output, reference.decodedMessage, len );
+        PrintDecodedMessage( output, reference->decodedMessage, len );
         fputs( "\n", output );
-        PrintDecodedMessage( output, tested.decodedMessage, len );
+        PrintDecodedMessage( output, tested->decodedMessage, len );
         fputs( "\n", output );
         char compared[len + 1];
         memset( compared, ' ', len );
         compared[len] = 0;
-        if( GetDifferences( reference.decodedMessage, tested.decodedMessage, compared, len ) ) {
+        if( GetDifferences( reference->decodedMessage, tested->decodedMessage, compared, len ) ) {
             fputs( compared, output );
             fputs( "\n", output );
         }
     }
 
-    template < typename  TestingStrategy >
+    template <  typename                    TTestingStrategy,
+                const TTestingStrategy&     TestingStrategy >
     class ScoreTesting {
         static enigma_score_function_t ScoreTestingFunction;
 
         static int GetTriscore( const Key* const key, scoreLength_t len ) {
-            return TestingStrategy::TestScore( &enigma_score_function_t::triscore, key, len );
+            return TestingStrategy.TestScore( &enigma_score_function_t::triscore, key, len );
         }
         static int GetBiscore( const Key* const key, scoreLength_t len ) {
-            return TestingStrategy::TestScore( &enigma_score_function_t::biscore, key, len );
+            return TestingStrategy.TestScore( &enigma_score_function_t::biscore, key, len );
         }
         static int GetUniscore( const Key* const key, scoreLength_t len ) {
-            return TestingStrategy::TestScore( &enigma_score_function_t::uniscore, key, len );
+            return TestingStrategy.TestScore( &enigma_score_function_t::uniscore, key, len );
         }
         static double GetIcScore( const Key* const key, scoreLength_t len ) {
-            return TestingStrategy::TestScore( &enigma_score_function_t::icscore, key, len );
+            return TestingStrategy.TestScore( &enigma_score_function_t::icscore, key, len );
         }
     public:
         static enigma_score_function_t* GetScoreTestingFunction() {
@@ -162,34 +194,23 @@ namespace Enigma
         }
     };
 
-    template < typename TestingStrategy >
-    enigma_score_function_t ScoreTesting<TestingStrategy>::ScoreTestingFunction {
-        ScoreTesting<TestingStrategy>::GetTriscore,
-        ScoreTesting<TestingStrategy>::GetBiscore,
-        ScoreTesting<TestingStrategy>::GetIcScore,
-        ScoreTesting<TestingStrategy>::GetUniscore,
+    template <  typename                    TTestingStrategy,
+                const TTestingStrategy&     TestingStrategy >
+    enigma_score_function_t ScoreTesting<TTestingStrategy, TestingStrategy>::ScoreTestingFunction {
+        ScoreTesting<TTestingStrategy, TestingStrategy>::GetTriscore,
+        ScoreTesting<TTestingStrategy, TestingStrategy>::GetBiscore,
+        ScoreTesting<TTestingStrategy, TestingStrategy>::GetIcScore,
+        ScoreTesting<TTestingStrategy, TestingStrategy>::GetUniscore,
     };
+
+    SimpleTestingStrategy simpleTestingStrategyInstance;
 }
 
 /** \brief Factory method returning requested testing configuration.
  *
- * \param
- * \param
- * \return
- *
  */
 enigma_score_function_t* enigma_score_testing_create( EnigmaScoreFunctions_t reference, EnigmaScoreFunctions_t tested ) {
-    switch( reference | tested ) {
-    case EnigmaSF_Optimized | EnigmaSF_SSSE3:
-        return Enigma::ScoreTesting < Enigma::SimpleTestingStrategy < Enigma::ParamsForScoringOptimized,
-                                                                      Enigma::ParamsForScoringSsse3 > >::GetScoreTestingFunction();
-    case EnigmaSF_Optimized | EnigmaSF_OptNoInterleave:
-        return Enigma::ScoreTesting < Enigma::SimpleTestingStrategy < Enigma::ParamsForScoringOptimized,
-                                                                      Enigma::ParamsForScoringOptNoInterleave> >::GetScoreTestingFunction();
-    case EnigmaSF_Optimized | EnigmaSF_Avx:
-        return Enigma::ScoreTesting < Enigma::SimpleTestingStrategy < Enigma::ParamsForScoringOptimized,
-                                                                      Enigma::ParamsForScoringAvx > >::GetScoreTestingFunction();
-    default:
-        exit( 4 );
-    }
+    Enigma::simpleTestingStrategyInstance.SetScoringParams( reference, tested );
+
+    return Enigma::ScoreTesting < Enigma::SimpleTestingStrategy, Enigma::simpleTestingStrategyInstance >::GetScoreTestingFunction();
 }
