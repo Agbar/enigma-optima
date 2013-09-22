@@ -1,3 +1,0 @@
-gcc -fomit-frame-pointer -s
-
-This will be used to link .o files into an executable.
