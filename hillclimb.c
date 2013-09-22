@@ -48,7 +48,6 @@ void save_state_exit(State state, int retval)
   if (ferror(fp) != 0)
     err_stream_fatal("00hc.resume");
 
-  free(state.ciphertext);
   exit(retval);
 }
 
