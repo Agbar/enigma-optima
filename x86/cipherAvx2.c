@@ -1,62 +1,64 @@
-#ifndef __SSSE3__
-# error SSSE3 not defined
+#ifndef __AVX2__
+# error AVX2 not defined
 #endif
 
 #include <immintrin.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include "cipherSsse3.h"
+#include "cipherAvx2.h"
+#include "cipherAvx2_inlines.h"
 #include "../cipher_inlines.h"
-#include "cipherSsse3_inlines.h"
 
-void prepare_decoder_lookup_M_H3_ssse3( const Key *key, int len );
-void prepare_decoder_lookup_ALL_ssse3( const Key *key, int len );
+void prepare_decoder_lookup_M_H3_avx2( const Key *key, int len );
+void prepare_decoder_lookup_ALL_avx2( const Key *key, int len );
 inline extern
-v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, const Key* const restrict key );
+v32qi DecodeBiteAvx2( int biteNumber, int lookupNumber, const Key* const restrict key );
 inline extern
-v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec );
+v32qi PermuteV32qi( const PermutationMap_t* map, v32qi vec );
 
-enigma_cipher_function_t enigma_cipher_decoder_lookup_ssse3 = {prepare_decoder_lookup_M_H3_ssse3, prepare_decoder_lookup_ALL_ssse3};
+enigma_cipher_function_t enigma_cipher_DecoderLookupAvx2 = { prepare_decoder_lookup_M_H3_avx2, prepare_decoder_lookup_ALL_avx2 };
 
-struct PathLookupSsse3_t PathLookupSsse3;
+struct PathLookupAvx2_t PathLookupAvx2;
 
 typedef void CalculatePermutationMap_f( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
 
-void CalculateLookup( int lookupNumber, struct RingsState rings, uint8_t rOffsetAtFirst, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap )
+void CalculateLookupAvx2( int lookupNumber, struct RingsState rings, uint8_t rOffsetAtFirst, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap )
 {
-    struct LookupChunk_t* cLkp = &PathLookupSsse3.lookups[lookupNumber];
+    struct LookupChunkAvx2_t* cLkp = &PathLookupAvx2.lookups[lookupNumber];
     int k;
 
     // calculate offsets used for cyclic permutation
-    v16qi rOffsets;
-    for( k = 0; k < 16 ; k++ )
-    {
+    v32qi rOffsets;
+    for( k = 0; k < 16; k++ ) {
+        rOffsets[k] = rOffsetAtFirst++;
+    }
+    if( rOffsetAtFirst >= 26 ) rOffsetAtFirst -= 26;
+    for ( ; k < 32; k++ ){
         rOffsets[k] = rOffsetAtFirst++;
     }
     rOffsets -= ( rOffsets >= 26 ) & 26;
     cLkp->rRingOffset = rOffsets;
 
     // calculate m,l,(g),u,(g-1),l-1,m-1 mapping
-    calculatePermutationMap( &PathLookupSsse3.lookups[lookupNumber].mapping, rings, key );
+    calculatePermutationMap( &PathLookupAvx2.lookups[lookupNumber].mapping, rings, key );
 }
 
-
-void CalculateMask( size_t lookupNumber, int8_t begin, int8_t end )
+void CalculateMaskAvx2( size_t lookupNumber, int8_t begin, int8_t end )
 {
     // erase previous contents
-    PathLookupSsse3.lookups[lookupNumber].mask ^= PathLookupSsse3.lookups[lookupNumber].mask;
+    PathLookupAvx2.lookups[lookupNumber].mask ^= PathLookupAvx2.lookups[lookupNumber].mask;
     int8_t current = begin;
     for( ; current < end; current++ ) {
-        PathLookupSsse3.lookups[lookupNumber].mask[current] = ~0;
+        PathLookupAvx2.lookups[lookupNumber].mask[current] = ~0;
     }
 }
 
 #define SECOND_TURNOVER_POINT 25
 
 inline extern
-void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const Key *const restrict key, int len ) {
-    CopyRRing2Lookup( key, PathLookupSsse3.r_ring );
+void PrepareDecoderLookupAvx2( CalculatePermutationMap_f* calculateMap, const Key *const restrict key, int len ) {
+    CopyRRing2Lookup( key, PathLookupAvx2.r_ring );
 
     // rings.r will be a position of R-ring for current lookup chunk
     struct RingsState rings = {
@@ -93,30 +95,30 @@ void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const Key *c
     int biteCounter  = 0;               ///< Number of bite currently processed.
 
     int i;
-    int bitesLimit = ( len + 15 )/ 16;
+    int bitesLimit = ( len + 31 )/ 32;
     for( i = 0; i < 24; i++ ) //fixme
     {
-        CalculateLookup( i, rings, rAtFirstPos, key, calculateMap );
+        CalculateLookupAvx2( i, rings, rAtFirstPos, key, calculateMap );
 
         // check wether next M-ring turn is within current text bite
         int charsToNextTurnover = SubMod26( GetNextTurnover( rings, turns ), rings.r ) + 1;
-        if( ( messagePosition & 15 ) + charsToNextTurnover < 16 ) {
+        if( ( messagePosition & 31 ) + charsToNextTurnover < 32 ) {
             // set r ring on positoin (like buttons were pressed nextMTurn times)
             rings.r = GetNextTurnover( rings, turns );
-            CalculateMask( i, messagePosition & 15, ( messagePosition + charsToNextTurnover ) & 15 );
+            CalculateMaskAvx2( i, messagePosition & 31, ( messagePosition + charsToNextTurnover ) & 31 );
             // we are still decoding same chunk of message
             messagePosition += charsToNextTurnover;
         }
         else {
-            // turn r until messagePosition is next multiple of 16
-            rAtFirstPos = AddMod26( rAtFirstPos, 15 );
+            // turn r until messagePosition is next multiple of 32 mod 26
+            rAtFirstPos = AddMod26( rAtFirstPos, 31 % 26 );
             rings.r     = rAtFirstPos;
             Step1( &rAtFirstPos );
-            CalculateMask( i, messagePosition & 15, 16 );
+            CalculateMaskAvx2( i, messagePosition & 31, 32 );
             // next chunk of message, but only R ring was turning
-            messagePosition = ( messagePosition + 16 ) & ~15;
+            messagePosition = ( messagePosition + 32 ) & ~31;
             // update turnovers
-            PathLookupSsse3.nextBite[biteCounter++] = i + 1;
+            PathLookupAvx2.nextBite[biteCounter++] = i + 1;
             if ( biteCounter >= bitesLimit ){
                 break;
             }
@@ -126,21 +128,10 @@ void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const Key *c
     }
 }
 
-void prepare_decoder_lookup_M_H3_ssse3( const Key *const restrict key, int len ) {
-    PrepareDecoderLookup( &CalculatePermutationMap3Rotors, key, len );
+void prepare_decoder_lookup_M_H3_avx2( const Key *const restrict key, int len ) {
+    PrepareDecoderLookupAvx2( &CalculatePermutationMap3Rotors, key, len );
 }
 
-void prepare_decoder_lookup_ALL_ssse3( const Key *key, int len ) {
-    PrepareDecoderLookup( &CalculatePermutationMap4Rotors, key, len );
-}
-
-void PrintLookup( FILE* file, v32qi vec, const char* const restrict name )
-{
-    fprintf( file, "%10s: ", name );
-    int i = 0;
-    for( ; i < 25; i++ ) {
-        fprintf( file, "%2i ", vec[i] );
-    }
-    fprintf( file, "%2i\n", vec[25] );
-    fflush( file );
+void prepare_decoder_lookup_ALL_avx2( const Key *key, int len ) {
+    PrepareDecoderLookupAvx2( &CalculatePermutationMap4Rotors, key, len );
 }

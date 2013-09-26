@@ -51,4 +51,7 @@ typedef unsigned char   v32qu   __attribute__ ((vector_size(32)));
  */
 typedef char            v32qi   __attribute__ ((vector_size(32)));
 
+/** \brief Vector of 4 double-quadwords. 256 bit. */
+typedef long long int   v4di    __attribute__ ((vector_size(32)));
+
 #endif // CONFIG_TYPES_H

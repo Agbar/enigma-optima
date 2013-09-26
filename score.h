@@ -39,6 +39,7 @@ enum EnigmaScoreFunctions_t {
     EnigmaSF_Optimized  = 4,
     EnigmaSF_SSSE3      = 8,
     EnigmaSF_Avx        = 1 << 4,
+    EnigmaSF_Avx2       = 1 << 5,
     // for experimental versions go from top
     EnigmaSF_OptNoInterleave = 1 << 31,
 };
@@ -65,6 +66,7 @@ union ScoringDecodedMessage
 # error Wrong ScoringDecodedMessage member sizes.
 #endif
     v16qi vector16[(CT+15)/16];
+    v32qi vector32[(CT+31)/32];
     text_t plain[(CT+15)&~15];
 };
 
