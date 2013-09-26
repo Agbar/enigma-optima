@@ -27,27 +27,30 @@ static enigma_cpu_flags_t get_hardware_supported_cpu_flags(void)
 
     __get_cpuid( 1, &eax, &ebx, &ecx, &edx );
 
-    if (edx & bit_MMX)
+    if ( edx & bit_MMX ){
         cpu_flags |= enigma_cpu_mmx;
+    }
 
-    if (ecx & bit_SSSE3)
+    if( ecx & bit_SSSE3 ){
         cpu_flags |= enigma_cpu_ssse3;
+    }
 
-    if (ecx & bit_AVX)
+    if( ecx & ( bit_AVX | bit_OSXSAVE) )
     {
         // confirm OS support for AVX
         ecx =0;
         asm("xgetbv" : "=d"(edx) , "=a"(eax) : "c" (ecx) );
 
-        if ((eax & 0x6) == 0x6) //enabled state support for XMM and YMM registers
+        if ( ( eax & 0x6) == 0x6 ) //enabled state support for XMM and YMM registers
         {
             cpu_flags |= enigma_cpu_avx;
 
-            ecx=0;
-            __get_cpuid(7, &eax,&ebx, &ecx, &edx );
+            // Use _macro_ from cpuid.h as it has 2 parameters.
+            __cpuid_count( 7, 0, eax, ebx, ecx, edx );
 
-             if(ebx & bit_AVX2)
+            if( ebx & bit_AVX2 ) {
                 cpu_flags |= enigma_cpu_avx2;
+            }
         }
     }
     return cpu_flags;
