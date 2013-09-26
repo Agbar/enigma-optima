@@ -26,7 +26,7 @@ static void DecodeScoredMessagePart( const const Key* const restrict key, int le
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;
-
+    v16qi currentRRingOffset = PathLookupSsse3.firstRRingOffset;
     while( messageBite < ( len + 15 ) / 16 )
     {
         /* Worst case:
@@ -45,13 +45,13 @@ static void DecodeScoredMessagePart( const const Key* const restrict key, int le
         lookupNumber += lookupsToNextBite;
         switch( lookupsToNextBite ) {
         case 4:
-            cBite  = enigma_cipher_decode_ssse3( messageBite, lookupNumber - 4, key );
+            cBite  = enigma_cipher_decode_ssse3( messageBite, lookupNumber - 4, currentRRingOffset, key );
         case 3:
-            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 3, key );
+            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 3, currentRRingOffset, key );
         case 2:
-            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 2, key );
+            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 2, currentRRingOffset, key );
         case 1:
-            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 1, key );
+            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 1, currentRRingOffset, key );
             break;
         default:
             exit(5);
@@ -59,6 +59,7 @@ static void DecodeScoredMessagePart( const const Key* const restrict key, int le
         // store whole decoded bite
         output -> vector16[messageBite] = cBite;
         messageBite++;
+        currentRRingOffset = AddMod26_v16qi_int8( currentRRingOffset, 16 );
     }
 }
 
