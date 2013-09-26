@@ -4,6 +4,8 @@
 #include <inttypes.h>
 #include "config/types.h"
 
+#define CONST __attribute__ ((const))
+
 /* int8_t
  * * * * * */
 /** \brief Subtract modulo 26.
@@ -12,6 +14,7 @@
  * \param b int8_t Subtrahend
  * \return int8_t Difference modulo 26
  */
+CONST
 inline
 int8_t SubMod26( int8_t a, int8_t b )
 {
@@ -26,6 +29,7 @@ int8_t SubMod26( int8_t a, int8_t b )
  * \param b int8_t Addend.
  * \return int8_t  Sum modulo 26.
  */
+CONST
 inline
 int8_t AddMod26( int8_t a, int8_t b )
 {
@@ -42,6 +46,7 @@ void IncrementMod(int8_t* number, int8_t modulo)
 
 /* v16qi
  * * * * * */
+CONST
 inline
 v16qi AddMod26_v16qi_int8( v16qi a, int8_t b ){
     v16qi value = a + b;
@@ -49,6 +54,7 @@ v16qi AddMod26_v16qi_int8( v16qi a, int8_t b ){
     return value;
 }
 
+CONST
 inline
 v16qi AddMod26_v16qi( v16qi a, v16qi b ){
     v16qi value = a + b;
@@ -56,6 +62,7 @@ v16qi AddMod26_v16qi( v16qi a, v16qi b ){
     return value;
 }
 
+CONST
 inline
 v16qi SubMod26_v16qi_int8( v16qi a, int8_t b ){
     v16qi value = a - b;
@@ -63,6 +70,7 @@ v16qi SubMod26_v16qi_int8( v16qi a, int8_t b ){
     return value;
 }
 
+CONST
 inline
 v16qi SubMod26_v16qi( v16qi a, v16qi b ){
     v16qi value = a - b;
@@ -72,6 +80,7 @@ v16qi SubMod26_v16qi( v16qi a, v16qi b ){
 
 /* v32qi
  * * * * * */
+CONST
 inline
 v32qi AddMod26_v32qi_int8( v32qi a, int8_t b ){
     v32qi value = a + b;
@@ -79,6 +88,7 @@ v32qi AddMod26_v32qi_int8( v32qi a, int8_t b ){
     return value;
 }
 
+CONST
 inline
 v32qi AddMod26_v32qi( v32qi a, v32qi b ){
     v32qi value = a + b;
@@ -86,6 +96,7 @@ v32qi AddMod26_v32qi( v32qi a, v32qi b ){
     return value;
 }
 
+CONST
 inline
 v32qi SubMod26_v32qi_int8( v32qi a, int8_t b ){
     v32qi value = a - b;
@@ -93,6 +104,7 @@ v32qi SubMod26_v32qi_int8( v32qi a, int8_t b ){
     return value;
 }
 
+CONST
 inline
 v32qi SubMod26_v32qi( v32qi a, v32qi b ){
     v32qi value = a - b;
