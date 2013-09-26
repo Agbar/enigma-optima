@@ -13,7 +13,7 @@ v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec ){
 }
 
 inline
-v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, const Key* const restrict key )
+v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, v16qi rRingOffset, const Key* const restrict key )
 {
     v16qi bite = ciphertext.vector16[biteNumber];
 
@@ -22,20 +22,20 @@ v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, const Key* c
 
     const struct LookupChunk_t* const restrict lookup = &PathLookupSsse3.lookups[lookupNumber];
 
-    bite += lookup->rRingOffset;
+    bite += rRingOffset;
     bite -= ( bite >= 26 ) & 26;
     bite = PermuteV16qi( &PathLookupSsse3.r_ring[0], bite );
-    bite -= lookup->rRingOffset;
+    bite -= rRingOffset;
     bite += ( bite < 0 ) & 26;
 
     // m+l rings and ukw
     bite = PermuteV16qi( &lookup->mapping,  bite );
 
     // right ring backwards
-    bite += lookup->rRingOffset;
+    bite += rRingOffset;
     bite -= ( bite >= 26 ) & 26;
     bite = PermuteV16qi( &PathLookupSsse3.r_ring[1], bite );
-    bite -= lookup->rRingOffset;
+    bite -= rRingOffset;
     bite += ( bite < 0 ) & 26;
 
     //stbrett backwards

@@ -5,7 +5,6 @@
 
 struct LookupChunk_t {
         PermutationMap_t mapping;
-        v16qi rRingOffset;
         v16qi mask;
 };
 
@@ -15,6 +14,7 @@ struct PathLookupSsse3_t
     uint_least16_t nextBite[24];        ///< First lookup number in next bite.
     // mapping forward and reverse
     PermutationMap_t r_ring[2];
+    v16qi firstRRingOffset;
 };
 
 /// Last message decoded by SSSE3 path.

@@ -13,7 +13,7 @@
 void prepare_decoder_lookup_M_H3_ssse3( const Key *key, int len );
 void prepare_decoder_lookup_ALL_ssse3( const Key *key, int len );
 inline extern
-v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, const Key* const restrict key );
+v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, v16qi rRingOffset, const Key* const restrict key );
 inline extern
 v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec );
 
@@ -23,11 +23,8 @@ struct PathLookupSsse3_t PathLookupSsse3;
 
 typedef void CalculatePermutationMap_f( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
 
-void CalculateLookup( int lookupNumber, struct RingsState rings, uint8_t rOffsetAtFirst, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap )
-{
-    struct LookupChunk_t* cLkp = &PathLookupSsse3.lookups[lookupNumber];
+void CalculateRRingOffets( int8_t rOffsetAtFirst ) {
     int k;
-
     // calculate offsets used for cyclic permutation
     v16qi rOffsets;
     for( k = 0; k < 16 ; k++ )
@@ -35,8 +32,11 @@ void CalculateLookup( int lookupNumber, struct RingsState rings, uint8_t rOffset
         rOffsets[k] = rOffsetAtFirst++;
     }
     rOffsets -= ( rOffsets >= 26 ) & 26;
-    cLkp->rRingOffset = rOffsets;
+    PathLookupSsse3.firstRRingOffset = rOffsets;
+}
 
+void CalculateLookup( int lookupNumber, struct RingsState rings, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap )
+{
     // calculate m,l,(g),u,(g-1),l-1,m-1 mapping
     calculatePermutationMap( &PathLookupSsse3.lookups[lookupNumber].mapping, rings, key );
 }
@@ -92,11 +92,13 @@ void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const Key *c
     int messagePosition = 0;            ///< Index of first character decoded by current lookup.
     int biteCounter  = 0;               ///< Number of bite currently processed.
 
+    CalculateRRingOffets( rAtFirstPos );
+
     int i;
     int bitesLimit = ( len + 15 )/ 16;
     for( i = 0; i < 24; i++ ) //fixme
     {
-        CalculateLookup( i, rings, rAtFirstPos, key, calculateMap );
+        CalculateLookup( i, rings, key, calculateMap );
 
         // check wether next M-ring turn is within current text bite
         int charsToNextTurnover = SubMod26( GetNextTurnover( rings, turns ), rings.r ) + 1;

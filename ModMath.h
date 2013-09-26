@@ -2,8 +2,10 @@
 #define MOD_MATH_H_INCLUDED
 
 #include <inttypes.h>
+#include "config/types.h"
 
-
+/* int8_t
+ * * * * * */
 /** \brief Subtract modulo 26.
  * Computes difference modulo 26 of given parameters.
  * \param a int8_t Minuend
@@ -36,6 +38,22 @@ inline
 void IncrementMod(int8_t* number, int8_t modulo)
 {
     if( ++*number == modulo  ) *number = 0;
+}
+
+/* v16qi
+ * * * * * */
+inline
+v16qi AddMod26_v16qi_int8( v16qi a, int8_t b ){
+    v16qi value = a + b;
+    value -= ( value >= 26 ) & 26;
+    return value;
+}
+
+inline
+v16qi SubMod26_v16qi_int8( v16qi a, int8_t b ){
+    v16qi value = a - b;
+    a += ( value < 0 ) & 26;
+    return value;
 }
 
 #endif
