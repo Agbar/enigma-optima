@@ -16,7 +16,7 @@ v32qi PermuteV32qi(const PermutationMap_t* map, v32qi vec ){
 }
 
 inline
-v32qi DecodeBiteAvx2( int biteNumber, int lookupNumber, const Key* const restrict key )
+v32qi DecodeBiteAvx2( int biteNumber, int lookupNumber, v32qi rRingOffset, const Key* const restrict key )
 {
     v32qi bite = ciphertext.vector32[biteNumber];
 
@@ -25,20 +25,20 @@ v32qi DecodeBiteAvx2( int biteNumber, int lookupNumber, const Key* const restric
 
     const struct LookupChunkAvx2_t* const restrict lookup  = &PathLookupAvx2.lookups[lookupNumber];
 
-    bite += lookup->rRingOffset;
+    bite += rRingOffset;
     bite -= ( bite >= 26 ) & 26;
     bite = PermuteV32qi( &PathLookupAvx2.r_ring[0], bite );
-    bite -= lookup->rRingOffset;
+    bite -= rRingOffset;
     bite += ( bite < 0 ) & 26;
 
     // m+l rings and ukw
     bite = PermuteV32qi( &lookup->mapping,  bite );
 
     // right ring backwards
-    bite += lookup->rRingOffset;
+    bite += rRingOffset;
     bite -= ( bite >= 26 ) & 26;
     bite = PermuteV32qi( &PathLookupAvx2.r_ring[1], bite );
-    bite -= lookup->rRingOffset;
+    bite -= rRingOffset;
     bite += ( bite < 0 ) & 26;
 
     //stbrett backwards
