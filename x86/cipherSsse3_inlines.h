@@ -22,22 +22,15 @@ v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, v16qi rRingO
 
     const struct LookupChunk_t* const restrict lookup = &PathLookupSsse3.lookups[lookupNumber];
 
-    bite += rRingOffset;
-    bite -= ( bite >= 26 ) & 26;
+    bite = AddMod26_v16qi( bite, rRingOffset );
     bite = PermuteV16qi( &PathLookupSsse3.r_ring[0], bite );
-    bite -= rRingOffset;
-    bite += ( bite < 0 ) & 26;
-
+    bite = SubMod26_v16qi( bite, rRingOffset );
     // m+l rings and ukw
     bite = PermuteV16qi( &lookup->mapping,  bite );
-
     // right ring backwards
-    bite += rRingOffset;
-    bite -= ( bite >= 26 ) & 26;
+    bite = AddMod26_v16qi( bite, rRingOffset );
     bite = PermuteV16qi( &PathLookupSsse3.r_ring[1], bite );
-    bite -= rRingOffset;
-    bite += ( bite < 0 ) & 26;
-
+    bite = SubMod26_v16qi( bite, rRingOffset );
     //stbrett backwards
     bite = PermuteV16qi( &key->stbrett, bite );
 

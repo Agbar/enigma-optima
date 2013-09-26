@@ -50,9 +50,23 @@ v16qi AddMod26_v16qi_int8( v16qi a, int8_t b ){
 }
 
 inline
+v16qi AddMod26_v16qi( v16qi a, v16qi b ){
+    v16qi value = a + b;
+    value -= ( value >= 26 ) & 26;
+    return value;
+}
+
+inline
 v16qi SubMod26_v16qi_int8( v16qi a, int8_t b ){
     v16qi value = a - b;
-    a += ( value < 0 ) & 26;
+    value += ( value < 0 ) & 26;
+    return value;
+}
+
+inline
+v16qi SubMod26_v16qi( v16qi a, v16qi b ){
+    v16qi value = a - b;
+    value += ( value < 0 ) & 26;
     return value;
 }
 

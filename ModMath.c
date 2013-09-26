@@ -13,4 +13,8 @@ void IncrementMod( int8_t* number, int8_t modulo );
 extern
 v16qi AddMod26_v16qi_int8( v16qi a, int8_t b );
 extern
+v16qi AddMod26_v16qi( v16qi a, v16qi b );
+extern
 v16qi SubMod26_v16qi_int8( v16qi a, int8_t b );
+extern
+v16qi SubMod26_v16qi( v16qi a, v16qi b );
