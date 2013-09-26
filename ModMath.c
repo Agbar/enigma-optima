@@ -23,3 +23,7 @@ extern
 v32qi AddMod26_v32qi_int8( v32qi a, int8_t b );
 extern
 v32qi SubMod26_v32qi_int8( v32qi a, int8_t b );
+extern
+v32qi AddMod26_v32qi( v32qi a, v32qi b );
+extern
+v32qi SubMod26_v32qi( v32qi a, v32qi b );
