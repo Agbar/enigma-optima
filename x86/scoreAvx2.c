@@ -26,7 +26,7 @@ static void DecodeScoredMessagePart( const const Key* const restrict key, int le
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;
-
+    v32qi currentRRingOffset = PathLookupAvx2.firstRRingOffset;
     while( messageBite < ( len + 31 ) / 32 )
     {
         /* Worst case:
@@ -46,15 +46,15 @@ static void DecodeScoredMessagePart( const const Key* const restrict key, int le
         lookupNumber += lookupsToNextBite;
         switch( lookupsToNextBite ) {
         case 5:
-            cBite  = DecodeBiteAvx2( messageBite, lookupNumber - 5, key );
+            cBite  = DecodeBiteAvx2( messageBite, lookupNumber - 5, currentRRingOffset, key );
         case 4:
-            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 4, key );
+            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 4, currentRRingOffset, key );
         case 3:
-            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 3, key );
+            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 3, currentRRingOffset, key );
         case 2:
-            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 2, key );
+            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 2, currentRRingOffset, key );
         case 1:
-            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 1, key );
+            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 1, currentRRingOffset, key );
             break;
         default:
             exit(5);
@@ -62,6 +62,7 @@ static void DecodeScoredMessagePart( const const Key* const restrict key, int le
         // store whole decoded bite
         output -> vector32[messageBite] = cBite;
         messageBite++;
+        currentRRingOffset = AddMod26_v32qi_int8( currentRRingOffset, 32 % 26 );
     }
 }
 
