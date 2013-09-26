@@ -13,6 +13,7 @@
 #include "scoreSimple.h"
 #include "x86\scoreSsse3.h"
 #include "x86\scoreAvx.h"
+#include "x86/scoreAvx2.h"
 
 #ifdef TESTING_SCORE
 # include "ScoreTesting.h"
@@ -43,6 +44,9 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
     }
     if (cpu & enigma_cpu_avx) {
         enigma_score_function_copy( sf, &enigmaScoreAvx );
+    }
+    if( cpu & enigma_cpu_avx2 ){
+        enigma_score_function_copy( sf, &enigmaScoreAvx2 );
     }
 
 #ifdef TESTING_SCORE

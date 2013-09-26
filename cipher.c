@@ -11,7 +11,9 @@
 #include "config\array_sizes.h"
 #include "config\types.h"
 
+#include "cipher_inlines.h"
 #include "x86/cipherSsse3.h"
+#include "x86/cipherAvx2.h"
 
 void init_path_lookup_H_M3(const Key *key, int len);
 void init_path_lookup_ALL(const Key *key, int len);
@@ -176,10 +178,13 @@ void enigma_cipher_init(enigma_cpu_flags_t cpu, int machine_type, enigma_prepare
     enigma_cipher_function_t* fs[4];
     int i = 0;
 
+    // FIXME: It is not very smart to always call all of them.
     fs[i++] = &enigma_cipher_decoder_lookup;
-
-    if (cpu & enigma_cpu_ssse3) {
+    if ( cpu & ( enigma_cpu_ssse3 | enigma_cpu_avx ) ) {
         fs[i++] = &enigma_cipher_decoder_lookup_ssse3;
+    }
+    if ( cpu & enigma_cpu_avx2 ) {
+        fs[i++] = &enigma_cipher_DecoderLookupAvx2;
     }
 
     int j=0;
@@ -671,6 +676,13 @@ void en_deciph_stdin_ALL(FILE *file, const Key *key)
 }
 
 extern void Step1( int8_t* ringOffset );
+
+extern void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
+extern void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
+
+extern void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2] );
+extern void StepAllRings( struct RingsState* restrict rings, struct Turnovers_t turns );
+extern int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns );
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms

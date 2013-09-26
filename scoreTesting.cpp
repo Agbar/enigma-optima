@@ -14,6 +14,7 @@ extern "C" {
 #include "x86\cipherSsse3.h"
 #include "x86\scoreSsse3.h"
 #include "x86\scoreAvx.h"
+#include "x86\scoreAvx2.h"
 }
 
 template<typename TRet>
@@ -29,6 +30,7 @@ namespace Enigma
         static ScoringParams ParamsForScoringSsse3;
         static ScoringParams ParamsForScoringOptNoInterleave;
         static ScoringParams ParamsForScoringAvx;
+        static ScoringParams ParamsForScoringAvx2;
     public:
         enigma_score_function_t* const scoreImpl;
         union ScoringDecodedMessage* const decodedMessage;
@@ -41,6 +43,8 @@ namespace Enigma
             switch( esf ){
             case EnigmaSF_Avx:
                 return &ParamsForScoringAvx;
+            case EnigmaSF_Avx2:
+                return &ParamsForScoringAvx2;
             case EnigmaSF_Optimized:
                 return &ParamsForScoringOptimized;
             case EnigmaSF_OptNoInterleave:
@@ -60,6 +64,7 @@ namespace Enigma
     ScoringParams ScoringParams::ParamsForScoringSsse3             ( &enigmaScoreSsse3,            &decodedMsgPartSsse3 );
     ScoringParams ScoringParams::ParamsForScoringOptNoInterleave   ( &enigmaScoreOptNoInterleave,  &decodedMsgPartNoInterleave );
     ScoringParams ScoringParams::ParamsForScoringAvx               ( &enigmaScoreAvx,              &decodedMsgPartAvx );
+    ScoringParams ScoringParams::ParamsForScoringAvx2              ( &enigmaScoreAvx2,             &decodedMsgPartAvx2 );
 
     /** \brief Function needed to differentiate between printing int and double.
      *
