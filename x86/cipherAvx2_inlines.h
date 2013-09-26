@@ -25,22 +25,15 @@ v32qi DecodeBiteAvx2( int biteNumber, int lookupNumber, v32qi rRingOffset, const
 
     const struct LookupChunkAvx2_t* const restrict lookup  = &PathLookupAvx2.lookups[lookupNumber];
 
-    bite += rRingOffset;
-    bite -= ( bite >= 26 ) & 26;
+    bite = AddMod26_v32qi( bite, rRingOffset );
     bite = PermuteV32qi( &PathLookupAvx2.r_ring[0], bite );
-    bite -= rRingOffset;
-    bite += ( bite < 0 ) & 26;
-
+    bite = SubMod26_v32qi( bite, rRingOffset );
     // m+l rings and ukw
     bite = PermuteV32qi( &lookup->mapping,  bite );
-
     // right ring backwards
-    bite += rRingOffset;
-    bite -= ( bite >= 26 ) & 26;
+    bite = AddMod26_v32qi( bite, rRingOffset );
     bite = PermuteV32qi( &PathLookupAvx2.r_ring[1], bite );
-    bite -= rRingOffset;
-    bite += ( bite < 0 ) & 26;
-
+    bite = SubMod26_v32qi( bite, rRingOffset );
     //stbrett backwards
     bite = PermuteV32qi( &key->stbrett, bite );
 

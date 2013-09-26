@@ -80,9 +80,23 @@ v32qi AddMod26_v32qi_int8( v32qi a, int8_t b ){
 }
 
 inline
+v32qi AddMod26_v32qi( v32qi a, v32qi b ){
+    v32qi value = a + b;
+    value -= ( value >= 26 ) & 26;
+    return value;
+}
+
+inline
 v32qi SubMod26_v32qi_int8( v32qi a, int8_t b ){
     v32qi value = a - b;
-    a += ( value < 0 ) & 26;
+    value += ( value < 0 ) & 26;
+    return value;
+}
+
+inline
+v32qi SubMod26_v32qi( v32qi a, v32qi b ){
+    v32qi value = a - b;
+    value += ( value < 0 ) & 26;
     return value;
 }
 
