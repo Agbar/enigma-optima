@@ -1,6 +1,8 @@
 #ifndef CIPHER_SSSE3_INLINES_H_INCLUDED
 #define CIPHER_SSSE3_INLINES_H_INCLUDED
 
+#include "..\dict.h"
+
 inline
 v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec ){
     /* Following line is needed to behave like __builtin_shuffle for all inputs and still being
