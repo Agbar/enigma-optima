@@ -9,6 +9,7 @@
 #include "scoreAvx2.h"
 #include "cipherAvx2.h"
 #include "cipherAvx2_inlines.h"
+#include "../score_inlines.h"
 
 // SSSE3 scores
 static double icscoreAvx2( const Key* const restrict key, scoreLength_t len );
@@ -22,7 +23,7 @@ union ScoringDecodedMessage decodedMsgPartAvx2;
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
-static void DecodeScoredMessagePart( const const Key* const restrict key, int len, union ScoringDecodedMessage* output )
+static void DecodeScoredMessagePartAvx2( const const Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;
@@ -66,63 +67,30 @@ static void DecodeScoredMessagePart( const const Key* const restrict key, int le
     }
 }
 
+__attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
-static double icscoreAvx2( const Key* const restrict key, scoreLength_t len )
-{
-    DecodeScoredMessagePart( key, len, &decodedMsgPartAvx2 );
-
-    uint16_t f[26] = {0};
-    int i;
-    for( i = 0; i < len; i++ ) {
-        f[decodedMsgPartAvx2.plain[i]]++;
-    }
-
-    STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
-    uint16_t S = 0;
-    for( i = 0; i < 26; i++ ) {
-        S += f[i] * ( f[i] - 1 );
-    }
-    return ( double )S / ( len * ( len - 1 ) );
+static double icscoreAvx2( const Key* const restrict key, scoreLength_t len ) {
+    DecodeScoredMessagePartAvx2( key, len, &decodedMsgPartAvx2 );
+    return ComputeIcscoreFromDecodedMsg( &decodedMsgPartAvx2, len );
 }
 
+__attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
-static int uniscoreAvx2( const Key* const restrict key, scoreLength_t len )
-{
-    DecodeScoredMessagePart( key, len, &decodedMsgPartAvx2 );
-
-    int score = 0, i;
-    for( i = 0; i < len; i++ ) {
-        score += unidict[i];
-    }
-    return score;
+static int uniscoreAvx2( const Key* const restrict key, scoreLength_t len ) {
+    DecodeScoredMessagePartAvx2( key, len, &decodedMsgPartAvx2 );
+    return ComputeUniscoreFromDecodedMsg( &decodedMsgPartAvx2, len );
 }
 
+__attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
-static int biscoreAvx2( const Key* const restrict key, scoreLength_t len )
-{
-    DecodeScoredMessagePart( key, len, &decodedMsgPartAvx2 );
-
-    int score = 0;
-    int x;
-    //uint8_t length = len;
-    for( x = 0; x < len - 1; ++x )
-    {
-        score += bidict[decodedMsgPartAvx2.plain[x]][decodedMsgPartAvx2.plain[x + 1]];
-    }
-
-    return score;
+static int biscoreAvx2( const Key* const restrict key, scoreLength_t len ) {
+    DecodeScoredMessagePartAvx2( key, len, &decodedMsgPartAvx2 );
+    return ComputeBiscoreFromDecodedMsg( &decodedMsgPartAvx2, len );
 }
 
+__attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
-static int triscoreAvx2( const Key* const restrict key, scoreLength_t len )
-{
-    DecodeScoredMessagePart( key, len, &decodedMsgPartAvx2 );
-
-    int x, score = 0;
-    for( x = 0; x < len - 2; ++x )
-    {
-        score += tridict[decodedMsgPartAvx2.plain[x]][decodedMsgPartAvx2.plain[x + 1]][decodedMsgPartAvx2.plain[x + 2]];
-    }
-
-    return score;
+static int triscoreAvx2( const Key* const restrict key, scoreLength_t len ) {
+    DecodeScoredMessagePartAvx2( key, len, &decodedMsgPartAvx2 );
+    return ComputeTriscoreFromDecodedMsg( &decodedMsgPartAvx2, len );
 }
