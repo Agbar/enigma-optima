@@ -44,9 +44,13 @@ typedef char            v16qi   __attribute__ ((vector_size(16)));
  */
 typedef short           v8hi    __attribute__ ((vector_size(16)));
 
-/** \brief Vector of 2 quadwords. 128 bit, defauld signedness.
+/** \brief Vector of 2 quadwords. 128 bit, default signedness.
  */
 typedef long long       v2di    __attribute__ ((vector_size(16)));
+
+/** \brief Vector of 4 doublewords. 128 bit, default signedness.
+ */
+typedef int             v4si    __attribute__ ((vector_size(16)));
 
 /*
  * 256 bit vectors
