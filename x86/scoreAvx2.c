@@ -24,7 +24,7 @@ union ScoringDecodedMessage decodedMsgPartAvx2;
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
-static void DecodeScoredMessagePartAvx2( const const Key* const restrict key, int len, union ScoringDecodedMessage* output )
+static void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;

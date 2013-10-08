@@ -17,7 +17,7 @@ v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, v16qi rRingO
 inline extern
 v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec );
 inline extern
-void DecodeScoredMessagePartSsse3( const const Key* const restrict key, int len, union ScoringDecodedMessage* output );
+void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union ScoringDecodedMessage* output );
 inline extern
 double ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scoreLength_t len );
 inline extern

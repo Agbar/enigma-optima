@@ -18,7 +18,7 @@ enigma_score_function_t enigmaScoreOptNoInterleave = {
 
 __attribute__ (( optimize( "sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops" ) ))
 static inline
-void DecodeScoredMessagePartNoInterleave( const const Key* const restrict key, scoreLength_t len, union ScoringDecodedMessage* output ){
+void DecodeScoredMessagePartNoInterleave( const Key* const restrict key, scoreLength_t len, union ScoringDecodedMessage* output ){
     const PermutationMap_t* const restrict stbrett = &key->stbrett;
     int i;
     for( i = 0; i < len - 15; i += 16 ) {

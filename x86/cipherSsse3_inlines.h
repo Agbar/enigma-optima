@@ -42,7 +42,7 @@ v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, v16qi rRingO
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
-void DecodeScoredMessagePartSsse3( const const Key* const restrict key, int len, union ScoringDecodedMessage* output )
+void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;
