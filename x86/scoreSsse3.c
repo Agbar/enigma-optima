@@ -25,7 +25,7 @@ __attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
 static double icscoreSsse3( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartSsse3 );
-    return ComputeIcscoreFromDecodedMsg( &decodedMsgPartSsse3, len );
+    return ComputeIcscoreFromDecodedMsgSsse3( &decodedMsgPartSsse3, len );
 }
 
 __attribute__ ((flatten))

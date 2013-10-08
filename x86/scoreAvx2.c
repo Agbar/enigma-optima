@@ -10,6 +10,7 @@
 #include "cipherAvx2.h"
 #include "cipherAvx2_inlines.h"
 #include "../score_inlines.h"
+#include "cipherSsse3_inlines.h"
 
 // SSSE3 scores
 static double icscoreAvx2( const Key* const restrict key, scoreLength_t len );
@@ -71,7 +72,7 @@ __attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
 static double icscoreAvx2( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartAvx2( key, len, &decodedMsgPartAvx2 );
-    return ComputeIcscoreFromDecodedMsg( &decodedMsgPartAvx2, len );
+    return ComputeIcscoreFromDecodedMsgSsse3( &decodedMsgPartAvx2, len );
 }
 
 __attribute__ ((flatten))
