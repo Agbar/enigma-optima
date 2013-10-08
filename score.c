@@ -14,6 +14,7 @@
 #include "x86\scoreSsse3.h"
 #include "x86\scoreAvx.h"
 #include "x86/scoreAvx2.h"
+#include "score_inlines.h"
 
 #ifdef TESTING_SCORE
 # include "ScoreTesting.h"
@@ -21,6 +22,13 @@
 
 /* declaration of internal functions */
 void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict from);
+
+inline extern
+int ComputeUniscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len );
+inline extern
+int ComputeBiscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len );
+inline extern
+int ComputeTriscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len );
 
 inline
 void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict prototype)
