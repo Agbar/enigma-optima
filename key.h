@@ -74,6 +74,7 @@ typedef struct _key_t {
 
 int init_key_default(Key *key, enum ModelType_t model);
 int init_key_low(Key *key, enum ModelType_t model);
+PURE_FUNCTION
 int keycmp(const Key *k1, const Key *k2);
 
 #endif

@@ -19,7 +19,9 @@ struct Turnovers_t {
      m2;
 };
 
+PURE_FUNCTION
 int scrambler_state(const Key *key, int len);
+PURE_FUNCTION
 double dgetic_ALL(const Key *key, int len);
 void en_deciph_stdin_ALL(FILE *file, const Key *key);
 

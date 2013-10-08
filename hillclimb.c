@@ -37,6 +37,7 @@ void save_state(State state)
   fclose(fp);
 }
 
+NO_RETURN
 void save_state_exit(State state, int retval)
 {
   FILE *fp;

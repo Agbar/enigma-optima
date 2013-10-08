@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "display.h"
 
 void usage(void)
 {
@@ -91,5 +92,5 @@ To report bugs or offer suggestions, please mail to <enigma-suite@bytereef.org>.
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ *
  */

@@ -39,6 +39,10 @@ enum { SW_ONSTART, SW_OTHER, SW_ALL, SW_NONE, SINGLE_KEY };
 #define ALIGNED_8( var )  DECLARE_ALIGNED( var, 8 )
 #define ALIGNED_4( var )  DECLARE_ALIGNED( var, 4 )
 
+#define NO_RETURN __attribute__((noreturn))
+#define CONST_FUNCTION __attribute__((const))
+#define PURE_FUNCTION __attribute__((pure))
+
 #ifdef __GNUC__
 # define INLINE_IS_FAST
 #endif

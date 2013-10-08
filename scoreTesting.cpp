@@ -7,6 +7,7 @@
 #include "scoreTesting.hpp"
 
 extern "C" {
+#include "global.h"
 #include "result.h"
 #include "cipher.h"
 #include "scoreBasic.h"
@@ -103,11 +104,13 @@ namespace Enigma
     bool AreEqual( TCmp a, TCmp b );
 
     template<>
+    CONST_FUNCTION
     bool AreEqual<int>( int a, int b ) {
         return a == b;
     }
 
     template<>
+    CONST_FUNCTION
     bool AreEqual<double>( double a, double b ) {
         dbLn a1 = {a};
         dbLn b1 = {b};
