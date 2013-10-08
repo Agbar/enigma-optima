@@ -37,7 +37,7 @@ typedef char            v16qi   __attribute__ ((vector_size(16)));
 
 /** \brief Vector of 8 words. 128 bit, default signedness.
  */
-typedef signed short    v8hi    __attribute__ ((vector_size(16)));
+typedef short           v8hi    __attribute__ ((vector_size(16)));
 
 /** \brief Vector of 2 quadwords. 128 bit, defauld signedness.
  */
