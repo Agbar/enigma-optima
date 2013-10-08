@@ -111,4 +111,95 @@ double ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scor
     return ( double )sum / ( len * ( len - 1 ) );
 }
 
+inline
+void Unpack_v16qi( v16qi in, v8hi* lo, v8hi *hi ){
+    v16qi zero = { 0 };
+    *lo = (v8hi) __builtin_ia32_punpcklbw128 ( in, zero );
+    *hi = (v8hi) __builtin_ia32_punpckhbw128 ( in, zero );
+}
+
+inline
+void Unpack_v8hi( v8hi in, v4si* lo, v4si* hi ){
+    v8hi zero = { 0 };
+    *lo = (v4si) __builtin_ia32_punpcklwd128( in, zero );
+    *hi = (v4si) __builtin_ia32_punpckhwd128( in, zero );
+}
+
+inline
+v16qi MOVDQU( v16qi* p ){
+    v16qi ret;
+    asm( "MOVDQU %1, %0":
+        "=x" (ret) :
+        "m" (*p)
+    );
+    return ret;
+}
+
+__attribute__ ((optimize("unroll-loops")))
+inline
+int ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len ){
+    int score = 0;
+    int i;
+    for( i = 0; i + 15 < len - 2; i += 16 ) {
+        v16qi a = *(v16qi*)( msg->plain + i );
+        v8hi aLo, aHi;
+        Unpack_v16qi( a, &aLo, &aHi );
+        aLo *= 32 * 32;
+        aHi *= 32 * 32;
+        v16qi b = MOVDQU( (v16qi*) ( msg->plain + i + 1 ) );
+        v8hi bLo, bHi;
+        Unpack_v16qi( b, &bLo, &bHi );
+        bLo *= 32;
+        bHi *= 32;
+        v16qi c = MOVDQU( (v16qi*) ( msg->plain + i + 2 ) );
+        v8hi cLo, cHi;
+        Unpack_v16qi( c, &cLo, &cHi );
+
+        aLo += bLo + cLo;
+        aHi += bHi + cHi;
+
+        int j;
+        for( j=0; j< 8; j++ ){
+            score += *( ( dict_t* ) tridict + aLo[j] );
+            score += *( ( dict_t* ) tridict + aHi[j] );
+        }
+    }
+    for( ; i < len - 2; ++i ) {
+        score += tridict[msg->plain[i]][msg->plain[i + 1]][msg->plain[i + 2]];
+    }
+    return score;
+}
+
+
+__attribute__ ((optimize("unroll-loops")))
+inline
+int ComputeBiscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len ){
+    int score = 0;
+    int i;
+    for( i = 0; i + 15 < len - 1; i += 16 ) {
+        v16qi a = *(v16qi*)( msg->plain + i );
+        v8hi aLo, aHi;
+        Unpack_v16qi( a, &aLo, &aHi );
+        aLo *= 32;
+        aHi *= 32;
+        v16qi b = MOVDQU( (v16qi*) ( msg->plain + i + 1 ) );
+        v8hi bLo, bHi;
+        Unpack_v16qi( b, &bLo, &bHi );
+
+        aLo += bLo;
+        aHi += bHi;
+
+        int j;
+        for( j=0; j< 8; j++ ){
+            score += *( ( dict_t* ) bidict + aLo[j] );
+            score += *( ( dict_t* ) bidict + aHi[j] );
+        }
+    }
+    for( ; i < len - 1; ++i ) {
+        score += bidict[msg->plain[i]][msg->plain[i + 1]];
+    }
+    return score;
+}
+
+
 #endif
