@@ -12,6 +12,7 @@ int   triscoreSimple(const Key* const restrict key, scoreLength_t len);
 
 enigma_score_function_t enigmaScoreSimple = { triscoreSimple, biscoreSimple, icscoreSimple, uniscoreSimple};
 
+PURE_FUNCTION
 double icscoreSimple(const Key* const restrict key, scoreLength_t len)
 {
   int f[26] = {0};
@@ -36,6 +37,7 @@ double icscoreSimple(const Key* const restrict key, scoreLength_t len)
   return S;
 }
 
+PURE_FUNCTION
 int uniscoreSimple(const Key* const restrict key, scoreLength_t len)
 {
   int i;
@@ -51,6 +53,7 @@ int uniscoreSimple(const Key* const restrict key, scoreLength_t len)
   return s;
 }
 
+PURE_FUNCTION
 int biscoreSimple(const Key* const restrict key, scoreLength_t len)
 {
   int i;
@@ -71,6 +74,7 @@ int biscoreSimple(const Key* const restrict key, scoreLength_t len)
 
 }
 
+PURE_FUNCTION
 int triscoreSimple(const Key* const restrict key,  scoreLength_t len)
 {
   int i;
