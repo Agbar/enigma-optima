@@ -11,13 +11,13 @@ void rand_var(text_t var[]);
 void set_to_ct_freq(text_t var[], int len);
 
 /* swaps letters */
-inline void swap(PermutationMap_t *stbrett, int i, int k)
+inline void SwapStbrett(Key* key, int i, int k)
 {
   text_t store;
 
-  store = stbrett->letters[i];
-  stbrett->letters[i] = stbrett->letters[k];
-  stbrett->letters[k] = store;
+  store = key->stbrett.letters[i];
+  key->stbrett.letters[i] = key->stbrett.letters[k];
+  key->stbrett.letters[k] = store;
 }
 
 #endif
