@@ -2,6 +2,7 @@
 #define CIPHER_SSSE3_INLINES_H_INCLUDED
 
 #include "..\dict.h"
+#include "cipherSsse3.h"
 
 inline
 v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec ){
@@ -80,6 +81,34 @@ void DecodeScoredMessagePartSsse3( const const Key* const restrict key, int len,
         messageBite++;
         currentRRingOffset = AddMod26_v16qi_int8( currentRRingOffset, 16 );
     }
+}
+
+__attribute__ ((optimize("unroll-loops")))
+__attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
+inline
+double ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scoreLength_t len ){
+    uint8_t ALIGNED_32(f[32]) = {0};
+    int i;
+    for( i = 0; i < len; i++ ) {
+        f[msg->plain[i]]++;
+    }
+
+    v16qi* const v = (v16qi*) f; // it makes v16hi[2];
+    v16qi v0 = v[0];
+    v16qi v1 = v[1];
+    v16qi minusOne = {0};
+    minusOne = ~minusOne;
+    // short result[i] = v0[2*i] * ( v0[2*i] + minusOne ) + v0[2*i+1] * ( v0[2*i+1] + minusOne );
+    v8hi foo = __builtin_ia32_pmaddubsw128( v0, v0 + minusOne );
+    v8hi bar = __builtin_ia32_pmaddubsw128( v1, v1 + minusOne );
+    foo += bar;
+    foo = __builtin_ia32_phaddw128( foo, foo ); // [0+1, 2+3, 4+5, 6+7, ...]
+    foo = __builtin_ia32_phaddw128( foo, foo ); // [0+1+2+3, 4+5+6+7, ...]
+    foo = __builtin_ia32_phaddw128( foo, foo );
+
+    STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
+    uint16_t sum = foo[0];
+    return ( double )sum / ( len * ( len - 1 ) );
 }
 
 #endif

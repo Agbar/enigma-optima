@@ -33,21 +33,25 @@ int ComputeUniscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength
     return score;
 }
 
+#include "config/types.h"
 __attribute__ ((optimize("unroll-loops")))
+__attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
 double ComputeIcscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len ){
-    uint16_t f[26] = {0};
+    uint8_t f[32] = {0};
     int i;
     for( i = 0; i < len; i++ ) {
         f[msg->plain[i]]++;
     }
 
     STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
-    uint16_t S = 0;
+
+    uint16_t sum = 0;
     for( i = 0; i < 26; i++ ) {
-        S += f[i] * ( f[i] - 1 );
+        sum += f[i] * ( f[i] - 1 );
     }
-    return ( double )S / ( len * ( len - 1 ) );
+    double ret = ( double )sum / ( len * ( len - 1 ) );
+    return ret;
 }
 
 #endif
