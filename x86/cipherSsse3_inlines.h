@@ -87,28 +87,44 @@ __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
 double ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scoreLength_t len ){
-    uint8_t ALIGNED_32(f[32]) = {0};
+    uint8_t ALIGNED_32( f[32] ) = {0};
     int i;
     for( i = 0; i < len; i++ ) {
         f[msg->plain[i]]++;
     }
-
-    v16qi* const v = (v16qi*) f; // it makes v16hi[2];
-    v16qi v0 = v[0];
-    v16qi v1 = v[1];
-    v16qi minusOne = {0};
-    minusOne = ~minusOne;
+    v16qi* const v = ( v16qi* ) f; // it makes v16hi[2];
     // short result[i] = v0[2*i] * ( v0[2*i] + minusOne ) + v0[2*i+1] * ( v0[2*i+1] + minusOne );
-    v8hi foo = __builtin_ia32_pmaddubsw128( v0, v0 + minusOne );
-    v8hi bar = __builtin_ia32_pmaddubsw128( v1, v1 + minusOne );
+    v8hi foo = __builtin_ia32_pmaddubsw128( v[0], v[0] + -1 );
+    v8hi bar = __builtin_ia32_pmaddubsw128( v[1], v[1] + -1 );
     foo += bar;
-    foo = __builtin_ia32_phaddw128( foo, foo ); // [0+1, 2+3, 4+5, 6+7, ...]
-    foo = __builtin_ia32_phaddw128( foo, foo ); // [0+1+2+3, 4+5+6+7, ...]
-    foo = __builtin_ia32_phaddw128( foo, foo );
+    v8hi hexFF00 = ( v8hi )_mm_set1_epi16( 0xFF00 );
+
+#if defined( __AVX__ )
+    asm(
+        "vpandn %[hi], %[mask], %[lo]\n\t"
+        "vpand  %[hi], %[mask], %[hi]\n\t" :
+        [hi] "+x" (foo), [lo] "=&x" (bar) :
+        [mask]"x" (hexFF00)
+    );
+#else
+    v8hi temp = temp; //disable uninitialized warning
+    asm(
+        "movdqa %[hi],      %[tmp]\n\t"
+        "pand   %[lo],      %[hi]\n\t"
+        "pandn  %[tmp],     %[lo]\n\t" :
+        [hi] "+x" ( foo ), [lo] "=x" ( bar ) :
+        "1" ( hexFF00 ), [tmp] "x" ( temp )
+    );
+#endif
+
+    v16qi zero = {0};
+    v8hi high =  ( v8hi ) __builtin_ia32_psadbw128( ( v16qi ) foo, zero );
+    v8hi low  =  ( v8hi ) __builtin_ia32_psadbw128( ( v16qi ) bar, zero );
 
     STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
-    uint16_t sum = foo[0];
-    return ( double )sum / ( len * ( len - 1 ) );
+    uint16_t sum = ( high[0] + high[4] )* 256 + low[0] + low[4];
+    double ret = ( double )sum / ( len * ( len - 1 ) );
+    return ret;
 }
 
 inline
