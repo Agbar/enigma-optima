@@ -105,7 +105,7 @@ extern
 void FixPermutationMapTail(PermutationMap_t* mapping);
 
 extern
-void Fill0To25(text_t array[26]);
+void Fill0To25(text_t array[static 26]);
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
