@@ -33,7 +33,7 @@ typedef struct _enigma_cipher_function_t
     enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup_ALL;
 } enigma_cipher_function_t;
 
-void enigma_cipher_init(enigma_cpu_flags_t cpu, int machine_type, enigma_prepare_decoder_lookup_function_pt* cf);
+void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf);
 
 extern enigma_cipher_function_t enigma_cipher_decoder_lookup;
 extern text_t path_lookup[CT][LAST_DIMENSION];

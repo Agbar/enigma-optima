@@ -173,7 +173,61 @@ void enigma_prepare_decoder_lookups(const Key* key, int len)
     }
 }
 
-void enigma_cipher_init(enigma_cpu_flags_t cpu, int machine_type, enigma_prepare_decoder_lookup_function_pt* cf)
+__attribute__(( unused ))
+static
+void CipherInit(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf ) {
+    enigma_cipher_function_t* fun = &enigma_cipher_decoder_lookup;
+    if( cpu & ( enigma_cpu_ssse3 | enigma_cpu_avx ) ) {
+        fun = &enigma_cipher_decoder_lookup_ssse3;
+    }
+    if ( cpu & enigma_cpu_avx2 ) {
+        fun = &enigma_cipher_DecoderLookupAvx2;
+    }
+    switch( machine_type ) {
+    case EnigmaModel_H:
+    case EnigmaModel_M3:
+        *cf = fun->prepare_decoder_lookup_M_H3;
+        return;
+    case EnigmaModel_M4:
+        *cf = fun->prepare_decoder_lookup_ALL;
+        return;
+    case EnigmaModel_Error:
+        *cf = 0;// Hopefully causes exception early.
+        return;
+    }
+}
+
+__attribute__(( unused ))
+static
+void CipherInitScoreTesting(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf ) {
+    enigma_cipher_function_t* fs[2] = { &enigma_cipher_decoder_lookup };
+    if ( cpu & ( enigma_cpu_ssse3 | enigma_cpu_avx ) ) {
+        fs[1] = &enigma_cipher_decoder_lookup_ssse3;
+    }
+    if ( cpu & enigma_cpu_avx2 ) {
+        fs[1] = &enigma_cipher_DecoderLookupAvx2;
+    }
+    int j;
+    for ( j = 0 ; j < 2; j++ ) {
+        switch( machine_type ) {
+        case EnigmaModel_H:
+        case EnigmaModel_M3:
+            enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_M_H3;
+            break;
+        case EnigmaModel_M4:
+            enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_ALL;
+            break;
+        case EnigmaModel_Error:
+            *cf = 0;
+            return;
+        }
+    }
+    *cf = enigma_prepare_decoder_lookups;
+}
+
+__attribute__ (( unused ))
+static
+void CipherInitMulti(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf)
 {
     enigma_cipher_function_t* fs[4];
     int i = 0;
@@ -198,10 +252,22 @@ void enigma_cipher_init(enigma_cpu_flags_t cpu, int machine_type, enigma_prepare
             break;
         case EnigmaModel_M4:
             enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_ALL;
+            break;
+        case EnigmaModel_Error:
+            *cf = 0;
+            return;
         }
     }
 
     *cf = enigma_prepare_decoder_lookups;
+}
+
+void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf){
+#ifndef TESTING_SCORE
+    CipherInit( cpu, machine_type, cf );
+#else
+    CipherInitScoreTesting( cpu, machine_type, cf );
+#endif
 }
 
 /* Check for slow wheel movement */
