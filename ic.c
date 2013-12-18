@@ -23,13 +23,11 @@ void ic_noring( const Key *from, const Key *to __attribute__((unused)), const Ke
     {EnigmaModel_M3, 2,0,8,8,8,25,25, 0,25,25,25},
     {EnigmaModel_M4,4,10,8,8,8,25,25,25,25,25,25}
   };
-  int m;
+
   double a, bestic;
   int firstloop = 1, clen;
 
-
-  m = from->model;
-
+  enum ModelType_t m = from->model;
 
   /* iterate thru all but ring settings */
   ckey = gkey = lo = *from;
