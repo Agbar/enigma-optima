@@ -13,7 +13,7 @@
 void prepare_decoder_lookup_M_H3_ssse3( const Key *key, int len );
 void prepare_decoder_lookup_ALL_ssse3( const Key *key, int len );
 inline extern
-v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, v16qi rRingOffset, const Key* const restrict key );
+v16qi enigma_cipher_decode_ssse3( v16qi bite, int lookupNumber, v16qi rRingOffset, const Key* const restrict key );
 inline extern
 v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec );
 inline extern

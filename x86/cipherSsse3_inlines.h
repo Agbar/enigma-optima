@@ -15,19 +15,24 @@ v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec ){
     return ret1 | ret2;
 }
 
-inline
-v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, v16qi rRingOffset, const Key* const restrict key )
-{
-    v16qi bite = ciphertext.vector16[biteNumber];
 
+inline
+v16qi PreDecodeBiteSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key ){
     // stbrett forward
     bite = PermuteV16qi ( &key->stbrett, bite );
-
-    const struct LookupChunk_t* const restrict lookup = &PathLookupSsse3.lookups[lookupNumber];
-
+    // right ring forward
     bite = AddMod26_v16qi( bite, rRingOffset );
     bite = PermuteV16qi( &PathLookupSsse3.r_ring[0], bite );
     bite = SubMod26_v16qi( bite, rRingOffset );
+    return bite;
+}
+
+inline
+v16qi enigma_cipher_decode_ssse3( v16qi predecodedBite, int lookupNumber, v16qi rRingOffset, const Key* const restrict key )
+{
+    v16qi bite = predecodedBite;
+    const struct LookupChunk_t* const restrict lookup = &PathLookupSsse3.lookups[lookupNumber];
+
     // m+l rings and ukw
     bite = PermuteV16qi( &lookup->mapping,  bite );
     // right ring backwards
@@ -39,6 +44,7 @@ v16qi enigma_cipher_decode_ssse3( int biteNumber, int lookupNumber, v16qi rRingO
 
     return bite & PathLookupSsse3.lookups[lookupNumber].mask;
 }
+
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
@@ -63,15 +69,18 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
         uint_least16_t lookupsToNextBite = PathLookupSsse3.nextBite[messageBite] - lookupNumber;
         v16qi cBite = {0};
         lookupNumber += lookupsToNextBite;
+        v16qi currentBite = ciphertext.vector16[messageBite];
+        v16qi predecoded  = PreDecodeBiteSsse3( currentBite, currentRRingOffset, key );
+
         switch( lookupsToNextBite ) {
         case 4:
-            cBite  = enigma_cipher_decode_ssse3( messageBite, lookupNumber - 4, currentRRingOffset, key );
+            cBite  = enigma_cipher_decode_ssse3( predecoded, lookupNumber - 4, currentRRingOffset, key );
         case 3:
-            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 3, currentRRingOffset, key );
+            cBite |= enigma_cipher_decode_ssse3( predecoded, lookupNumber - 3, currentRRingOffset, key );
         case 2:
-            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 2, currentRRingOffset, key );
+            cBite |= enigma_cipher_decode_ssse3( predecoded, lookupNumber - 2, currentRRingOffset, key );
         case 1:
-            cBite |= enigma_cipher_decode_ssse3( messageBite, lookupNumber - 1, currentRRingOffset, key );
+            cBite |= enigma_cipher_decode_ssse3( predecoded, lookupNumber - 1, currentRRingOffset, key );
             break;
         default:
             exit(5);
