@@ -42,6 +42,8 @@ enum { SW_ONSTART, SW_OTHER, SW_ALL, SW_NONE, SINGLE_KEY };
 #define NO_RETURN __attribute__((noreturn))
 #define CONST_FUNCTION __attribute__((const))
 #define PURE_FUNCTION __attribute__((pure))
+#define UNUSED __attribute__ ((unused))
+
 
 #ifdef __GNUC__
 # define INLINE_IS_FAST

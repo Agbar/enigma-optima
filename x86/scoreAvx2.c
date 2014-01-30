@@ -59,7 +59,7 @@ static void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len,
             cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 1, currentRRingOffset, key );
             break;
         default:
-            exit(5);
+            exit_d(5);
         }
         // store whole decoded bite
         output -> vector32[messageBite] = cBite;
