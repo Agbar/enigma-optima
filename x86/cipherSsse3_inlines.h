@@ -30,7 +30,7 @@ v16qi PreDecodeBiteSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restr
 }
 
 inline
-v16qi enigma_cipher_decode_ssse3( v16qi predecodedBite, int lookupNumber, v16qi rRingOffset, const Key* const restrict key )
+v16qi DecodeBiteSsse3( v16qi predecodedBite, int lookupNumber, v16qi rRingOffset, const Key* const restrict key )
 {
     v16qi bite = predecodedBite;
     const struct LookupChunk_t* const restrict lookup = &PathLookupSsse3.lookups[lookupNumber];
@@ -76,13 +76,13 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
 
         switch( lookupsToNextBite ) {
         case 4:
-            cBite  = enigma_cipher_decode_ssse3( predecoded, lookupNumber - 4, currentRRingOffset, key );
+            cBite  = DecodeBiteSsse3( predecoded, lookupNumber - 4, currentRRingOffset, key );
         case 3:
-            cBite |= enigma_cipher_decode_ssse3( predecoded, lookupNumber - 3, currentRRingOffset, key );
+            cBite |= DecodeBiteSsse3( predecoded, lookupNumber - 3, currentRRingOffset, key );
         case 2:
-            cBite |= enigma_cipher_decode_ssse3( predecoded, lookupNumber - 2, currentRRingOffset, key );
+            cBite |= DecodeBiteSsse3( predecoded, lookupNumber - 2, currentRRingOffset, key );
         case 1:
-            cBite |= enigma_cipher_decode_ssse3( predecoded, lookupNumber - 1, currentRRingOffset, key );
+            cBite |= DecodeBiteSsse3( predecoded, lookupNumber - 1, currentRRingOffset, key );
             break;
         default:
             exit_d(5);
