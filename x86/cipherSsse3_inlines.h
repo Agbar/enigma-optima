@@ -19,7 +19,7 @@ v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec ){
 
 
 inline
-v16qi PreDecodeBiteSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key ){
+v16qi DecodeBiteForwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key ){
     // stbrett forward
     bite = PermuteV16qi ( &key->stbrett, bite );
     // right ring forward
@@ -30,23 +30,24 @@ v16qi PreDecodeBiteSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restr
 }
 
 inline
-v16qi DecodeBiteSsse3( v16qi predecodedBite, int lookupNumber, v16qi rRingOffset, const Key* const restrict key )
-{
+v16qi DecodeBiteMaskedPartSsse3( v16qi predecodedBite, int lookupNumber ) {
     v16qi bite = predecodedBite;
-    const struct LookupChunk_t* const restrict lookup = &PathLookupSsse3.lookups[lookupNumber];
-
     // m+l rings and ukw
-    bite = PermuteV16qi( &lookup->mapping,  bite );
+    bite  = PermuteV16qi( &PathLookupSsse3.lookups[lookupNumber].mapping,  bite );
+    bite &= PathLookupSsse3.lookups[lookupNumber].mask;
+    return bite;
+}
+
+inline
+v16qi DecodeBiteBackwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key ) {
     // right ring backwards
     bite = AddMod26_v16qi( bite, rRingOffset );
     bite = PermuteV16qi( &PathLookupSsse3.r_ring[1], bite );
     bite = SubMod26_v16qi( bite, rRingOffset );
     //stbrett backwards
     bite = PermuteV16qi( &key->stbrett, bite );
-
-    return bite & PathLookupSsse3.lookups[lookupNumber].mask;
+    return bite;
 }
-
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
@@ -72,21 +73,22 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
         v16qi cBite = {0};
         lookupNumber += lookupsToNextBite;
         v16qi currentBite = ciphertext.vector16[messageBite];
-        v16qi predecoded  = PreDecodeBiteSsse3( currentBite, currentRRingOffset, key );
+        v16qi predecoded  = DecodeBiteForwardCommonSsse3( currentBite, currentRRingOffset, key );
 
         switch( lookupsToNextBite ) {
         case 4:
-            cBite  = DecodeBiteSsse3( predecoded, lookupNumber - 4, currentRRingOffset, key );
+            cBite  = DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 4 );
         case 3:
-            cBite |= DecodeBiteSsse3( predecoded, lookupNumber - 3, currentRRingOffset, key );
+            cBite |= DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 3 );
         case 2:
-            cBite |= DecodeBiteSsse3( predecoded, lookupNumber - 2, currentRRingOffset, key );
+            cBite |= DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 2 );
         case 1:
-            cBite |= DecodeBiteSsse3( predecoded, lookupNumber - 1, currentRRingOffset, key );
+            cBite |= DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 1 );
             break;
         default:
             exit_d(5);
         }
+        cBite = DecodeBiteBackwardCommonSsse3( cBite, currentRRingOffset, key );
         // store whole decoded bite
         output -> vector16[messageBite] = cBite;
         messageBite++;
