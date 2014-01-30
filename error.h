@@ -23,6 +23,18 @@ void err_input_fatal(int type);
 /* log message */
 void hillclimb_log(const char *s);
 
+/** \brief Exits, but only on debug builds. Otherwise does nothing.
+ *
+ * \param errorCode int Exit reason code.
+ * \return void
+ *
+ */
+inline
+void exit_d( int errorCode UNUSED ){
+#ifdef DEBUG
+    exit( errorCode );
+#endif
+}
 #endif
 
 

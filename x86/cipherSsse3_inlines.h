@@ -1,8 +1,10 @@
 #ifndef CIPHER_SSSE3_INLINES_H_INCLUDED
 #define CIPHER_SSSE3_INLINES_H_INCLUDED
 
+#include "..\error.h"
 #include "..\dict.h"
 #include "cipherSsse3.h"
+
 
 inline
 v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec ){
@@ -83,7 +85,7 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
             cBite |= enigma_cipher_decode_ssse3( predecoded, lookupNumber - 1, currentRRingOffset, key );
             break;
         default:
-            exit(5);
+            exit_d(5);
         }
         // store whole decoded bite
         output -> vector16[messageBite] = cBite;
