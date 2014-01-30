@@ -87,6 +87,7 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
             break;
         default:
             exit_d(5);
+            UNREACHABLE();
         }
         cBite = DecodeBiteBackwardCommonSsse3( cBite, currentRRingOffset, key );
         // store whole decoded bite
