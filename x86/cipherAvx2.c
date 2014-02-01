@@ -13,7 +13,11 @@
 void prepare_decoder_lookup_M_H3_avx2( const Key *key, int len );
 void prepare_decoder_lookup_ALL_avx2( const Key *key, int len );
 inline extern
-v32qi DecodeBiteAvx2( int biteNumber, int lookupNumber, v32qi rRingOffset, const Key* const restrict key );
+v32qi DecodeBiteForwardCommonAvx2( v32qi bite, v32qi rRingOffset, const Key* const restrict key );
+inline extern
+v32qi DecodeBiteMaskedPartAvx2( v32qi predecodedBite, int lookupNumber );
+inline extern
+v32qi DecodeBiteBackwardCommonAvx2( v32qi bite,  v32qi rRingOffset, const Key* const restrict key );
 inline extern
 v32qi PermuteV32qi( const PermutationMap_t* map, v32qi vec );
 inline extern
