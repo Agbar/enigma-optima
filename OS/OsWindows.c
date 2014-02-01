@@ -22,7 +22,7 @@ void SetupProcessProperties( void ) {
         fputs( "enigma: warning: could not set thread priority to idle\n", stderr );
     }
     // Disable (sic!) priority boost.
-    if( SetThreadPriorityBoost( currThing, TRUE ) ){
+    if( !SetThreadPriorityBoost( currThing, TRUE ) ){
         fputs( "enigma: warning: could not disable thread priority boost\n", stderr );
     }
 #endif
