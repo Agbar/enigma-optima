@@ -5,7 +5,7 @@
 #include "key.h"
 
 FILE *open_outfile(char *s);
-void print_plaintext(FILE *file, const PermutationMap_t *stbrett, int len);
+void print_plaintext(FILE *file, const Key* const key, int len);
 void print_key(FILE *file, const Key *key);
 
 #endif
