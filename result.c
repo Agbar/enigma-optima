@@ -24,13 +24,14 @@ FILE *open_outfile(char *s)
   return fp;
 }
 
-void print_plaintext(FILE *fp, const PermutationMap_t *stbrett, int len)
+void print_plaintext(FILE *fp, const Key *const key, int len)
 {
   int i;
   text_t c;
+  enigma_cipher_decoder_lookup.prepare_decoder_lookup_ALL(key, len);
 
   for (i = 0; i < len; i++) {
-    c = decode(0,i,stbrett);
+    c = decode(0,i,&key->stbrett);
     fputc(alpha[c], fp);
   }
   fputc('\n', fp);

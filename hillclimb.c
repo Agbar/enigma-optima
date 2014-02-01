@@ -694,7 +694,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  gkey = ckey;
                  gkey.score = bestscore;
                  print_key(outfile, &gkey);
-                 print_plaintext(outfile, &gkey.stbrett, len);
+                 print_plaintext(outfile, &gkey, len);
                  if (ferror(outfile) != 0) {
                    fputs("enigma: error: writing to result file failed\n", stderr);
                    exit(EXIT_FAILURE);
