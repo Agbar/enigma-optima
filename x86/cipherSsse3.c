@@ -13,7 +13,11 @@
 void prepare_decoder_lookup_M_H3_ssse3( const Key *key, int len );
 void prepare_decoder_lookup_ALL_ssse3( const Key *key, int len );
 inline extern
+v16qi DecodeBiteForwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key );
+inline extern
 v16qi DecodeBiteMaskedPartSsse3( v16qi bite, int lookupNumber );
+inline extern
+v16qi DecodeBiteBackwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key );
 inline extern
 v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec );
 inline extern
