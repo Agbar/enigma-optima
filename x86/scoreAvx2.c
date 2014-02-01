@@ -46,21 +46,26 @@ static void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len,
         uint_least16_t lookupsToNextBite = PathLookupAvx2.nextBite[messageBite] - lookupNumber;
         v32qi cBite = {0};
         lookupNumber += lookupsToNextBite;
+        v32qi currentBite = ciphertext.vector32[messageBite];
+        v32qi predecoded = DecodeBiteForwardCommonAvx2( currentBite, currentRRingOffset, key );
+
         switch( lookupsToNextBite ) {
         case 5:
-            cBite  = DecodeBiteAvx2( messageBite, lookupNumber - 5, currentRRingOffset, key );
+            cBite  = DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 5 );
         case 4:
-            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 4, currentRRingOffset, key );
+            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 4 );
         case 3:
-            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 3, currentRRingOffset, key );
+            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 3 );
         case 2:
-            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 2, currentRRingOffset, key );
+            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 2 );
         case 1:
-            cBite |= DecodeBiteAvx2( messageBite, lookupNumber - 1, currentRRingOffset, key );
+            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 1 );
             break;
         default:
             exit_d(5);
+            UNREACHABLE();
         }
+        cBite = DecodeBiteBackwardCommonAvx2( cBite, currentRRingOffset, key );
         // store whole decoded bite
         output -> vector32[messageBite] = cBite;
         messageBite++;
