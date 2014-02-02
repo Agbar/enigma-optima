@@ -10,12 +10,16 @@ void get_stecker(Key *key);
 void rand_var(text_t var[]);
 void set_to_ct_freq(text_t var[], int len);
 
-/* swaps letters */
-inline void SwapStbrett(Key* key, int i, int k)
-{
-  text_t store;
-
-  store = key->stbrett.letters[i];
+/** \brief Swaps letters i and k
+ *
+ * \param key Key*
+ * \param i int letter to swap with k
+ * \param k int Letter to swap with i
+ * \return void
+ */
+inline
+void SwapStbrett(Key* key, int i, int k) {
+  text_t store = key->stbrett.letters[i];
   key->stbrett.letters[i] = key->stbrett.letters[k];
   key->stbrett.letters[k] = store;
 }
