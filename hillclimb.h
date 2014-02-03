@@ -14,7 +14,7 @@ typedef struct {
 } Change;
 
 
-enum { NONE, KZ_IK, KZ_IZ, IX_KI, IX_KX, IXKZ_IK, IXKZ_IZ, IXKZ_IKXZ,
+enum Action_t { NONE, KZ_IK, KZ_IZ, IX_KI, IX_KX, IXKZ_IK, IXKZ_IZ, IXKZ_IKXZ,
        IXKZ_IZXK, RESWAP };
 
 
