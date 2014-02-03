@@ -11,7 +11,7 @@
 
 
 // extern definition for external linkage.
-extern void SwapStbrett(Key* key, int i, int k);
+extern void SwapStbrett(Key* const key, int i, int k);
 
 /* extracts stecker from key->stbrett to key->sf */
 void get_stecker(Key *key)

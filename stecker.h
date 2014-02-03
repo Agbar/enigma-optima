@@ -18,7 +18,7 @@ void set_to_ct_freq(text_t var[], int len);
  * \return void
  */
 inline
-void SwapStbrett(Key* key, int i, int k) {
+void SwapStbrett(Key* const key, int i, int k) {
   text_t store = key->stbrett.letters[i];
   key->stbrett.letters[i] = key->stbrett.letters[k];
   key->stbrett.letters[k] = store;
