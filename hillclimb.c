@@ -185,15 +185,16 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                 newtop = 1;
                 jbestscore = sf.triscore(&ckey, len) + sf.biscore(&ckey, len);
 
-                while (newtop) {
-                    newtop = 0;
-                    OptimizeBiscore( var, &ckey, len, &sf );
+                while (1) {
+                    OptimizeBiscore(  var, &ckey, len, &sf );
                     OptimizeTriscore( var, &ckey, len, &sf );
 
                     a = sf.triscore(&ckey, len) + sf.biscore(&ckey, len);
                     if (a > jbestscore) {
                         jbestscore = a;
-                        newtop = 1;
+                    }
+                    else{
+                        break;
                     }
                 }
 
