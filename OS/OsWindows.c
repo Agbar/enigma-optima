@@ -4,6 +4,7 @@
  */
 
 #include <stdio.h>
+#include <time.h>
 #include <windows.h>
 #include "Os.h"
 #include "..\error.h"
