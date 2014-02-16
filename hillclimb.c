@@ -72,7 +72,8 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
   time_t lastsave;
   int m;
   int i, k;
-  text_t var[26] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
+  text_t var[26];
+  Fill0To25(var);
   int pass, newtop, action;
   int bestscore, jbestscore, a, globalscore;
 
