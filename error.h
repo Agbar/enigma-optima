@@ -1,6 +1,7 @@
 #ifndef ERROR_H
 #define ERROR_H
 
+#include <stdlib.h>
 #include "global.h"
 
 enum { ERR_A_ONLY, ERR_EXCL_A, ERR_RING_SHORTCUT };
