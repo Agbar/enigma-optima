@@ -50,19 +50,31 @@ void print_state(FILE *fp, const State *state)
   else {
     fprintf(fp,
     "%c:%c%d%d%d:%c%c:%c%c%c%c=%c:%c%d%d%d:%c%c:%c%c%c%c=%c:%c%d%d%d:%c%c:%c%c%c%c=",
+    // from
     from->ukwnum == 3 ? 'B' : 'C',
+    //:
     from->slot.g == 9 ? 'B' : 'G', from->slot.l, from->slot.m, from->slot.r,
-    toupper(alpha[from->ring.m]), toupper(alpha[from->ring.r]),
-    toupper(alpha[from->mesg.g]), toupper(alpha[from->mesg.l]),
-    toupper(alpha[from->mesg.m]), toupper(alpha[from->mesg.r]),
+    //:
+    toupper(alpha[from->ring.m]), toupper(alpha[from->ring.r]) ,
+    //:
+    toupper(alpha[from->mesg.g]), toupper(alpha[from->mesg.l]) ,
+    toupper(alpha[from->mesg.m]), toupper(alpha[from->mesg.r]) ,
+    //= // to
     to->ukwnum == 3 ? 'B' : 'C',
+    //:
     to->slot.g == 9 ? 'B' : 'G', to->slot.l, to->slot.m, to->slot.r,
+    //:
     toupper(alpha[to->ring.m]), toupper(alpha[to->ring.r]),
+    //:
     toupper(alpha[to->mesg.g]), toupper(alpha[to->mesg.l]),
     toupper(alpha[to->mesg.m]), toupper(alpha[to->mesg.r]),
+    //= // current
     ckey->ukwnum == 3 ? 'B' : 'C',
+    //:
     ckey->slot.g == 9 ? 'B' : 'G', ckey->slot.l, ckey->slot.m, ckey->slot.r,
+    //:
     toupper(alpha[ckey->ring.m]), toupper(alpha[ckey->ring.r]),
+    //:
     toupper(alpha[ckey->mesg.g]), toupper(alpha[ckey->mesg.l]),
     toupper(alpha[ckey->mesg.m]), toupper(alpha[ckey->mesg.r]));
   }
