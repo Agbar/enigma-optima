@@ -51,6 +51,7 @@ void SetupRandomGenerator( void ) {
     seed = CONSTANT_SEED_VALUE;
 #endif
     srand( seed );
+    printf( "Seed set to: %u.\n", seed );
 }
 
 int GetRandomNumber( void ) {
