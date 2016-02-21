@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="enigma-opt" />
+		<Option pch_mode="2" />
+		<Option default_target="Profiling" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin/Release/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-DTESTING_SCORE" />
+				</Compiler>
+				<Linker>
+					<Add option="-O3" />
+					<Add option="-mtune=corei7" />
+				</Linker>
+			</Target>
+			<Target title="ReleaseConstSeed">
+				<Option output="bin/ReleaseConstSeed/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/ReleaseConstSeed/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters='-M M3 -c -o bench-result.txt -f &quot;B:532:AA:AAA&quot; -t &quot;B:532:AH:ZZZ&quot; 00trigr.cur 00bigr.cur benchmark_cipher' />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-DCONSTANT_SEED" />
+					<Add option="-DTESTING_SCORE" />
+				</Compiler>
+				<Linker>
+					<Add option="-O3" />
+					<Add option="-mtune=corei7" />
+				</Linker>
+			</Target>
+			<Target title="Debug">
+				<Option output="bin/Debug/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Debug/" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-M M4 -u C -w B738 -r AARI -m MSPZ -s BCDPEOFVGRHIKUMZQWXY -D 00trigr.cur 00bigr.cur 00ciphertext" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+					<Add option="-DTESTING_SCORE" />
+					<Add option="-DTESTING" />
+				</Compiler>
+			</Target>
+			<Target title="Profiling">
+				<Option output="bin/Profiling/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Profiling/" />
+				<Option object_output="obj/Profiling/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters='-M M3 -c -o bench-result.txt -f &quot;B:532:AA:AAA&quot; -t &quot;B:532:AH:ZZZ&quot; 00trigr.cur 00bigr.cur benchmark_cipher' />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Weffc++" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-pg" />
+					<Add option="-save-temps" />
+					<Add option="-fopt-info-all=opt_info.log" />
+					<Add option="-mtune=corei7" />
+					<Add option="-fno-builtin-memcpy" />
+					<Add option="-fverbose-asm" />
+					<Add option="-Wsuggest-attribute=pure" />
+					<Add option="-Wsuggest-attribute=const" />
+					<Add option="-Wsuggest-attribute=noreturn" />
+					<Add option="-DPROFILING" />
+					<Add option="-DTESTING_SCORE" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add option="-O3" />
+					<Add option="-mtune=corei7" />
+					<Add option="-m64" />
+					<Add library="libwinmm" />
+				</Linker>
+			</Target>
+			<Target title="Profile-Generate">
+				<Option output="bin/Profile/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Profile/" />
+				<Option object_output="obj/Profile/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters='-M M3 -c -o bench-result.txt -f &quot;B:532:AA:AAA&quot; -t &quot;B:532:AH:ZZZ&quot; 00trigr.cur 00bigr.cur benchmark_cipher' />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Weffc++" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-pg" />
+					<Add option="-save-temps" />
+					<Add option="-fopt-info-all=opt_info.log" />
+					<Add option="-mtune=corei7" />
+					<Add option="-fno-builtin-memcpy" />
+					<Add option="-fverbose-asm" />
+					<Add option="-fprofile-generate" />
+					<Add option="-DPROFILING" />
+					<Add option="-DENIGMA_CPU_SPECIFIC=enigma_cpu_ssse3" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add option="-O3" />
+					<Add option="-mtune=corei7" />
+					<Add option="-m64" />
+					<Add option="-fprofile-generate" />
+					<Add library="libwinmm" />
+				</Linker>
+			</Target>
+			<Target title="Profile-Use">
+				<Option output="bin/Profile/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Profile/" />
+				<Option object_output="obj/Profile/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters='-M M3 -c -o bench-result.txt -f &quot;B:532:AA:AAA&quot; -t &quot;B:532:AH:ZZZ&quot; 00trigr.cur 00bigr.cur benchmark_cipher' />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Weffc++" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-pg" />
+					<Add option="-save-temps" />
+					<Add option="-fopt-info-all=opt_info.log" />
+					<Add option="-mtune=corei7" />
+					<Add option="-fno-builtin-memcpy" />
+					<Add option="-fverbose-asm" />
+					<Add option="-fprofile-use" />
+					<Add option="-DPROFILING" />
+					<Add option="-DENIGMA_CPU_SPECIFIC=enigma_cpu_ssse3" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add option="-O3" />
+					<Add option="-mtune=corei7" />
+					<Add option="-m64" />
+					<Add option="-fprofile-use" />
+					<Add library="libwinmm" />
+				</Linker>
+			</Target>
+			<Target title="Coverage">
+				<Option output="bin/Coverage/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Coverage/" />
+				<Option object_output="obj/Coverage/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="--coverage" />
+					<Add option="-DPROFILING" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add option="-O3" />
+					<Add option="-march=i686" />
+					<Add option="-mtune=corei7" />
+					<Add option="--coverage" />
+				</Linker>
+			</Target>
+			<Target title="ListDefines">
+				<Option output="pre/ListDefines/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="pre/ListDefines/" />
+				<Option object_output="pre/ListDefines/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectCompilerOptionsRelation="-1" />
+				<Option projectLinkerOptionsRelation="-1" />
+				<Option projectIncludeDirsRelation="-1" />
+				<Option projectLibDirsRelation="-1" />
+				<MakeCommands>
+					<Build command="" />
+					<CompileFile command="" />
+					<Clean command="" />
+					<DistClean command="" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command=" &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-march=nocona" />
+			<Add option="-Wextra" />
+			<Add option="-Wall" />
+			<Add option="-m64" />
+			<Add option="-g" />
+			<Add option="-std=gnu99" />
+			<Add option="-std=gnu++11" />
+			<Add option="-Werror=implicit-function-declaration" />
+			<Add option="-Wunsafe-loop-optimizations" />
+			<Add option="-Wvector-operation-performance" />
+			<Add option="-fcall-used-xmm6" />
+			<Add option="-fcall-used-xmm7" />
+			<Add option="-fcall-used-xmm8" />
+			<Add option="-fcall-used-xmm9" />
+			<Add option="-fcall-used-xmm10" />
+			<Add option="-fcall-used-xmm11" />
+			<Add option="-fcall-used-xmm12" />
+			<Add option="-fcall-used-xmm13" />
+			<Add option="-fcall-used-xmm14" />
+			<Add option="-fcall-used-xmm15" />
+			<Add option="-save-temps" />
+		</Compiler>
+		<Linker>
+			<Add option="-m64" />
+			<Add option="-static" />
+		</Linker>
+		<Unit filename="../ModMath.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../ModMath.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../OS/Os.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../OS/OsDefault.c">
+			<Option compilerVar="CC" />
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="../OS/osWindows.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../charmap.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../charmap.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../cipher.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../cipher.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../cipher_inlines.h" />
+		<Unit filename="../ciphertext.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../ciphertext.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../config/array_sizes.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../config/testing.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../config/types.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../cpu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../cpu.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../date.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../date.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../dict.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../dict.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../display.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../display.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../enigma.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../error.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../error.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../global.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../hillclimb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../hillclimb.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../ic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../ic.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../input.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../input.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../key.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../key.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../result.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../result.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../resume_in.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../resume_in.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../resume_out.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../resume_out.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../scan.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../scan_int.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../score.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="0" buildCommand="$compiler -E $includes -c $file -o $objects_output_dir\$file_name.c.i \n" />
+		</Unit>
+		<Unit filename="../score.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../scoreBasic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../scoreBasic.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../scoreNoInterleave.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../scoreNoInterleave.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../scoreSimple.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../scoreSimple.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../scoreTesting.cpp">
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profiling" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+		</Unit>
+		<Unit filename="../scoreTesting.h">
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../scoreTesting.hpp">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../score_inlines.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../stecker.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../stecker.h">
+			<Option target="Release" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Profiling" />
+			<Option target="Coverage" />
+			<Option target="Debug" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+		</Unit>
+		<Unit filename="../x86/cipherAvx2.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler $options -mavx2 $includes -c $file -o $object" />
+		</Unit>
+		<Unit filename="../x86/cipherAvx2.h" />
+		<Unit filename="../x86/cipherAvx2_inlines.h" />
+		<Unit filename="../x86/cipherSsse3.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler $options -mssse3 $includes -c $file -o $object" />
+		</Unit>
+		<Unit filename="../x86/cipherSsse3.h" />
+		<Unit filename="../x86/cipherSsse3_inlines.h" />
+		<Unit filename="../x86/scoreAvx.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler $options -mavx $includes -c $file -o $object" />
+		</Unit>
+		<Unit filename="../x86/scoreAvx.h" />
+		<Unit filename="../x86/scoreAvx2.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler $options -mavx2 $includes -c $file -o $object" />
+		</Unit>
+		<Unit filename="../x86/scoreAvx2.h" />
+		<Unit filename="../x86/scoreSsse3.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler -mssse3 $options $includes -c $file -o $object" />
+		</Unit>
+		<Unit filename="../x86/scoreSsse3.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

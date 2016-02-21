@@ -1,0 +1,12 @@
+# GCC intermediate files
+*.i
+*.ii
+*.s
+
+# binary compiler output
+code_blocks/obj
+code_blocks/bin
+
+# Code::Blocks
+code_blocks/enigma-opt.depend
+code_blocks/enigma-opt.layout
