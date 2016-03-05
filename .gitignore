@@ -10,3 +10,6 @@ code_blocks/bin
 # Code::Blocks
 code_blocks/enigma-opt.depend
 code_blocks/enigma-opt.layout
+
+# CCCC
+code_blocks/.cccc
