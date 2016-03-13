@@ -263,11 +263,7 @@ void CipherInitMulti(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enig
 }
 
 void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf){
-#ifndef TESTING_SCORE
     CipherInit( cpu, machine_type, cf );
-#else
-    CipherInitScoreTesting( cpu, machine_type, cf );
-#endif
 }
 
 /* Check for slow wheel movement */
