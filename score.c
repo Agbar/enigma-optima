@@ -55,11 +55,6 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
         enigma_score_function_copy( sf, &enigmaScoreAvx2 );
         testing = EnigmaSF_Avx2;
     }
-
-#ifdef TESTING_SCORE
-    enigma_score_function_t* test = enigma_score_testing_create( EnigmaSF_Optimized, testing );
-    enigma_score_function_copy(sf,test);
-#endif
 }
 
 void DecodeScoredMessagePartStandard(const Key* const restrict key, int len, union ScoringDecodedMessage* restrict output){
