@@ -16,10 +16,6 @@
 #include "x86/scoreAvx2.h"
 #include "score_inlines.h"
 
-#ifdef TESTING_SCORE
-# include "ScoreTesting.h"
-#endif
-
 /* declaration of internal functions */
 void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict from);
 
