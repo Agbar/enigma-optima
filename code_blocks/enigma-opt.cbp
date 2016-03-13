@@ -83,7 +83,6 @@
 					<Add option="-pg -lgmon" />
 					<Add option="-O3" />
 					<Add option="-mtune=corei7" />
-					<Add option="-m64" />
 					<Add library="libwinmm" />
 				</Linker>
 			</Target>
@@ -113,7 +112,6 @@
 					<Add option="-pg -lgmon" />
 					<Add option="-O3" />
 					<Add option="-mtune=corei7" />
-					<Add option="-m64" />
 					<Add option="-fprofile-generate" />
 					<Add library="libwinmm" />
 				</Linker>
@@ -144,7 +142,6 @@
 					<Add option="-pg -lgmon" />
 					<Add option="-O3" />
 					<Add option="-mtune=corei7" />
-					<Add option="-m64" />
 					<Add option="-fprofile-use" />
 					<Add library="libwinmm" />
 				</Linker>
