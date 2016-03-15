@@ -278,6 +278,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 		</Unit>
+		<Unit filename="../common.h" />
 		<Unit filename="../config/array_sizes.h">
 			<Option target="Release" />
 			<Option target="ReleaseConstSeed" />
