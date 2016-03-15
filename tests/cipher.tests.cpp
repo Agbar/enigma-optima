@@ -18,3 +18,46 @@ TEST ( Step1Test, Changes_25_into_0 )
     Step1 ( &state );
     EXPECT_EQ( 0, state );
 }
+
+#include "../cipher_inlines.h"
+
+void ExpectRings( RingsState rings, int8_t r, int8_t m, int8_t l )
+{
+    EXPECT_EQ( r, rings.r );
+    EXPECT_EQ( m, rings.m );
+    EXPECT_EQ( l, rings.l );
+}
+
+// Coded after https://web.archive.org/web/20110719081659/http://www.eclipse.net/~dhamer/downloads/rotorpdf.zip
+TEST( StepAllRingsTests, DoubleStepping_David_H_Hamer )
+{
+    struct RingsState rings = {};
+    rings.r = 14; // O
+    rings.m = 3; // D
+    rings.l = 0; // A
+
+    // We have rings I, II, III in r, m , l slots.
+    struct Turnovers_t turns = {};
+    turns.r = 16;
+    turns.m = 4;
+    turns.r2 = -1;
+    turns.m2 = -1;
+
+    StepAllRings( &rings, turns );
+    ExpectRings( rings, 15, 3, 0 );
+
+    StepAllRings( &rings, turns );
+    ExpectRings( rings, 16, 3, 0 );
+
+    StepAllRings( &rings, turns );
+    ExpectRings( rings, 17, 4, 0 );
+
+    StepAllRings( &rings, turns );
+    ExpectRings( rings, 18, 5, 1 );
+
+    StepAllRings( &rings, turns );
+    ExpectRings( rings, 19, 5, 1 );
+
+    StepAllRings( &rings, turns );
+    ExpectRings( rings, 20, 5, 1 );
+}
