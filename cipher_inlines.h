@@ -2,6 +2,8 @@
 #define CIPHER_INLINES_HEADER_INCLUDED
 
 #include <stdbool.h>
+#include "common.h"
+#include "key.h"
 
 inline
 void StepAllRings( struct RingsState* restrict rings, struct Turnovers_t turns )

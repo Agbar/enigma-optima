@@ -10,10 +10,7 @@
 #include "key.h"
 #include "cipher.h"
 
-// skip 'restrict' C keyword in C++
-#ifdef __cplusplus
-# define restrict
-#endif
+#include "common.h"
 
 /** Best-fit type for length of part of the message used to compute scores.
  *  Size of scoreLength_t depends on value of CT macro. Selecting lowest possible
