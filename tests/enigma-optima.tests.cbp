@@ -30,8 +30,17 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add option="-m64" />
 			<Add option="-fexceptions" />
+			<Add directory="$(#gtest.include)" />
 		</Compiler>
+		<Linker>
+			<Add option="-m64" />
+			<Add library="libgtest" />
+			<Add directory="$(#gtest.lib)" />
+		</Linker>
+		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
