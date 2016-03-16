@@ -61,3 +61,40 @@ TEST( StepAllRingsTests, DoubleStepping_David_H_Hamer )
     StepAllRings( &rings, turns );
     ExpectRings( rings, 20, 5, 1 );
 }
+
+TEST( GetNextTurnoverTests, TestWithDoubleStepping_David_H_Hamer)
+{
+    struct RingsState rings = {};
+    rings.r = 14; // O
+    rings.m = 3; // D
+    rings.l = 0; // A
+
+    // We have rings I, II, III in r, m , l slots.
+    struct Turnovers_t turns = {};
+    turns.r = 16;
+    turns.m = 4;
+    turns.r2 = -1;
+    turns.m2 = -1;
+
+    EXPECT_EQ( 16,  GetNextTurnover( rings, turns ));
+
+    StepAllRings( &rings, turns );
+    EXPECT_EQ( 16,  GetNextTurnover( rings, turns ));
+
+    StepAllRings( &rings, turns );
+    EXPECT_EQ( 16,  GetNextTurnover( rings, turns ));
+
+    StepAllRings( &rings, turns );
+    EXPECT_EQ( 17,  GetNextTurnover( rings, turns ));
+
+    StepAllRings( &rings, turns );
+    EXPECT_EQ( 16,  GetNextTurnover( rings, turns ));
+
+    StepAllRings( &rings, turns );
+    EXPECT_EQ( 16,  GetNextTurnover( rings, turns ));
+
+    StepAllRings( &rings, turns );
+    EXPECT_EQ( 16,  GetNextTurnover( rings, turns ));
+
+
+}

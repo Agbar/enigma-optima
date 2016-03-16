@@ -36,6 +36,7 @@ void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2]
     memcpy( rRings[1].letters, rev_wal[key->slot.r], 32 );
 }
 
+//! \brief Return position of R ring on next turnover
 inline
 int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns )
 {
