@@ -95,6 +95,33 @@ TEST( GetNextTurnoverTests, TestWithDoubleStepping_David_H_Hamer)
 
     StepAllRings( &rings, turns );
     EXPECT_EQ( 16,  GetNextTurnover( rings, turns ));
+}
 
+TEST( GetNextTurnoverTests, TwoNotched_R_Rotor )
+{
+    struct RingsState rings = {};
+    rings.r = 0; // O
+    rings.m = 13; // not on turnover position
+    rings.l = 0; // irrelevant
 
+    // Ring R is of type VI, VII or VIII.
+    struct Turnovers_t turns = {};
+    turns.r = 0;
+    turns.r2 = 13;
+    turns.m = 0;    // no turnover of M/L
+    turns.m2 = -1;
+
+    EXPECT_EQ( 0, GetNextTurnover( rings, turns ) );
+
+    for( int i = 1; i <= 13 ; ++i )
+    {
+        rings.r = i;
+        EXPECT_EQ( 13, GetNextTurnover( rings, turns ) );
+    }
+
+    for( int i = 14; i <= 25; ++i )
+    {
+        rings.r = i;
+        EXPECT_EQ( 0, GetNextTurnover( rings, turns ) );
+    }
 }
