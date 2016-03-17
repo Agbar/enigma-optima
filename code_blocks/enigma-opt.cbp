@@ -16,6 +16,7 @@
 					<Add option="-O3" />
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-O3" />
@@ -33,6 +34,7 @@
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-DCONSTANT_SEED" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-O3" />
@@ -74,6 +76,7 @@
 					<Add option="-Wsuggest-attribute=const" />
 					<Add option="-Wsuggest-attribute=noreturn" />
 					<Add option="-DPROFILING" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
@@ -103,6 +106,7 @@
 					<Add option="-fprofile-generate" />
 					<Add option="-DPROFILING" />
 					<Add option="-DENIGMA_CPU_SPECIFIC=enigma_cpu_ssse3" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
@@ -133,6 +137,7 @@
 					<Add option="-fprofile-use" />
 					<Add option="-DPROFILING" />
 					<Add option="-DENIGMA_CPU_SPECIFIC=enigma_cpu_ssse3" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
