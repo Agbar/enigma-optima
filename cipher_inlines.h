@@ -7,7 +7,7 @@
 #include "key.h"
 
 inline
-void StepAllRings( struct RingsState* restrict rings, struct Turnovers_t turns )
+void StepAllRings( struct RingsState* const restrict rings, const struct Turnovers_t turns )
 {
     // check if m,l rings will be turned
     bool p2 = 0, p3 = 0;

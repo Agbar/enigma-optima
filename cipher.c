@@ -743,7 +743,7 @@ extern void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map
 extern void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
 
 extern void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2] );
-extern void StepAllRings( struct RingsState* restrict rings, struct Turnovers_t turns );
+extern void StepAllRings( struct RingsState* const restrict rings, const struct Turnovers_t turns );
 extern int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns );
 
 /*
