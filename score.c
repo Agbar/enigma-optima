@@ -29,10 +29,7 @@ int ComputeTriscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength
 inline
 void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict prototype)
 {
-    to->triscore = prototype->triscore;
-    to->biscore  = prototype->biscore;
-    to->icscore  = prototype->icscore;
-    to->uniscore = prototype->uniscore;
+    *to = *prototype;
 }
 
 void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
