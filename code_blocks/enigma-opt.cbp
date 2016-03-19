@@ -8,7 +8,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option output="bin/Release/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/enigma-optima" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -20,11 +20,10 @@
 				</Compiler>
 				<Linker>
 					<Add option="-O3" />
-					<Add option="-mtune=corei7" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseConstSeed">
-				<Option output="bin/ReleaseConstSeed/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/ReleaseConstSeed/enigma-optima" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/ReleaseConstSeed/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -42,7 +41,7 @@
 				</Linker>
 			</Target>
 			<Target title="Debug">
-				<Option output="bin/Debug/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/enigma-optima" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin/Debug/" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
@@ -55,7 +54,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Profiling">
-				<Option output="bin/Profiling/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Profiling/enigma-optima" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin/Profiling/" />
 				<Option object_output="obj/Profiling/" />
 				<Option type="1" />
@@ -86,7 +85,7 @@
 				</Linker>
 			</Target>
 			<Target title="Profile-Generate">
-				<Option output="bin/Profile/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Profile/enigma-optima" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin/Profile/" />
 				<Option object_output="obj/Profile/" />
 				<Option type="1" />
@@ -117,7 +116,7 @@
 				</Linker>
 			</Target>
 			<Target title="Profile-Use">
-				<Option output="bin/Profile/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Profile/enigma-optima" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin/Profile/" />
 				<Option object_output="obj/Profile/" />
 				<Option type="1" />
@@ -148,7 +147,7 @@
 				</Linker>
 			</Target>
 			<Target title="Coverage">
-				<Option output="bin/Coverage/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Coverage/enigma-optima" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin/Coverage/" />
 				<Option object_output="obj/Coverage/" />
 				<Option type="1" />
@@ -171,7 +170,7 @@
 				</Linker>
 			</Target>
 			<Target title="ListDefines">
-				<Option output="pre/ListDefines/enigma-opt" prefix_auto="1" extension_auto="1" />
+				<Option output="pre/ListDefines/enigma-optima" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="pre/ListDefines/" />
 				<Option object_output="pre/ListDefines/" />
 				<Option type="1" />
