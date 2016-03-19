@@ -2,9 +2,12 @@
 #define CIPHER_INLINES_HEADER_INCLUDED
 
 #include <stdbool.h>
+#include <assert.h>
+#include "common.h"
+#include "key.h"
 
 inline
-void StepAllRings( struct RingsState* restrict rings, struct Turnovers_t turns )
+void StepAllRings( struct RingsState* const restrict rings, const struct Turnovers_t turns )
 {
     // check if m,l rings will be turned
     bool p2 = 0, p3 = 0;
@@ -34,13 +37,31 @@ void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2]
     memcpy( rRings[1].letters, rev_wal[key->slot.r], 32 );
 }
 
+//! \brief Return position of R ring on next turnover
 inline
 int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns )
 {
-    // turnover on M-ring
+    // turnover caused by M-ring (double step)
     if ( turns.m2 == rings.m || turns.m == rings.m ) return rings.r; //Turnover now!
-    // normal
-    return ( turns.r2 != -1 && rings.r > turns.r ) ? turns.r2 : turns.r; // Turnover caused by R-ring
+    // normal Turnover caused by R-ring
+    if( turns.r2 == -1)
+    {
+        return turns.r;
+    }
+    // double notched R-ring
+    assert( turns.r2 > turns.r );
+    if( rings.r <= turns.r )
+    {
+        return turns.r;
+    }
+    else if ( rings.r <= turns.r2 )
+    {
+        return turns.r2;
+    }
+    else
+    {
+        return turns.r;
+    }
 }
 
 

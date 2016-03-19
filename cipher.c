@@ -263,11 +263,7 @@ void CipherInitMulti(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enig
 }
 
 void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf){
-#ifndef TESTING_SCORE
     CipherInit( cpu, machine_type, cf );
-#else
-    CipherInitScoreTesting( cpu, machine_type, cf );
-#endif
 }
 
 /* Check for slow wheel movement */
@@ -747,7 +743,7 @@ extern void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map
 extern void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
 
 extern void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2] );
-extern void StepAllRings( struct RingsState* restrict rings, struct Turnovers_t turns );
+extern void StepAllRings( struct RingsState* const restrict rings, const struct Turnovers_t turns );
 extern int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns );
 
 /*

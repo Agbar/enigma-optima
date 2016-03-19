@@ -9,10 +9,6 @@
 #include "config\array_sizes.h"
 #include "config\types.h"
 
-#ifdef TESTING_SCORE
-# include "ScoreTesting.h"
-#endif
-
 // default scores
 static double icscoreBasic( const Key* const restrict key, scoreLength_t length );
 static int   uniscoreBasic( const Key* const restrict key, scoreLength_t length );

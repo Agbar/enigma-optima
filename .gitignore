@@ -1,0 +1,21 @@
+# GCC intermediate files
+*.i
+*.ii
+*.s
+
+# binary compiler output
+code_blocks/obj
+code_blocks/bin
+tests/obj
+tests/bin
+
+# Code::Blocks
+code_blocks/enigma-opt.depend
+code_blocks/enigma-opt.layout
+enigma-opt.cscope_file_list
+tests/enigma-optima.tests.depend
+tests/enigma-optima.tests.layout
+enigma-optima.workspace.layout
+
+# CCCC
+code_blocks/.cccc
