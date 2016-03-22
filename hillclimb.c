@@ -17,10 +17,10 @@
 #include "score.h"
 #include "stecker.h"
 #include "state.h"
-#include "config\array_sizes.h"
-#include "config\testing.h"
-#include "config\types.h"
-#include "OS\Os.h"
+#include "config/array_sizes.h"
+#include "config/testing.h"
+#include "config/types.h"
+#include "OS/Os.h"
 
 void OptimizeIcscore ( text_t var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );
 void OptimizeBiscore ( text_t var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );

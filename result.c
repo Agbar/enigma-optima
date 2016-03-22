@@ -11,8 +11,8 @@
 #include "global.h"
 #include "key.h"
 #include "result.h"
-#include "config\array_sizes.h"
-#include "config\types.h"
+#include "config/array_sizes.h"
+#include "config/types.h"
 
 FILE *open_outfile(char *s)
 {

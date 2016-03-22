@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #include "key.h"
-#include "config\types.h"
+#include "config/types.h"
 
 void get_stecker(Key *key);
 void rand_var(text_t var[]);

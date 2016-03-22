@@ -1,8 +1,8 @@
 #ifndef CIPHER_SSSE3_INLINES_H_INCLUDED
 #define CIPHER_SSSE3_INLINES_H_INCLUDED
 
-#include "..\error.h"
-#include "..\dict.h"
+#include "../error.h"
+#include "../dict.h"
 #include "cipherSsse3.h"
 
 

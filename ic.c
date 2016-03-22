@@ -8,7 +8,7 @@
 #include "hillclimb.h"
 #include "ic.h"
 #include "key.h"
-#include "config\types.h"
+#include "config/types.h"
 
 
 void ic_noring( const Key *from, const Key *to __attribute__((unused)), const Key *ckey_res, const Key *gkey_res,

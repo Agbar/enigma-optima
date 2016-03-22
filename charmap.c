@@ -3,7 +3,7 @@
 
 
 #include "charmap.h"
-#include "config\types.h"
+#include "config/types.h"
 
 
 text_t code[UCHAR_MAX+1];

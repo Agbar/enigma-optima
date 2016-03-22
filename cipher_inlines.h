@@ -2,6 +2,7 @@
 #define CIPHER_INLINES_HEADER_INCLUDED
 
 #include <stdbool.h>
+#include <string.h>
 #include <assert.h>
 #include "common.h"
 #include "key.h"

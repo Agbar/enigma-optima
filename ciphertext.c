@@ -6,7 +6,7 @@
 #include "charmap.h"
 #include "error.h"
 #include "ciphertext.h"
-#include "config\types.h"
+#include "config/types.h"
 
 
 // Limit imposed by highest value in dictionary 71964 (bidict.naval) and size

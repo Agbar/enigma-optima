@@ -6,8 +6,8 @@
 #include "key.h"
 #include "score.h"
 #include "ciphertext.h"
-#include "config\array_sizes.h"
-#include "config\types.h"
+#include "config/array_sizes.h"
+#include "config/types.h"
 
 // default scores
 static double icscoreBasic( const Key* const restrict key, scoreLength_t length );

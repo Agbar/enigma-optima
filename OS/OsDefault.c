@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "Os.h"
-#include "..\config\testing.h"
+#include "../config/testing.h"
 
 // objects
 struct sigaction sigact;
