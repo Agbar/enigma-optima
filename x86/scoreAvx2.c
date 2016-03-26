@@ -4,8 +4,8 @@
 # error AVX2 not defined
 #endif
 
-#include "..\dict.h"
-#include "..\ciphertext.h"
+#include "../dict.h"
+#include "../ciphertext.h"
 #include "scoreAvx2.h"
 #include "cipherAvx2.h"
 #include "cipherAvx2_inlines.h"

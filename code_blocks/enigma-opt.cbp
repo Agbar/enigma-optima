@@ -242,7 +242,7 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="../OS/osWindows.c">
+		<Unit filename="../OS/OsWindows.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../charmap.c">

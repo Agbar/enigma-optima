@@ -20,8 +20,8 @@
 #include "resume_in.h"
 #include "resume_out.h"
 #include "scan.h"
-#include "config\types.h"
-#include "OS\Os.h"
+#include "config/types.h"
+#include "OS/Os.h"
 
 
 void SetupOsThingsAndStuff( void ) {

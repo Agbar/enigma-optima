@@ -1,8 +1,8 @@
 #ifndef DICT_H
 #define DICT_H
 
-#include "config\types.h"
-#include "config\array_sizes.h"
+#include "config/types.h"
+#include "config/array_sizes.h"
 
 
 int load_tridict(const char *filename);

@@ -1,7 +1,7 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include "config\types.h"
+#include "config/types.h"
 
 typedef struct {
   const Key *from;

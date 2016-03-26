@@ -6,8 +6,8 @@
 #include "global.h"
 #include "key.h"
 #include "stecker.h"
-#include "OS\Os.h"
-#include "config\types.h"
+#include "OS/Os.h"
+#include "config/types.h"
 
 
 // extern definition for external linkage.
