@@ -2,7 +2,7 @@
 #define CHARMAP_H
 
 #include <stdint.h>
-#include "config\types.h"
+#include "config/types.h"
 
 extern text_t code[];
 extern const unsigned char alpha[];

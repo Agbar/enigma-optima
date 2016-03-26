@@ -9,8 +9,8 @@
 #include "global.h"
 #include "key.h"
 #include "ModMath.h"
-#include "config\array_sizes.h"
-#include "config\types.h"
+#include "config/array_sizes.h"
+#include "config/types.h"
 
 struct Turnovers_t {
     int8_t r,

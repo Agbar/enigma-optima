@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #include "global.h"
-#include "config\types.h"
+#include "config/types.h"
 
 /* PermutationMap
  * * * * * * * * */

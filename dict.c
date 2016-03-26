@@ -3,8 +3,8 @@
 #include "charmap.h"
 #include "error.h"
 #include "dict.h"
-#include "config\types.h"
-#include "config\array_sizes.h"
+#include "config/types.h"
+#include "config/array_sizes.h"
 
 // This is quite bad.
 // dict  | samples |  sat  |  sat

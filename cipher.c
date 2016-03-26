@@ -8,8 +8,8 @@
 #include "key.h"
 #include "cpu.h"
 #include "cipher.h"
-#include "config\array_sizes.h"
-#include "config\types.h"
+#include "config/array_sizes.h"
+#include "config/types.h"
 
 #include "cipher_inlines.h"
 #include "x86/cipherSsse3.h"

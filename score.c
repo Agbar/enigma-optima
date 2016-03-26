@@ -6,13 +6,13 @@
 #include "key.h"
 #include "score.h"
 #include "ciphertext.h"
-#include "config\array_sizes.h"
-#include "config\types.h"
+#include "config/array_sizes.h"
+#include "config/types.h"
 
 #include "scoreBasic.h"
 #include "scoreSimple.h"
-#include "x86\scoreSsse3.h"
-#include "x86\scoreAvx.h"
+#include "x86/scoreSsse3.h"
+#include "x86/scoreAvx.h"
 #include "x86/scoreAvx2.h"
 #include "score_inlines.h"
 

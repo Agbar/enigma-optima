@@ -1,7 +1,7 @@
 #ifndef CIPHERTEXT_SSSE3_H_INCLUDED
 #define CIPHERTEXT_SSSE3_H_INCLUDED
-#include "..\cipher.h"
-#include "..\score.h"
+#include "../cipher.h"
+#include "../score.h"
 
 struct LookupChunk_t {
         PermutationMap_t mapping;

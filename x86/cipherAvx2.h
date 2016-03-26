@@ -1,7 +1,7 @@
 #ifndef CIPHERTEXT_AVX2_H_INCLUDED
 #define CIPHERTEXT_AVX2_H_INCLUDED
-#include "..\cipher.h"
-#include "..\score.h"
+#include "../cipher.h"
+#include "../score.h"
 
 struct LookupChunkAvx2_t {
         PermutationMap_t mapping;

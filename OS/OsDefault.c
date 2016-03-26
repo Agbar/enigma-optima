@@ -3,12 +3,15 @@
  */
 #include <signal.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 #include "Os.h"
-#include "..\config\testing.h"
+#include "../config/testing.h"
+#include "../error.h"
 
 // objects
 struct sigaction sigact;
+volatile sig_atomic_t doShutdown;
 
 void SetupProcessProperties( void ) {
 
