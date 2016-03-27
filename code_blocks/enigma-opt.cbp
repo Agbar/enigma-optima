@@ -241,6 +241,13 @@
 			<Option compilerVar="CC" />
 			<Option compile="0" />
 			<Option link="0" />
+			<Option target="ReleaseConstSeed" />
+			<Option target="Debug" />
+			<Option target="Profiling" />
+			<Option target="Profile-Generate" />
+			<Option target="Profile-Use" />
+			<Option target="Coverage" />
+			<Option target="ListDefines" />
 		</Unit>
 		<Unit filename="../OS/OsWindows.c">
 			<Option compilerVar="CC" />
