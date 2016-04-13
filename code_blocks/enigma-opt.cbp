@@ -43,6 +43,24 @@
 					<Add option="-O3" />
 				</Linker>
 			</Target>
+			<Target title="Release Linux x64">
+				<Option platforms="Unix;" />
+				<Option output="bin/ReleaseLinux64/enigma-optima" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/ReleaseLinux64/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-m64" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-m64" />
+					<Add option="-O3" />
+				</Linker>
+			</Target>
 			<Target title="ReleaseConstSeed">
 				<Option output="bin/ReleaseConstSeed/enigma-optima" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/ReleaseConstSeed/" />
@@ -247,6 +265,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../OS/Os.h">
 			<Option target="Release Windows x64" />
@@ -257,11 +276,17 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../OS/OsDefault.c">
 			<Option compilerVar="CC" />
-			<Option compile="0" />
-			<Option link="0" />
+			<Option target="ListDefines" />
+			<Option target="Release Linux x64" />
+		</Unit>
+		<Unit filename="../OS/OsWindows.c">
+			<Option compilerVar="CC" />
+			<Option target="Release Windows x64" />
+			<Option target="Release Windows x86" />
 			<Option target="ReleaseConstSeed" />
 			<Option target="Debug" />
 			<Option target="Profiling" />
@@ -269,9 +294,6 @@
 			<Option target="Profile-Use" />
 			<Option target="Coverage" />
 			<Option target="ListDefines" />
-		</Unit>
-		<Unit filename="../OS/OsWindows.c">
-			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../charmap.c">
 			<Option compilerVar="CC" />
@@ -285,6 +307,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../cipher.c">
 			<Option compilerVar="CC" />
@@ -298,6 +321,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../cipher_inlines.h" />
 		<Unit filename="../ciphertext.c">
@@ -312,6 +336,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../common.h" />
 		<Unit filename="../config/array_sizes.h">
@@ -323,6 +348,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../config/testing.h">
 			<Option target="Release Windows x64" />
@@ -333,6 +359,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../config/types.h">
 			<Option target="Release Windows x64" />
@@ -343,6 +370,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../cpu.c">
 			<Option compilerVar="CC" />
@@ -356,6 +384,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../date.c">
 			<Option compilerVar="CC" />
@@ -369,6 +398,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../dict.c">
 			<Option compilerVar="CC" />
@@ -382,6 +412,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../display.c">
 			<Option compilerVar="CC" />
@@ -395,6 +426,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../enigma.c">
 			<Option compilerVar="CC" />
@@ -411,6 +443,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../global.h">
 			<Option target="Release Windows x64" />
@@ -421,6 +454,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../hillclimb.c">
 			<Option compilerVar="CC" />
@@ -434,6 +468,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../ic.c">
 			<Option compilerVar="CC" />
@@ -447,6 +482,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../input.c">
 			<Option compilerVar="CC" />
@@ -460,6 +496,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../key.c">
 			<Option compilerVar="CC" />
@@ -473,6 +510,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../result.c">
 			<Option compilerVar="CC" />
@@ -486,6 +524,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../resume_in.c">
 			<Option compilerVar="CC" />
@@ -499,6 +538,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../resume_out.c">
 			<Option compilerVar="CC" />
@@ -512,6 +552,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../scan.h">
 			<Option target="Release Windows x64" />
@@ -522,6 +563,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../scan_int.c">
 			<Option compilerVar="CC" />
@@ -539,6 +581,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../scoreBasic.c">
 			<Option compilerVar="CC" />
@@ -552,6 +595,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../scoreNoInterleave.c">
 			<Option compilerVar="CC" />
@@ -565,6 +609,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../scoreSimple.c">
 			<Option compilerVar="CC" />
@@ -578,6 +623,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../score_inlines.h">
 			<Option target="Release Windows x64" />
@@ -588,6 +634,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../stecker.c">
 			<Option compilerVar="CC" />
@@ -601,6 +648,7 @@
 			<Option target="Profile-Generate" />
 			<Option target="Profile-Use" />
 			<Option target="Release Windows x86" />
+			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../x86/cipherAvx2.c">
 			<Option compilerVar="CC" />
