@@ -1,0 +1,47 @@
+<app_info>
+	<app>
+		<name>enigma_m4_2</name>
+		<user_friendly_name>Enigma Optima v1.0.0</user_friendly_name>
+		<non_cpu_intensive>0</non_cpu_intensive>
+	</app>
+	<file_info>
+		<name>wrapper_5.32_i686-pc-linux-gnu</name>
+		<executable/>
+		<!--
+		<download_url>http://download.enigmaathome.net/wrapper_5.32_windows_intelx86.exe</download_url>
+		-->
+	</file_info>
+	<file_info>
+		<name>enigma-optima</name>
+		<executable/>
+	</file_info>
+	<file_info>
+		<name>job_optima.xml</name>
+		<status>1</status>
+	</file_info>
+	<app_version>
+		<app_name>enigma_m4_2</app_name>
+		<version_num>532</version_num>
+		<avg_ncpus>1.000000</avg_ncpus>
+		<max_ncpus>1.000000</max_ncpus>
+		<flops>4500000000</flops>
+		<api_version>6.11.4</api_version>
+		<is_wrapper>1</is_wrapper>
+		<file_ref>
+			<file_name>wrapper_5.32_i686-pc-linux-gnu</file_name>
+			<open_name>enigma_wrapper</open_name>
+			<main_program/>
+			<copy_file/>
+		</file_ref>
+		<file_ref>
+			<file_name>enigma-optima</file_name>
+			<open_name>enigma_0.76</open_name>
+			<copy_file/>
+		</file_ref>
+		<file_ref>
+			<file_name>job_optima.xml</file_name>
+			<open_name>job.xml</open_name>
+			<copy_file/>
+		</file_ref>
+	</app_version>
+</app_info>
