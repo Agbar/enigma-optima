@@ -2,7 +2,6 @@
  * \brief This file implements OS related stuff for systems other than Windows.
  */
 #include <signal.h>
-#include <stdlib.h>
 #include <sys/time.h>
 
 #include "Os.h"
@@ -33,18 +32,8 @@ void InstallSighandler( void ) {
     }
 }
 
-void SetupRandomGenerator( void ) {
-    unsigned int seed;
-#if !defined CONSTANT_SEED
+unsigned int GetTimeBasedSeed( void ) {
     struct timeval tv;
     gettimeofday( &tv, NULL );
-    seed = ( tv.tv_sec % 1000 ) * 1000000 + tv.tv_usec;
-#else
-    seed = CONSTANT_SEED_VALUE;
-#endif
-    srand( seed );
-}
-
-int GetRandomNumber( void ) {
-    return rand();
+    return  ( tv.tv_sec % 1000 ) * 1000000 + tv.tv_usec;
 }

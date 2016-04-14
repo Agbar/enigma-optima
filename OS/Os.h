@@ -9,10 +9,6 @@ void SetupProcessProperties( void ) ;
 
 void InstallSighandler( void );
 
-void SetupRandomGenerator( void );
-
-int GetRandomNumber( void );
-
-
+unsigned int GetTimeBasedSeed( void );
 
 #endif

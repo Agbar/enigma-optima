@@ -43,17 +43,6 @@ void InstallSighandler( void ) {
     }
 }
 
-void SetupRandomGenerator( void ) {
-    unsigned int seed;
-#if !defined CONSTANT_SEED
-    seed = time( NULL );
-#else
-    seed = CONSTANT_SEED_VALUE;
-#endif
-    srand( seed );
-    printf( "Seed set to: %u.\n", seed );
-}
-
-int GetRandomNumber( void ) {
-    return rand();
+unsigned int GetTimeBasedSeed( void ) {
+    return time( NULL );
 }
