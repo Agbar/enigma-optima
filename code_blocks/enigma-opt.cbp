@@ -295,6 +295,10 @@
 			<Option target="Coverage" />
 			<Option target="ListDefines" />
 		</Unit>
+		<Unit filename="../banner.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../banner.h" />
 		<Unit filename="../charmap.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -350,6 +354,7 @@
 			<Option target="Release Windows x86" />
 			<Option target="Release Linux x64" />
 		</Unit>
+		<Unit filename="../config/releaseVersion.h" />
 		<Unit filename="../config/testing.h">
 			<Option target="Release Windows x64" />
 			<Option target="ReleaseConstSeed" />
