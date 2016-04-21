@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+#include "banner.h"
 #include "charmap.h"
 #include "cipher.h"
 #include "ciphertext.h"
@@ -56,6 +57,8 @@ int main(int argc, char **argv)
   };
 
   enigma_cpu_flags_init(enigma_cpu_all);
+
+  WriteStartupBanner();
 
   init_key_default(&key, model);
   init_charmap();

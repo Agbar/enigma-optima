@@ -12,6 +12,7 @@
 #include "global.h"
 #include "hillclimb.h"
 #include "key.h"
+#include "randomNumbers.h"
 #include "result.h"
 #include "resume_out.h"
 #include "score.h"
