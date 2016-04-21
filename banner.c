@@ -30,10 +30,22 @@ char* cpuFlagsToString( enum _enigma_cpu_flags_t flags )
     }
 }
 
+static int pointerSize = 8 * __SIZEOF_POINTER__;
+
+#ifdef _WIN32
+# define OS_NAME "Windows"
+#elif defined(__linux__)
+# define OS_NAME "Linux"
+#endif
+
+static char* osName = OS_NAME;
+
 void WriteStartupBanner( void ){
     fprintf(stderr,
-            "Enigma Optima %s\n"
+            "Enigma Optima %s %s%d\n"
             "Best ISA: %s\n"
             , releaseVersion
+            , osName
+            , pointerSize
             , cpuFlagsToString( enigma_cpu_flags ));
 }
