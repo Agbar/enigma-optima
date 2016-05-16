@@ -229,6 +229,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="Release All" targets="Release Windows x64;Release Windows x86;Release Linux x64;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
