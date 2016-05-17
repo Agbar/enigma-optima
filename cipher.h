@@ -53,7 +53,6 @@ extern text_t etw[52];
 // path_lookup[Offset][(Index)*(LAST_DIMENSION)+(Cx)];
 // is synonyme to
 // path_lookup[Offset+Index][(Cx)];
-#ifdef INLINE_IS_FAST
 inline
 text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett)
 {
@@ -63,16 +62,6 @@ text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett)
     c = path_lookup[offset][index*LAST_DIMENSION+c];
     return stbrett->letters[c];
 }
-#else
-
-#error DECODE macro needs refactoring
-#define DECODE(Cx,Offset,Index) \
-    Cx = (&ciphertext.plain[(Offset)])[(Index)]; \
-    Cx = stbrett[(Cx)]; \
-    Cx = path_lookup[Offset][(Index)*(LAST_DIMENSION)+(Cx)];\
-    Cx = stbrett[(Cx)];
-
-#endif
 
 inline
 void Step1( int8_t* ringOffset )
