@@ -195,183 +195,252 @@ static int uniscoreBasic( const Key* key, scoreLength_t len )
 
 }
 
-__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
+__attribute__ ((optimize("sched-stalled-insns=0"
+                        ",sched-stalled-insns-dep=16")))
 int biscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
-  int i;
-  text_t c1, c2;
-  int s = 0;
+    const PermutationMap_t* const stbrett = &key->stbrett;
+    const dict_t* const flatBidict = &bidict[0][0];
 
-  const PermutationMap_t* const stbrett = &key->stbrett;
+    int s = 0;
 
-  c1 = decode(0,0,stbrett);
+    size_t c = decode(0,0,stbrett);
 
-  for (i = 1; i < len-15; i += 16) {
-    c2 = decode(0,i,stbrett);
-    s += bidict[c1][c2];
+    int i = 1;
+    for( ; i < len - 15; i += 16 ) {
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 0, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c1 = decode(1,i,stbrett);
-    s += bidict[c2][c1];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 1, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c2 = decode(2,i,stbrett);
-    s += bidict[c1][c2];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 2, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c1 = decode(3,i,stbrett);
-    s += bidict[c2][c1];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 3, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c2 = decode(4,i,stbrett);
-    s += bidict[c1][c2];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 4, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c1 = decode(5,i,stbrett);
-    s += bidict[c2][c1];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 5, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c2 = decode(6,i,stbrett);
-    s += bidict[c1][c2];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 6, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c1 = decode(7,i,stbrett);
-    s += bidict[c2][c1];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 7, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c2 = decode(8,i,stbrett);
-    s += bidict[c1][c2];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 8, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c1 = decode(9,i,stbrett);
-    s += bidict[c2][c1];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 9, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c2 = decode(10,i,stbrett);
-    s += bidict[c1][c2];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 10, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c1 = decode(11,i,stbrett);
-    s += bidict[c2][c1];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 11, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c2 = decode(12,i,stbrett);
-    s += bidict[c1][c2];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 12, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c1 = decode(13,i,stbrett);
-    s += bidict[c2][c1];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 13, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c2 = decode(14,i,stbrett);
-    s += bidict[c1][c2];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 14, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c1 = decode(15,i,stbrett);
-    s += bidict[c2][c1];
-  }
-  for (; i < len-3; i += 4) {
-    c2 = decode(0,i,stbrett);
-    s += bidict[c1][c2];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 15, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+    }
+    for( ; i < len - 3; i += 4 ) {
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 0, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c1 = decode(1,i,stbrett);
-    s += bidict[c2][c1];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 1, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c2 = decode(2,i,stbrett);
-    s += bidict[c1][c2];
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 2, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
 
-    c1 = decode(3,i,stbrett);
-    s += bidict[c2][c1];
-  }
-  for (; i < len; i++) {
-    c2 = decode(0,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = c2;
-  }
-
-  return s;
-
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 3, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+    }
+    for( ; i < len; i++ ) {
+        c &= 0x1F;
+        c *= LAST_DIMENSION;
+        c += decode( 0, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+    }
+    return s;
 }
 
-__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
+__attribute__ ((optimize("sched-stalled-insns=0"
+                         ",sched-stalled-insns-dep=16"
+               )))
 int triscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
-  int i;
-  text_t c1, c2, c3;
-  int s;
+    int s = 0;
 
-  const PermutationMap_t* const stbrett = &key->stbrett;
+    const PermutationMap_t* const stbrett = &key->stbrett;
+    const dict_t* const flatTridict = &tridict[0][0][0];
 
-  s=0;
+    size_t c = decode(0,0,stbrett) * LAST_DIMENSION;
+    c += decode(1,0,stbrett);
 
-  c1 = decode(0,0,stbrett);
+    int i = 2;
+    for( ; i < len - 15; i += 16 ) {
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 0, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-  c2 = decode(1,0,stbrett);
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 1, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-  for (i = 2; i < len-15; i += 16) {
-    c3 = decode(0,i,stbrett);
-    s += tridict[c1][c2][c3];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 2, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c1 = decode(1,i,stbrett);
-    s += tridict[c2][c3][c1];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 3, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c2 = decode(2,i,stbrett);
-    s += tridict[c3][c1][c2];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 4, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c3 = decode(3,i,stbrett);
-    s += tridict[c1][c2][c3];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 5, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c1 = decode(4,i,stbrett);
-    s += tridict[c2][c3][c1];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 6, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c2 = decode(5,i,stbrett);
-    s += tridict[c3][c1][c2];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 7, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c3 = decode(6,i,stbrett);
-    s += tridict[c1][c2][c3];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 8, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c1 = decode(7,i,stbrett);
-    s += tridict[c2][c3][c1];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 9, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c2 = decode(8,i,stbrett);
-    s += tridict[c3][c1][c2];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 10, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c3 = decode(9,i,stbrett);
-    s += tridict[c1][c2][c3];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 11, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c1 = decode(10,i,stbrett);
-    s += tridict[c2][c3][c1];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 12, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c2 = decode(11,i,stbrett);
-    s += tridict[c3][c1][c2];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 13, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c3 = decode(12,i,stbrett);
-    s += tridict[c1][c2][c3];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 14, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c1 = decode(13,i,stbrett);
-    s += tridict[c2][c3][c1];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 15, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+    }
+    for( ; i < len - 3; i += 4 ) {
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 0, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c2 = decode(14,i,stbrett);
-    s += tridict[c3][c1][c2];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 1, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c3 = decode(15,i,stbrett);
-    s += tridict[c1][c2][c3];
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 2, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
 
-    c1 = c2;
-    c2 = c3;
-  }
-  for (; i < len-3; i += 4) {
-    c3 = decode(0,i,stbrett);
-    s += tridict[c1][c2][c3];
-
-    c1 = decode(1,i,stbrett);
-    s += tridict[c2][c3][c1];
-
-    c2 = decode(2,i,stbrett);
-    s += tridict[c3][c1][c2];
-
-    c3 = decode(3,i,stbrett);
-    s += tridict[c1][c2][c3];
-
-    c1 = c2;
-    c2 = c3;
-  }
-  for (; i < len; i++) {
-    c3 = decode(0,i,stbrett);
-    s += tridict[c1][c2][c3];
-
-    c1 = c2;
-    c2 = c3;
-  }
-
-  return s;
-
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 3, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+    }
+    for( ; i < len; ++i ) {
+        c &= 0x3FF;
+        c *= LAST_DIMENSION;
+        c += decode( 0, i, stbrett );
+        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+    }
+    return s;
 }
 
 /*
