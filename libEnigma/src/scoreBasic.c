@@ -115,6 +115,8 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
   return (S0+S1) + (S2+S3);
 }
 
+#define UNISCORE_ADD(S,A)\
+    asm( "add  %1, %0": "+q"( (S) ): "m"( unidict[(A)] ) )
 static int uniscoreBasic( const Key* key, scoreLength_t len )
 {
   int i;
@@ -126,197 +128,159 @@ static int uniscoreBasic( const Key* key, scoreLength_t len )
   s = 0;
   for (i = 0; i < len-15; i += 16) {
     c = decode(0,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(1,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(2,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(3,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(4,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(5,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(6,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(7,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(8,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(9,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(10,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(11,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(12,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(13,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(14,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(15,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
   }
   for (; i < len-3; i += 4) {
     c = decode(0,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(1,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(2,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
 
     c = decode(3,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
   }
   for (; i < len; i++) {
     c = decode(0,i,stbrett);
-    s += unidict[c];
+    UNISCORE_ADD( s, c );
   }
 
   return s;
 
 }
 
+#define BISCORE_ADD(S,A,B)\
+    asm( "add  %1, %0": "+q"( (S) ): "m"( bidict[(A)][(B)] ) )
 __attribute__ ((optimize("sched-stalled-insns=0"
                         ",sched-stalled-insns-dep=16")))
 int biscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
     const PermutationMap_t* const stbrett = &key->stbrett;
-    const dict_t* const flatBidict = &bidict[0][0];
-
     int s = 0;
 
-    size_t c = decode(0,0,stbrett);
+    size_t c1 = decode(0,0,stbrett);
 
     int i = 1;
     for( ; i < len - 15; i += 16 ) {
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 0, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        size_t c2 = decode( 0, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 1, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c1 = decode( 1, i, stbrett );
+        BISCORE_ADD( s , c2, c1 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 2, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c2 = decode( 2, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 3, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c1 = decode( 3, i, stbrett );
+        BISCORE_ADD( s , c2, c1 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 4, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c2 = decode( 4, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 5, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c1 = decode( 5, i, stbrett );
+        BISCORE_ADD( s , c2, c1 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 6, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c2 = decode( 6, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 7, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c1 = decode( 7, i, stbrett );
+        BISCORE_ADD( s , c2, c1 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 8, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c2 = decode( 8, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 9, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c1 = decode( 9, i, stbrett );
+        BISCORE_ADD( s , c2, c1 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 10, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c2 = decode( 10, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 11, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c1 = decode( 11, i, stbrett );
+        BISCORE_ADD( s , c2, c1 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 12, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c2 = decode( 12, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 13, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c1 = decode( 13, i, stbrett );
+        BISCORE_ADD( s , c2, c1 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 14, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c2 = decode( 14, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 15, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c1 = decode( 15, i, stbrett );
+        BISCORE_ADD( s , c2, c1 );
     }
     for( ; i < len - 3; i += 4 ) {
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 0, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        size_t c2 = decode( 0, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 1, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c1 = decode( 1, i, stbrett );
+        BISCORE_ADD( s , c2, c1 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 2, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c2 = decode( 2, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
 
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 3, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        c1 = decode( 3, i, stbrett );
+        BISCORE_ADD( s , c2, c1 );
     }
     for( ; i < len; i++ ) {
-        c &= 0x1F;
-        c *= LAST_DIMENSION;
-        c += decode( 0, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatBidict[ c ] ) );
+        size_t c2 = decode( 0, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
+        c1 = c2;
     }
     return s;
 }
+
+#define TRISCORE_ADD(S,A,B,C) \
+    asm( "add  %1, %0": "+q"( (s) ): "m"( tridict[(A)][(B)][(C)] ) )
 
 __attribute__ ((optimize("sched-stalled-insns=0"
                          ",sched-stalled-insns-dep=16"
@@ -326,119 +290,88 @@ int triscoreBasic( const Key* const restrict key, scoreLength_t len )
     int s = 0;
 
     const PermutationMap_t* const stbrett = &key->stbrett;
-    const dict_t* const flatTridict = &tridict[0][0][0];
 
-    size_t c = decode(0,0,stbrett) * LAST_DIMENSION;
-    c += decode(1,0,stbrett);
+    size_t c1 = decode(0,0,stbrett);
+    size_t c2 = decode(1,0,stbrett);
 
     int i = 2;
     for( ; i < len - 15; i += 16 ) {
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 0, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        size_t c3;
+        c3 = decode( 0, i, stbrett );
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 1, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c1 = decode( 1, i, stbrett );
+        TRISCORE_ADD( s, c2, c3, c1 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 2, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c2 = decode( 2, i, stbrett );
+        TRISCORE_ADD( s, c3, c1, c2 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 3, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c3 = decode( 3, i, stbrett );
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 4, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c1 = decode( 4, i, stbrett );
+        TRISCORE_ADD( s, c2, c3, c1 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 5, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c2 = decode( 5, i, stbrett );
+        TRISCORE_ADD( s, c3, c1, c2 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 6, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c3 = decode( 6, i, stbrett );
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 7, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c1 = decode( 7, i, stbrett );
+        TRISCORE_ADD( s, c2, c3, c1 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 8, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c2 = decode( 8, i, stbrett );
+        TRISCORE_ADD( s, c3, c1, c2 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 9, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c3 = decode( 9, i, stbrett );
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 10, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c1 = decode( 10, i, stbrett );
+        TRISCORE_ADD( s, c2, c3, c1 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 11, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c2 = decode( 11, i, stbrett );
+        TRISCORE_ADD( s, c3, c1, c2 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 12, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c3 = decode( 12, i, stbrett );
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 13, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c1 = decode( 13, i, stbrett );
+        TRISCORE_ADD( s, c2, c3, c1 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 14, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c2 = decode( 14, i, stbrett );
+        TRISCORE_ADD( s, c3, c1, c2 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 15, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c3 = decode( 15, i, stbrett );
+        TRISCORE_ADD( s, c1, c2, c3 );
+
+        c1 = c2;
+        c2 = c3;
     }
     for( ; i < len - 3; i += 4 ) {
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 0, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        size_t c3;
+        c3 = decode( 0, i, stbrett );
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 1, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c1 = decode( 1, i, stbrett );
+        TRISCORE_ADD( s, c2, c3, c1 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 2, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c2 = decode( 2, i, stbrett );
+        TRISCORE_ADD( s, c3, c1, c2 );
 
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 3, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        c3 = decode( 3, i, stbrett );
+        TRISCORE_ADD( s, c1, c2, c3 );
+
+        c1 = c2;
+        c2 = c3;
     }
     for( ; i < len; ++i ) {
-        c &= 0x3FF;
-        c *= LAST_DIMENSION;
-        c += decode( 0, i, stbrett );
-        asm( "add  %1, %0": "+q"( s ): "qm"( flatTridict[ c ] ) );
+        size_t c3;
+        c3 = decode( 0, i, stbrett );
+        TRISCORE_ADD( s, c1, c2, c3 );
+
+        c1 = c2;
+        c2 = c3;
     }
     return s;
 }
