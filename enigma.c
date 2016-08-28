@@ -64,26 +64,21 @@ int main(int argc, char **argv)
   init_charmap();
 
   opterr = 0;
-  while ((opt = getopt(argc, argv, "hvicxaRM:w:r:m:u:s:f:t:k:n:z:o:")) != -1) {
+  while ((opt = getopt(argc, argv, "hvcRM:f:t:o:")) != -1) {
     switch (opt) {
       case 'h': help(); break;
       case 'v': version(); break;
-      case 'u': if (!set_ukw(&key, optarg, model)) usage(); keyop = 1; break;
-      case 'w': if (!set_walze(&key, optarg, model)) usage(); keyop = 1; break;
-      case 'r': if (!set_ring(&key, optarg, model)) usage(); keyop = 1; break;
-      case 'm': if (!set_mesg(&key, optarg, model)) usage(); keyop = 1; break;
-      case 's': if (!set_stecker(&key, optarg)) usage(); keyop = 1; break;
+      // deprecated
       case 'c': hc = 1; break;
-      case 'i': ic = 1; break;
+      // deprecated
       case 'f': f = optarg; break;
+      // deprecated
       case 't': t = optarg; break;
-      case 'k': k = optarg; break;
-      case 'x': if (sw_mode != SW_ONSTART) usage(); sw_mode = SW_OTHER; break;
-      case 'a': if (sw_mode != SW_ONSTART) usage(); sw_mode = SW_ALL; break;
+      // E@H
       case 'R': resume = 1; hc = 1; break;
-      case 'n': if ((max_pass = scan_posint(optarg)) == -1) usage(); break;
-      case 'z': if ((max_score = scan_posint(optarg)) == -1) usage(); break;
+      // E@H
       case 'o': if (!(outfile = open_outfile(optarg))) usage(); break;
+      // deprecated
       case 'M': if ((model = get_model(optarg)) == EnigmaModel_Error || !first) usage();
                 if (!init_key_default(&key, model)) usage(); break;
       default: usage();
