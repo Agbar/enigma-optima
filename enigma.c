@@ -39,7 +39,7 @@ int main(int argc, char **argv)
   int len, clen;
   enum ModelType_t model = EnigmaModel_H;
   int opt, first = 1, keyop = 0;
-  int hc = 0, ic = 0;
+  int hc = 0;
   int sw_mode = SW_ONSTART;
   int max_pass = 1, firstpass = 1;
   int max_score = INT_MAX-1, resume = 0, maxargs;
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
   }
 
 
-  if (hc == 0 && ic == 0) {
+  if (hc == 0) {
     en_deciph_stdin_ALL(outfile, &key);
     return 0;
   }
@@ -99,32 +99,6 @@ int main(int argc, char **argv)
   load_bidict(argv[optind++]);
   load_ciphertext(argv[optind], &len, resume);
   if (len < 3) exit(EXIT_FAILURE);
-
-
-  if (ic == 1) {
-    if (keyop == 1) usage();
-    if (resume == 1) usage();
-    if (k != NULL) usage();
-    if (f == NULL && t == NULL) {
-      f = fmin[model];
-      t = tmax[model];
-
-      if (!set_range(&from, &to, f, t, model)) usage();
-
-      /* no range given, first try fast noring option */
-      ic_noring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, len);
-      ic_allring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, len);
-    }
-    else {
-      if (f == NULL) f = fmin[model];
-      if (t == NULL) t = tmax[model];
-
-      if (!set_range(&from, &to, f, t, model)) usage();
-
-      /* 300 passes hard wired */
-      ic_allring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, len);
-    }
-  }
 
   if (hc == 1) {
     if (keyop == 1) usage();
