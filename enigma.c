@@ -14,7 +14,6 @@
 #include "error.h"
 #include "global.h"
 #include "hillclimb.h"
-#include "ic.h"
 #include "input.h"
 #include "key.h"
 #include "result.h"
