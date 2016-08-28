@@ -43,7 +43,7 @@ int main(int argc, char **argv)
   int max_pass = 1, firstpass = 1;
   int max_score = INT_MAX-1, resume = 0, maxargs;
   FILE *outfile = stdout;
-  char *f = NULL, *t = NULL, *k = NULL;
+  char *f = NULL, *t = NULL;
   char *fmin[3] = {
     "A:123:AA:AAA",
     "B:123:AA:AAA",
@@ -102,17 +102,9 @@ int main(int argc, char **argv)
   if (hc == 1) {
     if (keyop == 1) usage();
     if (!resume) {
-      if (k != NULL) {
-        if (f != NULL || t != NULL) usage();
-        if (!set_key(&from, k, model, 1)) usage();
-        to = from;
-        sw_mode = SINGLE_KEY;
-      }
-      else {
         if (f == NULL) f = fmin[model];
         if (t == NULL) t = tmax[model];
         if (!set_range(&from, &to, f, t, model)) usage();
-      }
     }
     else {
       /* only -o option is allowed in addition to -R */
