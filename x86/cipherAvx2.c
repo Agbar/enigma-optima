@@ -108,7 +108,7 @@ void PrepareDecoderLookupAvx2( CalculatePermutationMap_f* calculateMap, const Ke
     {
         CalculateLookupAvx2( i, rings, key, calculateMap );
 
-        // check wether next M-ring turn is within current text bite
+        // check whether next M-ring turn is within current text bite
         int charsToNextTurnover = SubMod26( GetNextTurnover( rings, turns ), rings.r ) + 1;
         if( ( messagePosition & 31 ) + charsToNextTurnover < 32 ) {
             // set r ring on positoin (like buttons were pressed nextMTurn times)
