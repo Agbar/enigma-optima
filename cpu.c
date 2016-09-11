@@ -1,6 +1,8 @@
 #include <cpuid.h>
 #include "cpu.h"
 
+#include "config/testing.h"
+
 enigma_cpu_flags_t enigma_cpu_flags;
 
 static enigma_cpu_flags_t get_hardware_supported_cpu_flags(void);

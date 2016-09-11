@@ -1,5 +1,4 @@
-#ifndef TESTING_H_INCLUDED
-#define TESTING_H_INCLUDED
+#pragma once
 
 #ifndef SIMPLESCORE
 //# define SIMPLESCORE
@@ -22,4 +21,6 @@
 # define CONSTANT_SEED_VALUE 315
 #endif
 
-#endif // TESTING_H_INCLUDED
+#ifndef ENIGMA_CPU_SPECIFIC
+//#define ENIGMA_CPU_SPECIFIC enigma_cpu_generic
+#endif

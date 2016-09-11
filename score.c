@@ -8,6 +8,7 @@
 #include "ciphertext.h"
 #include "config/array_sizes.h"
 #include "config/types.h"
+#include "config/testing.h"
 
 #include "scoreBasic.h"
 #include "scoreSimple.h"
