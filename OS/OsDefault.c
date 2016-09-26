@@ -32,7 +32,7 @@ void InstallSighandler( void ) {
     }
 }
 
-unsigned int GetTimeBasedSeed( void ) {
+unsigned int GetRSeed( void ) {
     struct timeval tv;
     gettimeofday( &tv, NULL );
     return  ( tv.tv_sec % 1000 ) * 1000000 + tv.tv_usec;
