@@ -1,8 +1,12 @@
 /** \file
  * \brief This file implements OS related stuff for systems other than Windows.
  */
+
 #include <signal.h>
-#include <sys/time.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#include <sys/syscall.h>
 
 #include "Os.h"
 #include "../config/testing.h"
@@ -33,7 +37,13 @@ void InstallSighandler( void ) {
 }
 
 unsigned int GetRSeed( void ) {
-    struct timeval tv;
-    gettimeofday( &tv, NULL );
-    return  ( tv.tv_sec % 1000 ) * 1000000 + tv.tv_usec;
+    int seed;
+    const size_t requestedBytesNum = 4;
+    unsigned int ret = syscall( SYS_getrandom, &seed, requestedBytesNum, 0 );
+    if ( ret == requestedBytesNum ) {
+        return seed;
+    } else {
+        fputs( "enigma: error: Random seed generation failed\n", stderr );
+        exit( ret );
+    }
 }
