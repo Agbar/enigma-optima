@@ -123,7 +123,6 @@ int main(int argc, char **argv)
 
   if (outfile != stdout)
     fclose(outfile);
-//  free(ciphertext);
   return 0;
 
 }
