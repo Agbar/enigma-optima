@@ -6,25 +6,13 @@
 void usage(void)
 {
   fprintf(stderr, "enigma: usage: enigma \
-[ -hvicxaR ] \
-[ -M model ] \
-[ -u umkehrwalze ] \
-[ -w wheel-order ] \
-[ -r ring-settings ] \
-[ -s stecker-pairs ] \
-[ -m message-key ] \
+[ -hvR ] \
 [ -o output-file ] \
-[ -n passes ] \
-[ -z maximum-score ] \
-[ -k single-key ] \
-[ -f lower-bound ] \
-[ -t upper-bound ] \
 [ trigram-dictionary bigram-dictionary ciphertext ] \
 \n\nUse enigma -h for detailed help\n\n");
 
   exit(EXIT_FAILURE);
 }
-
 
 void help(void)
 {
