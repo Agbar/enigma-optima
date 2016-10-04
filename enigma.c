@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -97,7 +98,7 @@ int main(int argc, char **argv)
   load_ciphertext(argv[optind], &len, resume);
   if (len < 3) exit(EXIT_FAILURE);
 
-  if (hc == 1) {
+    assert( hc == 1 );
     if (keyop == 1) usage();
     if (!resume) {
         if (f == NULL) f = fmin[model];
@@ -118,8 +119,6 @@ int main(int argc, char **argv)
 
     hillclimb( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
                 max_score, resume, outfile, 1, clen );
-
-  }
 
   if (outfile != stdout)
     fclose(outfile);
