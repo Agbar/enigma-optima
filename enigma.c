@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   Key from, to, ckey_res, gkey_res;
   int len, clen;
   enum ModelType_t model = EnigmaModel_H;
-  int opt, first = 1, keyop = 0;
+  int opt, first = 1;
   int hc = 0;
   int sw_mode = SW_ONSTART;
   int max_pass = 1, firstpass = 1;
@@ -99,7 +99,6 @@ int main(int argc, char **argv)
   if (len < 3) exit(EXIT_FAILURE);
 
     assert( hc == 1 );
-    if (keyop == 1) usage();
     if (!resume) {
         if (f == NULL) f = fmin[model];
         if (t == NULL) t = tmax[model];
