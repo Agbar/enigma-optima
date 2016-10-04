@@ -29,6 +29,29 @@
 					<Add library="../code_blocks/obj/ReleaseWin64/error.o" />
 					<Add library="../code_blocks/obj/ReleaseWin64/date.o" />
 				</Linker>
+				<Environment>
+					<Variable name="gtest_lib" value="$(#gtest.lib)" />
+				</Environment>
+			</Target>
+			<Target title="Release Windows x86">
+				<Option output="bin/ReleaseWin32/enigma-optima" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/ReleaseWin32/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-m32" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m32" />
+					<Add library="../code_blocks/obj/ReleaseWin32/OS/OsWindows.o" />
+					<Add library="../code_blocks/obj/ReleaseWin32/error.o" />
+					<Add library="../code_blocks/obj/ReleaseWin32/date.o" />
+				</Linker>
+				<Environment>
+					<Variable name="gtest_lib" value="$(#gtest)lib32" />
+				</Environment>
 			</Target>
 		</Build>
 		<Compiler>
@@ -41,7 +64,7 @@
 		<Linker>
 			<Add option="-m64" />
 			<Add library="libgtest" />
-			<Add directory="$(#gtest.lib)" />
+			<Add directory="$(gtest_lib)" />
 		</Linker>
 		<Unit filename="GetRSeed.tests.cpp" />
 		<Unit filename="cipher.tests.cpp" />
