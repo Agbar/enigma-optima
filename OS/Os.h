@@ -9,6 +9,6 @@ void SetupProcessProperties( void ) ;
 
 void InstallSighandler( void );
 
-unsigned int GetTimeBasedSeed( void );
+unsigned int GetRSeed( void );
 
 #endif

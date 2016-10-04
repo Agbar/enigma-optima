@@ -3,8 +3,12 @@
  *  Compile and link this module only for Windows platform.
  */
 
+ // enable rand_s function
+#define _CRT_RAND_S
+
 #include <stdio.h>
-#include <time.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include <windows.h>
 #include "Os.h"
 #include "..\error.h"
@@ -43,6 +47,14 @@ void InstallSighandler( void ) {
     }
 }
 
-unsigned int GetTimeBasedSeed( void ) {
-    return time( NULL );
+unsigned int GetRSeed( void ) {
+    uint32_t randomValue;
+    errno_t isError = rand_s( &randomValue );
+    if( !isError ) {
+        return randomValue;
+    }
+    else {
+        fputs("enigma: error: Random seed generation failed\n", stderr);
+        exit( isError );
+    }
 }

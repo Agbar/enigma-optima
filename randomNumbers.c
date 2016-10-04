@@ -11,7 +11,7 @@ int GetRandomNumber( void ) {
 void SetupRandomGenerator( void ) {
     unsigned int seed;
 #if !defined CONSTANT_SEED
-    seed = GetTimeBasedSeed();
+    seed = GetRSeed();
 #else
     seed = CONSTANT_SEED_VALUE;
 #endif
