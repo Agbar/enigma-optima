@@ -2,6 +2,8 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="Workspace">
 		<Project filename="code_blocks/enigma-opt.cbp" />
-		<Project filename="tests/enigma-optima.tests.cbp" />
+		<Project filename="tests/enigma-optima.tests.cbp">
+			<Depends filename="code_blocks/enigma-opt.cbp" />
+		</Project>
 	</Workspace>
 </CodeBlocks_workspace_file>
