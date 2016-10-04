@@ -85,10 +85,8 @@ int main(int argc, char **argv)
     first = 0;
   }
 
-
   if (hc == 0) {
-    en_deciph_stdin_ALL(outfile, &key);
-    return 0;
+    usage();
   }
 
   SetupOsThingsAndStuff();
