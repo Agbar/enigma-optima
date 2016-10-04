@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -38,7 +39,8 @@ int main(int argc, char **argv)
   Key from, to, ckey_res, gkey_res;
   int len, clen;
   enum ModelType_t model = EnigmaModel_H;
-  int opt, first = 1;
+  int opt;
+  bool first = true;
   int hc = 0;
   int sw_mode = SW_ONSTART;
   int max_pass = 1, firstpass = 1;
@@ -83,7 +85,7 @@ int main(int argc, char **argv)
                 if (!init_key_default(&key, model)) usage(); break;
       default: usage();
     }
-    first = 0;
+    first = false;
   }
 
   if (hc == 0) {
