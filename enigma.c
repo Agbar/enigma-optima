@@ -1,7 +1,7 @@
+#include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
 #include <unistd.h>
 #include <limits.h>
 #include "banner.h"
@@ -14,7 +14,6 @@
 #include "error.h"
 #include "global.h"
 #include "hillclimb.h"
-#include "ic.h"
 #include "input.h"
 #include "key.h"
 #include "result.h"
@@ -38,13 +37,14 @@ int main(int argc, char **argv)
   Key from, to, ckey_res, gkey_res;
   int len, clen;
   enum ModelType_t model = EnigmaModel_H;
-  int opt, first = 1, keyop = 0;
-  int hc = 0, ic = 0;
+  int opt;
+  bool first = true;
+  int hc = 0;
   int sw_mode = SW_ONSTART;
   int max_pass = 1, firstpass = 1;
   int max_score = INT_MAX-1, resume = 0, maxargs;
   FILE *outfile = stdout;
-  char *f = NULL, *t = NULL, *k = NULL;
+  char *f = NULL, *t = NULL;
   char *fmin[3] = {
     "A:123:AA:AAA",
     "B:123:AA:AAA",
@@ -64,37 +64,30 @@ int main(int argc, char **argv)
   init_charmap();
 
   opterr = 0;
-  while ((opt = getopt(argc, argv, "hvicxaRM:w:r:m:u:s:f:t:k:n:z:o:")) != -1) {
+  while ((opt = getopt(argc, argv, "hvcRM:f:t:o:")) != -1) {
     switch (opt) {
       case 'h': help(); break;
       case 'v': version(); break;
-      case 'u': if (!set_ukw(&key, optarg, model)) usage(); keyop = 1; break;
-      case 'w': if (!set_walze(&key, optarg, model)) usage(); keyop = 1; break;
-      case 'r': if (!set_ring(&key, optarg, model)) usage(); keyop = 1; break;
-      case 'm': if (!set_mesg(&key, optarg, model)) usage(); keyop = 1; break;
-      case 's': if (!set_stecker(&key, optarg)) usage(); keyop = 1; break;
+      // deprecated
       case 'c': hc = 1; break;
-      case 'i': ic = 1; break;
+      // deprecated
       case 'f': f = optarg; break;
+      // deprecated
       case 't': t = optarg; break;
-      case 'k': k = optarg; break;
-      case 'x': if (sw_mode != SW_ONSTART) usage(); sw_mode = SW_OTHER; break;
-      case 'a': if (sw_mode != SW_ONSTART) usage(); sw_mode = SW_ALL; break;
+      // E@H
       case 'R': resume = 1; hc = 1; break;
-      case 'n': if ((max_pass = scan_posint(optarg)) == -1) usage(); break;
-      case 'z': if ((max_score = scan_posint(optarg)) == -1) usage(); break;
+      // E@H
       case 'o': if (!(outfile = open_outfile(optarg))) usage(); break;
+      // deprecated
       case 'M': if ((model = get_model(optarg)) == EnigmaModel_Error || !first) usage();
                 if (!init_key_default(&key, model)) usage(); break;
       default: usage();
     }
-    first = 0;
+    first = false;
   }
 
-
-  if (hc == 0 && ic == 0) {
-    en_deciph_stdin_ALL(outfile, &key);
-    return 0;
+  if (hc == 0) {
+    usage();
   }
 
   SetupOsThingsAndStuff();
@@ -105,46 +98,11 @@ int main(int argc, char **argv)
   load_ciphertext(argv[optind], &len, resume);
   if (len < 3) exit(EXIT_FAILURE);
 
-
-  if (ic == 1) {
-    if (keyop == 1) usage();
-    if (resume == 1) usage();
-    if (k != NULL) usage();
-    if (f == NULL && t == NULL) {
-      f = fmin[model];
-      t = tmax[model];
-
-      if (!set_range(&from, &to, f, t, model)) usage();
-
-      /* no range given, first try fast noring option */
-      ic_noring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, len);
-      ic_allring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, len);
-    }
-    else {
-      if (f == NULL) f = fmin[model];
-      if (t == NULL) t = tmax[model];
-
-      if (!set_range(&from, &to, f, t, model)) usage();
-
-      /* 300 passes hard wired */
-      ic_allring(&from, &to, NULL, NULL, SINGLE_KEY, 300, 1, max_score, resume, outfile, 0, len);
-    }
-  }
-
-  if (hc == 1) {
-    if (keyop == 1) usage();
+    assert( hc == 1 );
     if (!resume) {
-      if (k != NULL) {
-        if (f != NULL || t != NULL) usage();
-        if (!set_key(&from, k, model, 1)) usage();
-        to = from;
-        sw_mode = SINGLE_KEY;
-      }
-      else {
         if (f == NULL) f = fmin[model];
         if (t == NULL) t = tmax[model];
         if (!set_range(&from, &to, f, t, model)) usage();
-      }
     }
     else {
       /* only -o option is allowed in addition to -R */
@@ -161,11 +119,8 @@ int main(int argc, char **argv)
     hillclimb( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
                 max_score, resume, outfile, 1, clen );
 
-  }
-
   if (outfile != stdout)
     fclose(outfile);
-//  free(ciphertext);
   return 0;
 
 }
