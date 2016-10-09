@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "display.h"
+#include "config/releaseVersion.h"
 
 void usage(void)
 {
@@ -30,8 +31,9 @@ void help(void)
 
 void version(void)
 {
-  fprintf(stdout, "enigma-suite version 0.76\n\
-Copyright (C) 2005 Stefan Krah <stefan@bytereef.org>\n\n\
+  fprintf(stdout, "enigma-optima version %s\n\
+Copyright (C) 2005 Stefan Krah <stefan@bytereef.org>\n\
+          (C) 2016 Agbar <https://github.com/Agbar>\n\n\
     This program is free software; you can redistribute it and/or modify it\n\
     under the terms of version 2 (only) of the GNU General Public License as\n\
     published by the Free Software Foundation.\n\n\
@@ -42,7 +44,9 @@ Copyright (C) 2005 Stefan Krah <stefan@bytereef.org>\n\n\
     You should have received a copy of the GNU General Public License\n\
     along with this program; if not, write to the Free Software\n\
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.\n\n\
-To report bugs or offer suggestions, please mail to <enigma-suite@bytereef.org>.\n\n");
+To report bugs or offer suggestions, please use GitHub.\n\
+    https://github.com/Agbar/enigma-optima/issues\n\n"
+    , releaseVersion );
 
   exit(EXIT_SUCCESS);
 }
