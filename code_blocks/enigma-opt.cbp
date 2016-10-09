@@ -229,6 +229,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="Release All" targets="Release Windows x64;Release Windows x86;Release Linux x64;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
@@ -354,6 +357,7 @@
 			<Option target="Release Windows x86" />
 			<Option target="Release Linux x64" />
 		</Unit>
+		<Unit filename="../config/releaseVersion.cpp" />
 		<Unit filename="../config/releaseVersion.h" />
 		<Unit filename="../config/testing.h">
 			<Option target="Release Windows x64" />
@@ -465,20 +469,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../hillclimb.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
-		<Unit filename="../ic.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ic.h">
 			<Option target="Release Windows x64" />
 			<Option target="ReleaseConstSeed" />
 			<Option target="Profiling" />
