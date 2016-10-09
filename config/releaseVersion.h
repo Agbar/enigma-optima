@@ -1,3 +1,4 @@
 #pragma once
 
-char releaseVersion[] = "v1.0.0";
+extern char const* releaseVersion;
+
