@@ -50,7 +50,7 @@ __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
 double ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, scoreLength_t len ){
-    uint8_t f[32] = {0};
+    ALIGNED_32( uint8_t f[32] ) = {0};
     int i;
     for( i = 0; i < len; i++ ) {
         f[msg->plain[i]]++;
