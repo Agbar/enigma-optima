@@ -45,6 +45,7 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-march=pentium3" />
 					<Add option="-O3" />
 					<Add option="-m32" />
 				</Compiler>
