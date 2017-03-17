@@ -57,6 +57,9 @@
 				</Linker>
 			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="Release All" targets="Release x64;Release x86;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wnon-virtual-dtor" />
 			<Add option="-Wshadow" />
