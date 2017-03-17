@@ -31,6 +31,7 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-m64" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-O3" />
@@ -48,6 +49,7 @@
 					<Add option="-march=pentium3" />
 					<Add option="-O3" />
 					<Add option="-m32" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-O3" />
