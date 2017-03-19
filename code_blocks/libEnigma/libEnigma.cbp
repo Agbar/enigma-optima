@@ -96,6 +96,7 @@
 		<Unit filename="../../libEnigma/include/charmap.h" />
 		<Unit filename="../../libEnigma/include/common.h" />
 		<Unit filename="../../libEnigma/include/config/types.h" />
+		<Unit filename="../../libEnigma/include/global.h" />
 		<Unit filename="../../libEnigma/src/charmap.c">
 			<Option compilerVar="CC" />
 		</Unit>
