@@ -12,7 +12,7 @@
 #include <windows.h>
 #include "Os.h"
 #include "..\error.h"
-#include "..\config\testing.h"
+#include "config\testing.h"
 
 volatile sig_atomic_t doShutdown;
 

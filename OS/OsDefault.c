@@ -9,7 +9,7 @@
 #include <sys/syscall.h>
 
 #include "Os.h"
-#include "../config/testing.h"
+#include "config/testing.h"
 #include "../error.h"
 
 // objects
