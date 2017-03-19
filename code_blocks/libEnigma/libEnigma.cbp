@@ -92,6 +92,10 @@
 			<Add option="-static-libgcc" />
 			<Add option="-static" />
 		</Linker>
+		<Unit filename="../../libEnigma/include/charmap.h" />
+		<Unit filename="../../libEnigma/src/charmap.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
