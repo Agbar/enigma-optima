@@ -60,6 +60,7 @@
 			<Add option="-m64" />
 			<Add option="-fexceptions" />
 			<Add directory="$(#gtest.include)" />
+			<Add directory="../libEnigma/include" />
 		</Compiler>
 		<Linker>
 			<Add option="-m64" />
