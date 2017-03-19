@@ -6,6 +6,8 @@
 # binary compiler output
 code_blocks/obj
 code_blocks/bin
+code_blocks/libEnigma/obj
+code_blocks/libEnigma/bin
 tests/obj
 tests/bin
 
@@ -19,3 +21,5 @@ enigma-optima.workspace.layout
 
 # CCCC
 code_blocks/.cccc
+
+code_blocks/libEnigma/libEnigma\.depend

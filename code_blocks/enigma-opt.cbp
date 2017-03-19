@@ -23,6 +23,7 @@
 				<Linker>
 					<Add option="-m64" />
 					<Add option="-O3" />
+					<Add directory="libEnigma/bin/Release/x64" />
 				</Linker>
 			</Target>
 			<Target title="Release Windows x86">
@@ -42,6 +43,7 @@
 				<Linker>
 					<Add option="-m32" />
 					<Add option="-O3" />
+					<Add directory="libEnigma/bin/Release/x86" />
 				</Linker>
 			</Target>
 			<Target title="Release Linux x64">
@@ -252,9 +254,11 @@
 			<Add option="-fcall-used-xmm14" />
 			<Add option="-fcall-used-xmm15" />
 			<Add option="-save-temps" />
+			<Add directory="../libEnigma/include" />
 		</Compiler>
 		<Linker>
 			<Add option="-static" />
+			<Add library="libEnigma.a" />
 		</Linker>
 		<Unit filename="../ModMath.c">
 			<Option compilerVar="CC" />

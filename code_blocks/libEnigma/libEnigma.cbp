@@ -86,6 +86,7 @@
 			<Add option="-fcall-used-xmm13" />
 			<Add option="-fcall-used-xmm14" />
 			<Add option="-fcall-used-xmm15" />
+			<Add directory="../../libEnigma/include" />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libstdc++" />
