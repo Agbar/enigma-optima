@@ -348,20 +348,6 @@
 		</Unit>
 		<Unit filename="../config/releaseVersion.cpp" />
 		<Unit filename="../config/releaseVersion.h" />
-		<Unit filename="../cpu.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../cpu.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
 		<Unit filename="../date.c">
 			<Option compilerVar="CC" />
 		</Unit>

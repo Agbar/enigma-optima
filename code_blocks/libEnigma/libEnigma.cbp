@@ -97,9 +97,13 @@
 		<Unit filename="../../libEnigma/include/common.h" />
 		<Unit filename="../../libEnigma/include/config/testing.h" />
 		<Unit filename="../../libEnigma/include/config/types.h" />
+		<Unit filename="../../libEnigma/include/cpu.h" />
 		<Unit filename="../../libEnigma/include/global.h" />
 		<Unit filename="../../libEnigma/include/key.h" />
 		<Unit filename="../../libEnigma/src/charmap.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/cpu.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/key.c">
