@@ -93,6 +93,7 @@
 			<Add option="-static" />
 		</Linker>
 		<Unit filename="../../libEnigma/include/charmap.h" />
+		<Unit filename="../../libEnigma/include/config/types.h" />
 		<Unit filename="../../libEnigma/src/charmap.c">
 			<Option compilerVar="CC" />
 		</Unit>
