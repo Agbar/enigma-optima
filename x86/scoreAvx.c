@@ -4,7 +4,7 @@
 # error AVX not defined
 #endif
 
-#include "../dict.h"
+#include "dict.h"
 #include "../ciphertext.h"
 #include "scoreAvx.h"
 #include "scoreSsse3.h"
