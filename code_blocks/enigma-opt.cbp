@@ -307,20 +307,6 @@
 			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../cipher_inlines.h" />
-		<Unit filename="../ciphertext.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ciphertext.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
 		<Unit filename="../config/array_sizes.h">
 			<Option target="Release Windows x64" />
 			<Option target="ReleaseConstSeed" />

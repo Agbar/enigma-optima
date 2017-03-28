@@ -95,6 +95,7 @@
 		</Linker>
 		<Unit filename="../../libEnigma/include/ModMath.h" />
 		<Unit filename="../../libEnigma/include/charmap.h" />
+		<Unit filename="../../libEnigma/include/ciphertext.h" />
 		<Unit filename="../../libEnigma/include/common.h" />
 		<Unit filename="../../libEnigma/include/config/testing.h" />
 		<Unit filename="../../libEnigma/include/config/types.h" />
@@ -106,6 +107,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/charmap.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/ciphertext.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/cpu.c">
