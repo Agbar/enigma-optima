@@ -292,21 +292,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../banner.h" />
-		<Unit filename="../cipher.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../cipher.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
-		<Unit filename="../cipher_inlines.h" />
 		<Unit filename="../config/releaseVersion.cpp" />
 		<Unit filename="../config/releaseVersion.h" />
 		<Unit filename="../date.c">
@@ -513,18 +498,6 @@
 			<Option target="Release Windows x86" />
 			<Option target="Release Linux x64" />
 		</Unit>
-		<Unit filename="../x86/cipherAvx2.c">
-			<Option compilerVar="CC" />
-			<Option compiler="gcc" use="1" buildCommand="$compiler $options -mavx2 $includes -c $file -o $object" />
-		</Unit>
-		<Unit filename="../x86/cipherAvx2.h" />
-		<Unit filename="../x86/cipherAvx2_inlines.h" />
-		<Unit filename="../x86/cipherSsse3.c">
-			<Option compilerVar="CC" />
-			<Option compiler="gcc" use="1" buildCommand="$compiler $options -mssse3 $includes -c $file -o $object" />
-		</Unit>
-		<Unit filename="../x86/cipherSsse3.h" />
-		<Unit filename="../x86/cipherSsse3_inlines.h" />
 		<Unit filename="../x86/scoreAvx.c">
 			<Option compilerVar="CC" />
 			<Option compiler="gcc" use="1" buildCommand="$compiler $options -mavx $includes -c $file -o $object" />

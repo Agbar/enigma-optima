@@ -5,10 +5,10 @@
 #endif
 
 #include "dict.h"
-#include "../ciphertext.h"
+#include "ciphertext.h"
 #include "scoreSsse3.h"
-#include "cipherSsse3.h"
-#include "cipherSsse3_inlines.h"
+#include "x86/cipherSsse3.h"
+#include "x86/cipherSsse3_inlines.h"
 #include "../score_inlines.h"
 
 // SSSE3 scores

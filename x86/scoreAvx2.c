@@ -5,12 +5,12 @@
 #endif
 
 #include "dict.h"
-#include "../ciphertext.h"
+#include "ciphertext.h"
 #include "scoreAvx2.h"
-#include "cipherAvx2.h"
-#include "cipherAvx2_inlines.h"
+#include "x86/cipherAvx2.h"
+#include "x86/cipherAvx2_inlines.h"
 #include "../score_inlines.h"
-#include "cipherSsse3_inlines.h"
+#include "x86/cipherSsse3_inlines.h"
 
 // SSSE3 scores
 static double icscoreAvx2( const Key* const restrict key, scoreLength_t len );
