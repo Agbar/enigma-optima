@@ -10,7 +10,7 @@
 
 #include "Os.h"
 #include "config/testing.h"
-#include "../error.h"
+#include "error.h"
 
 // objects
 struct sigaction sigact;

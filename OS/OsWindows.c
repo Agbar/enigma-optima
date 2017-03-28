@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include "Os.h"
-#include "..\error.h"
+#include "error.h"
 #include "config\testing.h"
 
 volatile sig_atomic_t doShutdown;
