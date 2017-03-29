@@ -18,9 +18,6 @@ struct PathLookupAvx2_t
     v32qi firstRRingOffset;
 };
 
-/// Last message decoded by AVX2 path.
-extern union ScoringDecodedMessage decodedMsgPartAvx2;
-
 extern struct PathLookupAvx2_t PathLookupAvx2;
 
 extern enigma_cipher_function_t enigma_cipher_DecoderLookupAvx2;
