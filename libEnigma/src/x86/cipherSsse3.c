@@ -35,6 +35,11 @@ struct PathLookupSsse3_t PathLookupSsse3;
 
 typedef void CalculatePermutationMap_f( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
 
+void CalculateLookup( int lookupNumber, struct RingsState rings, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap );
+void CalculateMask( size_t lookupNumber, int8_t begin, int8_t end );
+void CalculateRRingOffets( int8_t rOffsetAtFirst );
+void PrintLookup( FILE* file, v32qi vec, const char* const restrict name );
+
 void CalculateRRingOffets( int8_t rOffsetAtFirst ) {
     int k;
     // calculate offsets used for cyclic permutation

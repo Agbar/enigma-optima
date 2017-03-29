@@ -31,6 +31,10 @@ struct PathLookupAvx2_t PathLookupAvx2;
 
 typedef void CalculatePermutationMap_f( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
 
+void CalculateLookupAvx2( int lookupNumber, struct RingsState rings, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap );
+void CalculateMaskAvx2( size_t lookupNumber, int8_t begin, int8_t end );
+void CalculateRRingOffetsAvx2( int8_t rOffsetAtFirst );
+
 void CalculateRRingOffetsAvx2( int8_t rOffsetAtFirst ) {
     int k;
     // calculate offsets used for cyclic permutation
