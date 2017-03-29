@@ -14,6 +14,7 @@
 
 void init_path_lookup_H_M3(const Key *key, int len);
 void init_path_lookup_ALL(const Key *key, int len);
+void enigma_prepare_decoder_lookups(const Key* key, int len);
 
 extern inline
 text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett);
