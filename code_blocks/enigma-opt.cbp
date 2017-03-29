@@ -416,74 +416,6 @@
 		<Unit filename="../scan_int.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../score.c">
-			<Option compilerVar="CC" />
-			<Option compiler="gcc" use="0" buildCommand="$compiler -E $includes -c $file -o $objects_output_dir\$file_name.c.i \n" />
-		</Unit>
-		<Unit filename="../score.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
-		<Unit filename="../scoreBasic.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../scoreBasic.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
-		<Unit filename="../scoreNoInterleave.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../scoreNoInterleave.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
-		<Unit filename="../scoreSimple.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../scoreSimple.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
-		<Unit filename="../score_inlines.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
 		<Unit filename="../stecker.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -498,21 +430,6 @@
 			<Option target="Release Windows x86" />
 			<Option target="Release Linux x64" />
 		</Unit>
-		<Unit filename="../x86/scoreAvx.c">
-			<Option compilerVar="CC" />
-			<Option compiler="gcc" use="1" buildCommand="$compiler $options -mavx $includes -c $file -o $object" />
-		</Unit>
-		<Unit filename="../x86/scoreAvx.h" />
-		<Unit filename="../x86/scoreAvx2.c">
-			<Option compilerVar="CC" />
-			<Option compiler="gcc" use="1" buildCommand="$compiler $options -mavx2 $includes -c $file -o $object" />
-		</Unit>
-		<Unit filename="../x86/scoreAvx2.h" />
-		<Unit filename="../x86/scoreSsse3.c">
-			<Option compilerVar="CC" />
-			<Option compiler="gcc" use="1" buildCommand="$compiler -mssse3 $options $includes -c $file -o $object" />
-		</Unit>
-		<Unit filename="../x86/scoreSsse3.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

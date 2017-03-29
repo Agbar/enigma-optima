@@ -108,10 +108,17 @@
 		<Unit filename="../../libEnigma/include/global.h" />
 		<Unit filename="../../libEnigma/include/key.h" />
 		<Unit filename="../../libEnigma/include/score.h" />
+		<Unit filename="../../libEnigma/include/scoreBasic.h" />
+		<Unit filename="../../libEnigma/include/scoreNoInterleave.h" />
+		<Unit filename="../../libEnigma/include/scoreSimple.h" />
+		<Unit filename="../../libEnigma/include/score_inlines.h" />
 		<Unit filename="../../libEnigma/include/x86/cipherAvx2.h" />
 		<Unit filename="../../libEnigma/include/x86/cipherAvx2_inlines.h" />
 		<Unit filename="../../libEnigma/include/x86/cipherSsse3.h" />
 		<Unit filename="../../libEnigma/include/x86/cipherSsse3_inlines.h" />
+		<Unit filename="../../libEnigma/include/x86/scoreAvx.h" />
+		<Unit filename="../../libEnigma/include/x86/scoreAvx2.h" />
+		<Unit filename="../../libEnigma/include/x86/scoreSsse3.h" />
 		<Unit filename="../../libEnigma/src/ModMath.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -133,10 +140,31 @@
 		<Unit filename="../../libEnigma/src/key.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../libEnigma/src/score.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/scoreBasic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/scoreNoInterleave.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/scoreSimple.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../libEnigma/src/x86/cipherAvx2.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/x86/cipherSsse3.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/x86/scoreAvx.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/x86/scoreAvx2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/x86/scoreSsse3.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
