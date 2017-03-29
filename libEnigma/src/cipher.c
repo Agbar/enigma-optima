@@ -15,7 +15,8 @@
 void init_path_lookup_H_M3(const Key *key, int len);
 void init_path_lookup_ALL(const Key *key, int len);
 
-extern text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett);
+extern inline
+text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett);
 
 /* Eintrittswalze */
 text_t etw[52] =
@@ -593,14 +594,14 @@ double dgetic_ALL(const Key *key, int len)
 
 }
 
-extern void Step1( int8_t* ringOffset );
+extern inline void Step1( int8_t* ringOffset );
 
-extern void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
-extern void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
+extern inline void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
+extern inline void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
 
-extern void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2] );
-extern void StepAllRings( struct RingsState* const restrict rings, const struct Turnovers_t turns );
-extern int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns );
+extern inline void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2] );
+extern inline void StepAllRings( struct RingsState* const restrict rings, const struct Turnovers_t turns );
+extern inline int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns );
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
