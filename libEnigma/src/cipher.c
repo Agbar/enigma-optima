@@ -155,12 +155,6 @@ text_t path_lookup[CT][LAST_DIMENSION];
 
 enigma_cipher_function_t enigma_cipher_decoder_lookup = {init_path_lookup_H_M3, init_path_lookup_ALL};
 
-void enigma_cipher_funcion_copy(enigma_cipher_function_t* to, const enigma_cipher_function_t* prototype)
-{
-    to->prepare_decoder_lookup_M_H3 = prototype->prepare_decoder_lookup_M_H3;
-    to->prepare_decoder_lookup_ALL  = prototype->prepare_decoder_lookup_ALL;
-}
-
 enigma_prepare_decoder_lookup_function_pt enigma_cipher_decoder_lookups_list[4];
 
 void enigma_prepare_decoder_lookups(const Key* key, int len)
