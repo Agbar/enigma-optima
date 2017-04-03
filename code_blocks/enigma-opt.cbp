@@ -356,10 +356,6 @@
 			<Option target="Release Windows x86" />
 			<Option target="Release Linux x64" />
 		</Unit>
-		<Unit filename="../randomNumbers.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../randomNumbers.h" />
 		<Unit filename="../result.c">
 			<Option compilerVar="CC" />
 		</Unit>

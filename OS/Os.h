@@ -9,6 +9,4 @@ void SetupProcessProperties( void ) ;
 
 void InstallSighandler( void );
 
-unsigned int GetRSeed( void );
-
 #endif

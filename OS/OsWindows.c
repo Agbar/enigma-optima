@@ -3,9 +3,6 @@
  *  Compile and link this module only for Windows platform.
  */
 
- // enable rand_s function
-#define _CRT_RAND_S
-
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -44,17 +41,5 @@ void InstallSighandler( void ) {
     }
     if( signal( SIGTERM, handle_signal ) == SIG_ERR ) {
         err_sigaction_fatal( SIGTERM );
-    }
-}
-
-unsigned int GetRSeed( void ) {
-    uint32_t randomValue;
-    errno_t isError = rand_s( &randomValue );
-    if( !isError ) {
-        return randomValue;
-    }
-    else {
-        fputs("enigma: error: Random seed generation failed\n", stderr);
-        exit( isError );
     }
 }

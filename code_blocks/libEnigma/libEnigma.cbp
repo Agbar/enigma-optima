@@ -107,6 +107,7 @@
 		<Unit filename="../../libEnigma/include/error.h" />
 		<Unit filename="../../libEnigma/include/global.h" />
 		<Unit filename="../../libEnigma/include/key.h" />
+		<Unit filename="../../libEnigma/include/randomNumbers.h" />
 		<Unit filename="../../libEnigma/include/score.h" />
 		<Unit filename="../../libEnigma/include/scoreBasic.h" />
 		<Unit filename="../../libEnigma/include/scoreNoInterleave.h" />
@@ -138,6 +139,15 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/key.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/randomNumbers.Linux.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/randomNumbers.Windows.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/randomNumbers.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/score.c">
