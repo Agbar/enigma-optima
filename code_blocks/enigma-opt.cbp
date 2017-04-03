@@ -62,6 +62,7 @@
 				<Linker>
 					<Add option="-m64" />
 					<Add option="-O3" />
+					<Add directory="libEnigma/bin/Release/x64" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseConstSeed">
