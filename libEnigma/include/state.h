@@ -1,5 +1,4 @@
-#ifndef STATE_H
-#define STATE_H
+#pragma once
 
 #include "config/types.h"
 
@@ -14,9 +13,6 @@ typedef struct {
   int *max_score;
   text_t *ciphertext;
 } State;
-
-#endif
-
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
