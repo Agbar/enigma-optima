@@ -1,8 +1,6 @@
 #ifndef STECKER_H
 #define STECKER_H
 
-#include <stdint.h>
-
 #include "key.h"
 #include "config/types.h"
 

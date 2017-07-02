@@ -1,14 +1,7 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
+#include "stecker.h"
 
 #include "ciphertext.h"
-#include "global.h"
-#include "key.h"
-#include "stecker.h"
 #include "randomNumbers.h"
-#include "config/types.h"
-
 
 // extern definition for external linkage.
 extern inline void SwapStbrett(Key* const key, int i, int k);
@@ -28,7 +21,6 @@ void get_stecker(Key *key)
       key->sf[k--] = i;
     }
   }
-
 }
 
 /* get new order for testing stecker */
@@ -44,7 +36,6 @@ void rand_var(text_t var[])
     var[count] = var[i];
     var[i] = store;
   }
-
 }
 
 /* arrange var[] in order of frequency of letters in ciphertext */
@@ -72,7 +63,6 @@ void set_to_ct_freq(text_t var[], int len)
     f[pos] = -1;
     var[n++] = pos;
   }
-
 }
 
 
