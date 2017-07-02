@@ -1,5 +1,4 @@
-#ifndef STECKER_H
-#define STECKER_H
+#pragma once
 
 #include "key.h"
 #include "config/types.h"
@@ -21,9 +20,6 @@ void SwapStbrett(Key* const key, int i, int k) {
   key->stbrett.letters[i] = key->stbrett.letters[k];
   key->stbrett.letters[k] = store;
 }
-
-#endif
-
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
