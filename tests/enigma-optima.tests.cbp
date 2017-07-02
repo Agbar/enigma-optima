@@ -22,9 +22,10 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-m64" />
 				</Compiler>
 				<Linker>
-					<Add option="-s" />
+					<Add option="-m64" />
 					<Add library="../code_blocks/obj/ReleaseWin64/OS/OsWindows.o" />
 					<Add library="../code_blocks/obj/ReleaseWin64/error.o" />
 					<Add library="../code_blocks/obj/ReleaseWin64/date.o" />
@@ -43,7 +44,6 @@
 					<Add option="-m32" />
 				</Compiler>
 				<Linker>
-					<Add option="-s" />
 					<Add option="-m32" />
 					<Add library="../code_blocks/obj/ReleaseWin32/OS/OsWindows.o" />
 					<Add library="../code_blocks/obj/ReleaseWin32/error.o" />
@@ -57,12 +57,11 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
-			<Add option="-m64" />
+			<Add option="-g" />
 			<Add option="-fexceptions" />
 			<Add directory="$(#gtest.include)" />
 		</Compiler>
 		<Linker>
-			<Add option="-m64" />
 			<Add library="libgtest" />
 			<Add directory="$(gtest_lib)" />
 		</Linker>
