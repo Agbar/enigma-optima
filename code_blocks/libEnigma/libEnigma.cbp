@@ -114,6 +114,7 @@
 		<Unit filename="../../libEnigma/include/scoreNoInterleave.h" />
 		<Unit filename="../../libEnigma/include/scoreSimple.h" />
 		<Unit filename="../../libEnigma/include/score_inlines.h" />
+		<Unit filename="../../libEnigma/include/state.h" />
 		<Unit filename="../../libEnigma/include/stecker.h" />
 		<Unit filename="../../libEnigma/include/x86/cipherAvx2.h" />
 		<Unit filename="../../libEnigma/include/x86/cipherAvx2_inlines.h" />
