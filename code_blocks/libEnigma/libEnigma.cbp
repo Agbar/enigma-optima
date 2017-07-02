@@ -113,6 +113,7 @@
 		<Unit filename="../../libEnigma/include/scoreNoInterleave.h" />
 		<Unit filename="../../libEnigma/include/scoreSimple.h" />
 		<Unit filename="../../libEnigma/include/score_inlines.h" />
+		<Unit filename="../../libEnigma/include/stecker.h" />
 		<Unit filename="../../libEnigma/include/x86/cipherAvx2.h" />
 		<Unit filename="../../libEnigma/include/x86/cipherAvx2_inlines.h" />
 		<Unit filename="../../libEnigma/include/x86/cipherSsse3.h" />
@@ -160,6 +161,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/scoreSimple.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/stecker.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/x86/cipherAvx2.c">
