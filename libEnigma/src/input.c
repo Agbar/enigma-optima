@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+
 #include "charmap.h"
 #include "error.h"
 #include "global.h"
-#include "key.h"
-#include "stecker.h"
 #include "input.h"
+#include "stecker.h"
 
 /** \brief Determine model.
  */
