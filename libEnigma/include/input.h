@@ -1,5 +1,4 @@
-#ifndef INPUT_H
-#define INPUT_H
+#pragma once
 
 #include "key.h"
 
@@ -16,8 +15,6 @@ PURE_FUNCTION
 int get_firstpass(char *s);
 int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust);
 int set_range(Key *from, Key *to, const char *kf, const char *kt, enum ModelType_t model);
-
-#endif
 
 
 /*
