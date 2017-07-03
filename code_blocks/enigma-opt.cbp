@@ -343,20 +343,6 @@
 			<Option target="Release Windows x86" />
 			<Option target="Release Linux x64" />
 		</Unit>
-		<Unit filename="../input.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../input.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
 		<Unit filename="../result.c">
 			<Option compilerVar="CC" />
 		</Unit>
