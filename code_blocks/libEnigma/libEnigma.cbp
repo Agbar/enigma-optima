@@ -109,6 +109,7 @@
 		<Unit filename="../../libEnigma/include/input.h" />
 		<Unit filename="../../libEnigma/include/key.h" />
 		<Unit filename="../../libEnigma/include/randomNumbers.h" />
+		<Unit filename="../../libEnigma/include/resume_out.h" />
 		<Unit filename="../../libEnigma/include/scan.h" />
 		<Unit filename="../../libEnigma/include/score.h" />
 		<Unit filename="../../libEnigma/include/scoreBasic.h" />
@@ -155,6 +156,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/randomNumbers.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/resume_out.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/scan.c">
