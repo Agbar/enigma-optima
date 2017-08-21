@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <windows.h>
-#include "Os.h"
+#include "OS\Os.h"
 #include "error.h"
 #include "config\testing.h"
 
