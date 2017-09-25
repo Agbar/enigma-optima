@@ -6,17 +6,21 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
-				<Option output="bin/Debug/enigma-optima" prefix_auto="1" extension_auto="1" />
+			<Target title="Debug x64">
+				<Option output="bin/Debug/enigma-optima.tests" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add directory="../code_blocks/libEnigma/bin/Debug/x64" />
+					<Add directory="$(#gtest.lib)" />
+				</Linker>
 			</Target>
 			<Target title="Release Windows x64">
-				<Option output="bin/ReleaseWin64/enigma-optima" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/ReleaseWin64/enigma-optima.tests" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/ReleaseWin64/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -25,16 +29,12 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="../code_blocks/obj/ReleaseWin64/OS/OsWindows.o" />
-					<Add library="../code_blocks/obj/ReleaseWin64/error.o" />
-					<Add library="../code_blocks/obj/ReleaseWin64/date.o" />
+					<Add directory="../code_blocks/libEnigma/bin/Release/x64" />
+					<Add directory="$(#gtest.lib)" />
 				</Linker>
-				<Environment>
-					<Variable name="gtest_lib" value="$(#gtest.lib)" />
-				</Environment>
 			</Target>
 			<Target title="Release Windows x86">
-				<Option output="bin/ReleaseWin32/enigma-optima" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/ReleaseWin32/enigma-optima.tests" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/ReleaseWin32/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -45,13 +45,9 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="-m32" />
-					<Add library="../code_blocks/obj/ReleaseWin32/OS/OsWindows.o" />
-					<Add library="../code_blocks/obj/ReleaseWin32/error.o" />
-					<Add library="../code_blocks/obj/ReleaseWin32/date.o" />
+					<Add directory="../code_blocks/libEnigma/bin/Release/x86" />
+					<Add directory="$(#gtest.lib32)" />
 				</Linker>
-				<Environment>
-					<Variable name="gtest_lib" value="$(#gtest)lib32" />
-				</Environment>
 			</Target>
 		</Build>
 		<Compiler>
@@ -65,7 +61,7 @@
 		<Linker>
 			<Add option="-m64" />
 			<Add library="libgtest" />
-			<Add directory="$(gtest_lib)" />
+			<Add library="libEnigma" />
 		</Linker>
 		<Unit filename="GetRSeed.tests.cpp" />
 		<Unit filename="cipher.tests.cpp" />
