@@ -65,25 +65,7 @@
 					<Add directory="libEnigma/bin/Release/x64" />
 				</Linker>
 			</Target>
-			<Target title="ReleaseConstSeed">
-				<Option output="bin/ReleaseConstSeed/enigma-optima" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/ReleaseConstSeed/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option parameters='-M M3 -c -o bench-result.txt -f &quot;B:532:AA:AAA&quot; -t &quot;B:532:AH:ZZZ&quot; 00trigr.cur 00bigr.cur benchmark_cipher' />
-				<Compiler>
-					<Add option="-O3" />
-					<Add option="-Wextra" />
-					<Add option="-Wall" />
-					<Add option="-DCONSTANT_SEED" />
-					<Add option="-DNDEBUG" />
-				</Compiler>
-				<Linker>
-					<Add option="-O3" />
-					<Add option="-mtune=corei7" />
-				</Linker>
-			</Target>
-			<Target title="Debug">
+			<Target title="Debug x64">
 				<Option output="bin/Debug/enigma-optima" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin/Debug/" />
 				<Option object_output="obj/Debug/" />
@@ -95,141 +77,9 @@
 					<Add option="-DDEBUG" />
 					<Add option="-DTESTING" />
 				</Compiler>
-			</Target>
-			<Target title="Profiling">
-				<Option output="bin/Profiling/enigma-optima" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin/Profiling/" />
-				<Option object_output="obj/Profiling/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option parameters='-M M3 -c -o bench-result.txt -f &quot;B:532:AA:AAA&quot; -t &quot;B:532:AH:ZZZ&quot; 00trigr.cur 00bigr.cur benchmark_cipher' />
-				<Compiler>
-					<Add option="-O3" />
-					<Add option="-Weffc++" />
-					<Add option="-Wextra" />
-					<Add option="-Wall" />
-					<Add option="-pg" />
-					<Add option="-save-temps" />
-					<Add option="-fopt-info-all=opt_info.log" />
-					<Add option="-mtune=corei7" />
-					<Add option="-fno-builtin-memcpy" />
-					<Add option="-fverbose-asm" />
-					<Add option="-Wsuggest-attribute=pure" />
-					<Add option="-Wsuggest-attribute=const" />
-					<Add option="-Wsuggest-attribute=noreturn" />
-					<Add option="-DPROFILING" />
-					<Add option="-DNDEBUG" />
-				</Compiler>
 				<Linker>
-					<Add option="-pg -lgmon" />
-					<Add option="-O3" />
-					<Add option="-mtune=corei7" />
-					<Add library="libwinmm" />
+					<Add directory="libEnigma/bin/Debug/x64" />
 				</Linker>
-			</Target>
-			<Target title="Profile-Generate">
-				<Option output="bin/Profile/enigma-optima" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin/Profile/" />
-				<Option object_output="obj/Profile/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option parameters='-M M3 -c -o bench-result.txt -f &quot;B:532:AA:AAA&quot; -t &quot;B:532:AH:ZZZ&quot; 00trigr.cur 00bigr.cur benchmark_cipher' />
-				<Compiler>
-					<Add option="-O3" />
-					<Add option="-Weffc++" />
-					<Add option="-Wextra" />
-					<Add option="-Wall" />
-					<Add option="-pg" />
-					<Add option="-save-temps" />
-					<Add option="-fopt-info-all=opt_info.log" />
-					<Add option="-mtune=corei7" />
-					<Add option="-fno-builtin-memcpy" />
-					<Add option="-fverbose-asm" />
-					<Add option="-fprofile-generate" />
-					<Add option="-DPROFILING" />
-					<Add option="-DENIGMA_CPU_SPECIFIC=enigma_cpu_ssse3" />
-					<Add option="-DNDEBUG" />
-				</Compiler>
-				<Linker>
-					<Add option="-pg -lgmon" />
-					<Add option="-O3" />
-					<Add option="-mtune=corei7" />
-					<Add option="-fprofile-generate" />
-					<Add library="libwinmm" />
-				</Linker>
-			</Target>
-			<Target title="Profile-Use">
-				<Option output="bin/Profile/enigma-optima" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin/Profile/" />
-				<Option object_output="obj/Profile/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option parameters='-M M3 -c -o bench-result.txt -f &quot;B:532:AA:AAA&quot; -t &quot;B:532:AH:ZZZ&quot; 00trigr.cur 00bigr.cur benchmark_cipher' />
-				<Compiler>
-					<Add option="-O3" />
-					<Add option="-Weffc++" />
-					<Add option="-Wextra" />
-					<Add option="-Wall" />
-					<Add option="-pg" />
-					<Add option="-save-temps" />
-					<Add option="-fopt-info-all=opt_info.log" />
-					<Add option="-mtune=corei7" />
-					<Add option="-fno-builtin-memcpy" />
-					<Add option="-fverbose-asm" />
-					<Add option="-fprofile-use" />
-					<Add option="-DPROFILING" />
-					<Add option="-DENIGMA_CPU_SPECIFIC=enigma_cpu_ssse3" />
-					<Add option="-DNDEBUG" />
-				</Compiler>
-				<Linker>
-					<Add option="-pg -lgmon" />
-					<Add option="-O3" />
-					<Add option="-mtune=corei7" />
-					<Add option="-fprofile-use" />
-					<Add library="libwinmm" />
-				</Linker>
-			</Target>
-			<Target title="Coverage">
-				<Option output="bin/Coverage/enigma-optima" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin/Coverage/" />
-				<Option object_output="obj/Coverage/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Compiler>
-					<Add option="-O3" />
-					<Add option="-Wextra" />
-					<Add option="-Wall" />
-					<Add option="-pg" />
-					<Add option="-g" />
-					<Add option="--coverage" />
-					<Add option="-DPROFILING" />
-				</Compiler>
-				<Linker>
-					<Add option="-pg -lgmon" />
-					<Add option="-O3" />
-					<Add option="-march=i686" />
-					<Add option="-mtune=corei7" />
-					<Add option="--coverage" />
-				</Linker>
-			</Target>
-			<Target title="ListDefines">
-				<Option output="pre/ListDefines/enigma-optima" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="pre/ListDefines/" />
-				<Option object_output="pre/ListDefines/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option projectCompilerOptionsRelation="-1" />
-				<Option projectLinkerOptionsRelation="-1" />
-				<Option projectIncludeDirsRelation="-1" />
-				<Option projectLibDirsRelation="-1" />
-				<MakeCommands>
-					<Build command="" />
-					<CompileFile command="" />
-					<Clean command="" />
-					<DistClean command="" />
-					<AskRebuildNeeded command="" />
-					<SilentBuild command=" &gt; $(CMD_NULL)" />
-				</MakeCommands>
 			</Target>
 		</Build>
 		<VirtualTargets>
@@ -259,24 +109,17 @@
 		</Compiler>
 		<Linker>
 			<Add option="-static" />
-			<Add library="libEnigma.a" />
+			<Add library="libEnigma" />
 		</Linker>
 		<Unit filename="../OS/OsDefault.c">
 			<Option compilerVar="CC" />
-			<Option target="ListDefines" />
 			<Option target="Release Linux x64" />
 		</Unit>
 		<Unit filename="../OS/OsWindows.c">
 			<Option compilerVar="CC" />
 			<Option target="Release Windows x64" />
 			<Option target="Release Windows x86" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Debug" />
-			<Option target="Profiling" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Coverage" />
-			<Option target="ListDefines" />
+			<Option target="Debug x64" />
 		</Unit>
 		<Unit filename="../banner.c">
 			<Option compilerVar="CC" />
@@ -287,17 +130,7 @@
 		<Unit filename="../display.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../display.h">
-			<Option target="Release Windows x64" />
-			<Option target="ReleaseConstSeed" />
-			<Option target="Profiling" />
-			<Option target="Coverage" />
-			<Option target="Debug" />
-			<Option target="Profile-Generate" />
-			<Option target="Profile-Use" />
-			<Option target="Release Windows x86" />
-			<Option target="Release Linux x64" />
-		</Unit>
+		<Unit filename="../display.h" />
 		<Unit filename="../enigma.c">
 			<Option compilerVar="CC" />
 		</Unit>
