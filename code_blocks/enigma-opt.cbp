@@ -114,6 +114,7 @@
 		<Unit filename="../OS/OsDefault.c">
 			<Option compilerVar="CC" />
 			<Option target="Release Linux x64" />
+			<Option target="Debug x64" />
 		</Unit>
 		<Unit filename="../OS/OsWindows.c">
 			<Option compilerVar="CC" />

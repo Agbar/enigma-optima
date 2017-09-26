@@ -3,6 +3,8 @@
  *  Compile and link this module only for Windows platform.
  */
 
+ #if defined(_WIN32)
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -43,3 +45,5 @@ void InstallSighandler( void ) {
         err_sigaction_fatal( SIGTERM );
     }
 }
+
+#endif

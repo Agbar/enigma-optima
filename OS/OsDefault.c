@@ -2,6 +2,8 @@
  * \brief This file implements OS related stuff for systems other than Windows.
  */
 
+ #if defined(__linux__)
+
 #include <signal.h>
 #include <stdio.h>
 
@@ -32,3 +34,5 @@ void InstallSighandler( void ) {
         err_sigaction_fatal( SIGTERM );
     }
 }
+
+#endif
