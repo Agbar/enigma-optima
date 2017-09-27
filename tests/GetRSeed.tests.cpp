@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 extern "C" {
-    #include "../OS/Os.h"
+    #include "randomNumbers.h"
 }
 
 // There is tiny tiny chance that this test will fail. However chances should

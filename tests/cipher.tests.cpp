@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../cipher.h"
+#include "cipher.h"
 
 TEST( Step1Test , Changes_N_into_N_plus_1 )
 {
@@ -19,7 +19,7 @@ TEST ( Step1Test, Changes_25_into_0 )
     EXPECT_EQ( 0, state );
 }
 
-#include "../cipher_inlines.h"
+#include "cipher_inlines.h"
 
 void ExpectRings( RingsState rings, int8_t r, int8_t m, int8_t l )
 {

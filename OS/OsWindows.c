@@ -3,16 +3,15 @@
  *  Compile and link this module only for Windows platform.
  */
 
- // enable rand_s function
-#define _CRT_RAND_S
+ #if defined(_WIN32)
 
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <windows.h>
-#include "Os.h"
-#include "..\error.h"
-#include "..\config\testing.h"
+#include "OS\Os.h"
+#include "error.h"
+#include "config\testing.h"
 
 volatile sig_atomic_t doShutdown;
 
@@ -47,14 +46,4 @@ void InstallSighandler( void ) {
     }
 }
 
-unsigned int GetRSeed( void ) {
-    uint32_t randomValue;
-    errno_t isError = rand_s( &randomValue );
-    if( !isError ) {
-        return randomValue;
-    }
-    else {
-        fputs("enigma: error: Random seed generation failed\n", stderr);
-        exit( isError );
-    }
-}
+#endif
