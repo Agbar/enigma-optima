@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <ctype.h>
-#include <unistd.h>
 #include "charmap.h"
 #include "global.h"
 #include "key.h"
@@ -12,7 +11,7 @@ void print_state(FILE *fp, const State *state)
 {
   char stecker[27];
   int i;
-  int ofd;
+//  int ofd;
 
   const Key *from = state->from;
   const Key *to = state->to;
@@ -25,7 +24,7 @@ void print_state(FILE *fp, const State *state)
 
 
   /* general state */
-  if (from->model == H) fprintf(fp, "H=");
+  if (from->model == H_) fprintf(fp, "H=");
   else if (from->model == M3) fprintf(fp, "M3=");
   else if (from->model== M4) fprintf(fp, "M4=");
  
@@ -75,7 +74,7 @@ void print_state(FILE *fp, const State *state)
 
 
   /* global key */
-  if (from->model == H) fprintf(fp, "H=");
+  if (from->model == H_) fprintf(fp, "H=");
   else if (from->model == M3) fprintf(fp, "M3=");
   else if (from->model== M4) fprintf(fp, "M4=");
 

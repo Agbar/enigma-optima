@@ -3,7 +3,7 @@
 
 #define WINDOWS 
 
-#define H 0
+#define H_ 0
 #define M3 1
 #define M4 2
 

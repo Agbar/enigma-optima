@@ -5,7 +5,7 @@
 #include <time.h>
 #include "cipher.h"
 #include "global.h"
-#include "hillclimb.h"
+#include "hillclimb2.h"
 #include "ic.h"
 #include "key.h"
 
@@ -18,7 +18,7 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
   Key gkey;
   Key lo;
   int hi[3][12] = {
-    {H, 2,0,5,5,5,25,25,0,25,25,25},
+    {H_, 2,0,5,5,5,25,25,0,25,25,25},
     {M3,2,0,8,8,8,25,25,0,25,25,25},
     {M4,4,10,8,8,8,25,25,25,25,25,25}
   };
@@ -89,7 +89,7 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
   /* try to recover stecker of the best key (gkey) */
   clen = (len < CT) ? len : CT;
-  hillclimb( &gkey, &gkey, ckey_res, gkey_res, sw_mode, max_pass, firstpass,
+  hillclimb2( &gkey, &gkey, ckey_res, gkey_res, sw_mode, max_pass, firstpass,
              max_score, resume, outfile, act_on_sig, ciphertext, clen );
 
 }
@@ -103,7 +103,7 @@ void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key 
   Key gkey;
   Key lo;
   int hi[3][12] = {
-    {H, 2,0,5,5,5,25,25,0,25,25,25},
+    {H_, 2,0,5,5,5,25,25,0,25,25,25},
     {M3,2,0,8,8,8,25,25,0,25,25,25},
     {M4,4,10,8,8,8,25,25,25,25,25,25}
   };
@@ -160,7 +160,7 @@ void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key 
   /* try to recover stecker of the best key (gkey) */
   HILLCLIMB:
   clen = (len < CT) ? len : CT;
-  hillclimb( &gkey, &gkey, ckey_res, gkey_res, sw_mode, max_pass, firstpass,
+  hillclimb2( &gkey, &gkey, ckey_res, gkey_res, sw_mode, max_pass, firstpass,
              max_score, resume, outfile, act_on_sig, ciphertext, clen );
 
 }

@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include <sys/time.h>
 #include <signal.h>
 #include "cipher.h"
 #include "dict.h"
@@ -21,6 +20,7 @@
 #include <windows.h>
 #endif
 
+Key recovered_key;
 
 extern int tridict[][26][26];
 extern int path_lookup[][26];
@@ -98,7 +98,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
   Key gkey;
   Key lo;
   int hi[3][12] = {
-    {H, 2,0,5,5,5,25,25,0,25,25,25},
+    {H_, 2,0,5,5,5,25,25,0,25,25,25},
     {M3,2,0,8,8,8,25,25,0,25,25,25},
     {M4,4,10,8,8,8,25,25,25,25,25,25}
   };
@@ -220,7 +220,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
                /* initialize path_lookup */
                switch (m) {
-                 case H: case M3:
+                 case H_: case M3:
                    init_path_lookup_H_M3(&ckey, len);
                    break;
                  case M4:
@@ -786,6 +786,9 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
   }
 
   FINISHED:
+  get_stecker(&gkey);
+  recovered_key = gkey;
+  
   if (resume)
     hillclimb_log("enigma: finished range");
   if (act_on_sig)

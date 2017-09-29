@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include <unistd.h>
 #include <limits.h>
 #include "charmap.h"
 #include "date.h"
@@ -13,6 +12,7 @@
 
 extern int path_lookup[][26];
 
+#define PATH_MAX 255
 
 FILE *open_outfile(char *s)
 {
@@ -28,7 +28,7 @@ void print_plaintext(FILE *fp, const int *stbrett, const int *ciphertext, int le
 {
   int i;
   int c;
-  int ofd;
+//  int ofd;
 
   for (i = 0; i < len; i++) {
     c = stbrett[ciphertext[i]];
@@ -52,7 +52,7 @@ void print_key(FILE *fp, const Key *key)
   char date[DATELEN];
   char stecker[27];
   int i;
-  int ofd;
+//  int ofd;
 
   datestring(date);
   fprintf(fp, "Date: %s\n", date);

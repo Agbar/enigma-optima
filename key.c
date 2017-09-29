@@ -5,14 +5,14 @@
 /* initialize key to defaults */
 int init_key_default(Key *key, int model)
 {
-  Key def_H  = {H, 1,0,1,2,3,0,0,0,0,0,0,0,0,{0},{0},0,0};
+  Key def_H  = {H_, 1,0,1,2,3,0,0,0,0,0,0,0,0,{0},{0},0,0};
   Key def_M3 = {M3,1,0,1,2,3,0,0,0,0,0,0,0,0,{0},{0},0,0};
   Key def_M4 = {M4,3,9,1,2,3,0,0,0,0,0,0,0,0,{0},{0},0,0};
 
   int i;
 
   switch (model) {
-    case H : *key = def_H; break;
+    case H_ : *key = def_H; break;
     case M3: *key = def_M3; break;
     case M4: *key = def_M4; break;
     default: return 0;
@@ -28,7 +28,7 @@ int init_key_default(Key *key, int model)
 /* initializes each key element to the lowest possible value */
 int init_key_low(Key *key, int model)
 {
-    Key low_H  = {H, 0,0,1,1,1,0,0,0,0,0,0,0,0,{0},{0},0,0};
+    Key low_H  = {H_, 0,0,1,1,1,0,0,0,0,0,0,0,0,{0},{0},0,0};
     Key low_M3 = {M3,1,0,1,1,1,0,0,0,0,0,0,0,0,{0},{0},0,0};
     Key low_M4 = {M4,3,9,1,1,1,0,0,0,0,0,0,0,0,{0},{0},0,0};
 
@@ -36,7 +36,7 @@ int init_key_low(Key *key, int model)
 
 
     switch (model) {
-      case H : *key = low_H; break;
+      case H_ : *key = low_H; break;
       case M3: *key = low_M3; break;
       case M4: *key = low_M4; break;
       default: return 0;

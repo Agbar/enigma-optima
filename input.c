@@ -13,7 +13,7 @@
 int get_model(char *s)
 {
   if (strcmp(s, "H") == 0 || strcmp(s, "h") == 0)
-    return H;
+    return H_;
   if (strcmp(s, "M3") == 0 || strcmp(s, "m3") == 0)
     return M3;
   if (strcmp(s, "M4") == 0 || strcmp(s, "m4") == 0)
@@ -27,7 +27,7 @@ int set_ukw(Key *key, char *s, int model)
 {
   if (strcmp(s, "A") == 0 || strcmp(s, "a") == 0) {
     switch (model) {
-      case H: key->ukwnum = 0; break;
+      case H_: key->ukwnum = 0; break;
       default: return 0;
     }
     return 1;
@@ -68,7 +68,7 @@ int set_walze(Key *key, char *s, int model)
   }
   while (*x != '\0') {
     switch (model) {
-      case H: /* digits 1-5, no repetitions */
+      case H_: /* digits 1-5, no repetitions */
         if ( !isdigit((unsigned char)*x) || *x < '1' || *x > '5'
            || strrchr(x, *x) != x )
              return 0;
@@ -156,7 +156,7 @@ int set_mesg(Key *key, char *s, int model)
 /* set steckerbrett */
 int set_stecker(Key *key, char *s)
 {
-  int len;
+  size_t len;
   char *x;
 
   /* max 26 chars, even number */
@@ -224,7 +224,7 @@ int set_key(Key *key, const char *keystring, int model, int adjust)
     if (!init_key_low(key, model)) return 0;
 
     switch (model) {
-      case H: case M3: len = 12; d = 4; break;
+      case H_: case M3: len = 12; d = 4; break;
       case M4: len = 14; d = 5; break;
       default: return 0;
     }

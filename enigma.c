@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <unistd.h>
 #include <limits.h>
 #include "charmap.h"
 #include "cipher.h"
@@ -11,7 +10,7 @@
 #include "display.h"
 #include "error.h"
 #include "global.h"
-#include "hillclimb.h"
+#include "hillclimb2.h"
 #include "ic.h"
 #include "input.h"
 #include "key.h"
@@ -19,6 +18,7 @@
 #include "resume_in.h"
 #include "resume_out.h"
 #include "scan.h"
+#include "getopt.h"
 
 
 int main(int argc, char **argv)
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
   Key key;
   Key from, to, ckey_res, gkey_res;
   int *ciphertext, len, clen;
-  int model = H;
+  int model = H_;
   int opt, first = 1, keyop = 0;
   int hc = 0, ic = 0;
   int sw_mode = SW_ONSTART;
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
   init_charmap();
 
   opterr = 0;
-  while ((opt = getopt(argc, argv, "hvicxaRM:w:r:m:u:s:f:t:k:n:z:o:")) != -1) {
+  while ((opt = getopt(argc, argv, "hvicpxaRM:w:r:m:u:s:f:t:k:n:z:o:")) != -1) {
     switch (opt) {
       case 'h': help(); break;
       case 'v': version(); break;
@@ -68,6 +68,7 @@ int main(int argc, char **argv)
       case 'a': if (sw_mode != SW_ONSTART) usage(); sw_mode = SW_ALL; break;
       case 'R': resume = 1; hc = 1; break;
       case 'n': if ((max_pass = scan_posint(optarg)) == -1) usage(); break;
+	  case 'p': firstpass = 0; break;
       case 'z': if ((max_score = scan_posint(optarg)) == -1) usage(); break;
       case 'o': if (!(outfile = open_outfile(optarg))) usage(); break;
       case 'M': if ((model = get_model(optarg)) == -1 || !first) usage();
@@ -86,7 +87,8 @@ int main(int argc, char **argv)
 
   if (argc-optind != 3) usage();
   load_tridict(argv[optind++]);
-  load_bidict(argv[optind++]);
+  load_unidict(argv[optind++]);
+  //load_bidict(argv[optind++]);
   ciphertext = load_ciphertext(argv[optind], &len, resume);
   if (len < 3) exit(EXIT_FAILURE);
 
@@ -126,7 +128,8 @@ int main(int argc, char **argv)
         sw_mode = SINGLE_KEY;
       }
       else {
-        if (f == NULL) f = fmin[model];
+
+		  if (f == NULL) f = fmin[model];
         if (t == NULL) t = tmax[model];
         if (!set_range(&from, &to, f, t, model)) usage();
       }
@@ -143,7 +146,7 @@ int main(int argc, char **argv)
 
     clen = (len < CT) ? len : CT;
 
-    hillclimb( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
+    hillclimb2( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
                 max_score, resume, outfile, 1, ciphertext, clen );
 
   }
