@@ -4,6 +4,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <signal.h>
+
+#if defined(_WIN32)
+#include <windows.h>
+#endif
+
 #include "cipher.h"
 #include "dict.h"
 #include "error.h"
@@ -15,10 +20,6 @@
 #include "score.h"
 #include "stecker.h"
 #include "state.h"
-
-#ifdef WINDOWS
-#include <windows.h>
-#endif
 
 Key recovered_key;
 
