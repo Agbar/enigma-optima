@@ -244,7 +244,7 @@ double icscore(const int *stbrett, const int *ciphertext, int len)
   S0 += f[24]*(f[24]-1);
   S1 += f[25]*(f[25]-1);
 
-  return (double)((S0 + S1) + (S2 + S3));
+  return (double)((S0+S1) + (S2+S3)) / (len*(len-1));
 }
 
 
