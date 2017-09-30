@@ -21,8 +21,6 @@
 #include "stecker.h"
 #include "state.h"
 
-Key recovered_key;
-
 extern int tridict[][26][26];
 extern int path_lookup[][26];
 #ifndef WINDOWS
@@ -787,9 +785,6 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
   }
 
   FINISHED:
-  get_stecker(&gkey);
-  recovered_key = gkey;
-  
   if (resume)
     hillclimb_log("enigma: finished range");
   if (act_on_sig)
