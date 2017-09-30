@@ -11,7 +11,7 @@
 #include "display.h"
 #include "error.h"
 #include "global.h"
-#include "hillclimb2.h"
+#include "hillclimb.h"
 #include "ic.h"
 #include "input.h"
 #include "key.h"
@@ -85,8 +85,7 @@ int main(int argc, char **argv)
 
   if (argc-optind != 3) usage();
   load_tridict(argv[optind++]);
-  load_unidict(argv[optind++]);
-  //load_bidict(argv[optind++]);
+  load_bidict(argv[optind++]);
   ciphertext = load_ciphertext(argv[optind], &len, resume);
   if (len < 3) exit(EXIT_FAILURE);
 
@@ -127,7 +126,7 @@ int main(int argc, char **argv)
       }
       else {
 
-		  if (f == NULL) f = fmin[model];
+        if (f == NULL) f = fmin[model];
         if (t == NULL) t = tmax[model];
         if (!set_range(&from, &to, f, t, model)) usage();
       }
@@ -144,7 +143,7 @@ int main(int argc, char **argv)
 
     clen = (len < CT) ? len : CT;
 
-    hillclimb2( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
+    hillclimb( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
                 max_score, resume, outfile, 1, ciphertext, clen );
 
   }

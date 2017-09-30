@@ -5,7 +5,7 @@
 #include <time.h>
 #include "cipher.h"
 #include "global.h"
-#include "hillclimb2.h"
+#include "hillclimb.h"
 #include "ic.h"
 #include "key.h"
 
@@ -89,7 +89,7 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
   /* try to recover stecker of the best key (gkey) */
   clen = (len < CT) ? len : CT;
-  hillclimb2( &gkey, &gkey, ckey_res, gkey_res, sw_mode, max_pass, firstpass,
+  hillclimb( &gkey, &gkey, ckey_res, gkey_res, sw_mode, max_pass, firstpass,
              max_score, resume, outfile, act_on_sig, ciphertext, clen );
 
 }
@@ -160,7 +160,7 @@ void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key 
   /* try to recover stecker of the best key (gkey) */
   HILLCLIMB:
   clen = (len < CT) ? len : CT;
-  hillclimb2( &gkey, &gkey, ckey_res, gkey_res, sw_mode, max_pass, firstpass,
+  hillclimb( &gkey, &gkey, ckey_res, gkey_res, sw_mode, max_pass, firstpass,
              max_score, resume, outfile, act_on_sig, ciphertext, clen );
 
 }
