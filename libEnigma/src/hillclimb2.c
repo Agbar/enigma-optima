@@ -10,6 +10,7 @@
 #endif
 
 #include "cipher.h"
+#include "ciphertext.h"
 #include "dict.h"
 #include "error.h"
 #include "global.h"
@@ -54,7 +55,6 @@ void save_state_exit2(State state, int retval)
   if (ferror(fp) != 0)
     err_stream_fatal("00hc.resume");
 
-  free(state.ciphertext);
   exit(retval);
 }
 
@@ -93,9 +93,9 @@ void install_sighandler2(void)
 
 void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                FILE *outfile, int act_on_sig, int *ciphertext, int len )
+                FILE *outfile, int act_on_sig, int len )
 {
-  Key ckey; 
+  Key ckey;
   Key gkey;
   Key lo;
   int hi[3][12] = {
@@ -145,7 +145,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
     state.pass = &pass;
     state.firstpass = &firstpass;
     state.max_score = &max_score;
-    state.ciphertext = ciphertext;
+    state.ciphertext = ciphertext.plain;
   
     install_sighandler2();
   }
@@ -158,7 +158,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 
   if (firstpass)
     /* set testing order to letter frequency in ciphertext */
-    set_to_ct_freq(var, ciphertext, len);
+    set_to_ct_freq(var, len);
   else
     /* set random testing order */
     rand_var(var);
@@ -232,7 +232,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
              
 
                /* ic score */
-               bestic = icscore(ckey.stbrett, ciphertext, len);
+               bestic = icscore(ckey.stbrett, len);
 			   for (p = 0; p < 25; p++) {
 				   for (q = p + 1; q < 26; q++) {
 					   i = var[p];
@@ -259,7 +259,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   ckey.stbrett[k] = i;
 					   }
 
-					   ic = icscore(ckey.stbrett, ciphertext, len);
+					   ic = icscore(ckey.stbrett, len);
 
 					   if (ic > bestic) {
 						   bestic = ic;
@@ -274,7 +274,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 				   }
 			   }
 
-			   bestscore = uniscore(ckey.stbrett, ciphertext, len);
+			   bestscore = uniscore(ckey.stbrett, len);
 			   for (p = 0; p < 25; p++) {
 				   for (q = p + 1; q < 26; q++) {
 					   i = var[p];
@@ -301,7 +301,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   ckey.stbrett[k] = i;
 					   }
 
-					   a = uniscore(ckey.stbrett, ciphertext, len);
+					   a = uniscore(ckey.stbrett, len);
 
 					   if (a > bestscore) {
 						   bestscore = a;
@@ -316,9 +316,9 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 				   }
 			   }
 
-			   
-			   bestscore = triscore(ckey.stbrett, ciphertext, len);
-               do {		
+
+			   bestscore = triscore(ckey.stbrett, len);
+               do {
 				 jbestscore = bestscore;
                  for (p = 0; p < 25; p++) {
                    for (q = p+1; q < 26; q++) {
@@ -346,7 +346,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   ckey.stbrett[k] = i;
 					   }
 
-                       a = triscore(ckey.stbrett, ciphertext, len);
+                       a = triscore(ckey.stbrett, len);
 
                        if (a > bestscore) {                 
 						   bestscore = a;
@@ -371,7 +371,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
                  gkey = ckey;
                  gkey.score = bestscore;
                  print_key(outfile, &gkey);
-                 print_plaintext(outfile, gkey.stbrett, ciphertext, len);
+                 print_plaintext(outfile, gkey.stbrett, len);
                  if (ferror(outfile) != 0) {
                    fputs("enigma: error: writing to result file failed\n", stderr);
                    exit(EXIT_FAILURE);
