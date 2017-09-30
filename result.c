@@ -9,10 +9,11 @@
 #include "key.h"
 #include "result.h"
 
+#ifndef PATH_MAX
+# define PATH_MAX 255
+#endif
 
 extern int path_lookup[][26];
-
-#define PATH_MAX 255
 
 FILE *open_outfile(char *s)
 {
