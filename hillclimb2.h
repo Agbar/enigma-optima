@@ -12,9 +12,10 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 
 
 /*
- * This file is part of enigma-suite-0.76, which is distributed under the terms
+ * This file is part of enigma-suite, which is distributed under the terms
  * of the General Public License (GPL), version 2. See doc/COPYING for details.
  *
  * Copyright (C) 2005 Stefan Krah
- * 
+ * Copyright (C) 2016 Alex Shovkoplyas (VE3NEA)
+ *
  */
