@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include "cipher.h"
 #include "key.h"
 #include "score.h"
@@ -8,9 +7,6 @@ extern int tridict[][26][26];
 extern int bidict[][26];
 extern int unidict[26];
 extern int path_lookup[][26];
-uint64_t scoring_count;
-
-
 
 /* returns the trigram score of a key/ciphertext combination */
 int get_triscore(const Key *key, const int *ciphertext, int len)
@@ -248,7 +244,6 @@ double icscore(const int *stbrett, const int *ciphertext, int len)
   S0 += f[24]*(f[24]-1);
   S1 += f[25]*(f[25]-1);
 
-  scoring_count++;
   return (double)((S0 + S1) + (S2 + S3));
 }
 
@@ -370,7 +365,6 @@ int uniscore(const int *stbrett, const int *ciphertext, int len)
     s0 += unidict[c1];
   }
 
-  scoring_count++;
   return (s0+s1) + (s2+s3);
 
 }
@@ -503,7 +497,6 @@ int biscore(const int *stbrett, const int *ciphertext, int len)
     c1 = c2;
   }
 
-  scoring_count++;
   return (s0+s1) + (s2+s3);
 
 }
@@ -643,7 +636,6 @@ int triscore(const int *stbrett, const int *ciphertext, int len)
     c2 = c3;
   }
 
-  scoring_count++;
   return (s0+s1) + (s2+s3);
 
 }
