@@ -22,8 +22,6 @@
 #include "stecker.h"
 #include "state.h"
 
-extern int tridict[][26][26];
-extern int path_lookup[][26];
 #ifndef WINDOWS
 struct sigaction sigact;
 #endif
