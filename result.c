@@ -28,7 +28,6 @@ void print_plaintext(FILE *fp, const int *stbrett, const int *ciphertext, int le
 {
   int i;
   int c;
-//  int ofd;
 
   for (i = 0; i < len; i++) {
     c = stbrett[ciphertext[i]];
@@ -52,7 +51,6 @@ void print_key(FILE *fp, const Key *key)
   char date[DATELEN];
   char stecker[27];
   int i;
-//  int ofd;
 
   datestring(date);
   fprintf(fp, "Date: %s\n", date);
