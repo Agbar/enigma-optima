@@ -18,7 +18,7 @@ void ic_noring( const Key *from, const Key *to, const Key *ckey_res, const Key *
   Key gkey;
   Key lo;
   int hi[3][12] = {
-    {H_, 2,0,5,5,5,25,25,0,25,25,25},
+    {H, 2,0,5,5,5,25,25,0,25,25,25},
     {M3,2,0,8,8,8,25,25,0,25,25,25},
     {M4,4,10,8,8,8,25,25,25,25,25,25}
   };
@@ -103,7 +103,7 @@ void ic_allring( const Key *from, const Key *to, const Key *ckey_res, const Key 
   Key gkey;
   Key lo;
   int hi[3][12] = {
-    {H_, 2,0,5,5,5,25,25,0,25,25,25},
+    {H, 2,0,5,5,5,25,25,0,25,25,25},
     {M3,2,0,8,8,8,25,25,0,25,25,25},
     {M4,4,10,8,8,8,25,25,25,25,25,25}
   };

@@ -26,7 +26,7 @@ int main(int argc, char **argv)
   Key key;
   Key from, to, ckey_res, gkey_res;
   int *ciphertext, len, clen;
-  int model = H_;
+  int model = H;
   int opt, first = 1, keyop = 0;
   int hc = 0, ic = 0;
   int sw_mode = SW_ONSTART;

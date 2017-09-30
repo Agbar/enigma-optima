@@ -24,7 +24,7 @@ void print_state(FILE *fp, const State *state)
 
 
   /* general state */
-  if (from->model == H_) fprintf(fp, "H=");
+  if (from->model == H) fprintf(fp, "H=");
   else if (from->model == M3) fprintf(fp, "M3=");
   else if (from->model== M4) fprintf(fp, "M4=");
  
@@ -74,7 +74,7 @@ void print_state(FILE *fp, const State *state)
 
 
   /* global key */
-  if (from->model == H_) fprintf(fp, "H=");
+  if (from->model == H) fprintf(fp, "H=");
   else if (from->model == M3) fprintf(fp, "M3=");
   else if (from->model== M4) fprintf(fp, "M4=");
 
