@@ -49,7 +49,7 @@ int main(int argc, char **argv)
   init_charmap();
 
   opterr = 0;
-  while ((opt = getopt(argc, argv, "hvicpxaRM:w:r:m:u:s:f:t:k:n:z:o:")) != -1) {
+  while ((opt = getopt(argc, argv, "hvicxaRM:w:r:m:u:s:f:t:k:n:z:o:")) != -1) {
     switch (opt) {
       case 'h': help(); break;
       case 'v': version(); break;
@@ -67,7 +67,6 @@ int main(int argc, char **argv)
       case 'a': if (sw_mode != SW_ONSTART) usage(); sw_mode = SW_ALL; break;
       case 'R': resume = 1; hc = 1; break;
       case 'n': if ((max_pass = scan_posint(optarg)) == -1) usage(); break;
-	  case 'p': firstpass = 0; break;
       case 'z': if ((max_score = scan_posint(optarg)) == -1) usage(); break;
       case 'o': if (!(outfile = open_outfile(optarg))) usage(); break;
       case 'M': if ((model = get_model(optarg)) == -1 || !first) usage();
