@@ -1,3 +1,4 @@
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -18,8 +19,6 @@
 #include "resume_in.h"
 #include "resume_out.h"
 #include "scan.h"
-#include "getopt.h"
-
 
 int main(int argc, char **argv)
 {
