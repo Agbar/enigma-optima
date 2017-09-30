@@ -81,6 +81,21 @@
 					<Add directory="libEnigma/bin/Debug/x64" />
 				</Linker>
 			</Target>
+			<Target title="List Includes">
+				<Option output="unused" prefix_auto="1" extension_auto="0" />
+				<Option working_dir="pre/Includes/" />
+				<Option object_output="pre/Includes/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-M" />
+					<Add option="-H" />
+				</Compiler>
+				<Linker>
+					<Add option="-c" />
+				</Linker>
+			</Target>
 		</Build>
 		<VirtualTargets>
 			<Add alias="Release All" targets="Release Windows x64;Release Windows x86;Release Linux x64;" />
@@ -115,12 +130,14 @@
 			<Option compilerVar="CC" />
 			<Option target="Release Linux x64" />
 			<Option target="Debug x64" />
+			<Option target="List Includes" />
 		</Unit>
 		<Unit filename="../OS/OsWindows.c">
 			<Option compilerVar="CC" />
 			<Option target="Release Windows x64" />
 			<Option target="Release Windows x86" />
 			<Option target="Debug x64" />
+			<Option target="List Includes" />
 		</Unit>
 		<Unit filename="../banner.c">
 			<Option compilerVar="CC" />
