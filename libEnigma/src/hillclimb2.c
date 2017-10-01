@@ -55,16 +55,17 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
   Key ckey;
   Key gkey;
   Key lo;
-  int hi[3][12] = {
-    {H, 2,0,5,5,5,25,25,0,25,25,25},
-    {M3,2,0,8,8,8,25,25,0,25,25,25},
-    {M4,4,10,8,8,8,25,25,25,25,25,25} 
+  text_t hi[3][12] = {
+    {EnigmaModel_H ,2, 0,5,5,5,25,25, 0,25,25,25},
+    {EnigmaModel_M3,2, 0,8,8,8,25,25, 0,25,25,25},
+    {EnigmaModel_M4,4,10,8,8,8,25,25,25,25,25,25}
   };
   State state;
   time_t lastsave;
   int m;
   int p, q, i, k, x, z, u, v;
-  int var[26] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
+  text_t var[26];
+  Fill0To25(var);
   int pass;
   int bestscore, jbestscore, a, globalscore;
   double bestic, ic;
