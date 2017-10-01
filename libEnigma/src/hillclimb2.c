@@ -71,6 +71,10 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
   double bestic, ic;
   int firstloop = 1;
 
+  enigma_score_function_t sf;
+
+  enigma_score_init( enigma_cpu_flags, &sf );
+
   enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup;
 
   enigma_cipher_init( enigma_cpu_flags, from->model, &prepare_decoder_lookup );
@@ -169,7 +173,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
                prepare_decoder_lookup( &ckey, len );
 
                /* ic score */
-               bestic = icscore(ckey.stbrett, len);
+               bestic = sf.icscore( &ckey, len );
 			   for (p = 0; p < 25; p++) {
 				   for (q = p + 1; q < 26; q++) {
 					   i = var[p];
@@ -196,7 +200,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   ckey.stbrett.letters[k] = i;
 					   }
 
-					   ic = icscore(ckey.stbrett, len);
+					   ic = sf.icscore( &ckey, len );
 
 					   if (ic > bestic) {
 						   bestic = ic;
@@ -211,7 +215,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 				   }
 			   }
 
-			   bestscore = uniscore(ckey.stbrett, len);
+			   bestscore = sf.uniscore( &ckey, len );
 			   for (p = 0; p < 25; p++) {
 				   for (q = p + 1; q < 26; q++) {
 					   i = var[p];
@@ -238,7 +242,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   ckey.stbrett.letters[k] = i;
 					   }
 
-					   a = uniscore(ckey.stbrett, len);
+					   a = sf.uniscore( &ckey, len );
 
 					   if (a > bestscore) {
 						   bestscore = a;
@@ -254,7 +258,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 			   }
 
 
-			   bestscore = triscore(ckey.stbrett, len);
+			   bestscore = sf.triscore( &ckey, len );
                do {
 				 jbestscore = bestscore;
                  for (p = 0; p < 25; p++) {
@@ -283,7 +287,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   ckey.stbrett.letters[k] = i;
 					   }
 
-                       a = triscore(ckey.stbrett, len);
+                       a = sf.triscore( &ckey, len );
 
                        if (a > bestscore) {                 
 						   bestscore = a;
