@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <ctype.h>
-#include <unistd.h>
+
+#ifndef WINDOWS
+# include <unistd.h>
+#endif
+
 #include "charmap.h"
 #include "global.h"
 #include "key.h"
