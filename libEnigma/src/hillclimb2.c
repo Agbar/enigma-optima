@@ -157,8 +157,8 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
                } 
 
                /* complete ckey initialization */
-               for (i = 0; i < 26; i++)
-                 ckey.sf[i] = ckey.stbrett[i] = i;
+               Fill0To25( ckey.sf );
+               Fill0To25( ckey.stbrett.letters );
                ckey.count = 0;
 
                /* initialize path_lookup */
@@ -180,26 +180,26 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 				   for (q = p + 1; q < 26; q++) {
 					   i = var[p];
 					   k = var[q];
-					   x = ckey.stbrett[i];
-					   z = ckey.stbrett[k];
-					   u = ckey.stbrett[x];
-					   v = ckey.stbrett[z];
+					   x = ckey.stbrett.letters[i];
+					   z = ckey.stbrett.letters[k];
+					   u = ckey.stbrett.letters[x];
+					   v = ckey.stbrett.letters[z];
 
 					   if (x == k) {
-						   ckey.stbrett[i] = i;
-						   ckey.stbrett[k] = k;
+						   ckey.stbrett.letters[i] = i;
+						   ckey.stbrett.letters[k] = k;
 					   }
 					   else {
 						   if (x != i) {
-							   ckey.stbrett[i] = i;
-							   ckey.stbrett[x] = x;
+							   ckey.stbrett.letters[i] = i;
+							   ckey.stbrett.letters[x] = x;
 						   };
 						   if (z != k) {
-							   ckey.stbrett[k] = k;
-							   ckey.stbrett[z] = z;
+							   ckey.stbrett.letters[k] = k;
+							   ckey.stbrett.letters[z] = z;
 						   };
-						   ckey.stbrett[i] = k;
-						   ckey.stbrett[k] = i;
+						   ckey.stbrett.letters[i] = k;
+						   ckey.stbrett.letters[k] = i;
 					   }
 
 					   ic = icscore(ckey.stbrett, len);
@@ -208,10 +208,10 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   bestic = ic;
 					   }
 					   else {
-						   ckey.stbrett[z] = v; 
-						   ckey.stbrett[x] = u;
-						   ckey.stbrett[k] = z; 
-						   ckey.stbrett[i] = x;
+						   ckey.stbrett.letters[z] = v;
+						   ckey.stbrett.letters[x] = u;
+						   ckey.stbrett.letters[k] = z;
+						   ckey.stbrett.letters[i] = x;
 					   }
 
 				   }
@@ -222,26 +222,26 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 				   for (q = p + 1; q < 26; q++) {
 					   i = var[p];
 					   k = var[q];
-					   x = ckey.stbrett[i];
-					   z = ckey.stbrett[k];
-					   u = ckey.stbrett[x];
-					   v = ckey.stbrett[z];
+					   x = ckey.stbrett.letters[i];
+					   z = ckey.stbrett.letters[k];
+					   u = ckey.stbrett.letters[x];
+					   v = ckey.stbrett.letters[z];
 
 					   if (x == k) {
-						   ckey.stbrett[i] = i;
-						   ckey.stbrett[k] = k;
+						   ckey.stbrett.letters[i] = i;
+						   ckey.stbrett.letters[k] = k;
 					   }
 					   else {
 						   if (x != i) {
-							   ckey.stbrett[i] = i;
-							   ckey.stbrett[x] = x;
+							   ckey.stbrett.letters[i] = i;
+							   ckey.stbrett.letters[x] = x;
 						   };
 						   if (z != k) {
-							   ckey.stbrett[k] = k;
-							   ckey.stbrett[z] = z;
+							   ckey.stbrett.letters[k] = k;
+							   ckey.stbrett.letters[z] = z;
 						   };
-						   ckey.stbrett[i] = k;
-						   ckey.stbrett[k] = i;
+						   ckey.stbrett.letters[i] = k;
+						   ckey.stbrett.letters[k] = i;
 					   }
 
 					   a = uniscore(ckey.stbrett, len);
@@ -250,10 +250,10 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   bestscore = a;
 					   }
 					   else {
-						   ckey.stbrett[z] = v; 
-						   ckey.stbrett[x] = u;
-						   ckey.stbrett[k] = z; 
-						   ckey.stbrett[i] = x;
+						   ckey.stbrett.letters[z] = v;
+						   ckey.stbrett.letters[x] = u;
+						   ckey.stbrett.letters[k] = z;
+						   ckey.stbrett.letters[i] = x;
 					   }
 
 				   }
@@ -267,26 +267,26 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
                    for (q = p+1; q < 26; q++) {
 					   i = var[p];
 					   k = var[q];
-					   x = ckey.stbrett[i];
-					   z = ckey.stbrett[k];
-					   u = ckey.stbrett[x];
-					   v = ckey.stbrett[z];
+					   x = ckey.stbrett.letters[i];
+					   z = ckey.stbrett.letters[k];
+					   u = ckey.stbrett.letters[x];
+					   v = ckey.stbrett.letters[z];
 
 					   if (x == k) {
-						   ckey.stbrett[i] = i; 
-						   ckey.stbrett[k] = k; 
+						   ckey.stbrett.letters[i] = i;
+						   ckey.stbrett.letters[k] = k;
 					   }
 					   else {
-						   if (x != i) { 
-							   ckey.stbrett[i] = i;  
-							   ckey.stbrett[x] = x; 
+						   if (x != i) {
+							   ckey.stbrett.letters[i] = i;
+							   ckey.stbrett.letters[x] = x;
 						   };
-						   if (z != k) { 
-							   ckey.stbrett[k] = k;  
-							   ckey.stbrett[z] = z; 
+						   if (z != k) {
+							   ckey.stbrett.letters[k] = k;
+							   ckey.stbrett.letters[z] = z;
 						   };
-						   ckey.stbrett[i] = k;
-						   ckey.stbrett[k] = i;
+						   ckey.stbrett.letters[i] = k;
+						   ckey.stbrett.letters[k] = i;
 					   }
 
                        a = triscore(ckey.stbrett, len);
@@ -295,10 +295,10 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   bestscore = a;
                        }
 					   else {
-						   ckey.stbrett[z] = v; 
-						   ckey.stbrett[x] = u;
-						   ckey.stbrett[k] = z; 
-						   ckey.stbrett[i] = x;
+						   ckey.stbrett.letters[z] = v;
+						   ckey.stbrett.letters[x] = u;
+						   ckey.stbrett.letters[k] = z;
+						   ckey.stbrett.letters[i] = x;
 					   }
                      
                    }
