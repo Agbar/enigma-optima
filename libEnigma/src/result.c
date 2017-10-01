@@ -2,6 +2,11 @@
 #include <string.h>
 #include <ctype.h>
 #include <limits.h>
+
+#ifndef WINDOWS
+# include <unistd.h>
+#endif
+
 #include "cipher.h"
 #include "ciphertext.h"
 #include "charmap.h"
