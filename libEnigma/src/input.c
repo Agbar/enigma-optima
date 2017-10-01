@@ -183,7 +183,7 @@ int set_mesg(Key *key, char *s, enum ModelType_t model)
  */
 int set_stecker(Key *key, char *s)
 {
-  int len;
+  size_t len;
   char *x;
 
   /* max 26 chars, even number */

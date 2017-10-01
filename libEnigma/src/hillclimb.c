@@ -4,7 +4,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include <sys/time.h>
 #include "cipher.h"
 #include "ciphertext.h"
 #include "dict.h"

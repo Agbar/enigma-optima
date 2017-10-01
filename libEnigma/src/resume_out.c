@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <ctype.h>
-#include <unistd.h>
 #include "charmap.h"
 #include "global.h"
 #include "key.h"

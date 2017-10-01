@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include <unistd.h>
 #include <limits.h>
 #include "cipher.h"
 #include "ciphertext.h"
@@ -13,6 +12,10 @@
 #include "result.h"
 #include "config/array_sizes.h"
 #include "config/types.h"
+
+#ifndef PATH_MAX
+# define PATH_MAX 255
+#endif
 
 FILE *open_outfile(char *s)
 {
