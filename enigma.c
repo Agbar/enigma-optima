@@ -13,9 +13,9 @@
 #include "display.h"
 #include "error.h"
 #include "global.h"
-#include "hillclimb.h"
 #include "input.h"
 #include "key.h"
+#include "optimizer.h"
 #include "result.h"
 #include "resume_in.h"
 #include "resume_out.h"
@@ -63,8 +63,14 @@ int main(int argc, char **argv)
   init_key_default(&key, model);
   init_charmap();
 
+  const struct option longOpts[] = {
+    { .name = "optimizer", .has_arg = required_argument,  .val = 0x11 }
+    , {0}
+  };
+
+  int option_index = 0;
   opterr = 0;
-  while ((opt = getopt(argc, argv, "hvcRM:f:t:o:")) != -1) {
+  while (( opt = getopt_long(argc, argv, "hvcRM:f:t:o:", longOpts, &option_index )) != -1) {
     switch (opt) {
       case 'h': help(); break;
       case 'v': version(); break;
@@ -81,6 +87,7 @@ int main(int argc, char **argv)
       // deprecated
       case 'M': if ((model = get_model(optarg)) == EnigmaModel_Error || !first) usage();
                 if (!init_key_default(&key, model)) usage(); break;
+      case 0x11: if ( !selectOptimizer( optarg ) ) usage(); break;
       default: usage();
     }
     first = false;
@@ -116,8 +123,8 @@ int main(int argc, char **argv)
 
     clen = (len < CT) ? len : CT;
 
-    hillclimb( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
-                max_score, resume, outfile, 1, clen );
+    optimizeScore( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
+                   max_score, resume, outfile, 1, clen );
 
   if (outfile != stdout)
     fclose(outfile);
