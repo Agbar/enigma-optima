@@ -165,6 +165,9 @@
 		<Unit filename="../../libEnigma/src/key.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../libEnigma/src/optimizer.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../libEnigma/src/randomNumbers.Linux.c">
 			<Option compilerVar="CC" />
 		</Unit>
