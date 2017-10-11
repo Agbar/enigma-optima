@@ -19,7 +19,7 @@ typedef void OptimizerFun( const Key *from
                   , int act_on_sig
                   , int len );
 
-static OptimizerFun* selectedOptimizer = NULL;
+static OptimizerFun* selectedOptimizer = hillclimb;
 
 bool selectOptimizer( const char* const name ) {
 
