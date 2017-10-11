@@ -9,7 +9,6 @@
 #include "cipher.h"
 #include "ciphertext.h"
 #include "cpu.h"
-#include "dict.h"
 #include "display.h"
 #include "error.h"
 #include "global.h"
@@ -100,8 +99,8 @@ int main(int argc, char **argv)
   SetupOsThingsAndStuff();
 
   if (argc-optind != 3) usage();
-  load_tridict(argv[optind++]);
-  load_bidict(argv[optind++]);
+  loadDictionaries( argv[optind], argv[optind+1] );
+  optind += 2;
   load_ciphertext(argv[optind], &len, resume);
   if (len < 3) exit(EXIT_FAILURE);
 

@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "optimizer.h"
+#include "dict.h"
 #include "hillclimb.h"
 #include "hillclimb2.h"
 
@@ -33,6 +34,23 @@ bool selectOptimizer( const char* const name ) {
         return true;
     }
     return false;
+}
+
+void loadDictionaries( const char * const firstDict, const char * const secondDict ) {
+    if ( selectedOptimizer == NULL ) {
+        exit( 1 );
+    }
+    if ( selectedOptimizer == hillclimb ) {
+        load_tridict( firstDict );
+        load_bidict( secondDict );
+        return;
+    }
+    if ( selectedOptimizer == hillclimb2 ) {
+        load_tridict( firstDict );
+        load_unidict( secondDict );
+        return;
+    }
+    exit( 1 );
 }
 
 void optimizeScore( const Key *from

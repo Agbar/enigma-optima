@@ -6,6 +6,8 @@
 
 bool selectOptimizer( const char* const name );
 
+void loadDictionaries(  const char * firstDict, const char * secondDic );
+
 void optimizeScore( const Key *from
                   , const Key *to
                   , const Key *ckey_res
