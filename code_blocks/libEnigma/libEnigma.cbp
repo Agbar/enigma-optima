@@ -112,6 +112,7 @@
 		<Unit filename="../../libEnigma/include/hillclimb2.h" />
 		<Unit filename="../../libEnigma/include/input.h" />
 		<Unit filename="../../libEnigma/include/key.h" />
+		<Unit filename="../../libEnigma/include/optimizer.h" />
 		<Unit filename="../../libEnigma/include/randomNumbers.h" />
 		<Unit filename="../../libEnigma/include/result.h" />
 		<Unit filename="../../libEnigma/include/resume_in.h" />
@@ -162,6 +163,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/key.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../libEnigma/src/optimizer.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../libEnigma/src/randomNumbers.Linux.c">
