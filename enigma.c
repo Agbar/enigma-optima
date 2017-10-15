@@ -38,10 +38,11 @@ int main(int argc, char **argv)
   enum ModelType_t model = EnigmaModel_H;
   int opt;
   bool first = true;
+  bool optimizerOptionPresent = false;
   int hc = 0;
   int sw_mode = SW_ONSTART;
   int max_pass = 1, firstpass = 1;
-  int max_score = INT_MAX-1, resume = 0, maxargs;
+  int max_score = INT_MAX-1, resume = 0;
   FILE *outfile = stdout;
   char *f = NULL, *t = NULL;
   char *fmin[3] = {
@@ -63,7 +64,7 @@ int main(int argc, char **argv)
   init_charmap();
 
   const struct option longOpts[] = {
-    { .name = "optimizer", .has_arg = required_argument,  .val = 0x11 }
+  { .name = "optimizer", .has_arg = required_argument,  .val = 0x11 }
     , {0}
   };
 
@@ -86,7 +87,12 @@ int main(int argc, char **argv)
       // deprecated
       case 'M': if ((model = get_model(optarg)) == EnigmaModel_Error || !first) usage();
                 if (!init_key_default(&key, model)) usage(); break;
-      case 0x11: if ( !selectOptimizer( optarg ) ) usage(); break;
+      case 0x11:
+            if ( optimizerOptionPresent || !selectOptimizer( optarg ) ) {
+                usage();
+            }
+            optimizerOptionPresent = true;
+            break;
       default: usage();
     }
     first = false;
@@ -111,8 +117,9 @@ int main(int argc, char **argv)
         if (!set_range(&from, &to, f, t, model)) usage();
     }
     else {
-      /* only -o option is allowed in addition to -R */
-      maxargs = (outfile == stdout) ? 5 : 7;
+      /* only -o option and --optimizer are allowed in addition to -R */
+      int maxargs = (outfile == stdout) ? 5 : 7;
+      if ( optimizerOptionPresent ) maxargs += 2;
       if (argc != maxargs) usage();
       if (!set_state(&from, &to, &ckey_res, &gkey_res, &sw_mode, &max_pass, &firstpass, &max_score)) {
         fputs("enigma: error: resume file is not in the right format\n", stderr);
