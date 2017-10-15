@@ -1,7 +1,12 @@
 <app_info>
 	<app>
 		<name>enigma_m4_2</name>
-		<user_friendly_name>Enigma Optima v1.0.1</user_friendly_name>
+		<user_friendly_name>Enigma Optima v1.1.0-dev</user_friendly_name>
+		<non_cpu_intensive>0</non_cpu_intensive>
+	</app>
+	<app>
+		<name>enigma_m4_3</name>
+		<user_friendly_name>Enigma Optima AV v1.1.0-dev</user_friendly_name>
 		<non_cpu_intensive>0</non_cpu_intensive>
 	</app>
 	<file_info>
@@ -12,13 +17,26 @@
 		-->
 	</file_info>
 	<file_info>
+		<name>wrapper_1.05_windows_x86_64.exe</name>
+		<executable/>
+		<!--
+		<download_url>http://download.enigmaathome.net/wrapper_1.05_windows_x86_64.exe</download_url>
+		-->
+	</file_info>
+	<file_info>
 		<name>enigma-optima.exe</name>
 		<executable/>
 	</file_info>
+
 	<file_info>
-		<name>job_optima.xml</name>
+		<name>job_optima_Krah.xml</name>
 		<status>1</status>
 	</file_info>
+	<file_info>
+		<name>job_optima_AV.xml</name>
+		<status>1</status>
+	</file_info>
+
 	<app_version>
 		<app_name>enigma_m4_2</app_name>
 		<version_num>532</version_num>
@@ -39,9 +57,27 @@
 			<copy_file/>
 		</file_ref>
 		<file_ref>
-			<file_name>job_optima.xml</file_name>
+			<file_name>job_optima_Krah.xml</file_name>
 			<open_name>job.xml</open_name>
 			<copy_file/>
+		</file_ref>
+	</app_version>
+
+	<app_version>
+		<app_name>enigma_m4_3</app_name>
+		<version_num>105</version_num>
+		<file_ref>
+			<file_name>wrapper_1.05_windows_x86_64.exe</file_name>
+			<open_name>enigma_wrapper.exe</open_name>
+			<main_program/>
+		</file_ref>
+		<file_ref>
+			<file_name>enigma-optima.exe</file_name>
+			<open_name>enigma_av.exe</open_name>
+		</file_ref>
+		<file_ref>
+			<file_name>job_optima_AV.xml</file_name>
+			<open_name>job.xml</open_name>
 		</file_ref>
 	</app_version>
 </app_info>
