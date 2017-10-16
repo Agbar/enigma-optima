@@ -50,8 +50,8 @@ double ComputeIcscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLeng
     for( i = 0; i < 26; i++ ) {
         sum += f[i] * ( f[i] - 1 );
     }
-    double ret = ( double )sum / ( len * ( len - 1 ) );
-    return ret;
+
+    return ( double )sum;
 }
 
 #endif

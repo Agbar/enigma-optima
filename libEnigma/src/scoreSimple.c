@@ -32,7 +32,6 @@ double icscoreSimple(const Key* const restrict key, scoreLength_t len)
 
   for (i = 0; i < 26; i++)
     S += f[i]*(f[i]-1);
-  S /= len*(len-1);
 
   return S;
 }

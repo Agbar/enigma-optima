@@ -82,7 +82,7 @@ double ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, score
 
     STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
     uint16_t sum = 256 *( high[0] + high[4] + high[8] + high[12] ) + low[0] + low[4] + low[8] + low[12];
-    return ( double )sum / ( len * ( len - 1 ) );
+    return ( double )sum;
 }
 
 

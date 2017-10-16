@@ -137,8 +137,8 @@ double ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scor
 
     STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
     uint16_t sum = ( high[0] + high[4] )* 256 + low[0] + low[4];
-    double ret = ( double )sum / ( len * ( len - 1 ) );
-    return ret;
+
+    return ( double )sum;
 }
 
 inline
