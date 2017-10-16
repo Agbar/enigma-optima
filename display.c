@@ -8,8 +8,9 @@ void usage(void)
 {
   fprintf(stderr, "enigma: usage: enigma \
 [ -hvR ] \
+[ --optimizer algorithm ]\
 [ -o output-file ] \
-[ trigram-dictionary bigram-dictionary ciphertext ] \
+trigram-dictionary 2nd-dictionary ciphertext \
 \n\nUse enigma -h for detailed help\n\n");
 
   exit(EXIT_FAILURE);
@@ -19,9 +20,13 @@ void help(void)
 {
   fprintf(stderr, "\nOptions:\n\n\
 -o      Output file. Defaults to stdout.\n\n\
-        arguments <trigram-dict>, <bigram-dict> and <ciphertext>.\n\n\
+        arguments <trigram-dict>, <2nd-dict> and <ciphertext>.\n\n\
 -R      Standalone option:  Resume a hill climb, reading the previous state from\n\
         00hc.resume.\n\n\
+--optimizer <algorithm> Selects optimization algorithm. Available options are:\n\
+        * AV   - algorithm by Alex VE3NEA used in Enigma AV\n\
+        * Krah - (default) original algorithm used in Enigma 0.76\n\
+        This option can be used together with -R.\n\n\
 -h      Display this help screen.\n\n\
 -v      Display version information.\n" );
 
