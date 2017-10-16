@@ -64,7 +64,7 @@ int main(int argc, char **argv)
   init_charmap();
 
   const struct option longOpts[] = {
-  { .name = "optimizer", .has_arg = required_argument,  .val = 0x11 }
+  { .name = "optimizer", .has_arg = required_argument,  .val = 0x101 }
     , {0}
   };
 
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
       // deprecated
       case 'M': if ((model = get_model(optarg)) == EnigmaModel_Error || !first) usage();
                 if (!init_key_default(&key, model)) usage(); break;
-      case 0x11:
+      case 0x101:
             if ( optimizerOptionPresent || !selectOptimizer( optarg ) ) {
                 usage();
             }
