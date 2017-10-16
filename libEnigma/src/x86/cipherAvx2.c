@@ -23,7 +23,7 @@ v32qi DecodeBiteBackwardCommonAvx2( v32qi bite,  v32qi rRingOffset, const Key* c
 inline extern
 v32qi PermuteV32qi( const PermutationMap_t* map, v32qi vec );
 inline extern
-double ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, scoreLength_t len );
+uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, scoreLength_t len );
 
 enigma_cipher_function_t enigma_cipher_DecoderLookupAvx2 = { prepare_decoder_lookup_M_H3_avx2, prepare_decoder_lookup_ALL_avx2 };
 

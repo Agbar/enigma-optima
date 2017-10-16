@@ -68,7 +68,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
   Fill0To25(var);
   int pass;
   int bestscore, jbestscore, a, globalscore;
-  double bestic, ic;
+  uint16_t bestic, ic;
   int firstloop = 1;
 
   enigma_score_function_t sf;

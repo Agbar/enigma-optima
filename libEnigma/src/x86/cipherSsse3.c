@@ -25,7 +25,7 @@ v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec );
 inline extern
 void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union ScoringDecodedMessage* output );
 inline extern
-double ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scoreLength_t len );
+uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scoreLength_t len );
 inline extern
 int ComputeBiscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len );
 

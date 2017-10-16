@@ -49,7 +49,7 @@ v32qi DecodeBiteBackwardCommonAvx2( v32qi bite,  v32qi rRingOffset, const Key* c
 __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
-double ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, scoreLength_t len ){
+uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, scoreLength_t len ){
     ALIGNED_32( uint8_t f[32] ) = {0};
     int i;
     for( i = 0; i < len; i++ ) {
@@ -80,9 +80,8 @@ double ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, score
     v16hi high = __builtin_ia32_psadbw256( ( v32qi ) ( foo ), zero );
     v16hi low  = __builtin_ia32_psadbw256( ( v32qi ) ( bar ), zero );
 
-    STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
     uint16_t sum = 256 *( high[0] + high[4] + high[8] + high[12] ) + low[0] + low[4] + low[8] + low[12];
-    return ( double )sum;
+    return sum;
 }
 
 

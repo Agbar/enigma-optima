@@ -100,7 +100,7 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
 __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
-double ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scoreLength_t len ){
+uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scoreLength_t len ){
     uint8_t ALIGNED_32( f[32] ) = {0};
     int i;
     for( i = 0; i < len; i++ ) {
@@ -135,10 +135,9 @@ double ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scor
     v8hi high =  ( v8hi ) __builtin_ia32_psadbw128( ( v16qi ) foo, zero );
     v8hi low  =  ( v8hi ) __builtin_ia32_psadbw128( ( v16qi ) bar, zero );
 
-    STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
     uint16_t sum = ( high[0] + high[4] )* 256 + low[0] + low[4];
 
-    return ( double )sum;
+    return sum;
 }
 
 inline

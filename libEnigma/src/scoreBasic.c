@@ -10,10 +10,10 @@
 #include "config/types.h"
 
 // default scores
-static double icscoreBasic( const Key* const restrict key, scoreLength_t length );
-static int   uniscoreBasic( const Key* const restrict key, scoreLength_t length );
-static int    biscoreBasic( const Key* const restrict key, scoreLength_t length );
-static int   triscoreBasic( const Key* const restrict key, scoreLength_t length );
+static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t length );
+static int     uniscoreBasic( const Key* const restrict key, scoreLength_t length );
+static int      biscoreBasic( const Key* const restrict key, scoreLength_t length );
+static int     triscoreBasic( const Key* const restrict key, scoreLength_t length );
 
 enigma_score_function_t enigmaScoreBasic = { triscoreBasic, biscoreBasic, icscoreBasic, uniscoreBasic };
 
@@ -23,10 +23,9 @@ union ScoringDecodedMessage decodedMsgPartBasic;
  * opti scores
  ************************/
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static double icscoreBasic( const Key* const restrict key, scoreLength_t len )
+static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
   int f[26] = {0};
-  int S0, S1, S2, S3;
   text_t c1;
   int i;
 
@@ -102,7 +101,7 @@ static double icscoreBasic( const Key* const restrict key, scoreLength_t len )
     f[c1]++;
   }
 
-
+  uint16_t S0, S1, S2, S3;
   S0 = S1 = S2 = S3 = 0;
   for (i = 0; i < 23; i += 4) {
     S0 += f[i]*(f[i]-1);
@@ -113,8 +112,7 @@ static double icscoreBasic( const Key* const restrict key, scoreLength_t len )
   S0 += f[24]*(f[24]-1);
   S1 += f[25]*(f[25]-1);
 
-  return (double)((S0+S1) + (S2+S3));
-
+  return (S0+S1) + (S2+S3);
 }
 
 static int uniscoreBasic( const Key* key, scoreLength_t len )

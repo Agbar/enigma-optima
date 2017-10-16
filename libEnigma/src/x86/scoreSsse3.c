@@ -14,10 +14,10 @@
 #include "score_inlines.h"
 
 // SSSE3 scores
-static double icscoreSsse3( const Key* const restrict key, scoreLength_t len );
-static int   uniscoreSsse3( const Key* const restrict key, scoreLength_t len );
-static int    biscoreSsse3( const Key* const restrict key, scoreLength_t len );
-static int   triscoreSsse3( const Key* const restrict key, scoreLength_t len );
+static uint16_t icscoreSsse3( const Key* const restrict key, scoreLength_t len );
+static int     uniscoreSsse3( const Key* const restrict key, scoreLength_t len );
+static int      biscoreSsse3( const Key* const restrict key, scoreLength_t len );
+static int     triscoreSsse3( const Key* const restrict key, scoreLength_t len );
 
 inline extern
 int     ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len );
@@ -32,7 +32,7 @@ union ScoringDecodedMessage decodedMsgPartSsse3;
 
 __attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
-static double icscoreSsse3( const Key* const restrict key, scoreLength_t len ) {
+static uint16_t icscoreSsse3( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartSsse3 );
     return ComputeIcscoreFromDecodedMsgSsse3( &decodedMsgPartSsse3, len );
 }

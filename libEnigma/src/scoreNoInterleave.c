@@ -3,10 +3,10 @@
 #include "score.h"
 
 // default scores
-static int   uniscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
-static int    biscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
-static int   triscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
-static double icscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
+static int     uniscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
+static int      biscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
+static int     triscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
+static uint16_t icscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
 
 union ScoringDecodedMessage decodedMsgPartNoInterleave;
 
@@ -63,7 +63,7 @@ int triscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static double icscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
+static uint16_t icscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
     if (len < 2) {
         return 0;
     }
@@ -76,7 +76,7 @@ static double icscoreNoInterleave( const Key* const restrict key, scoreLength_t 
         f[decodedMsgPartNoInterleave.plain[i]]++;
     }
 
-    int S0, S1, S2, S3;
+    uint16_t S0, S1, S2, S3;
     S0 = S1 = S2 = S3 = 0;
     for( i = 0; i < 26 - 3; i += 4 ) {
         S0 += f[i]     *( f[i]     - 1 );
@@ -87,7 +87,7 @@ static double icscoreNoInterleave( const Key* const restrict key, scoreLength_t 
     S0 += f[24] * ( f[24] - 1 );
     S1 += f[25] * ( f[25] - 1 );
 
-    return ( double )( ( S0 + S1 ) + ( S2 + S3 ) );
+    return ( S0 + S1 ) + ( S2 + S3 );
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))

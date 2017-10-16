@@ -20,12 +20,13 @@ typedef uint8_t scoreLength_t;
 
 STATIC_ASSERT ( ( scoreLength_t ) -1 > 0 , "scoreLength_t should be unsigned, so next assert can be correct." );
 STATIC_ASSERT (  1 << ( sizeof( scoreLength_t ) * 8 ) > CT , "scoreLength_t is to narrow." );
+STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
 
 typedef struct _enigma_score_function_t{
-    int    (*triscore) ( const Key* const restrict key, scoreLength_t length );
-    int    (* biscore) ( const Key* const restrict key, scoreLength_t length );
-    double (* icscore) ( const Key* const restrict key, scoreLength_t length );
-    int    (*uniscore) ( const Key* const restrict key, scoreLength_t length );
+    int      (*triscore) ( const Key* const restrict key, scoreLength_t length );
+    int      (* biscore) ( const Key* const restrict key, scoreLength_t length );
+    uint16_t (* icscore) ( const Key* const restrict key, scoreLength_t length );
+    int      (*uniscore) ( const Key* const restrict key, scoreLength_t length );
 } enigma_score_function_t;
 
 // Flags are used to allow combining.
