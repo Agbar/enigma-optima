@@ -1,0 +1,7 @@
+<job_desc>
+    <!-- Author: TJM@enigmaathome.net -->
+    <task>
+        <application>enigma_av.exe</application>
+        <command_line>--optimizer AV -R -o results.txt 03trigr.cur 03unigr.cur 00ciphertext</command_line>
+    </task>
+</job_desc>
