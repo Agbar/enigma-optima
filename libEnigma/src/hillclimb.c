@@ -303,8 +303,8 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 void OptimizeIcscore( text_t var[26], Key* const ckey, int len, const enigma_score_function_t* const sf ){
     int i, z, x;
     enum Action_t action = NONE;
-    double bestic = sf->icscore( ckey, len );
-    double ic;
+    uint16_t bestic = sf->icscore( ckey, len );
+    uint16_t ic;
     for( i = 0; i < 26; i++ ) {
         int k;
         for( k = i + 1; k < 26; k++ ) {

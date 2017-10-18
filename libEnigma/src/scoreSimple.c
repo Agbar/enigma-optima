@@ -5,18 +5,17 @@
 #include "cipher.h"
 
 
-double icscoreSimple(const Key* const restrict key, scoreLength_t len);
-int   uniscoreSimple(const Key* const restrict key, scoreLength_t len);
-int    biscoreSimple(const Key* const restrict key, scoreLength_t len);
-int   triscoreSimple(const Key* const restrict key, scoreLength_t len);
+uint16_t icscoreSimple( const Key* const restrict key, scoreLength_t len );
+int     uniscoreSimple( const Key* const restrict key, scoreLength_t len );
+int      biscoreSimple( const Key* const restrict key, scoreLength_t len );
+int     triscoreSimple( const Key* const restrict key, scoreLength_t len );
 
 enigma_score_function_t enigmaScoreSimple = { triscoreSimple, biscoreSimple, icscoreSimple, uniscoreSimple};
 
 PURE_FUNCTION
-double icscoreSimple(const Key* const restrict key, scoreLength_t len)
+uint16_t icscoreSimple( const Key* const restrict key, scoreLength_t len )
 {
-  int f[26] = {0};
-  double S = 0;
+  int f[26] = {0};  
   int i;
   int c;
 
@@ -30,9 +29,9 @@ double icscoreSimple(const Key* const restrict key, scoreLength_t len)
     f[c]++;
   }
 
+  uint16_t S = 0;
   for (i = 0; i < 26; i++)
     S += f[i]*(f[i]-1);
-  S /= len*(len-1);
 
   return S;
 }

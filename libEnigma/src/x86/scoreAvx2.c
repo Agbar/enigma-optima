@@ -15,10 +15,10 @@
 #include "x86/cipherSsse3_inlines.h"
 
 // SSSE3 scores
-static double icscoreAvx2( const Key* const restrict key, scoreLength_t len );
-static int   uniscoreAvx2( const Key* const restrict key, scoreLength_t len );
-static int    biscoreAvx2( const Key* const restrict key, scoreLength_t len );
-static int   triscoreAvx2( const Key* const restrict key, scoreLength_t len );
+static uint16_t icscoreAvx2( const Key* const restrict key, scoreLength_t len );
+static int     uniscoreAvx2( const Key* const restrict key, scoreLength_t len );
+static int      biscoreAvx2( const Key* const restrict key, scoreLength_t len );
+static int     triscoreAvx2( const Key* const restrict key, scoreLength_t len );
 
 enigma_score_function_t enigmaScoreAvx2 = { triscoreAvx2,  biscoreAvx2 , icscoreAvx2,  uniscoreAvx2 } ;
 
@@ -77,7 +77,7 @@ static void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len,
 
 __attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
-static double icscoreAvx2( const Key* const restrict key, scoreLength_t len ) {
+static uint16_t icscoreAvx2( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartAvx2( key, len, &decodedMsgPartAvx2 );
     return ComputeIcscoreFromDecodedMsgAvx2( &decodedMsgPartAvx2, len );
 }
