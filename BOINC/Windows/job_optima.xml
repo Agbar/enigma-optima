@@ -1,7 +1,0 @@
-<job_desc>
-	<!-- Author: TJM@enigmaathome.net -->
-    <task>
-    <application>enigma_0.76.exe</application>
-    <command_line>-R -o results.txt 00trigr.cur 00bigr.cur 00ciphertext</command_line>
-    </task>
-</job_desc>

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="Workspace">
-		<Project filename="code_blocks/enigma-opt.cbp" />
-		<Project filename="tests/enigma-optima.tests.cbp" />
+		<Project filename="code_blocks/enigma-opt.cbp">
+			<Depends filename="code_blocks/libEnigma/libEnigma.cbp" />
+		</Project>
+		<Project filename="tests/enigma-optima.tests.cbp">
+			<Depends filename="code_blocks/libEnigma/libEnigma.cbp" />
+		</Project>
+		<Project filename="code_blocks/libEnigma/libEnigma.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

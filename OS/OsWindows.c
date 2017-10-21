@@ -3,12 +3,15 @@
  *  Compile and link this module only for Windows platform.
  */
 
+ #if defined(_WIN32)
+
 #include <stdio.h>
-#include <time.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include <windows.h>
-#include "Os.h"
-#include "..\error.h"
-#include "..\config\testing.h"
+#include "OS\Os.h"
+#include "error.h"
+#include "config\testing.h"
 
 volatile sig_atomic_t doShutdown;
 
@@ -43,6 +46,4 @@ void InstallSighandler( void ) {
     }
 }
 
-unsigned int GetTimeBasedSeed( void ) {
-    return time( NULL );
-}
+#endif

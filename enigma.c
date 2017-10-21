@@ -1,21 +1,20 @@
 #include <assert.h>
+#include <getopt.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <limits.h>
 #include "banner.h"
 #include "charmap.h"
 #include "cipher.h"
 #include "ciphertext.h"
 #include "cpu.h"
-#include "dict.h"
 #include "display.h"
 #include "error.h"
 #include "global.h"
-#include "hillclimb.h"
 #include "input.h"
 #include "key.h"
+#include "optimizer.h"
 #include "result.h"
 #include "resume_in.h"
 #include "resume_out.h"
@@ -39,10 +38,11 @@ int main(int argc, char **argv)
   enum ModelType_t model = EnigmaModel_H;
   int opt;
   bool first = true;
+  bool optimizerOptionPresent = false;
   int hc = 0;
   int sw_mode = SW_ONSTART;
   int max_pass = 1, firstpass = 1;
-  int max_score = INT_MAX-1, resume = 0, maxargs;
+  int max_score = INT_MAX-1, resume = 0;
   FILE *outfile = stdout;
   char *f = NULL, *t = NULL;
   char *fmin[3] = {
@@ -63,8 +63,14 @@ int main(int argc, char **argv)
   init_key_default(&key, model);
   init_charmap();
 
+  const struct option longOpts[] = {
+  { .name = "optimizer", .has_arg = required_argument,  .val = 0x101 }
+    , {0}
+  };
+
+  int option_index = 0;
   opterr = 0;
-  while ((opt = getopt(argc, argv, "hvcRM:f:t:o:")) != -1) {
+  while (( opt = getopt_long(argc, argv, "hvcRM:f:t:o:", longOpts, &option_index )) != -1) {
     switch (opt) {
       case 'h': help(); break;
       case 'v': version(); break;
@@ -81,6 +87,12 @@ int main(int argc, char **argv)
       // deprecated
       case 'M': if ((model = get_model(optarg)) == EnigmaModel_Error || !first) usage();
                 if (!init_key_default(&key, model)) usage(); break;
+      case 0x101:
+            if ( optimizerOptionPresent || !selectOptimizer( optarg ) ) {
+                usage();
+            }
+            optimizerOptionPresent = true;
+            break;
       default: usage();
     }
     first = false;
@@ -93,8 +105,8 @@ int main(int argc, char **argv)
   SetupOsThingsAndStuff();
 
   if (argc-optind != 3) usage();
-  load_tridict(argv[optind++]);
-  load_bidict(argv[optind++]);
+  loadDictionaries( argv[optind], argv[optind+1] );
+  optind += 2;
   load_ciphertext(argv[optind], &len, resume);
   if (len < 3) exit(EXIT_FAILURE);
 
@@ -105,8 +117,9 @@ int main(int argc, char **argv)
         if (!set_range(&from, &to, f, t, model)) usage();
     }
     else {
-      /* only -o option is allowed in addition to -R */
-      maxargs = (outfile == stdout) ? 5 : 7;
+      /* only -o option and --optimizer are allowed in addition to -R */
+      int maxargs = (outfile == stdout) ? 5 : 7;
+      if ( optimizerOptionPresent ) maxargs += 2;
       if (argc != maxargs) usage();
       if (!set_state(&from, &to, &ckey_res, &gkey_res, &sw_mode, &max_pass, &firstpass, &max_score)) {
         fputs("enigma: error: resume file is not in the right format\n", stderr);
@@ -116,8 +129,8 @@ int main(int argc, char **argv)
 
     clen = (len < CT) ? len : CT;
 
-    hillclimb( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
-                max_score, resume, outfile, 1, clen );
+    optimizeScore( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
+                   max_score, resume, outfile, 1, clen );
 
   if (outfile != stdout)
     fclose(outfile);

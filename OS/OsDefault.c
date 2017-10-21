@@ -1,12 +1,15 @@
 /** \file
  * \brief This file implements OS related stuff for systems other than Windows.
  */
-#include <signal.h>
-#include <sys/time.h>
 
-#include "Os.h"
-#include "../config/testing.h"
-#include "../error.h"
+ #if defined(__linux__)
+
+#include <signal.h>
+#include <stdio.h>
+
+#include "OS/Os.h"
+#include "config/testing.h"
+#include "error.h"
 
 // objects
 struct sigaction sigact;
@@ -32,8 +35,4 @@ void InstallSighandler( void ) {
     }
 }
 
-unsigned int GetTimeBasedSeed( void ) {
-    struct timeval tv;
-    gettimeofday( &tv, NULL );
-    return  ( tv.tv_sec % 1000 ) * 1000000 + tv.tv_usec;
-}
+#endif

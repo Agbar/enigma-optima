@@ -1,0 +1,7 @@
+<job_desc>
+    <!-- Author: TJM@enigmaathome.net -->
+    <task>
+        <application>enigma_0.76</application>
+        <command_line>--optimizer Krah -R -o results.txt 00trigr.cur 00bigr.cur 00ciphertext</command_line>
+    </task>
+</job_desc>

@@ -1,3 +1,3 @@
 #include "releaseVersion.h"
 
-char const* releaseVersion = "v1.0.1";
+char const* releaseVersion = "v1.1.0";
