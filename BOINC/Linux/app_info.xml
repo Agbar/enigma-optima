@@ -1,12 +1,12 @@
 <app_info>
 	<app>
 		<name>enigma_m4_2</name>
-		<user_friendly_name>Enigma Optima v1.1.0-dev</user_friendly_name>
+		<user_friendly_name>Enigma Optima v1.1.0</user_friendly_name>
 		<non_cpu_intensive>0</non_cpu_intensive>
 	</app>
 	<app>
 		<name>enigma_m4_3</name>
-		<user_friendly_name>Enigma Optima AV v1.1.0-dev</user_friendly_name>
+		<user_friendly_name>Enigma Optima AV v1.1.0</user_friendly_name>
 		<non_cpu_intensive>0</non_cpu_intensive>
 	</app>
 	<file_info>
