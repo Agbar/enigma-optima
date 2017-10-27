@@ -54,12 +54,16 @@ static void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len,
         switch( lookupsToNextBite ) {
         case 5:
             cBite  = DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 5 );
+            FALLTHROUGH();
         case 4:
             cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 4 );
+            FALLTHROUGH();
         case 3:
             cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 3 );
+            FALLTHROUGH();
         case 2:
             cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 2 );
+            FALLTHROUGH();
         case 1:
             cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 1 );
             break;

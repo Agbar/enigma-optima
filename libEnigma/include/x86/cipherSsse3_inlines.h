@@ -78,10 +78,13 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
         switch( lookupsToNextBite ) {
         case 4:
             cBite  = DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 4 );
+            FALLTHROUGH();
         case 3:
             cBite |= DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 3 );
+            FALLTHROUGH();
         case 2:
             cBite |= DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 2 );
+            FALLTHROUGH();
         case 1:
             cBite |= DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 1 );
             break;
