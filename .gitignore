@@ -23,3 +23,6 @@ enigma-optima.workspace.layout
 code_blocks/.cccc
 
 code_blocks/libEnigma/libEnigma\.depend
+
+/code_blocks/benchmark/obj/
+/code_blocks/benchmark/bin/
