@@ -73,7 +73,7 @@ void hillclimb_log(const char *s)
   fflush(stderr);
 }
 
-extern
+extern inline
 void exit_d( int errorCode );
 
 /*
