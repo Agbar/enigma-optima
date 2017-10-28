@@ -60,6 +60,7 @@
 		<Compiler>
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
+			<Add option="-g" />
 			<Add option="-std=gnu99" />
 			<Add option="-std=gnu++11" />
 			<Add option="-Werror=implicit-function-declaration" />
