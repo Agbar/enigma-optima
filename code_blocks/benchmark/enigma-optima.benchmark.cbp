@@ -17,6 +17,8 @@
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
+					<Add directory="$(#gbench.lib)" />
+					<Add directory="../libEnigma/bin/Debug/x64" />
 				</Linker>
 			</Target>
 			<Target title="Release x64">
@@ -31,6 +33,8 @@
 				<Linker>
 					<Add option="-O3" />
 					<Add option="-m64" />
+					<Add directory="$(#gbench.lib)" />
+					<Add directory="../libEnigma/bin/Release/x64" />
 				</Linker>
 			</Target>
 			<Target title="Release x86">
@@ -45,6 +49,8 @@
 				<Linker>
 					<Add option="-O3" />
 					<Add option="-m32" />
+					<Add directory="$(#gbench.lib32)" />
+					<Add directory="../libEnigma/bin/Release/x86" />
 				</Linker>
 			</Target>
 		</Build>
@@ -57,9 +63,13 @@
 			<Add option="-Wunsafe-loop-optimizations" />
 			<Add option="-Wvector-operation-performance" />
 			<Add option="-fexceptions" />
+			<Add directory="$(#gbench.include)" />
+			<Add directory="../../libEnigma/include" />
 		</Compiler>
 		<Linker>
 			<Add option="-static" />
+			<Add library="benchmark" />
+			<Add library="Enigma" />
 		</Linker>
 		<Extensions>
 			<code_completion />
