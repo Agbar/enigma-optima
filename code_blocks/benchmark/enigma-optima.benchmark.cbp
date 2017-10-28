@@ -73,7 +73,9 @@
 			<Add option="-static" />
 			<Add library="benchmark" />
 			<Add library="Enigma" />
+			<Add library="shlwapi" />
 		</Linker>
+		<Unit filename="../../benchmark/main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
