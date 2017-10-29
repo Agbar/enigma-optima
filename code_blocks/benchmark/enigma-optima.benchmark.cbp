@@ -76,7 +76,11 @@
 			<Add library="Enigma" />
 			<Add library="shlwapi" />
 		</Linker>
+		<Unit filename="../../benchmark/enigmaError.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../benchmark/main.cpp" />
+		<Unit filename="../../benchmark/triscore.tests.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
