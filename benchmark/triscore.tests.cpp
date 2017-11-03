@@ -17,7 +17,7 @@ struct triscore
     size_t len = 0;
     Key key {};
 
-    triscore() {
+    void SetUp(benchmark::State& st) override {
         init_charmap();
 
         load_tridict( "00trigr.AVv1" );
