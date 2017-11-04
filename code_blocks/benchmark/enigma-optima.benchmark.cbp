@@ -67,11 +67,12 @@
 			<Add option="-Wunsafe-loop-optimizations" />
 			<Add option="-Wvector-operation-performance" />
 			<Add option="-fexceptions" />
+			<Add option="-pthread" />
 			<Add directory="$(#gbench.include)" />
 			<Add directory="../../libEnigma/include" />
 		</Compiler>
 		<Linker>
-			<Add option="-static" />
+			<Add option="-pthread" />
 			<Add library="benchmark" />
 			<Add library="Enigma" />
 			<Add library="shlwapi" />
