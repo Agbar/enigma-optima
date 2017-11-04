@@ -9,6 +9,8 @@ extern "C" {
 #include "stecker.h"
 #include "x86/cipherSsse3.h"
 #include "x86/scoreSsse3.h"
+#include "x86/cipherAvx2.h"
+#include "x86/scoreAvx2.h"
 }
 
 
@@ -92,3 +94,20 @@ BENCHMARK_DEFINE_F( triscore, ssse3 ) ( benchmark::State& state ){
 }
 
 BENCHMARK_REGISTER_F( triscore, ssse3 );
+
+BENCHMARK_DEFINE_F( triscore, avx2 ) ( benchmark::State& state ){
+    enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
+
+    int score = 0;
+    while( state.KeepRunning() ) {
+        score = enigmaScoreAvx2.triscore( &key, len );
+    }
+
+    if( score != 46438 ) {
+        state.SkipWithError( "Wrong score!" );
+    }
+
+    state.SetBytesProcessed( state.iterations() * len );
+}
+
+BENCHMARK_REGISTER_F( triscore, avx2 );
