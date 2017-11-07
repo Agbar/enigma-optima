@@ -77,6 +77,7 @@
 			<Add library="Enigma" />
 			<Add library="shlwapi" />
 		</Linker>
+		<Unit filename="../../benchmark/biscore.tests.cpp" />
 		<Unit filename="../../benchmark/enigmaError.c">
 			<Option compilerVar="CC" />
 		</Unit>
