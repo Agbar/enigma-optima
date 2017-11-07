@@ -81,6 +81,7 @@
 		<Unit filename="../../benchmark/enigmaError.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../benchmark/icscore.tests.cpp" />
 		<Unit filename="../../benchmark/main.cpp" />
 		<Unit filename="../../benchmark/triscore.tests.cpp" />
 		<Unit filename="../../benchmark/uniscore.tests.cpp" />
