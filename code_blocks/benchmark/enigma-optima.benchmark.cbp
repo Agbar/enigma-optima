@@ -83,6 +83,7 @@
 		</Unit>
 		<Unit filename="../../benchmark/main.cpp" />
 		<Unit filename="../../benchmark/triscore.tests.cpp" />
+		<Unit filename="../../benchmark/uniscore.tests.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
