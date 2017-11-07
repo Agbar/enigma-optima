@@ -6,6 +6,7 @@ extern "C" {
 #include "dict.h"
 #include "input.h"
 #include "scoreBasic.h"
+#include "scoreSimple.h"
 #include "stecker.h"
 #include "x86/cipherSsse3.h"
 #include "x86/scoreSsse3.h"
@@ -58,6 +59,20 @@ struct biscore
     }
 };
 
+BENCHMARK_DEFINE_F( biscore, simple )( benchmark::State& state ) {
+
+    enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
+
+    int score = 0;
+    while( state.KeepRunning() ) {
+        score = enigmaScoreSimple.biscore( &key, len );
+    }
+    if( score != 7913 ) {
+        state.SkipWithError( "Wrong score!" );
+    }
+    state.SetBytesProcessed( state.iterations() * len );
+}
+
 BENCHMARK_DEFINE_F( biscore, basic )( benchmark::State& state ) {
 
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
@@ -71,8 +86,6 @@ BENCHMARK_DEFINE_F( biscore, basic )( benchmark::State& state ) {
     }
     state.SetBytesProcessed( state.iterations() * len );
 }
-
-BENCHMARK_REGISTER_F( biscore, basic );
 
 BENCHMARK_DEFINE_F( biscore, ssse3 ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("ssse3") ) {
@@ -91,8 +104,6 @@ BENCHMARK_DEFINE_F( biscore, ssse3 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_REGISTER_F( biscore, ssse3 );
-
 BENCHMARK_DEFINE_F( biscore, avx2 ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("avx2") ) {
         state.SkipWithError("AVX2 not supported");
@@ -110,4 +121,7 @@ BENCHMARK_DEFINE_F( biscore, avx2 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
+BENCHMARK_REGISTER_F( biscore, simple );
+BENCHMARK_REGISTER_F( biscore, basic );
+BENCHMARK_REGISTER_F( biscore, ssse3 );
 BENCHMARK_REGISTER_F( biscore, avx2 );
