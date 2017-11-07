@@ -79,6 +79,10 @@ BENCHMARK_DEFINE_F( triscore, basic )( benchmark::State& state ) {
 BENCHMARK_REGISTER_F( triscore, basic );
 
 BENCHMARK_DEFINE_F( triscore, ssse3 ) ( benchmark::State& state ){
+    if( !__builtin_cpu_supports("ssse3") ) {
+        state.SkipWithError("SSSE3 not supported");
+        return;
+    }
     enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
@@ -96,6 +100,10 @@ BENCHMARK_DEFINE_F( triscore, ssse3 ) ( benchmark::State& state ){
 BENCHMARK_REGISTER_F( triscore, ssse3 );
 
 BENCHMARK_DEFINE_F( triscore, avx2 ) ( benchmark::State& state ){
+    if( !__builtin_cpu_supports("avx2") ) {
+        state.SkipWithError("AVX2 not supported");
+        return;
+    }
     enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
