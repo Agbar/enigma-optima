@@ -82,10 +82,15 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../benchmark/cipherAvx2_ni.h" />
+		<Unit filename="../../benchmark/cipherAvx_ni.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../benchmark/cipherAvx_ni.h" />
 		<Unit filename="../../benchmark/cipherSsse3_ni.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../benchmark/cipherSsse3_ni.h" />
+		<Unit filename="../../benchmark/computeTriscoreAvx.tests.cpp" />
 		<Unit filename="../../benchmark/computeTriscoreAvx2.tests.cpp" />
 		<Unit filename="../../benchmark/computeTriscoreSsse3.tests.cpp" />
 		<Unit filename="../../benchmark/enigmaError.c">
