@@ -78,6 +78,11 @@
 			<Add library="shlwapi" />
 		</Linker>
 		<Unit filename="../../benchmark/biscore.tests.cpp" />
+		<Unit filename="../../benchmark/cipherSsse3_ni.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../benchmark/cipherSsse3_ni.h" />
+		<Unit filename="../../benchmark/computeTriscoreSsse3.tests.cpp" />
 		<Unit filename="../../benchmark/enigmaError.c">
 			<Option compilerVar="CC" />
 		</Unit>
