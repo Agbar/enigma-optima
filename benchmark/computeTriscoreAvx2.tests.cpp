@@ -6,8 +6,8 @@ extern "C" {
 #include "dict.h"
 #include "input.h"
 #include "stecker.h"
-#include "x86/cipherSsse3.h"
-#include "cipherSsse3_ni.h"
+#include "x86/cipherAvx2.h"
+#include "cipherAvx2_ni.h"
 }
 
 struct compute_triscore
@@ -52,44 +52,39 @@ struct compute_triscore
         get_stecker( &key );
 
         len = sizeof ct - 1;
-
     }
 };
 
-BENCHMARK_DEFINE_F( compute_triscore, score_sse2 ) ( benchmark::State& state ){
+BENCHMARK_DEFINE_F( compute_triscore, score_avx2 ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("sse2") ) {
         state.SkipWithError("SSSE3 not supported");
         return;
     }
-    enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
-
-    DecodeMessageSsse3( &key, len );
-
+    enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
+    DecodeMessageAvx2( &key, len );
     int score = 0;
     while( state.KeepRunning() ) {
-        score = TriscoreSse3( len );
+        score = TriscoreAvx2( len );
     }
-
     if( score != 46438 ) {
         state.SkipWithError( "Wrong score!" );
     }
-
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_DEFINE_F( compute_triscore, decode_ssse3 ) ( benchmark::State& state ){
+BENCHMARK_DEFINE_F( compute_triscore, decode_avx2 ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("ssse3") ) {
         state.SkipWithError("SSSE3 not supported");
         return;
     }
-    enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
-
+    enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
     while( state.KeepRunning() ) {
-        DecodeMessageSsse3( &key, len );
+        DecodeMessageAvx2( &key, len );
     }
-
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_REGISTER_F( compute_triscore, decode_ssse3 );
-BENCHMARK_REGISTER_F( compute_triscore, score_sse2 );
+
+BENCHMARK_REGISTER_F( compute_triscore, decode_avx2 );
+BENCHMARK_REGISTER_F( compute_triscore, score_avx2 );
+
