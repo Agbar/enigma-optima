@@ -56,8 +56,8 @@ struct compute_triscore
 };
 
 BENCHMARK_DEFINE_F( compute_triscore, score_avx2 ) ( benchmark::State& state ){
-    if( !__builtin_cpu_supports("sse2") ) {
-        state.SkipWithError("SSSE3 not supported");
+    if( !__builtin_cpu_supports("avx2") ) {
+        state.SkipWithError("AVX2 not supported");
         return;
     }
     enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
@@ -73,8 +73,8 @@ BENCHMARK_DEFINE_F( compute_triscore, score_avx2 ) ( benchmark::State& state ){
 }
 
 BENCHMARK_DEFINE_F( compute_triscore, decode_avx2 ) ( benchmark::State& state ){
-    if( !__builtin_cpu_supports("ssse3") ) {
-        state.SkipWithError("SSSE3 not supported");
+    if( !__builtin_cpu_supports("avx2") ) {
+        state.SkipWithError("AVX2 not supported");
         return;
     }
     enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );

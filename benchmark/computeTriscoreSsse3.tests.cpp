@@ -56,8 +56,8 @@ struct compute_triscore
     }
 };
 
-BENCHMARK_DEFINE_F( compute_triscore, score_sse2 ) ( benchmark::State& state ){
-    if( !__builtin_cpu_supports("sse2") ) {
+BENCHMARK_DEFINE_F( compute_triscore, score_ssse3_sse2 ) ( benchmark::State& state ){
+    if( !__builtin_cpu_supports("ssse3") ) {
         state.SkipWithError("SSSE3 not supported");
         return;
     }
@@ -92,4 +92,4 @@ BENCHMARK_DEFINE_F( compute_triscore, decode_ssse3 ) ( benchmark::State& state )
 }
 
 BENCHMARK_REGISTER_F( compute_triscore, decode_ssse3 );
-BENCHMARK_REGISTER_F( compute_triscore, score_sse2 );
+BENCHMARK_REGISTER_F( compute_triscore, score_ssse3_sse2 );
