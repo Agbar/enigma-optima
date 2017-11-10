@@ -77,19 +77,4 @@ BENCHMARK_DEFINE_F( compute_triscore, score_ssse3_sse2 ) ( benchmark::State& sta
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_DEFINE_F( compute_triscore, decode_ssse3 ) ( benchmark::State& state ){
-    if( !__builtin_cpu_supports("ssse3") ) {
-        state.SkipWithError("SSSE3 not supported");
-        return;
-    }
-    enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
-
-    while( state.KeepRunning() ) {
-        DecodeMessageSsse3( &key, len );
-    }
-
-    state.SetBytesProcessed( state.iterations() * len );
-}
-
-BENCHMARK_REGISTER_F( compute_triscore, decode_ssse3 );
 BENCHMARK_REGISTER_F( compute_triscore, score_ssse3_sse2 );

@@ -72,19 +72,4 @@ BENCHMARK_DEFINE_F( compute_triscore, score_avx2 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_DEFINE_F( compute_triscore, decode_avx2 ) ( benchmark::State& state ){
-    if( !__builtin_cpu_supports("avx2") ) {
-        state.SkipWithError("AVX2 not supported");
-        return;
-    }
-    enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
-    while( state.KeepRunning() ) {
-        DecodeMessageAvx2( &key, len );
-    }
-    state.SetBytesProcessed( state.iterations() * len );
-}
-
-
-BENCHMARK_REGISTER_F( compute_triscore, decode_avx2 );
 BENCHMARK_REGISTER_F( compute_triscore, score_avx2 );
-

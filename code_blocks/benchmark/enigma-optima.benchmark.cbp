@@ -93,6 +93,7 @@
 		<Unit filename="../../benchmark/computeTriscoreAvx.tests.cpp" />
 		<Unit filename="../../benchmark/computeTriscoreAvx2.tests.cpp" />
 		<Unit filename="../../benchmark/computeTriscoreSsse3.tests.cpp" />
+		<Unit filename="../../benchmark/decode.tests.cpp" />
 		<Unit filename="../../benchmark/enigmaError.c">
 			<Option compilerVar="CC" />
 		</Unit>

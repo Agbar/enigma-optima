@@ -6,11 +6,14 @@ extern "C" {
 #include "dict.h"
 #include "input.h"
 #include "stecker.h"
+#include "x86/cipherAvx2.h"
 #include "x86/cipherSsse3.h"
 #include "cipherAvx_ni.h"
+#include "cipherAvx2_ni.h"
+#include "cipherSsse3_ni.h"
 }
 
-struct compute_triscore
+struct decode
     : public benchmark::Fixture {
     size_t len = 0;
     Key key {};
@@ -52,29 +55,49 @@ struct compute_triscore
         get_stecker( &key );
 
         len = sizeof ct - 1;
-
     }
 };
 
-BENCHMARK_DEFINE_F( compute_triscore, score_avx_sse2 ) ( benchmark::State& state ){
+BENCHMARK_DEFINE_F( decode, ssse3 ) ( benchmark::State& state ){
+    if( !__builtin_cpu_supports("ssse3") ) {
+        state.SkipWithError("SSSE3 not supported");
+        return;
+    }
+    enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
+
+    while( state.KeepRunning() ) {
+        DecodeMessageSsse3( &key, len );
+    }
+
+    state.SetBytesProcessed( state.iterations() * len );
+}
+
+BENCHMARK_DEFINE_F( decode, avx ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("avx") ) {
         state.SkipWithError("AVX not supported");
         return;
     }
     enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
 
-    DecodeMessageAvx( &key, len );
-
-    int score = 0;
     while( state.KeepRunning() ) {
-        score = TriscoreAvx( len );
-    }
-
-    if( score != 46438 ) {
-        state.SkipWithError( "Wrong score!" );
+        DecodeMessageAvx( &key, len );
     }
 
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_REGISTER_F( compute_triscore, score_avx_sse2 );
+BENCHMARK_DEFINE_F( decode, avx2 ) ( benchmark::State& state ){
+    if( !__builtin_cpu_supports("avx2") ) {
+        state.SkipWithError("AVX2 not supported");
+        return;
+    }
+    enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
+    while( state.KeepRunning() ) {
+        DecodeMessageAvx2( &key, len );
+    }
+    state.SetBytesProcessed( state.iterations() * len );
+}
+
+BENCHMARK_REGISTER_F( decode, ssse3 );
+BENCHMARK_REGISTER_F( decode, avx );
+BENCHMARK_REGISTER_F( decode, avx2 );
