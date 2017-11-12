@@ -1,5 +1,8 @@
 #include <benchmark/benchmark.h>
 
+#include "AlignedAllocationTrait.h"
+#include "MessageAndKeyBasedFixture.h"
+
 extern "C" {
 #include "charmap.h"
 #include "ciphertext.h"
@@ -11,13 +14,13 @@ extern "C" {
 #include "cipherAvx_ni.h"
 #include "cipherAvx2_ni.h"
 #include "cipherSsse3_ni.h"
+
 }
 
-struct decode
-    : public benchmark::Fixture {
-    size_t len = 0;
-    Key key {};
-
+struct decoding
+    : public MessageAndKeyBasedFixture
+    , public AlignedAllocationTrait<decoding>
+{
     void SetUp(benchmark::State& st) override {
         init_charmap();
 
@@ -58,7 +61,7 @@ struct decode
     }
 };
 
-BENCHMARK_DEFINE_F( decode, ssse3 ) ( benchmark::State& state ){
+BENCHMARK_DEFINE_F( decoding, ssse3 ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("ssse3") ) {
         state.SkipWithError("SSSE3 not supported");
         return;
@@ -72,7 +75,7 @@ BENCHMARK_DEFINE_F( decode, ssse3 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_DEFINE_F( decode, avx ) ( benchmark::State& state ){
+BENCHMARK_DEFINE_F( decoding, avx ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("avx") ) {
         state.SkipWithError("AVX not supported");
         return;
@@ -86,7 +89,7 @@ BENCHMARK_DEFINE_F( decode, avx ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_DEFINE_F( decode, avx2 ) ( benchmark::State& state ){
+BENCHMARK_DEFINE_F( decoding, avx2 ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("avx2") ) {
         state.SkipWithError("AVX2 not supported");
         return;
@@ -98,6 +101,6 @@ BENCHMARK_DEFINE_F( decode, avx2 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_REGISTER_F( decode, ssse3 );
-BENCHMARK_REGISTER_F( decode, avx );
-BENCHMARK_REGISTER_F( decode, avx2 );
+BENCHMARK_REGISTER_F( decoding, ssse3 );
+BENCHMARK_REGISTER_F( decoding, avx );
+BENCHMARK_REGISTER_F( decoding, avx2 );

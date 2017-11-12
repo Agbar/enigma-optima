@@ -77,6 +77,8 @@
 			<Add library="Enigma" />
 			<Add library="shlwapi" />
 		</Linker>
+		<Unit filename="../../benchmark/AlignedAllocationTrait.h" />
+		<Unit filename="../../benchmark/MessageAndKeyBasedFixture.h" />
 		<Unit filename="../../benchmark/biscore.tests.cpp" />
 		<Unit filename="../../benchmark/cipherAvx2_ni.c">
 			<Option compilerVar="CC" />
@@ -93,7 +95,7 @@
 		<Unit filename="../../benchmark/computeTriscoreAvx.tests.cpp" />
 		<Unit filename="../../benchmark/computeTriscoreAvx2.tests.cpp" />
 		<Unit filename="../../benchmark/computeTriscoreSsse3.tests.cpp" />
-		<Unit filename="../../benchmark/decode.tests.cpp" />
+		<Unit filename="../../benchmark/decoding.tests.cpp" />
 		<Unit filename="../../benchmark/enigmaError.c">
 			<Option compilerVar="CC" />
 		</Unit>
