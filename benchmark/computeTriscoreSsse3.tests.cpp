@@ -1,4 +1,5 @@
 #include <benchmark/benchmark.h>
+#include "AlignedAllocationTrait.h"
 
 extern "C" {
 #include "charmap.h"
@@ -11,7 +12,8 @@ extern "C" {
 }
 
 struct compute_triscore
-    : public benchmark::Fixture {
+    : public benchmark::Fixture
+    , public AlignedAllocationTrait<compute_triscore> {
     size_t len = 0;
     Key key {};
 
