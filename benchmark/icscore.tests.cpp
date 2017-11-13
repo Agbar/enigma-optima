@@ -1,5 +1,5 @@
 #include <benchmark/benchmark.h>
-#include "AlignedAllocationTrait.h"
+#include "MessageAndKeyBasedFixture.h"
 
 extern "C" {
 #include "charmap.h"
@@ -17,11 +17,8 @@ extern "C" {
 }
 
 struct icscore
-    : public benchmark::Fixture
-    , public AlignedAllocationTrait<icscore> {
-    size_t len = 0;
-    Key key {};
-
+    : public MessageAndKeyBasedFixture
+{
     void SetUp( benchmark::State& st ) override {
         init_charmap();
         // Score: 46438

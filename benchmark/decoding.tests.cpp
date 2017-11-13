@@ -1,6 +1,5 @@
 #include <benchmark/benchmark.h>
 
-#include "AlignedAllocationTrait.h"
 #include "MessageAndKeyBasedFixture.h"
 
 extern "C" {
@@ -19,7 +18,6 @@ extern "C" {
 
 struct decoding
     : public MessageAndKeyBasedFixture
-    , public AlignedAllocationTrait<decoding>
 {
     void SetUp(benchmark::State& st) override {
         init_charmap();

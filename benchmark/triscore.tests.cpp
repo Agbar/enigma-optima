@@ -1,5 +1,5 @@
 #include <benchmark/benchmark.h>
-#include "AlignedAllocationTrait.h"
+#include "MessageAndKeyBasedFixture.h"
 
 extern "C" {
 #include "charmap.h"
@@ -17,12 +17,9 @@ extern "C" {
 }
 
 struct triscore
-    : public benchmark::Fixture
-    , public AlignedAllocationTrait<triscore> {
-    size_t len = 0;
-    Key key {};
-
-    void SetUp(benchmark::State& st) override {
+    : public MessageAndKeyBasedFixture
+{
+     void SetUp(benchmark::State& st) override {
         init_charmap();
 
         load_tridict( "00trigr.AVv1" );
