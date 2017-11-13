@@ -73,6 +73,8 @@
 		</Compiler>
 		<Linker>
 			<Add option="-pthread" />
+			<Add option="-static-libgcc" />
+			<Add option="-static-libstdc++" />
 			<Add library="benchmark" />
 			<Add library="Enigma" />
 			<Add library="shlwapi" />
