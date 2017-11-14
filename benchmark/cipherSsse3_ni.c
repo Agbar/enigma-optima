@@ -30,3 +30,8 @@ __attribute__ ((flatten))
 int  UniscoreSsse3( scoreLength_t len ){
     return ComputeUniscoreFromDecodedMsg( &decodedMsgPartSsse3, len );
 }
+
+__attribute__ ((flatten))
+int  IcscoreSsse3( scoreLength_t len ){
+    return ComputeIcscoreFromDecodedMsgSsse3( &decodedMsgPartSsse3, len );
+}

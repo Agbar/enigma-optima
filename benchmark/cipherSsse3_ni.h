@@ -5,5 +5,6 @@
 
 void DecodeMessageSsse3( const Key* const restrict key, int len );
 int  BiscoreSsse3( scoreLength_t len );
+int  IcscoreSsse3( scoreLength_t len );
 int  TriscoreSse3( scoreLength_t len );
 int  UniscoreSsse3( scoreLength_t len );
