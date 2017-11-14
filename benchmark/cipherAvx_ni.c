@@ -7,6 +7,7 @@
 #include <immintrin.h>
 
 #include "cipherAvx_ni.h"
+#include "score_inlines.h"
 #include "x86/cipherSsse3_inlines.h"
 #include "x86/scoreAvx.h"
 
@@ -18,4 +19,8 @@ void DecodeMessageAvx( const Key* const restrict key, int len ) {
 __attribute__ ((flatten))
 int TriscoreAvx( scoreLength_t len ) {
     return ComputeTriscoreFromDecodedMsgSse2( &decodedMsgPartAvx, len );
+
+__attribute__ ((flatten))
+int BiscoreAvx( scoreLength_t len ) {
+    return ComputeBiscoreFromDecodedMsg( &decodedMsgPartAvx, len );
 }

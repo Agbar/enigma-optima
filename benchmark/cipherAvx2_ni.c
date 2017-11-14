@@ -20,3 +20,8 @@ __attribute__ ((flatten))
 int TriscoreAvx2( scoreLength_t len ) {
     return ComputeTriscoreFromDecodedMsg( &decodedMsgPartAvx2, len );
 }
+
+__attribute__ ((flatten))
+int BiscoreAvx2( scoreLength_t len ) {
+    return ComputeBiscoreFromDecodedMsg( &decodedMsgPartAvx2, len );
+}
