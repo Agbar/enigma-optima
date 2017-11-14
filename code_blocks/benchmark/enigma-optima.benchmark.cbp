@@ -80,6 +80,7 @@
 			<Add library="shlwapi" />
 		</Linker>
 		<Unit filename="../../benchmark/AlignedAllocationTrait.h" />
+		<Unit filename="../../benchmark/MessageAndKeyBasedFixture.cpp" />
 		<Unit filename="../../benchmark/MessageAndKeyBasedFixture.h" />
 		<Unit filename="../../benchmark/biscore.tests.cpp" />
 		<Unit filename="../../benchmark/cipherAvx2_ni.c">

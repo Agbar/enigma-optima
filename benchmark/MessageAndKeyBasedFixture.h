@@ -13,4 +13,9 @@ struct MessageAndKeyBasedFixture
     , public AlignedAllocationTrait<MessageAndKeyBasedFixture> {
     size_t len = 0;
     Key key {};
+
+    void SetUp( benchmark::State& st ) final;
+
+protected:
+    virtual void LoadDictionary() = 0;
 };
