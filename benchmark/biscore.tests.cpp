@@ -15,6 +15,7 @@ extern "C" {
 struct biscore
     : public MessageAndKeyBasedFixture
 {
+    const int expectedScore = 7913;
 protected:
     void LoadDictionary() override {
         load_bidict( "00bigr.cur" );
@@ -29,7 +30,7 @@ BENCHMARK_DEFINE_F( biscore, simple )( benchmark::State& state ) {
     while( state.KeepRunning() ) {
         score = enigmaScoreSimple.biscore( &key, len );
     }
-    if( score != 7913 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -43,7 +44,7 @@ BENCHMARK_DEFINE_F( biscore, basic_no_interleave )( benchmark::State& state ) {
     while( state.KeepRunning() ) {
         score = enigmaScoreOptNoInterleave.biscore( &key, len );
     }
-    if( score != 7913 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -57,7 +58,7 @@ BENCHMARK_DEFINE_F( biscore, basic )( benchmark::State& state ) {
     while( state.KeepRunning() ) {
         score = enigmaScoreBasic.biscore( &key, len );
     }
-    if( score != 7913 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -74,7 +75,7 @@ BENCHMARK_DEFINE_F( biscore, ssse3 ) ( benchmark::State& state ){
     while( state.KeepRunning() ) {
         score = enigmaScoreSsse3.biscore( &key, len );
     }
-    if( score != 7913 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -91,7 +92,7 @@ BENCHMARK_DEFINE_F( biscore, avx2 ) ( benchmark::State& state ){
     while( state.KeepRunning() ) {
         score = enigmaScoreAvx2.biscore( &key, len );
     }
-    if( score != 7913 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
