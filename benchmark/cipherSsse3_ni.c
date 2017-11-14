@@ -8,6 +8,7 @@
 #include <immintrin.h>
 
 #include "cipherSsse3_ni.h"
+#include "score_inlines.h"
 #include "x86/cipherSsse3_inlines.h"
 
 __attribute__ ((flatten))
@@ -23,4 +24,9 @@ int TriscoreSse3( scoreLength_t len ) {
 __attribute__ ((flatten))
 int BiscoreSsse3( scoreLength_t len ) {
     return ComputeBiscoreFromDecodedMsgSse2( &decodedMsgPartSsse3, len );
+}
+
+__attribute__ ((flatten))
+int  UniscoreSsse3( scoreLength_t len ){
+    return ComputeUniscoreFromDecodedMsg( &decodedMsgPartSsse3, len );
 }

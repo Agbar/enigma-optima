@@ -97,6 +97,7 @@
 		<Unit filename="../../benchmark/cipherSsse3_ni.h" />
 		<Unit filename="../../benchmark/compute_biscore.tests.cpp" />
 		<Unit filename="../../benchmark/compute_triscore.tests.cpp" />
+		<Unit filename="../../benchmark/compute_uniscore.tests.cpp" />
 		<Unit filename="../../benchmark/decoding.tests.cpp" />
 		<Unit filename="../../benchmark/enigmaError.c">
 			<Option compilerVar="CC" />
