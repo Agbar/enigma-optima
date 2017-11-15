@@ -26,7 +26,7 @@ BENCHMARK_DEFINE_F( triscore, simple )( benchmark::State& state ) {
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = enigmaScoreSimple.triscore( &key, len );
     }
 
@@ -41,7 +41,7 @@ BENCHMARK_DEFINE_F( triscore, basic_no_interleave )( benchmark::State& state ) {
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = enigmaScoreOptNoInterleave.triscore( &key, len );
     }
     if( score != 46438 ) {
@@ -55,7 +55,7 @@ BENCHMARK_DEFINE_F( triscore, basic )( benchmark::State& state ) {
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = enigmaScoreBasic.triscore( &key, len );
     }
 
@@ -74,7 +74,7 @@ BENCHMARK_DEFINE_F( triscore, ssse3 ) ( benchmark::State& state ){
     enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = enigmaScoreSsse3.triscore( &key, len );
     }
 
@@ -93,7 +93,7 @@ BENCHMARK_DEFINE_F( triscore, avx2 ) ( benchmark::State& state ){
     enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = enigmaScoreAvx2.triscore( &key, len );
     }
 

@@ -22,7 +22,7 @@ protected:
 BENCHMARK_DEFINE_F( decoding, simple )( benchmark::State& state ) {
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
 
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         DecodeScoredMessagePartNoInterleaveSimple( &key, len, &decodedMsgPartNoInterleave );
     }
 
@@ -32,7 +32,7 @@ BENCHMARK_DEFINE_F( decoding, simple )( benchmark::State& state ) {
 BENCHMARK_DEFINE_F( decoding, basic_no_interleave )( benchmark::State& state ) {
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
 
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         DecodeScoredMessagePartNoInterleave( &key, len, &decodedMsgPartNoInterleave );
     }
 
@@ -46,7 +46,7 @@ BENCHMARK_DEFINE_F( decoding, ssse3 ) ( benchmark::State& state ){
     }
     enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
 
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         DecodeMessageSsse3( &key, len );
     }
 
@@ -60,7 +60,7 @@ BENCHMARK_DEFINE_F( decoding, avx ) ( benchmark::State& state ){
     }
     enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
 
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         DecodeMessageAvx( &key, len );
     }
 
@@ -73,7 +73,7 @@ BENCHMARK_DEFINE_F( decoding, avx2 ) ( benchmark::State& state ){
         return;
     }
     enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         DecodeMessageAvx2( &key, len );
     }
     state.SetBytesProcessed( state.iterations() * len );

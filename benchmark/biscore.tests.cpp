@@ -27,7 +27,7 @@ BENCHMARK_DEFINE_F( biscore, simple )( benchmark::State& state ) {
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = enigmaScoreSimple.biscore( &key, len );
     }
     if( score != expectedScore ) {
@@ -41,7 +41,7 @@ BENCHMARK_DEFINE_F( biscore, basic_no_interleave )( benchmark::State& state ) {
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = enigmaScoreOptNoInterleave.biscore( &key, len );
     }
     if( score != expectedScore ) {
@@ -55,7 +55,7 @@ BENCHMARK_DEFINE_F( biscore, basic )( benchmark::State& state ) {
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = enigmaScoreBasic.biscore( &key, len );
     }
     if( score != expectedScore ) {
@@ -72,7 +72,7 @@ BENCHMARK_DEFINE_F( biscore, ssse3 ) ( benchmark::State& state ){
     enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = enigmaScoreSsse3.biscore( &key, len );
     }
     if( score != expectedScore ) {
@@ -89,7 +89,7 @@ BENCHMARK_DEFINE_F( biscore, avx2 ) ( benchmark::State& state ){
     enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = enigmaScoreAvx2.biscore( &key, len );
     }
     if( score != expectedScore ) {

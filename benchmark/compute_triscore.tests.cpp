@@ -29,7 +29,7 @@ BENCHMARK_DEFINE_F( compute_triscore, ssse3_sse2 ) ( benchmark::State& state ){
     DecodeMessageSsse3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = TriscoreSse3( len );
     }
 
@@ -50,7 +50,7 @@ BENCHMARK_DEFINE_F( compute_triscore, avx_sse2 ) ( benchmark::State& state ){
     DecodeMessageAvx( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = TriscoreAvx( len );
     }
 
@@ -69,7 +69,7 @@ BENCHMARK_DEFINE_F( compute_triscore, avx2 ) ( benchmark::State& state ){
     enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
     DecodeMessageAvx2( &key, len );
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = TriscoreAvx2( len );
     }
     if( score != 46438 ) {

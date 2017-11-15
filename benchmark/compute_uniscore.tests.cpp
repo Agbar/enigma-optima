@@ -30,7 +30,7 @@ BENCHMARK_DEFINE_F( compute_uniscore, ssse3 ) ( benchmark::State& state ){
     DecodeMessageSsse3( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = UniscoreSsse3( len );
     }
 
@@ -51,7 +51,7 @@ BENCHMARK_DEFINE_F( compute_uniscore, avx ) ( benchmark::State& state ){
     DecodeMessageAvx( &key, len );
 
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = UniscoreAvx( len );
     }
 
@@ -70,7 +70,7 @@ BENCHMARK_DEFINE_F( compute_uniscore, avx2 ) ( benchmark::State& state ){
     enigma_cipher_DecoderLookupAvx2.prepare_decoder_lookup_M_H3( &key, len );
     DecodeMessageAvx2( &key, len );
     int score = 0;
-    while( state.KeepRunning() ) {
+    for( auto _ : state ) {
         score = UniscoreAvx2( len );
     }
     if( score != expectedScore ) {
