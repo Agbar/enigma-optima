@@ -8,6 +8,8 @@ extern "C" {
 #include "cipherAvx_ni.h"
 #include "cipherAvx2_ni.h"
 #include "cipherSsse3_ni.h"
+#include "scoreNoInterleave.h"
+#include "scoreNoInterleave_inlines.h"
 }
 
 struct decoding
@@ -16,6 +18,16 @@ struct decoding
 protected:
     void LoadDictionary() override {}
 };
+
+BENCHMARK_DEFINE_F( decoding, basic_no_interleave )( benchmark::State& state ) {
+    enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
+
+    while( state.KeepRunning() ) {
+        DecodeScoredMessagePartNoInterleave( &key, len, &decodedMsgPartNoInterleave );
+    }
+
+    state.SetBytesProcessed( state.iterations() * len );
+}
 
 BENCHMARK_DEFINE_F( decoding, ssse3 ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("ssse3") ) {
@@ -57,6 +69,7 @@ BENCHMARK_DEFINE_F( decoding, avx2 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
+BENCHMARK_REGISTER_F( decoding, basic_no_interleave);
 BENCHMARK_REGISTER_F( decoding, ssse3 );
 BENCHMARK_REGISTER_F( decoding, avx );
 BENCHMARK_REGISTER_F( decoding, avx2 );

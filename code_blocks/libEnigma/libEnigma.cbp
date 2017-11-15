@@ -122,6 +122,7 @@
 		<Unit filename="../../libEnigma/include/score.h" />
 		<Unit filename="../../libEnigma/include/scoreBasic.h" />
 		<Unit filename="../../libEnigma/include/scoreNoInterleave.h" />
+		<Unit filename="../../libEnigma/include/scoreNoInterleave_inlines.h" />
 		<Unit filename="../../libEnigma/include/scoreSimple.h" />
 		<Unit filename="../../libEnigma/include/score_inlines.h" />
 		<Unit filename="../../libEnigma/include/state.h" />
