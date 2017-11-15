@@ -36,3 +36,13 @@ void DecodeScoredMessagePartNoInterleave( const Key* const restrict key, scoreLe
         output->plain[i] = decode( 0, i, stbrett );
     }
 }
+
+__attribute__ (( optimize( "sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops" ) ))
+static inline
+void DecodeScoredMessagePartNoInterleaveSimple( const Key* const restrict key, scoreLength_t len, union ScoringDecodedMessage* output ){
+    const PermutationMap_t* const restrict stbrett = &key->stbrett;
+    int i;
+    for ( i = 0 ; i < len; i++ ) {
+        output->plain[i] = decode( 0, i, stbrett );
+    }
+}

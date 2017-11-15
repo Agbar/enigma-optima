@@ -19,6 +19,16 @@ protected:
     void LoadDictionary() override {}
 };
 
+BENCHMARK_DEFINE_F( decoding, simple )( benchmark::State& state ) {
+    enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
+
+    while( state.KeepRunning() ) {
+        DecodeScoredMessagePartNoInterleaveSimple( &key, len, &decodedMsgPartNoInterleave );
+    }
+
+    state.SetBytesProcessed( state.iterations() * len );
+}
+
 BENCHMARK_DEFINE_F( decoding, basic_no_interleave )( benchmark::State& state ) {
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
 
@@ -69,6 +79,7 @@ BENCHMARK_DEFINE_F( decoding, avx2 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
+BENCHMARK_REGISTER_F( decoding, simple );
 BENCHMARK_REGISTER_F( decoding, basic_no_interleave);
 BENCHMARK_REGISTER_F( decoding, ssse3 );
 BENCHMARK_REGISTER_F( decoding, avx );
