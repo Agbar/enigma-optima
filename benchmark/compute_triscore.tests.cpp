@@ -41,7 +41,7 @@ BENCHMARK_DEFINE_F( compute_triscore, sse2 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_DEFINE_F( compute_triscore, avx_sse2 ) ( benchmark::State& state ){
+BENCHMARK_DEFINE_F( compute_triscore, avx ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("avx") ) {
         state.SkipWithError("AVX not supported");
         return;
@@ -80,6 +80,6 @@ BENCHMARK_DEFINE_F( compute_triscore, avx2 ) ( benchmark::State& state ){
 }
 
 BENCHMARK_REGISTER_F( compute_triscore, sse2 );
-BENCHMARK_REGISTER_F( compute_triscore, avx_sse2 );
+BENCHMARK_REGISTER_F( compute_triscore, avx );
 BENCHMARK_REGISTER_F( compute_triscore, avx2 );
 
