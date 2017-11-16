@@ -17,16 +17,6 @@ void DecodeMessageSsse3( const Key* const restrict key, int len ) {
 }
 
 __attribute__ ((flatten))
-int TriscoreSse3( scoreLength_t len ) {
-    return ComputeTriscoreFromDecodedMsgSse2( &decodedMsgPartSsse3, len );
-}
-
-__attribute__ ((flatten))
-int BiscoreSsse3( scoreLength_t len ) {
-    return ComputeBiscoreFromDecodedMsgSse2( &decodedMsgPartSsse3, len );
-}
-
-__attribute__ ((flatten))
 int  UniscoreSsse3( scoreLength_t len ){
     return ComputeUniscoreFromDecodedMsg( &decodedMsgPartSsse3, len );
 }

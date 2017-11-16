@@ -91,6 +91,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../benchmark/cipherAvx_ni.h" />
+		<Unit filename="../../benchmark/cipherSse2_ni.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../benchmark/cipherSse2_ni.h" />
 		<Unit filename="../../benchmark/cipherSsse3_ni.c">
 			<Option compilerVar="CC" />
 		</Unit>
