@@ -7,8 +7,8 @@ void DecodeMessageBasicNoInterleave( const Key* const restrict key, int len ){
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
 }
 
-int  BiscoreBasicNoInterleave( scoreLength_t len ){
-    return ComputeBiscoreFromDecodedMsgNoInterleave( &decodedMsgPartNoInterleave, len );
+int  BiscoreSimple( scoreLength_t len ){
+    return ComputeBiscoreFromDecodedMsg( &decodedMsgPartNoInterleave, len );
 }
 
 int  TriscoreBasicNoInterleave( scoreLength_t len ){

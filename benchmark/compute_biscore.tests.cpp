@@ -22,14 +22,14 @@ protected:
     }
 };
 
-BENCHMARK_DEFINE_F( compute_biscore, basic_no_interleave ) ( benchmark::State& state ){
+BENCHMARK_DEFINE_F( compute_biscore, simple ) ( benchmark::State& state ){
     enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
 
     DecodeMessageBasicNoInterleave( &key, len );
 
     int score = 0;
     for( auto _ : state ) {
-        score = BiscoreBasicNoInterleave( len );
+        score = BiscoreSimple( len );
     }
 
     if( score != expectedScore ) {
@@ -98,9 +98,7 @@ BENCHMARK_DEFINE_F( compute_biscore, avx2 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
-BENCHMARK_REGISTER_F( compute_biscore, basic_no_interleave );
+BENCHMARK_REGISTER_F( compute_biscore, simple );
 BENCHMARK_REGISTER_F( compute_biscore, sse2 );
 BENCHMARK_REGISTER_F( compute_biscore, avx );
 BENCHMARK_REGISTER_F( compute_biscore, avx2 );
-
-

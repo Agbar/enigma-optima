@@ -1,6 +1,7 @@
 #include "dict.h"
 #include "key.h"
 #include "score.h"
+#include "score_inlines.h"
 #include "scoreNoInterleave.h"
 #include "scoreNoInterleave_inlines.h"
 
@@ -67,7 +68,7 @@ static int uniscoreNoInterleave( const Key* key, scoreLength_t len ) {
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
 static int biscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
-    return ComputeBiscoreFromDecodedMsgNoInterleave( &decodedMsgPartNoInterleave, len );
+    return ComputeBiscoreFromDecodedMsg( &decodedMsgPartNoInterleave, len );
 }
 
 
