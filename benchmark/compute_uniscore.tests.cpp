@@ -5,9 +5,10 @@ extern "C" {
 #include "dict.h"
 #include "x86/cipherSsse3.h"
 #include "x86/cipherAvx2.h"
+#include "cipherNoInterleave_ni.h"
+#include "cipherSsse3_ni.h"
 #include "cipherAvx_ni.h"
 #include "cipherAvx2_ni.h"
-#include "cipherSsse3_ni.h"
 }
 
 struct compute_uniscore
@@ -19,6 +20,23 @@ protected:
         load_unidict( "00unigr.AVv1" );
     }
 };
+
+BENCHMARK_DEFINE_F( compute_uniscore, simple ) ( benchmark::State& state ){
+    enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3( &key, len );
+
+    DecodeMessageBasicNoInterleave( &key, len );
+
+    int score = 0;
+    for( auto _ : state ) {
+        score = UniscoreBasicNoInterleave( len );
+    }
+
+    if( score != expectedScore ) {
+        state.SkipWithError( "Wrong score!" );
+    }
+
+    state.SetBytesProcessed( state.iterations() * len );
+}
 
 BENCHMARK_DEFINE_F( compute_uniscore, ssse3 ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("ssse3") ) {
@@ -79,9 +97,7 @@ BENCHMARK_DEFINE_F( compute_uniscore, avx2 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
+BENCHMARK_REGISTER_F( compute_uniscore, simple );
 BENCHMARK_REGISTER_F( compute_uniscore, ssse3 );
 BENCHMARK_REGISTER_F( compute_uniscore, avx );
 BENCHMARK_REGISTER_F( compute_uniscore, avx2 );
-
-
-

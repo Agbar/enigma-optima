@@ -1,4 +1,5 @@
 #include "cipherNoInterleave_ni.h"
+#include "score_inlines.h"
 #include "scoreNoInterleave.h"
 #include "scoreNoInterleave_inlines.h"
 
@@ -12,4 +13,8 @@ int  BiscoreBasicNoInterleave( scoreLength_t len ){
 
 int  TriscoreBasicNoInterleave( scoreLength_t len ){
     return ComputeTriscoreFromDecodedMsgNoInterleave( &decodedMsgPartNoInterleave, len );
+}
+
+int  UniscoreBasicNoInterleave( scoreLength_t len ){
+    return ComputeUniscoreFromDecodedMsg( &decodedMsgPartNoInterleave, len );
 }
