@@ -11,6 +11,10 @@ int  BiscoreSimple( scoreLength_t len ){
     return ComputeBiscoreFromDecodedMsg( &decodedMsgPartNoInterleave, len );
 }
 
+uint16_t IcscoreSimple( scoreLength_t len ){
+    return ComputeIcscoreFromDecodedMsg( &decodedMsgPartNoInterleave, len );
+}
+
 int  TriscoreBasicNoInterleave( scoreLength_t len ){
     return ComputeTriscoreFromDecodedMsg( &decodedMsgPartNoInterleave, len );
 }
