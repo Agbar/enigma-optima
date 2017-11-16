@@ -12,7 +12,7 @@ int  BiscoreSimple( scoreLength_t len ){
 }
 
 int  TriscoreBasicNoInterleave( scoreLength_t len ){
-    return ComputeTriscoreFromDecodedMsgNoInterleave( &decodedMsgPartNoInterleave, len );
+    return ComputeTriscoreFromDecodedMsg( &decodedMsgPartNoInterleave, len );
 }
 
 int  UniscoreBasicNoInterleave( scoreLength_t len ){

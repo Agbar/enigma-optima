@@ -22,7 +22,7 @@ enigma_score_function_t enigmaScoreOptNoInterleave = {
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
 int triscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
-    return ComputeTriscoreFromDecodedMsgNoInterleave( &decodedMsgPartNoInterleave, len );
+    return ComputeTriscoreFromDecodedMsg( &decodedMsgPartNoInterleave, len );
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
