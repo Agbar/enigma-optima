@@ -21,13 +21,7 @@ enigma_score_function_t enigmaScoreOptNoInterleave = {
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
 int triscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
-    uint8_t length = len;
-    int s = 0;
-    uint8_t i;
-    for ( i = 0; i < length - 2; ++i ){
-        s += tridict[decodedMsgPartNoInterleave.plain[i]][decodedMsgPartNoInterleave.plain[i+1]][decodedMsgPartNoInterleave.plain[i+2]];
-    }
-    return s;
+    return ComputeTriscoreFromDecodedMsgNoInterleave( &decodedMsgPartNoInterleave, len );
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cipher.h"
+#include "dict.h"
 #include "key.h"
 
 __attribute__ (( optimize( "sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops" ) ))
@@ -45,4 +46,14 @@ void DecodeScoredMessagePartNoInterleaveSimple( const Key* const restrict key, s
     for ( i = 0 ; i < len; i++ ) {
         output->plain[i] = decode( 0, i, stbrett );
     }
+}
+
+static inline
+int ComputeTriscoreFromDecodedMsgNoInterleave( union ScoringDecodedMessage* msg, scoreLength_t len ){
+    int s = 0;
+    uint8_t i;
+    for ( i = 0; i < len - 2; ++i ){
+        s += tridict[msg->plain[i]][msg->plain[i+1]][msg->plain[i+2]];
+    }
+    return s;
 }
