@@ -49,7 +49,7 @@ BENCHMARK_DEFINE_F( compute_triscore, sse2 ) ( benchmark::State& state ){
         score = TriscoreSse2( len );
     }
 
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
 
@@ -70,7 +70,7 @@ BENCHMARK_DEFINE_F( compute_triscore, avx ) ( benchmark::State& state ){
         score = TriscoreAvx( len );
     }
 
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
 
@@ -88,7 +88,7 @@ BENCHMARK_DEFINE_F( compute_triscore, avx2 ) ( benchmark::State& state ){
     for( auto _ : state ) {
         score = TriscoreAvx2( len );
     }
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
