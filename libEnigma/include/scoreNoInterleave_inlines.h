@@ -57,3 +57,13 @@ int ComputeTriscoreFromDecodedMsgNoInterleave( union ScoringDecodedMessage* msg,
     }
     return s;
 }
+
+static inline
+int ComputeBiscoreFromDecodedMsgNoInterleave( union ScoringDecodedMessage* msg, scoreLength_t len ){
+    uint8_t i;
+    int s = 0;
+    for( i = 0; i < len - 1; i++ ) {
+        s += bidict[msg->plain[i]][msg->plain[i + 1]];
+    }
+    return s;
+}

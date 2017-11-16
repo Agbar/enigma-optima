@@ -67,13 +67,7 @@ static int uniscoreNoInterleave( const Key* key, scoreLength_t len ) {
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
 static int biscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
-    uint8_t i;
-    uint8_t length = len;
-    int s = 0;
-    for( i = 0; i < length - 1; i++ ) {
-        s += bidict[decodedMsgPartNoInterleave.plain[i]][decodedMsgPartNoInterleave.plain[i + 1]];
-    }
-    return s;
+    return ComputeBiscoreFromDecodedMsgNoInterleave( &decodedMsgPartNoInterleave, len );
 }
 
 
