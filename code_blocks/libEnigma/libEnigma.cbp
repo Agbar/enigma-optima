@@ -75,6 +75,7 @@
 			<Add option="-std=gnu99" />
 			<Add option="-std=gnu++11" />
 			<Add option="-Werror=implicit-function-declaration" />
+			<Add option="-Werror=return-type" />
 			<Add option="-Wimplicit-fallthrough=5" />
 			<Add option="-Wunsafe-loop-optimizations" />
 			<Add option="-fcall-used-xmm6" />
@@ -122,6 +123,7 @@
 		<Unit filename="../../libEnigma/include/score.h" />
 		<Unit filename="../../libEnigma/include/scoreBasic.h" />
 		<Unit filename="../../libEnigma/include/scoreNoInterleave.h" />
+		<Unit filename="../../libEnigma/include/scoreNoInterleave_inlines.h" />
 		<Unit filename="../../libEnigma/include/scoreSimple.h" />
 		<Unit filename="../../libEnigma/include/score_inlines.h" />
 		<Unit filename="../../libEnigma/include/state.h" />

@@ -1,5 +1,7 @@
-#ifndef CIPHER_AVX2_INLINES_H_INCLUDED
-#define CIPHER_AVX2_INLINES_H_INCLUDED
+#pragma once
+
+#include "error.h"
+#include "cipherAvx2.h"
 
 inline
 v32qi PermuteV32qi(const PermutationMap_t* map, v32qi vec ){
@@ -46,6 +48,61 @@ v32qi DecodeBiteBackwardCommonAvx2( v32qi bite,  v32qi rRingOffset, const Key* c
     return bite;
 }
 
+__attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
+inline
+static void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len, union ScoringDecodedMessage* output )
+{
+    uint16_t messageBite  = 0;
+    uint_least16_t lookupNumber = 0;
+    v32qi currentRRingOffset = PathLookupAvx2.firstRRingOffset;
+    while( messageBite < ( len + 31 ) / 32 )
+    {
+        /* Worst case:
+         *  P0123456789ABCDEFGHIJKLMNOP01234    R-ring position (turnovers on 12 & 25, coded C & P)
+         *  0123456789ABCDEF0123456789ABCDEF    characters in bite
+         *  |||           |            |
+         *  |||           |            +
+         *  |||           +-  turnover on second notch of R ring
+         *  ||+- turnover caused by M-ring (turning L- & M- rings).
+         *  |+-- turnover setting M-ring to turnover position
+         *  +--- last character from previous bite
+         *
+         *  In the worst case there are 5 lookups per bite.
+         */
+        uint_least16_t lookupsToNextBite = PathLookupAvx2.nextBite[messageBite] - lookupNumber;
+        v32qi cBite = {0};
+        lookupNumber += lookupsToNextBite;
+        v32qi currentBite = ciphertext.vector32[messageBite];
+        v32qi predecoded = DecodeBiteForwardCommonAvx2( currentBite, currentRRingOffset, key );
+
+        switch( lookupsToNextBite ) {
+        case 5:
+            cBite  = DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 5 );
+            FALLTHROUGH();
+        case 4:
+            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 4 );
+            FALLTHROUGH();
+        case 3:
+            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 3 );
+            FALLTHROUGH();
+        case 2:
+            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 2 );
+            FALLTHROUGH();
+        case 1:
+            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 1 );
+            break;
+        default:
+            exit_d(5);
+            UNREACHABLE();
+        }
+        cBite = DecodeBiteBackwardCommonAvx2( cBite, currentRRingOffset, key );
+        // store whole decoded bite
+        output -> vector32[messageBite] = cBite;
+        messageBite++;
+        currentRRingOffset = AddMod26_v32qi_int8( currentRRingOffset, 32 % 26 );
+    }
+}
+
 __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 inline
@@ -83,6 +140,3 @@ uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, sco
     uint16_t sum = 256 *( high[0] + high[4] + high[8] + high[12] ) + low[0] + low[4] + low[8] + low[12];
     return sum;
 }
-
-
-#endif

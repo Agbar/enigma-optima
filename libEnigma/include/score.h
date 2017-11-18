@@ -1,5 +1,4 @@
-#ifndef SCORE_H
-#define SCORE_H
+#pragma once
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -79,8 +78,6 @@ void PrintDecodedMessage( FILE* stream, union ScoringDecodedMessage* message, in
 void DecodeScoredMessagePartStandard(const Key* const restrict key, int len, union ScoringDecodedMessage* restrict output);
 
 bool GetDifferences( union ScoringDecodedMessage* restrict reference, union ScoringDecodedMessage* restrict tested, char* restrict output, int len );
-
-#endif
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms

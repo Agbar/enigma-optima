@@ -1,6 +1,6 @@
-#ifndef SCORE_INLINES_HEADER_INCLUDED
-#define SCORE_INLINES_HEADER_INCLUDED
+#pragma once
 
+#include "dict.h"
 #include "score.h"
 
 __attribute__ ((optimize("unroll-loops")))
@@ -51,5 +51,3 @@ uint16_t ComputeIcscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLe
 
     return sum;
 }
-
-#endif
