@@ -4,7 +4,7 @@
 extern "C" {
 #include "x86/cipherSsse3.h"
 #include "x86/cipherAvx2.h"
-#include "cipherNoInterleave_ni.h"
+#include "cipherSimple_ni.h"
 #include "cipherSsse3_ni.h"
 #include "cipherAvx_ni.h"
 #include "cipherAvx2_ni.h"

@@ -1,4 +1,4 @@
-#include "cipherNoInterleave_ni.h"
+#include "cipherSimple_ni.h"
 #include "score_inlines.h"
 #include "scoreNoInterleave.h"
 #include "scoreNoInterleave_inlines.h"
