@@ -27,11 +27,6 @@ int BiscoreAvx( scoreLength_t len ) {
 }
 
 __attribute__ ((flatten))
-int  UniscoreAvx( scoreLength_t len ){
-    return ComputeUniscoreFromDecodedMsg( &decodedMsgPartAvx, len );
-}
-
-__attribute__ ((flatten))
 int  IcscoreAvx( scoreLength_t len ){
     return ComputeIcscoreFromDecodedMsgSsse3( &decodedMsgPartAvx, len );
 }
