@@ -53,6 +53,18 @@ BENCHMARK_DEFINE_F( decoding, ssse3 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
+BENCHMARK_DEFINE_F( decoding, avx ) ( benchmark::State& state ){
+    if( !__builtin_cpu_supports("avx") ) {
+        state.SkipWithError("AVX not supported");
+        return;
+    }
+    enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
+    for( auto _ : state ) {
+        DecodeMessageAvx( &key, len );
+    }
+    state.SetBytesProcessed( state.iterations() * len );
+}
+
 BENCHMARK_DEFINE_F( decoding, avx2 ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("avx2") ) {
         state.SkipWithError("AVX2 not supported");
@@ -68,4 +80,5 @@ BENCHMARK_DEFINE_F( decoding, avx2 ) ( benchmark::State& state ){
 BENCHMARK_REGISTER_F( decoding, simple );
 BENCHMARK_REGISTER_F( decoding, basic_no_interleave);
 BENCHMARK_REGISTER_F( decoding, ssse3 );
+BENCHMARK_REGISTER_F( decoding, avx );
 BENCHMARK_REGISTER_F( decoding, avx2 );
