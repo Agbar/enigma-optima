@@ -4,5 +4,4 @@
 #include "score.h"
 
 void DecodeMessageAvx2( const Key* const restrict key, int len );
-int  BiscoreAvx2( scoreLength_t len );
 int  IcscoreAvx2( scoreLength_t len );

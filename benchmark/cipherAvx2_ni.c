@@ -17,11 +17,6 @@ void DecodeMessageAvx2( const Key* const restrict key, int len ) {
 }
 
 __attribute__ ((flatten))
-int BiscoreAvx2( scoreLength_t len ) {
-    return ComputeBiscoreFromDecodedMsg( &decodedMsgPartAvx2, len );
-}
-
-__attribute__ ((flatten))
 int  IcscoreAvx2( scoreLength_t len ){
     return ComputeIcscoreFromDecodedMsgAvx2( &decodedMsgPartAvx2, len );
 }
