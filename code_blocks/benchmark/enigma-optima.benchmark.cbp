@@ -99,6 +99,9 @@
 				</Linker>
 			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="Release x64;Release Win x64;Release x86;Release Win x86;Debug x64;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
