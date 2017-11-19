@@ -166,7 +166,6 @@ void enigma_prepare_decoder_lookups(const Key* key, int len)
     }
 }
 
-__attribute__(( unused ))
 static
 void CipherInit(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf ) {
     enigma_cipher_function_t* fun = &enigma_cipher_decoder_lookup;
