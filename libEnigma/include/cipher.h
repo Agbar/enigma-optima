@@ -52,7 +52,7 @@ extern text_t etw[52];
 // path_lookup[Offset][(Index)*(LAST_DIMENSION)+(Cx)];
 // is synonyme to
 // path_lookup[Offset+Index][(Cx)];
-inline
+static inline
 text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett)
 {
     text_t c;
@@ -62,7 +62,7 @@ text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett)
     return stbrett->letters[c];
 }
 
-inline
+static inline
 void Step1( int8_t* ringOffset )
 {
     IncrementMod( ringOffset, 26 );
