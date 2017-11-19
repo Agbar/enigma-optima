@@ -17,7 +17,7 @@ typedef union _PermutationMap_t
     text_t letters[32];
 } PermutationMap_t;
 
-inline
+static inline
 void FixPermutationMapTail(PermutationMap_t* mapping){
     int k = 26;
     for(; k < 32; k++)

@@ -102,9 +102,6 @@ int keycmp(const Key *k1, const Key *k2)
 }
 
 extern inline
-void FixPermutationMapTail(PermutationMap_t* mapping);
-
-extern inline
 void Fill0To25(text_t array[static 26]);
 
 /*
