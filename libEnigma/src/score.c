@@ -20,16 +20,6 @@
 /* declaration of internal functions */
 void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict from);
 
-inline extern
-int ComputeUniscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len );
-inline extern
-int ComputeBiscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len );
-inline extern
-int ComputeTriscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len );
-
-inline extern
-uint16_t ComputeIcscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len );
-
 inline
 void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict prototype)
 {
