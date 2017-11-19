@@ -14,16 +14,6 @@
 
 void prepare_decoder_lookup_M_H3_avx2( const Key *key, int len );
 void prepare_decoder_lookup_ALL_avx2( const Key *key, int len );
-inline extern
-v32qi DecodeBiteForwardCommonAvx2( v32qi bite, v32qi rRingOffset, const Key* const restrict key );
-inline extern
-v32qi DecodeBiteMaskedPartAvx2( v32qi predecodedBite, int lookupNumber );
-inline extern
-v32qi DecodeBiteBackwardCommonAvx2( v32qi bite,  v32qi rRingOffset, const Key* const restrict key );
-inline extern
-v32qi PermuteV32qi( const PermutationMap_t* map, v32qi vec );
-inline extern
-uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, scoreLength_t len );
 
 enigma_cipher_function_t enigma_cipher_DecoderLookupAvx2 = { prepare_decoder_lookup_M_H3_avx2, prepare_decoder_lookup_ALL_avx2 };
 

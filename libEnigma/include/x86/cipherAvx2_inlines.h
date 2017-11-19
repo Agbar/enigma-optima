@@ -3,7 +3,7 @@
 #include "error.h"
 #include "cipherAvx2.h"
 
-inline
+static inline
 v32qi PermuteV32qi(const PermutationMap_t* map, v32qi vec ){
     /* Following line is needed to behave like __builtin_shuffle for all inputs and still being
     faster, but our data is always in interval [0,25] = [0,0x1A). */
@@ -17,7 +17,7 @@ v32qi PermuteV32qi(const PermutationMap_t* map, v32qi vec ){
     return ret1 | ret2;
 }
 
-inline
+static inline
 v32qi DecodeBiteForwardCommonAvx2( v32qi bite, v32qi rRingOffset, const Key* const restrict key ) {
     // stbrett forward
     bite = PermuteV32qi ( &key->stbrett, bite );
@@ -28,7 +28,7 @@ v32qi DecodeBiteForwardCommonAvx2( v32qi bite, v32qi rRingOffset, const Key* con
     return bite;
 }
 
-inline
+static inline
 v32qi DecodeBiteMaskedPartAvx2( v32qi predecodedBite, int lookupNumber ) {
     v32qi bite = predecodedBite;
     // m+l rings and ukw
@@ -37,7 +37,7 @@ v32qi DecodeBiteMaskedPartAvx2( v32qi predecodedBite, int lookupNumber ) {
     return bite;
 }
 
-inline
+static inline
 v32qi DecodeBiteBackwardCommonAvx2( v32qi bite,  v32qi rRingOffset, const Key* const restrict key ) {
     // right ring backwards
     bite = AddMod26_v32qi( bite, rRingOffset );
@@ -49,8 +49,8 @@ v32qi DecodeBiteBackwardCommonAvx2( v32qi bite,  v32qi rRingOffset, const Key* c
 }
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
-inline
-static void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len, union ScoringDecodedMessage* output )
+static inline
+void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;
@@ -105,7 +105,7 @@ static void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len,
 
 __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
-inline
+static inline
 uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, scoreLength_t len ){
     ALIGNED_32( uint8_t f[32] ) = {0};
     int i;
