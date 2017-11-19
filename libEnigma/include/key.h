@@ -27,8 +27,7 @@ void FixPermutationMapTail(PermutationMap_t* mapping){
 }
 
 __attribute__((optimize("unroll-loops")))
-static
-inline
+static inline
 void Fill0To25(text_t array[26])
 {
     int32_t* arrayInt = (int32_t*)array;
