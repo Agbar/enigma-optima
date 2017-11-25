@@ -17,7 +17,7 @@ typedef union _PermutationMap_t
     text_t letters[32];
 } PermutationMap_t;
 
-inline
+static inline
 void FixPermutationMapTail(PermutationMap_t* mapping){
     int k = 26;
     for(; k < 32; k++)
@@ -27,8 +27,7 @@ void FixPermutationMapTail(PermutationMap_t* mapping){
 }
 
 __attribute__((optimize("unroll-loops")))
-static
-inline
+static inline
 void Fill0To25(text_t array[26])
 {
     int32_t* arrayInt = (int32_t*)array;

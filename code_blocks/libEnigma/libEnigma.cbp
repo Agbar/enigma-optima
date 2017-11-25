@@ -135,9 +135,6 @@
 		<Unit filename="../../libEnigma/include/x86/scoreAvx.h" />
 		<Unit filename="../../libEnigma/include/x86/scoreAvx2.h" />
 		<Unit filename="../../libEnigma/include/x86/scoreSsse3.h" />
-		<Unit filename="../../libEnigma/src/ModMath.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../../libEnigma/src/charmap.c">
 			<Option compilerVar="CC" />
 		</Unit>

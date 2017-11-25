@@ -1,12 +1,10 @@
-#ifndef CIPHER_SSSE3_INLINES_H_INCLUDED
-#define CIPHER_SSSE3_INLINES_H_INCLUDED
+#pragma once
 
 #include "error.h"
 #include "dict.h"
 #include "cipherSsse3.h"
 
-
-inline
+static inline
 v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec ){
     /* Following line is needed to behave like __builtin_shuffle for all inputs and still being
     faster, but our data is always in interval [0,25] = [0,0x1A). */
@@ -18,7 +16,7 @@ v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec ){
 }
 
 
-inline
+static inline
 v16qi DecodeBiteForwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key ){
     // stbrett forward
     bite = PermuteV16qi ( &key->stbrett, bite );
@@ -29,7 +27,7 @@ v16qi DecodeBiteForwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* c
     return bite;
 }
 
-inline
+static inline
 v16qi DecodeBiteMaskedPartSsse3( v16qi predecodedBite, int lookupNumber ) {
     v16qi bite = predecodedBite;
     // m+l rings and ukw
@@ -38,7 +36,7 @@ v16qi DecodeBiteMaskedPartSsse3( v16qi predecodedBite, int lookupNumber ) {
     return bite;
 }
 
-inline
+static inline
 v16qi DecodeBiteBackwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key ) {
     // right ring backwards
     bite = AddMod26_v16qi( bite, rRingOffset );
@@ -50,7 +48,7 @@ v16qi DecodeBiteBackwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* 
 }
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
-inline
+static inline
 void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
@@ -102,7 +100,7 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
 
 __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
-inline
+static inline
 uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scoreLength_t len ){
     uint8_t ALIGNED_32( f[32] ) = {0};
     int i;
@@ -143,21 +141,21 @@ uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, sc
     return sum;
 }
 
-inline
+static inline
 void Unpack_v16qi( v16qi in, v8hi* lo, v8hi *hi ){
     v16qi zero = { 0 };
     *lo = (v8hi) __builtin_ia32_punpcklbw128 ( in, zero );
     *hi = (v8hi) __builtin_ia32_punpckhbw128 ( in, zero );
 }
 
-inline
+static inline
 void Unpack_v8hi( v8hi in, v4si* lo, v4si* hi ){
     v8hi zero = { 0 };
     *lo = (v4si) __builtin_ia32_punpcklwd128( in, zero );
     *hi = (v4si) __builtin_ia32_punpckhwd128( in, zero );
 }
 
-inline
+static inline
 v16qi MOVDQU( v16qi* p ){
     v16qi ret;
     asm( "MOVDQU %1, %0":
@@ -168,7 +166,7 @@ v16qi MOVDQU( v16qi* p ){
 }
 
 __attribute__ ((optimize("unroll-loops")))
-inline
+static inline
 int ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len ){
     int score = 0;
     int i;
@@ -204,7 +202,7 @@ int ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLe
 
 
 __attribute__ ((optimize("unroll-loops")))
-inline
+static inline
 int ComputeBiscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len ){
     int score = 0;
     int i;
@@ -232,6 +230,3 @@ int ComputeBiscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLen
     }
     return score;
 }
-
-
-#endif

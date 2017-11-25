@@ -3,9 +3,6 @@
 #include "ciphertext.h"
 #include "randomNumbers.h"
 
-// extern definition for external linkage.
-extern inline void SwapStbrett(Key* const key, int i, int k);
-
 /* extracts stecker from key->stbrett to key->sf */
 void get_stecker(Key *key)
 {

@@ -4,7 +4,7 @@
 #include "score.h"
 
 __attribute__ ((optimize("unroll-loops")))
-inline
+static inline
 int ComputeTriscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len ){
     int x, score = 0;
     for( x = 0; x < len - 2; ++x ) {
@@ -14,7 +14,7 @@ int ComputeTriscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength
 }
 
 __attribute__ ((optimize("unroll-loops")))
-inline
+static inline
 int ComputeBiscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len ) {
     int score = 0, x;
     for( x = 0; x < len - 1; ++x ) {
@@ -24,7 +24,7 @@ int ComputeBiscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_
 }
 
 __attribute__ ((optimize("unroll-loops")))
-inline
+static inline
 int ComputeUniscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len ){
     int score = 0, i;
     for( i = 0; i < len; i++ ) {
@@ -36,7 +36,7 @@ int ComputeUniscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength
 #include "config/types.h"
 __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
-inline
+static inline
 uint16_t ComputeIcscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len ){
     uint8_t f[32] = {0};
     int i;
