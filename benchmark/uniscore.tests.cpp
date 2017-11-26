@@ -8,6 +8,7 @@ extern "C" {
 #include "scoreSimple.h"
 #include "x86/cipherSsse3.h"
 #include "x86/scoreSsse3.h"
+#include "x86/scoreAvx.h"
 #include "x86/cipherAvx2.h"
 #include "x86/scoreAvx2.h"
 }
@@ -15,6 +16,7 @@ extern "C" {
 struct uniscore
     : public MessageAndKeyBasedFixture
 {
+    const int expectedScore = 66593;
 protected:
     void LoadDictionary() override {
         load_unidict( "00unigr.AVv1" );
@@ -29,7 +31,7 @@ BENCHMARK_DEFINE_F( uniscore, simple )( benchmark::State& state ) {
     for( auto _ : state ) {
         score = enigmaScoreSimple.uniscore( &key, len );
     }
-    if( score != 66593 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -43,7 +45,7 @@ BENCHMARK_DEFINE_F( uniscore, basic_no_interleave )( benchmark::State& state ) {
     for( auto _ : state ) {
         score = enigmaScoreOptNoInterleave.uniscore( &key, len );
     }
-    if( score != 66593 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -57,7 +59,7 @@ BENCHMARK_DEFINE_F( uniscore, basic )( benchmark::State& state ) {
     for( auto _ : state ) {
         score = enigmaScoreBasic.uniscore( &key, len );
     }
-    if( score != 66593 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -74,7 +76,24 @@ BENCHMARK_DEFINE_F( uniscore, ssse3 ) ( benchmark::State& state ){
     for( auto _ : state ) {
         score = enigmaScoreSsse3.uniscore( &key, len );
     }
-    if( score != 66593 ) {
+    if( score != expectedScore ) {
+        state.SkipWithError( "Wrong score!" );
+    }
+    state.SetBytesProcessed( state.iterations() * len );
+}
+
+BENCHMARK_DEFINE_F( uniscore, avx ) ( benchmark::State& state ){
+    if( !__builtin_cpu_supports("avx") ) {
+        state.SkipWithError("AVX not supported");
+        return;
+    }
+    enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
+
+    int score = 0;
+    for( auto _ : state ) {
+        score = enigmaScoreAvx.uniscore( &key, len );
+    }
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -91,7 +110,7 @@ BENCHMARK_DEFINE_F( uniscore, avx2 ) ( benchmark::State& state ){
     for( auto _ : state ) {
         score = enigmaScoreAvx2.uniscore( &key, len );
     }
-    if( score != 66593 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -101,4 +120,5 @@ BENCHMARK_REGISTER_F( uniscore, simple );
 BENCHMARK_REGISTER_F( uniscore, basic_no_interleave );
 BENCHMARK_REGISTER_F( uniscore, basic );
 BENCHMARK_REGISTER_F( uniscore, ssse3 );
+BENCHMARK_REGISTER_F( uniscore, avx );
 BENCHMARK_REGISTER_F( uniscore, avx2 );

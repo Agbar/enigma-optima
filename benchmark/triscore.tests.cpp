@@ -8,6 +8,7 @@ extern "C" {
 #include "scoreSimple.h"
 #include "x86/cipherSsse3.h"
 #include "x86/scoreSsse3.h"
+#include "x86/scoreAvx.h"
 #include "x86/cipherAvx2.h"
 #include "x86/scoreAvx2.h"
 }
@@ -15,6 +16,7 @@ extern "C" {
 struct triscore
     : public MessageAndKeyBasedFixture
 {
+    const int expectedScore = 46438;
 protected:
     void LoadDictionary() override {
         load_tridict( "00trigr.AVv1" );
@@ -30,7 +32,7 @@ BENCHMARK_DEFINE_F( triscore, simple )( benchmark::State& state ) {
         score = enigmaScoreSimple.triscore( &key, len );
     }
 
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
 
@@ -44,7 +46,7 @@ BENCHMARK_DEFINE_F( triscore, basic_no_interleave )( benchmark::State& state ) {
     for( auto _ : state ) {
         score = enigmaScoreOptNoInterleave.triscore( &key, len );
     }
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -59,7 +61,7 @@ BENCHMARK_DEFINE_F( triscore, basic )( benchmark::State& state ) {
         score = enigmaScoreBasic.triscore( &key, len );
     }
 
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
 
@@ -78,10 +80,27 @@ BENCHMARK_DEFINE_F( triscore, ssse3 ) ( benchmark::State& state ){
         score = enigmaScoreSsse3.triscore( &key, len );
     }
 
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
 
+    state.SetBytesProcessed( state.iterations() * len );
+}
+
+BENCHMARK_DEFINE_F( triscore, avx ) ( benchmark::State& state ){
+    if( !__builtin_cpu_supports("avx") ) {
+        state.SkipWithError("AVX not supported");
+        return;
+    }
+    enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
+
+    int score = 0;
+    for( auto _ : state ) {
+        score = enigmaScoreAvx.triscore( &key, len );
+    }
+    if( score != expectedScore ) {
+        state.SkipWithError( "Wrong score!" );
+    }
     state.SetBytesProcessed( state.iterations() * len );
 }
 
@@ -97,7 +116,7 @@ BENCHMARK_DEFINE_F( triscore, avx2 ) ( benchmark::State& state ){
         score = enigmaScoreAvx2.triscore( &key, len );
     }
 
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
 
@@ -108,4 +127,5 @@ BENCHMARK_REGISTER_F( triscore, simple );
 BENCHMARK_REGISTER_F( triscore, basic_no_interleave );
 BENCHMARK_REGISTER_F( triscore, basic );
 BENCHMARK_REGISTER_F( triscore, ssse3 );
+BENCHMARK_REGISTER_F( triscore, avx );
 BENCHMARK_REGISTER_F( triscore, avx2 );
