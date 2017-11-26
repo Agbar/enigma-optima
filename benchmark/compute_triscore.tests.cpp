@@ -56,5 +56,24 @@ BENCHMARK_DEFINE_F( compute_triscore, sse2 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
+BENCHMARK_DEFINE_F( compute_triscore, sse2_avx ) ( benchmark::State& state ){
+    if( !__builtin_cpu_supports("avx") ) {
+        state.SkipWithError("AVX not supported");
+        return;
+    }
+    enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
+    DecodeMessageSsse3( &key, len );
+
+    int score = 0;
+    for( auto _ : state ) {
+        score = TriscoreAvx( len );
+    }
+    if( score != expectedScore ) {
+        state.SkipWithError( "Wrong score!" );
+    }
+    state.SetBytesProcessed( state.iterations() * len );
+}
+
 BENCHMARK_REGISTER_F( compute_triscore, simple );
 BENCHMARK_REGISTER_F( compute_triscore, sse2 );
+BENCHMARK_REGISTER_F( compute_triscore, sse2_avx );
