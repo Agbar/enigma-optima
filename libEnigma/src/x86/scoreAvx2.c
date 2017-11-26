@@ -49,5 +49,5 @@ __attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
 static int triscoreAvx2( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartAvx2( key, len, &decodedMsgPartAvx2 );
-    return ComputeTriscoreFromDecodedMsg( &decodedMsgPartAvx2, len );
+    return ComputeTriscoreFromDecodedMsgSse2( &decodedMsgPartAvx2, len );
 }
