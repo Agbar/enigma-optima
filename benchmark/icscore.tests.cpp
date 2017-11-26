@@ -14,6 +14,7 @@ extern "C" {
 struct icscore
     : public MessageAndKeyBasedFixture
 {
+    const int expectedScore = 1344;
 protected:
     void LoadDictionary() override {}
 };
@@ -26,7 +27,7 @@ BENCHMARK_DEFINE_F( icscore, simple )( benchmark::State& state ) {
     for( auto _ : state ) {
         score = enigmaScoreSimple.icscore( &key, len );
     }
-    if( score != 1344 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -40,7 +41,7 @@ BENCHMARK_DEFINE_F( icscore, basic_no_interleave )( benchmark::State& state ) {
     for( auto _ : state ) {
         score = enigmaScoreOptNoInterleave.icscore( &key, len );
     }
-    if( score != 1344 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -54,7 +55,7 @@ BENCHMARK_DEFINE_F( icscore, basic )( benchmark::State& state ) {
     for( auto _ : state ) {
         score = enigmaScoreBasic.icscore( &key, len );
     }
-    if( score != 1344 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -71,7 +72,7 @@ BENCHMARK_DEFINE_F( icscore, ssse3 ) ( benchmark::State& state ){
     for( auto _ : state ) {
         score = enigmaScoreSsse3.icscore( &key, len );
     }
-    if( score != 1344 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -88,7 +89,7 @@ BENCHMARK_DEFINE_F( icscore, avx2 ) ( benchmark::State& state ){
     for( auto _ : state ) {
         score = enigmaScoreAvx2.icscore( &key, len );
     }
-    if( score != 1344 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
