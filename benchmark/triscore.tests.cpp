@@ -15,6 +15,7 @@ extern "C" {
 struct triscore
     : public MessageAndKeyBasedFixture
 {
+    const int expectedScore = 46438;
 protected:
     void LoadDictionary() override {
         load_tridict( "00trigr.AVv1" );
@@ -30,7 +31,7 @@ BENCHMARK_DEFINE_F( triscore, simple )( benchmark::State& state ) {
         score = enigmaScoreSimple.triscore( &key, len );
     }
 
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
 
@@ -44,7 +45,7 @@ BENCHMARK_DEFINE_F( triscore, basic_no_interleave )( benchmark::State& state ) {
     for( auto _ : state ) {
         score = enigmaScoreOptNoInterleave.triscore( &key, len );
     }
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
     state.SetBytesProcessed( state.iterations() * len );
@@ -59,7 +60,7 @@ BENCHMARK_DEFINE_F( triscore, basic )( benchmark::State& state ) {
         score = enigmaScoreBasic.triscore( &key, len );
     }
 
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
 
@@ -78,7 +79,7 @@ BENCHMARK_DEFINE_F( triscore, ssse3 ) ( benchmark::State& state ){
         score = enigmaScoreSsse3.triscore( &key, len );
     }
 
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
 
@@ -97,7 +98,7 @@ BENCHMARK_DEFINE_F( triscore, avx2 ) ( benchmark::State& state ){
         score = enigmaScoreAvx2.triscore( &key, len );
     }
 
-    if( score != 46438 ) {
+    if( score != expectedScore ) {
         state.SkipWithError( "Wrong score!" );
     }
 
