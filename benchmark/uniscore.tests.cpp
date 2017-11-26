@@ -8,6 +8,7 @@ extern "C" {
 #include "scoreSimple.h"
 #include "x86/cipherSsse3.h"
 #include "x86/scoreSsse3.h"
+#include "x86/scoreAvx.h"
 #include "x86/cipherAvx2.h"
 #include "x86/scoreAvx2.h"
 }
@@ -81,6 +82,23 @@ BENCHMARK_DEFINE_F( uniscore, ssse3 ) ( benchmark::State& state ){
     state.SetBytesProcessed( state.iterations() * len );
 }
 
+BENCHMARK_DEFINE_F( uniscore, avx ) ( benchmark::State& state ){
+    if( !__builtin_cpu_supports("avx") ) {
+        state.SkipWithError("AVX not supported");
+        return;
+    }
+    enigma_cipher_decoder_lookup_ssse3.prepare_decoder_lookup_M_H3( &key, len );
+
+    int score = 0;
+    for( auto _ : state ) {
+        score = enigmaScoreAvx.uniscore( &key, len );
+    }
+    if( score != expectedScore ) {
+        state.SkipWithError( "Wrong score!" );
+    }
+    state.SetBytesProcessed( state.iterations() * len );
+}
+
 BENCHMARK_DEFINE_F( uniscore, avx2 ) ( benchmark::State& state ){
     if( !__builtin_cpu_supports("avx2") ) {
         state.SkipWithError("AVX2 not supported");
@@ -102,4 +120,5 @@ BENCHMARK_REGISTER_F( uniscore, simple );
 BENCHMARK_REGISTER_F( uniscore, basic_no_interleave );
 BENCHMARK_REGISTER_F( uniscore, basic );
 BENCHMARK_REGISTER_F( uniscore, ssse3 );
+BENCHMARK_REGISTER_F( uniscore, avx );
 BENCHMARK_REGISTER_F( uniscore, avx2 );
