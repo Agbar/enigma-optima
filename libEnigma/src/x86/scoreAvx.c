@@ -42,12 +42,12 @@ __attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
 static int biscoreAvx( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartAvx );
-    return ComputeBiscoreFromDecodedMsg( &decodedMsgPartAvx, len );
+    return ComputeBiscoreFromDecodedMsgSse2( &decodedMsgPartAvx, len );
 }
 
 __attribute__ ((flatten))
 __attribute__ ((optimize("unroll-loops")))
 static int triscoreAvx( const Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartAvx );
-    return ComputeTriscoreFromDecodedMsg( &decodedMsgPartAvx, len );
+    return ComputeTriscoreFromDecodedMsgSse2( &decodedMsgPartAvx, len );
 }

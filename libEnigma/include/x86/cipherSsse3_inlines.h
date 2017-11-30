@@ -157,12 +157,7 @@ void Unpack_v8hi( v8hi in, v4si* lo, v4si* hi ){
 
 static inline
 v16qi MOVDQU( v16qi* p ){
-    v16qi ret;
-    asm( "MOVDQU %1, %0":
-        "=x" (ret) :
-        "m" (*p)
-    );
-    return ret;
+    return __builtin_ia32_loaddqu( (char*) p );
 }
 
 __attribute__ ((optimize("unroll-loops")))
