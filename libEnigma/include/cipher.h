@@ -79,24 +79,85 @@ v2qs decode2( size_t offset, size_t index, const PermutationMap_t* const stbrett
 }
 
 static inline
+v4qs decode3( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+{
+    size_t c;
+    size_t d;
+    size_t e;
+    asm(
+        "movsb%z[c] %c[offset]+0( %[ctext], %[ind] ),    %[c]    \n\t"
+        "movsb%z[d] %c[offset]+1( %[ctext], %[ind] ),    %[d]    \n\t"
+        "movsb%z[e] %c[offset]+2( %[ctext], %[ind] ),    %[e]    \n\t"
+        : [c]       "=&r"    ( c )
+        , [d]       "=&r"    ( d )
+        , [e]       "=&r"    ( e )
+        : [ctext]   "r"     ( &ciphertext )
+        , [ind]     "r"     ( index )
+        , [offset]  "i"     ( offset ));
+
+    c = stbrett->letters[c];
+    d = stbrett->letters[d];
+    e = stbrett->letters[e];
+
+     asm(
+        "movsb%z[c] (%c[offset]+0)*%c[ld]( %[p_lookup_ind], %[c] ),  %[c]    \n\t"
+        "movsb%z[d] (%c[offset]+1)*%c[ld]( %[p_lookup_ind], %[d] ),  %[d]    \n\t"
+        "movsb%z[e] (%c[offset]+2)*%c[ld]( %[p_lookup_ind], %[e] ),  %[e]    \n\t"
+
+        : [c]           "+&r"  ( c )
+        , [d]           "+&r"  ( d )
+        , [e]           "+&r"  ( e )
+        : [p_lookup_ind]"r"    ( path_lookup + index )
+        , [offset]      "i"     ( offset )
+        , [ld]          "i"     ( LAST_DIMENSION ));
+
+
+    v4qs ret = { stbrett->letters[c]
+               , stbrett->letters[d]
+               , stbrett->letters[e]
+               };
+    return ret;
+}
+
+static inline
 v4qs decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
 {
-    text_t c;
-    text_t d;
-    text_t e;
-    text_t f;
-    c = (&ciphertext.plain[offset    ])[index];
-    d = (&ciphertext.plain[offset + 1])[index];
-    e = (&ciphertext.plain[offset + 2])[index];
-    f = (&ciphertext.plain[offset + 3])[index];
+    size_t c;
+    size_t d;
+    size_t e;
+    size_t f;
+    asm(
+        "movsb%z[c] %c[offset]+0( %[ctext], %[ind] ),    %[c]    \n\t"
+        "movsb%z[d] %c[offset]+1( %[ctext], %[ind] ),    %[d]    \n\t"
+        "movsb%z[e] %c[offset]+2( %[ctext], %[ind] ),    %[e]    \n\t"
+        "movsb%z[f] %c[offset]+3( %[ctext], %[ind] ),    %[f]    \n\t"
+        : [c]       "=&r"    ( c )
+        , [d]       "=&r"    ( d )
+        , [e]       "=&r"    ( e )
+        , [f]       "=&r"    ( f )
+        : [ctext]   "r"     ( &ciphertext )
+        , [ind]     "r"     ( index )
+        , [offset]  "i"     ( offset ));
+
     c = stbrett->letters[c];
     d = stbrett->letters[d];
     e = stbrett->letters[e];
     f = stbrett->letters[f];
-    c = path_lookup[offset    ][index*LAST_DIMENSION+c];
-    d = path_lookup[offset + 1][index*LAST_DIMENSION+d];
-    e = path_lookup[offset + 2][index*LAST_DIMENSION+e];
-    f = path_lookup[offset + 3][index*LAST_DIMENSION+f];
+
+    // path_lookup[Offset+Index][(Cx)]
+    asm(
+        "movsb%z[c] (%c[offset]+0)*%c[ld]( %[p_lookup_ind], %[c] ),  %[c]    \n\t"
+        "movsb%z[d] (%c[offset]+1)*%c[ld]( %[p_lookup_ind], %[d] ),  %[d]    \n\t"
+        "movsb%z[e] (%c[offset]+2)*%c[ld]( %[p_lookup_ind], %[e] ),  %[e]    \n\t"
+        "movsb%z[f] (%c[offset]+3)*%c[ld]( %[p_lookup_ind], %[f] ),  %[f]    \n\t"
+
+        : [c]           "+&r"  ( c )
+        , [d]           "+&r"  ( d )
+        , [e]           "+&r"  ( e )
+        , [f]           "+&r"  ( f )
+        : [p_lookup_ind]"r"    ( path_lookup + index )
+        , [offset]      "i"     ( offset )
+        , [ld]          "i"     ( LAST_DIMENSION ));
 
     v4qs ret = { stbrett->letters[c]
                , stbrett->letters[d]
