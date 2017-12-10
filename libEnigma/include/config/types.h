@@ -30,6 +30,16 @@ as sometimes it is convenient ie. unsigned right shuffles, etc.
  * * * * * * * * * * */
 
  /*
+ * 16 bit vectors
+ */
+typedef signed char     v2qs    __attribute__ ((vector_size(2)));
+
+ /*
+ * 32 bit vectors
+ */
+typedef signed char     v4qs    __attribute__ ((vector_size(4)));
+
+ /*
  * 128 bit vectors
  */
 /** \brief Vector of 16 unsigned bytes. 128 bit.

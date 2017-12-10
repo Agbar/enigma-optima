@@ -63,6 +63,50 @@ text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett)
 }
 
 static inline
+v2qs decode2( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+{
+    text_t c;
+    text_t d;
+    c = (&ciphertext.plain[offset    ])[index];
+    d = (&ciphertext.plain[offset + 1])[index];
+    c = stbrett->letters[c];
+    d = stbrett->letters[d];
+    c = path_lookup[offset    ][index*LAST_DIMENSION+c];
+    d = path_lookup[offset + 1][index*LAST_DIMENSION+d];
+
+    v2qs ret = { stbrett->letters[c], stbrett->letters[d] };
+    return ret;
+}
+
+static inline
+v4qs decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+{
+    text_t c;
+    text_t d;
+    text_t e;
+    text_t f;
+    c = (&ciphertext.plain[offset    ])[index];
+    d = (&ciphertext.plain[offset + 1])[index];
+    e = (&ciphertext.plain[offset + 2])[index];
+    f = (&ciphertext.plain[offset + 3])[index];
+    c = stbrett->letters[c];
+    d = stbrett->letters[d];
+    e = stbrett->letters[e];
+    f = stbrett->letters[f];
+    c = path_lookup[offset    ][index*LAST_DIMENSION+c];
+    d = path_lookup[offset + 1][index*LAST_DIMENSION+d];
+    e = path_lookup[offset + 2][index*LAST_DIMENSION+e];
+    f = path_lookup[offset + 3][index*LAST_DIMENSION+f];
+
+    v4qs ret = { stbrett->letters[c]
+               , stbrett->letters[d]
+               , stbrett->letters[e]
+               , stbrett->letters[f]
+               };
+    return ret;
+}
+
+static inline
 void Step1( int8_t* ringOffset )
 {
     IncrementMod( ringOffset, 26 );
