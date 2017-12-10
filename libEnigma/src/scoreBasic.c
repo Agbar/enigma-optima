@@ -26,7 +26,6 @@ __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unrol
 static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
   int f[26] = {0};
-  text_t c1;
   int i;
 
   if (len < 2)
@@ -35,69 +34,40 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
   const PermutationMap_t* stbrett = &key->stbrett;
 
   for (i = 0; i < len-15; i += 16) {
-    c1 = decode(0,i,stbrett);
-    f[c1]++;
+    v4qs c;
+    c = decode4(0,i,stbrett);
+    f[c[0]]++;
+    f[c[1]]++;
+    f[c[2]]++;
+    f[c[3]]++;
 
-    c1 = decode(1,i,stbrett);
-    f[c1]++;
+    c = decode4(4,i,stbrett);
+    f[c[0]]++;
+    f[c[1]]++;
+    f[c[2]]++;
+    f[c[3]]++;
 
-    c1 = decode(2,i,stbrett);
-    f[c1]++;
+    c = decode4(8,i,stbrett);
+    f[c[0]]++;
+    f[c[1]]++;
+    f[c[2]]++;
+    f[c[3]]++;
 
-    c1 = decode(3,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(4,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(5,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(6,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(7,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(8,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(9,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(10,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(11,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(12,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(13,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(14,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(15,i,stbrett);
-    f[c1]++;
+    c = decode4(12,i,stbrett);
+    f[c[0]]++;
+    f[c[1]]++;
+    f[c[2]]++;
+    f[c[3]]++;
   }
   for (; i < len-3; i += 4) {
-    c1 = decode(0,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(1,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(2,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(3,i,stbrett);
-    f[c1]++;
+    v4qs c = decode4(0,i,stbrett);
+    f[c[0]]++;
+    f[c[1]]++;
+    f[c[2]]++;
+    f[c[3]]++;
   }
   for (; i < len; i++) {
-    c1 = decode(0,i,stbrett);
+    text_t c1 = decode(0,i,stbrett);
     f[c1]++;
   }
 
