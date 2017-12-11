@@ -120,17 +120,17 @@ v4qs decode3( size_t offset, size_t index, const PermutationMap_t* const stbrett
 }
 
 static inline
-v4qs decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
 {
     size_t c;
     size_t d;
     size_t e;
     size_t f;
     asm(
-        "movsb%z[c] %c[offset]+0( %[ctext], %[ind] ),    %[c]    \n\t"
-        "movsb%z[d] %c[offset]+1( %[ctext], %[ind] ),    %[d]    \n\t"
-        "movsb%z[e] %c[offset]+2( %[ctext], %[ind] ),    %[e]    \n\t"
-        "movsb%z[f] %c[offset]+3( %[ctext], %[ind] ),    %[f]    \n\t"
+        "movsb%z[c] %c[offset] + 0( %[ctext], %[ind] ),    %[c]    \n\t"
+        "movsb%z[d] %c[offset] + 1( %[ctext], %[ind] ),    %[d]    \n\t"
+        "movsb%z[e] %c[offset] + 2( %[ctext], %[ind] ),    %[e]    \n\t"
+        "movsb%z[f] %c[offset] + 3( %[ctext], %[ind] ),    %[f]    \n\t"
         : [c]       "=&r"    ( c )
         , [d]       "=&r"    ( d )
         , [e]       "=&r"    ( e )
@@ -146,10 +146,10 @@ v4qs decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett
 
     // path_lookup[Offset+Index][(Cx)]
     asm(
-        "movsb%z[c] (%c[offset]+0)*%c[ld]( %[p_lookup_ind], %[c] ),  %[c]    \n\t"
-        "movsb%z[d] (%c[offset]+1)*%c[ld]( %[p_lookup_ind], %[d] ),  %[d]    \n\t"
-        "movsb%z[e] (%c[offset]+2)*%c[ld]( %[p_lookup_ind], %[e] ),  %[e]    \n\t"
-        "movsb%z[f] (%c[offset]+3)*%c[ld]( %[p_lookup_ind], %[f] ),  %[f]    \n\t"
+        "movsb%z[c] ( %c[offset] + 0 ) * %c[ld]( %[p_lookup_ind], %[c] ),  %[c]    \n\t"
+        "movsb%z[d] ( %c[offset] + 1 ) * %c[ld]( %[p_lookup_ind], %[d] ),  %[d]    \n\t"
+        "movsb%z[e] ( %c[offset] + 2 ) * %c[ld]( %[p_lookup_ind], %[e] ),  %[e]    \n\t"
+        "movsb%z[f] ( %c[offset] + 3 ) * %c[ld]( %[p_lookup_ind], %[f] ),  %[f]    \n\t"
 
         : [c]           "+&r"  ( c )
         , [d]           "+&r"  ( d )
@@ -159,11 +159,11 @@ v4qs decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett
         , [offset]      "i"     ( offset )
         , [ld]          "i"     ( LAST_DIMENSION ));
 
-    v4qs ret = { stbrett->letters[c]
-               , stbrett->letters[d]
-               , stbrett->letters[e]
-               , stbrett->letters[f]
-               };
+    v4pis ret = { stbrett->letters[c]
+                , stbrett->letters[d]
+                , stbrett->letters[e]
+                , stbrett->letters[f]
+                };
     return ret;
 }
 

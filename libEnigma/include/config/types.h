@@ -20,6 +20,7 @@ l: length of element, coded as:
     s: single   32  int, float          double word
     d: double   64  long long, double   quad word
     t: tetra   128  __i128, long double
+    p: pointer      32 or 64 bits
 t: type
     i: integer (default)
     f: floating point
@@ -28,6 +29,12 @@ I extend type to allow:
     u: unsigned
 as sometimes it is convenient ie. unsigned right shuffles, etc.
  * * * * * * * * * * */
+
+ /*
+ * Target dependent size vectors
+ */
+typedef intptr_t        v4pis    __attribute__ ((vector_size(4*sizeof( intptr_t )))) ;
+typedef uintptr_t       v4piu    __attribute__ ((vector_size(4*sizeof( intptr_t )))) ;
 
  /*
  * 16 bit vectors
