@@ -49,11 +49,13 @@
 					<Add option="-march=pentium3" />
 					<Add option="-O3" />
 					<Add option="-m32" />
+					<Add option="-fno-pie" />
+					<Add option="-fno-pic" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
-					<Add option="-O3" />
 					<Add option="-m32" />
+					<Add option="-O3" />
 				</Linker>
 			</Target>
 		</Build>
