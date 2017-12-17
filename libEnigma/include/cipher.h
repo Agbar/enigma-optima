@@ -63,6 +63,64 @@ text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett)
 }
 
 static inline
+v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett );
+
+#ifdef __i386__
+
+static inline
+v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+{
+    size_t c;
+    size_t d;
+    size_t e;
+    size_t f;
+    asm(
+        "movsb%z[c] %[ctext] + %c[offset] + 0( %[ind] ),    %[c]    \n\t"
+        "movsb%z[d] %[ctext] + %c[offset] + 1( %[ind] ),    %[d]    \n\t"
+        "movsb%z[e] %[ctext] + %c[offset] + 2( %[ind] ),    %[e]    \n\t"
+        "movsb%z[f] %[ctext] + %c[offset] + 3( %[ind] ),    %[f]    \n\t"
+        : [c]       "=&r"    ( c )
+        , [d]       "=&r"    ( d )
+        , [e]       "=&r"    ( e )
+        , [f]       "=&r"    ( f )
+        : [ctext]   "m"     ( ciphertext )
+        , [ind]     "r"     ( index )
+        , [offset]  "i"     ( offset ));
+
+    c = stbrett->letters[c];
+    d = stbrett->letters[d];
+    e = stbrett->letters[e];
+    f = stbrett->letters[f];
+
+    // path_lookup[Offset+Index][(Cx)]
+    asm(
+        "movsb%z[c] %[path_lookup] + ( %c[offset] + 0 ) * %c[ld]( %[index], %[c] ),  %[c]    \n\t"
+        "movsb%z[d] %[path_lookup] + ( %c[offset] + 1 ) * %c[ld]( %[index], %[d] ),  %[d]    \n\t"
+        "movsb%z[e] %[path_lookup] + ( %c[offset] + 2 ) * %c[ld]( %[index], %[e] ),  %[e]    \n\t"
+        "movsb%z[f] %[path_lookup] + ( %c[offset] + 3 ) * %c[ld]( %[index], %[f] ),  %[f]    \n\t"
+
+        : [c]           "+&r"   ( c )
+        , [d]           "+&r"   ( d )
+        , [e]           "+&r"   ( e )
+        , [f]           "+&r"   ( f )
+        : [path_lookup] "m"     ( path_lookup )
+        , [index]       "r"     ( index * LAST_DIMENSION )
+        , [offset]      "i"     ( offset )
+        , [ld]          "i"     ( LAST_DIMENSION ));
+
+    v4pis ret = { stbrett->letters[c]
+                , stbrett->letters[d]
+                , stbrett->letters[e]
+                , stbrett->letters[f]
+                };
+    return ret;
+}
+
+#endif
+
+#ifdef __amd64__
+
+static inline
 v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
 {
     size_t c;
@@ -109,6 +167,8 @@ v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbret
                 };
     return ret;
 }
+
+#endif
 
 static inline
 void Step1( int8_t* ringOffset )
