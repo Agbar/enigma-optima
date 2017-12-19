@@ -229,52 +229,45 @@ int triscoreBasic( const Key* const restrict key, scoreLength_t len )
     int i = 2;
     for( ; i < len - 15; i += 16 ) {
         size_t c3;
-        c3 = decode( 0, i, stbrett );
+        v4pis d;
+        d = decode4( 0, i, stbrett );
+        c3 = d[0];
+        TRISCORE_ADD( s, c1, c2, c3 );
+        c1 = d[1];
+        TRISCORE_ADD( s, c2, c3, c1 );
+        c2 = d[2];
+        TRISCORE_ADD( s, c3, c1, c2 );
+        c3 = d[3];
         TRISCORE_ADD( s, c1, c2, c3 );
 
-        c1 = decode( 1, i, stbrett );
+        d = decode4( 4, i, stbrett );
+        c1 = d[0];
         TRISCORE_ADD( s, c2, c3, c1 );
-
-        c2 = decode( 2, i, stbrett );
+        c2 = d[1];
         TRISCORE_ADD( s, c3, c1, c2 );
-
-        c3 = decode( 3, i, stbrett );
+        c3 = d[2];
         TRISCORE_ADD( s, c1, c2, c3 );
-
-        c1 = decode( 4, i, stbrett );
+        c1 = d[3];
         TRISCORE_ADD( s, c2, c3, c1 );
 
-        c2 = decode( 5, i, stbrett );
+        d = decode4( 8, i, stbrett );
+        c2 = d[0];
         TRISCORE_ADD( s, c3, c1, c2 );
-
-        c3 = decode( 6, i, stbrett );
+        c3 = d[1];
         TRISCORE_ADD( s, c1, c2, c3 );
-
-        c1 = decode( 7, i, stbrett );
+        c1 = d[2];
         TRISCORE_ADD( s, c2, c3, c1 );
-
-        c2 = decode( 8, i, stbrett );
+        c2 = d[3];
         TRISCORE_ADD( s, c3, c1, c2 );
 
-        c3 = decode( 9, i, stbrett );
+        d = decode4( 12, i, stbrett );
+        c3 = d[0];
         TRISCORE_ADD( s, c1, c2, c3 );
-
-        c1 = decode( 10, i, stbrett );
+        c1 = d[1];
         TRISCORE_ADD( s, c2, c3, c1 );
-
-        c2 = decode( 11, i, stbrett );
+        c2 = d[2];
         TRISCORE_ADD( s, c3, c1, c2 );
-
-        c3 = decode( 12, i, stbrett );
-        TRISCORE_ADD( s, c1, c2, c3 );
-
-        c1 = decode( 13, i, stbrett );
-        TRISCORE_ADD( s, c2, c3, c1 );
-
-        c2 = decode( 14, i, stbrett );
-        TRISCORE_ADD( s, c3, c1, c2 );
-
-        c3 = decode( 15, i, stbrett );
+        c3 = d[3];
         TRISCORE_ADD( s, c1, c2, c3 );
 
         c1 = c2;
@@ -282,16 +275,17 @@ int triscoreBasic( const Key* const restrict key, scoreLength_t len )
     }
     for( ; i < len - 3; i += 4 ) {
         size_t c3;
-        c3 = decode( 0, i, stbrett );
+        v4pis d = decode4( 0, i, stbrett );
+        c3 = d[0];
         TRISCORE_ADD( s, c1, c2, c3 );
 
-        c1 = decode( 1, i, stbrett );
+        c1 = d[1];
         TRISCORE_ADD( s, c2, c3, c1 );
 
-        c2 = decode( 2, i, stbrett );
+        c2 = d[2];
         TRISCORE_ADD( s, c3, c1, c2 );
 
-        c3 = decode( 3, i, stbrett );
+        c3 = d[3];
         TRISCORE_ADD( s, c1, c2, c3 );
 
         c1 = c2;
