@@ -46,26 +46,38 @@ extern text_t rev_wal[11][78];
 extern text_t ukw[5][52];
 extern text_t etw[52];
 
-// (&ciphertext[x])[i]; is a synonyme to: ciphertext[x+i];
-// and is useful where ciphertext[x] can be calculated at compilation time.
-//
-// path_lookup[Offset][(Index)*(LAST_DIMENSION)+(Cx)];
-// is synonyme to
-// path_lookup[Offset+Index][(Cx)];
 static inline
-text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett)
-{
-    text_t c;
-    c = (&ciphertext.plain[offset])[index];
-    c = stbrett->letters[c];
-    c = path_lookup[offset][index*LAST_DIMENSION+c];
-    return stbrett->letters[c];
-}
+size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett );
 
 static inline
 v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett );
 
 #ifdef __i386__
+
+static inline
+size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett )
+{
+    size_t c;
+    asm(
+        "movsb%z[c] %[ctext] + %c[offset] ( %[ind] ),    %[c]    \n\t"
+        : [c]       "=&r"    ( c )
+        : [ctext]   "m"     ( ciphertext )
+        , [ind]     "r"     ( index )
+        , [offset]  "i"     ( offset ));
+
+    c = stbrett->letters[c];
+
+    // path_lookup[Offset+Index][(Cx)]
+    asm(
+        "movsb%z[c] %[path_lookup] + %c[offset] * %c[ld]( %[index], %[c] ), %[c]    \n\t"
+        : [c]           "+&r"   ( c )
+        : [path_lookup] "m"     ( path_lookup )
+        , [index]       "r"     ( index * LAST_DIMENSION )
+        , [offset]      "i"     ( offset )
+        , [ld]          "i"     ( LAST_DIMENSION ));
+
+    return stbrett->letters[c];
+}
 
 static inline
 v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
@@ -119,6 +131,32 @@ v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbret
 #endif
 
 #ifdef __amd64__
+
+static inline
+size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett )
+{
+    size_t c;
+    asm(
+        "movsb%z[c] %c[offset] ( %[ctext], %[ind] ),    %[c]    \n\t"
+
+        : [c]       "=&r"   ( c )
+        : [ctext]   "r"     ( &ciphertext )
+        , [ind]     "r"     ( index )
+        , [offset]  "i"     ( offset ));
+
+    c = stbrett->letters[c];
+
+    // path_lookup[Offset+Index][(Cx)]
+    asm(
+        "movsb%z[c] ( %c[offset] + 0 ) * %c[ld]( %[p_lookup_ind], %[c] ),  %[c]    \n\t"
+
+        : [c]           "+&r"  ( c )
+        : [p_lookup_ind]"r"    ( path_lookup + index )
+        , [offset]      "i"     ( offset )
+        , [ld]          "i"     ( LAST_DIMENSION ));
+
+    return stbrett->letters[c];
+}
 
 static inline
 v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
