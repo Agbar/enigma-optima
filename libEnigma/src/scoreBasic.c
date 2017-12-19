@@ -150,65 +150,57 @@ int biscoreBasic( const Key* const restrict key, scoreLength_t len )
 
     int i = 1;
     for( ; i < len - 15; i += 16 ) {
-        size_t c2 = decode( 0, i, stbrett );
+        v4pis d;
+        size_t c2;
+        d = decode4( 0, i, stbrett );
+        c2 = d[0];
         BISCORE_ADD( s , c1, c2 );
-
-        c1 = decode( 1, i, stbrett );
+        c1 = d[1];
+        BISCORE_ADD( s , c2, c1 );
+        c2 = d[2];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[3];
         BISCORE_ADD( s , c2, c1 );
 
-        c2 = decode( 2, i, stbrett );
+        d = decode4( 4, i, stbrett );
+        c2 = d[0];
         BISCORE_ADD( s , c1, c2 );
-
-        c1 = decode( 3, i, stbrett );
+        c1 = d[1];
+        BISCORE_ADD( s , c2, c1 );
+        c2 = d[2];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[3];
         BISCORE_ADD( s , c2, c1 );
 
-        c2 = decode( 4, i, stbrett );
+        d = decode4( 8, i, stbrett );
+        c2 = d[0];
         BISCORE_ADD( s , c1, c2 );
-
-        c1 = decode( 5, i, stbrett );
+        c1 = d[1];
+        BISCORE_ADD( s , c2, c1 );
+        c2 = d[2];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[3];
         BISCORE_ADD( s , c2, c1 );
 
-        c2 = decode( 6, i, stbrett );
+        d = decode4( 12, i, stbrett );
+        c2 = d[0];
         BISCORE_ADD( s , c1, c2 );
-
-        c1 = decode( 7, i, stbrett );
+        c1 = d[1];
         BISCORE_ADD( s , c2, c1 );
-
-        c2 = decode( 8, i, stbrett );
+        c2 = d[2];
         BISCORE_ADD( s , c1, c2 );
-
-        c1 = decode( 9, i, stbrett );
-        BISCORE_ADD( s , c2, c1 );
-
-        c2 = decode( 10, i, stbrett );
-        BISCORE_ADD( s , c1, c2 );
-
-        c1 = decode( 11, i, stbrett );
-        BISCORE_ADD( s , c2, c1 );
-
-        c2 = decode( 12, i, stbrett );
-        BISCORE_ADD( s , c1, c2 );
-
-        c1 = decode( 13, i, stbrett );
-        BISCORE_ADD( s , c2, c1 );
-
-        c2 = decode( 14, i, stbrett );
-        BISCORE_ADD( s , c1, c2 );
-
-        c1 = decode( 15, i, stbrett );
+        c1 = d[3];
         BISCORE_ADD( s , c2, c1 );
     }
     for( ; i < len - 3; i += 4 ) {
-        size_t c2 = decode( 0, i, stbrett );
+        v4pis d = decode4( 0, i, stbrett );
+        size_t c2 = d[0];
         BISCORE_ADD( s , c1, c2 );
-
-        c1 = decode( 1, i, stbrett );
+        c1 = d[1];
         BISCORE_ADD( s , c2, c1 );
-
-        c2 = decode( 2, i, stbrett );
+        c2 = d[2];
         BISCORE_ADD( s , c1, c2 );
-
-        c1 = decode( 3, i, stbrett );
+        c1 = d[3];
         BISCORE_ADD( s , c2, c1 );
     }
     for( ; i < len; i++ ) {
