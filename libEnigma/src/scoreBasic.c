@@ -90,81 +90,51 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
 static int uniscoreBasic( const Key* key, scoreLength_t len )
 {
   int i;
-  text_t c;
   int s;
 
   const PermutationMap_t* stbrett = &key->stbrett;
 
   s = 0;
   for (i = 0; i < len-15; i += 16) {
-    c = decode(0,i,stbrett);
-    UNISCORE_ADD( s, c );
+    v4pis c;
+    c = decode4( 0, i, stbrett );
+    UNISCORE_ADD( s, c[0] );
+    UNISCORE_ADD( s, c[1] );
+    UNISCORE_ADD( s, c[2] );
+    UNISCORE_ADD( s, c[3] );
 
-    c = decode(1,i,stbrett);
-    UNISCORE_ADD( s, c );
+    c = decode4( 4, i, stbrett );
+    UNISCORE_ADD( s, c[0] );
+    UNISCORE_ADD( s, c[1] );
+    UNISCORE_ADD( s, c[2] );
+    UNISCORE_ADD( s, c[3] );
 
-    c = decode(2,i,stbrett);
-    UNISCORE_ADD( s, c );
+    c = decode4( 8, i, stbrett );
+    UNISCORE_ADD( s, c[0] );
+    UNISCORE_ADD( s, c[1] );
+    UNISCORE_ADD( s, c[2] );
+    UNISCORE_ADD( s, c[3] );
 
-    c = decode(3,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(4,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(5,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(6,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(7,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(8,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(9,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(10,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(11,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(12,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(13,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(14,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(15,i,stbrett);
-    UNISCORE_ADD( s, c );
+    c = decode4( 12, i, stbrett );
+    UNISCORE_ADD( s, c[0] );
+    UNISCORE_ADD( s, c[1] );
+    UNISCORE_ADD( s, c[2] );
+    UNISCORE_ADD( s, c[3] );
   }
   for (; i < len-3; i += 4) {
-    c = decode(0,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(1,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(2,i,stbrett);
-    UNISCORE_ADD( s, c );
-
-    c = decode(3,i,stbrett);
-    UNISCORE_ADD( s, c );
+    v4pis c;
+    c = decode4( 0, i, stbrett );
+    UNISCORE_ADD( s, c[0] );
+    UNISCORE_ADD( s, c[1] );
+    UNISCORE_ADD( s, c[2] );
+    UNISCORE_ADD( s, c[3] );
   }
   for (; i < len; i++) {
-    c = decode(0,i,stbrett);
+    text_t c = decode(0,i,stbrett);
     UNISCORE_ADD( s, c );
   }
 
   return s;
-
 }
 
 #define BISCORE_ADD(S,A,B)\
