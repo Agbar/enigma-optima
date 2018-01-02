@@ -26,7 +26,6 @@ __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unrol
 static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
   int f[26] = {0};
-  text_t c1;
   int i;
 
   if (len < 2)
@@ -35,69 +34,40 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
   const PermutationMap_t* stbrett = &key->stbrett;
 
   for (i = 0; i < len-15; i += 16) {
-    c1 = decode(0,i,stbrett);
-    f[c1]++;
+    v4pis c;
+    c = decode4(0,i,stbrett);
+    f[c[0]]++;
+    f[c[1]]++;
+    f[c[2]]++;
+    f[c[3]]++;
 
-    c1 = decode(1,i,stbrett);
-    f[c1]++;
+    c = decode4(4,i,stbrett);
+    f[c[0]]++;
+    f[c[1]]++;
+    f[c[2]]++;
+    f[c[3]]++;
 
-    c1 = decode(2,i,stbrett);
-    f[c1]++;
+    c = decode4(8,i,stbrett);
+    f[c[0]]++;
+    f[c[1]]++;
+    f[c[2]]++;
+    f[c[3]]++;
 
-    c1 = decode(3,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(4,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(5,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(6,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(7,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(8,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(9,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(10,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(11,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(12,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(13,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(14,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(15,i,stbrett);
-    f[c1]++;
+    c = decode4(12,i,stbrett);
+    f[c[0]]++;
+    f[c[1]]++;
+    f[c[2]]++;
+    f[c[3]]++;
   }
   for (; i < len-3; i += 4) {
-    c1 = decode(0,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(1,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(2,i,stbrett);
-    f[c1]++;
-
-    c1 = decode(3,i,stbrett);
-    f[c1]++;
+    v4pis c = decode4(0,i,stbrett);
+    f[c[0]]++;
+    f[c[1]]++;
+    f[c[2]]++;
+    f[c[3]]++;
   }
   for (; i < len; i++) {
-    c1 = decode(0,i,stbrett);
+    text_t c1 = decode(0,i,stbrett);
     f[c1]++;
   }
 
@@ -115,263 +85,221 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
   return (S0+S1) + (S2+S3);
 }
 
+#define UNISCORE_ADD(S,A)\
+    asm( "add  %1, %0": "+q"( (S) ): "m"( unidict[(A)] ) )
 static int uniscoreBasic( const Key* key, scoreLength_t len )
 {
   int i;
-  text_t c;
   int s;
 
   const PermutationMap_t* stbrett = &key->stbrett;
 
   s = 0;
   for (i = 0; i < len-15; i += 16) {
-    c = decode(0,i,stbrett);
-    s += unidict[c];
+    v4pis c;
+    c = decode4( 0, i, stbrett );
+    UNISCORE_ADD( s, c[0] );
+    UNISCORE_ADD( s, c[1] );
+    UNISCORE_ADD( s, c[2] );
+    UNISCORE_ADD( s, c[3] );
 
-    c = decode(1,i,stbrett);
-    s += unidict[c];
+    c = decode4( 4, i, stbrett );
+    UNISCORE_ADD( s, c[0] );
+    UNISCORE_ADD( s, c[1] );
+    UNISCORE_ADD( s, c[2] );
+    UNISCORE_ADD( s, c[3] );
 
-    c = decode(2,i,stbrett);
-    s += unidict[c];
+    c = decode4( 8, i, stbrett );
+    UNISCORE_ADD( s, c[0] );
+    UNISCORE_ADD( s, c[1] );
+    UNISCORE_ADD( s, c[2] );
+    UNISCORE_ADD( s, c[3] );
 
-    c = decode(3,i,stbrett);
-    s += unidict[c];
-
-    c = decode(4,i,stbrett);
-    s += unidict[c];
-
-    c = decode(5,i,stbrett);
-    s += unidict[c];
-
-    c = decode(6,i,stbrett);
-    s += unidict[c];
-
-    c = decode(7,i,stbrett);
-    s += unidict[c];
-
-    c = decode(8,i,stbrett);
-    s += unidict[c];
-
-    c = decode(9,i,stbrett);
-    s += unidict[c];
-
-    c = decode(10,i,stbrett);
-    s += unidict[c];
-
-    c = decode(11,i,stbrett);
-    s += unidict[c];
-
-    c = decode(12,i,stbrett);
-    s += unidict[c];
-
-    c = decode(13,i,stbrett);
-    s += unidict[c];
-
-    c = decode(14,i,stbrett);
-    s += unidict[c];
-
-    c = decode(15,i,stbrett);
-    s += unidict[c];
+    c = decode4( 12, i, stbrett );
+    UNISCORE_ADD( s, c[0] );
+    UNISCORE_ADD( s, c[1] );
+    UNISCORE_ADD( s, c[2] );
+    UNISCORE_ADD( s, c[3] );
   }
   for (; i < len-3; i += 4) {
-    c = decode(0,i,stbrett);
-    s += unidict[c];
-
-    c = decode(1,i,stbrett);
-    s += unidict[c];
-
-    c = decode(2,i,stbrett);
-    s += unidict[c];
-
-    c = decode(3,i,stbrett);
-    s += unidict[c];
+    v4pis c;
+    c = decode4( 0, i, stbrett );
+    UNISCORE_ADD( s, c[0] );
+    UNISCORE_ADD( s, c[1] );
+    UNISCORE_ADD( s, c[2] );
+    UNISCORE_ADD( s, c[3] );
   }
   for (; i < len; i++) {
-    c = decode(0,i,stbrett);
-    s += unidict[c];
+    text_t c = decode(0,i,stbrett);
+    UNISCORE_ADD( s, c );
   }
 
   return s;
-
 }
 
-__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
+#define BISCORE_ADD(S,A,B)\
+    asm( "add  %1, %0": "+q"( (S) ): "m"( bidict[(A)][(B)] ) )
+__attribute__ ((optimize("sched-stalled-insns=0"
+                        ",sched-stalled-insns-dep=16")))
 int biscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
-  int i;
-  text_t c1, c2;
-  int s = 0;
+    const PermutationMap_t* const stbrett = &key->stbrett;
+    int s = 0;
 
-  const PermutationMap_t* const stbrett = &key->stbrett;
+    size_t c1 = decode(0,0,stbrett);
 
-  c1 = decode(0,0,stbrett);
+    int i = 1;
+    for( ; i < len - 15; i += 16 ) {
+        v4pis d;
+        size_t c2;
+        d = decode4( 0, i, stbrett );
+        c2 = d[0];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[1];
+        BISCORE_ADD( s , c2, c1 );
+        c2 = d[2];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[3];
+        BISCORE_ADD( s , c2, c1 );
 
-  for (i = 1; i < len-15; i += 16) {
-    c2 = decode(0,i,stbrett);
-    s += bidict[c1][c2];
+        d = decode4( 4, i, stbrett );
+        c2 = d[0];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[1];
+        BISCORE_ADD( s , c2, c1 );
+        c2 = d[2];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[3];
+        BISCORE_ADD( s , c2, c1 );
 
-    c1 = decode(1,i,stbrett);
-    s += bidict[c2][c1];
+        d = decode4( 8, i, stbrett );
+        c2 = d[0];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[1];
+        BISCORE_ADD( s , c2, c1 );
+        c2 = d[2];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[3];
+        BISCORE_ADD( s , c2, c1 );
 
-    c2 = decode(2,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = decode(3,i,stbrett);
-    s += bidict[c2][c1];
-
-    c2 = decode(4,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = decode(5,i,stbrett);
-    s += bidict[c2][c1];
-
-    c2 = decode(6,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = decode(7,i,stbrett);
-    s += bidict[c2][c1];
-
-    c2 = decode(8,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = decode(9,i,stbrett);
-    s += bidict[c2][c1];
-
-    c2 = decode(10,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = decode(11,i,stbrett);
-    s += bidict[c2][c1];
-
-    c2 = decode(12,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = decode(13,i,stbrett);
-    s += bidict[c2][c1];
-
-    c2 = decode(14,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = decode(15,i,stbrett);
-    s += bidict[c2][c1];
-  }
-  for (; i < len-3; i += 4) {
-    c2 = decode(0,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = decode(1,i,stbrett);
-    s += bidict[c2][c1];
-
-    c2 = decode(2,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = decode(3,i,stbrett);
-    s += bidict[c2][c1];
-  }
-  for (; i < len; i++) {
-    c2 = decode(0,i,stbrett);
-    s += bidict[c1][c2];
-
-    c1 = c2;
-  }
-
-  return s;
-
+        d = decode4( 12, i, stbrett );
+        c2 = d[0];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[1];
+        BISCORE_ADD( s , c2, c1 );
+        c2 = d[2];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[3];
+        BISCORE_ADD( s , c2, c1 );
+    }
+    for( ; i < len - 3; i += 4 ) {
+        v4pis d = decode4( 0, i, stbrett );
+        size_t c2 = d[0];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[1];
+        BISCORE_ADD( s , c2, c1 );
+        c2 = d[2];
+        BISCORE_ADD( s , c1, c2 );
+        c1 = d[3];
+        BISCORE_ADD( s , c2, c1 );
+    }
+    for( ; i < len; i++ ) {
+        size_t c2 = decode( 0, i, stbrett );
+        BISCORE_ADD( s , c1, c2 );
+        c1 = c2;
+    }
+    return s;
 }
 
-__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
+#define TRISCORE_ADD(S,A,B,C) \
+    asm( "add  %1, %0": "+q"( (s) ): "m"( tridict[(A)][(B)][(C)] ) )
+
+__attribute__ ((optimize("sched-stalled-insns=0"
+                         ",sched-stalled-insns-dep=16"
+               )))
 int triscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
-  int i;
-  text_t c1, c2, c3;
-  int s;
+    int s = 0;
 
-  const PermutationMap_t* const stbrett = &key->stbrett;
+    const PermutationMap_t* const stbrett = &key->stbrett;
 
-  s=0;
+    size_t c1 = decode(0,0,stbrett);
+    size_t c2 = decode(1,0,stbrett);
 
-  c1 = decode(0,0,stbrett);
+    int i = 2;
+    for( ; i < len - 15; i += 16 ) {
+        size_t c3;
+        v4pis d;
+        d = decode4( 0, i, stbrett );
+        c3 = d[0];
+        TRISCORE_ADD( s, c1, c2, c3 );
+        c1 = d[1];
+        TRISCORE_ADD( s, c2, c3, c1 );
+        c2 = d[2];
+        TRISCORE_ADD( s, c3, c1, c2 );
+        c3 = d[3];
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-  c2 = decode(1,0,stbrett);
+        d = decode4( 4, i, stbrett );
+        c1 = d[0];
+        TRISCORE_ADD( s, c2, c3, c1 );
+        c2 = d[1];
+        TRISCORE_ADD( s, c3, c1, c2 );
+        c3 = d[2];
+        TRISCORE_ADD( s, c1, c2, c3 );
+        c1 = d[3];
+        TRISCORE_ADD( s, c2, c3, c1 );
 
-  for (i = 2; i < len-15; i += 16) {
-    c3 = decode(0,i,stbrett);
-    s += tridict[c1][c2][c3];
+        d = decode4( 8, i, stbrett );
+        c2 = d[0];
+        TRISCORE_ADD( s, c3, c1, c2 );
+        c3 = d[1];
+        TRISCORE_ADD( s, c1, c2, c3 );
+        c1 = d[2];
+        TRISCORE_ADD( s, c2, c3, c1 );
+        c2 = d[3];
+        TRISCORE_ADD( s, c3, c1, c2 );
 
-    c1 = decode(1,i,stbrett);
-    s += tridict[c2][c3][c1];
+        d = decode4( 12, i, stbrett );
+        c3 = d[0];
+        TRISCORE_ADD( s, c1, c2, c3 );
+        c1 = d[1];
+        TRISCORE_ADD( s, c2, c3, c1 );
+        c2 = d[2];
+        TRISCORE_ADD( s, c3, c1, c2 );
+        c3 = d[3];
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-    c2 = decode(2,i,stbrett);
-    s += tridict[c3][c1][c2];
+        c1 = c2;
+        c2 = c3;
+    }
+    for( ; i < len - 3; i += 4 ) {
+        size_t c3;
+        v4pis d = decode4( 0, i, stbrett );
+        c3 = d[0];
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-    c3 = decode(3,i,stbrett);
-    s += tridict[c1][c2][c3];
+        c1 = d[1];
+        TRISCORE_ADD( s, c2, c3, c1 );
 
-    c1 = decode(4,i,stbrett);
-    s += tridict[c2][c3][c1];
+        c2 = d[2];
+        TRISCORE_ADD( s, c3, c1, c2 );
 
-    c2 = decode(5,i,stbrett);
-    s += tridict[c3][c1][c2];
+        c3 = d[3];
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-    c3 = decode(6,i,stbrett);
-    s += tridict[c1][c2][c3];
+        c1 = c2;
+        c2 = c3;
+    }
+    for( ; i < len; ++i ) {
+        size_t c3;
+        c3 = decode( 0, i, stbrett );
+        TRISCORE_ADD( s, c1, c2, c3 );
 
-    c1 = decode(7,i,stbrett);
-    s += tridict[c2][c3][c1];
-
-    c2 = decode(8,i,stbrett);
-    s += tridict[c3][c1][c2];
-
-    c3 = decode(9,i,stbrett);
-    s += tridict[c1][c2][c3];
-
-    c1 = decode(10,i,stbrett);
-    s += tridict[c2][c3][c1];
-
-    c2 = decode(11,i,stbrett);
-    s += tridict[c3][c1][c2];
-
-    c3 = decode(12,i,stbrett);
-    s += tridict[c1][c2][c3];
-
-    c1 = decode(13,i,stbrett);
-    s += tridict[c2][c3][c1];
-
-    c2 = decode(14,i,stbrett);
-    s += tridict[c3][c1][c2];
-
-    c3 = decode(15,i,stbrett);
-    s += tridict[c1][c2][c3];
-
-    c1 = c2;
-    c2 = c3;
-  }
-  for (; i < len-3; i += 4) {
-    c3 = decode(0,i,stbrett);
-    s += tridict[c1][c2][c3];
-
-    c1 = decode(1,i,stbrett);
-    s += tridict[c2][c3][c1];
-
-    c2 = decode(2,i,stbrett);
-    s += tridict[c3][c1][c2];
-
-    c3 = decode(3,i,stbrett);
-    s += tridict[c1][c2][c3];
-
-    c1 = c2;
-    c2 = c3;
-  }
-  for (; i < len; i++) {
-    c3 = decode(0,i,stbrett);
-    s += tridict[c1][c2][c3];
-
-    c1 = c2;
-    c2 = c3;
-  }
-
-  return s;
-
+        c1 = c2;
+        c2 = c3;
+    }
+    return s;
 }
 
 /*

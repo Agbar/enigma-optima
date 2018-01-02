@@ -46,21 +46,167 @@ extern text_t rev_wal[11][78];
 extern text_t ukw[5][52];
 extern text_t etw[52];
 
-// (&ciphertext[x])[i]; is a synonyme to: ciphertext[x+i];
-// and is useful where ciphertext[x] can be calculated at compilation time.
-//
-// path_lookup[Offset][(Index)*(LAST_DIMENSION)+(Cx)];
-// is synonyme to
-// path_lookup[Offset+Index][(Cx)];
 static inline
-text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett)
+size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett );
+
+static inline
+v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett );
+
+#ifdef __i386__
+
+static inline
+size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett )
 {
-    text_t c;
-    c = (&ciphertext.plain[offset])[index];
+    size_t c;
+    asm(
+        "movsb%z[c] %[ctext] + %c[offset] ( %[ind] ),    %[c]    \n\t"
+        : [c]       "=&r"    ( c )
+        : [ctext]   "m"     ( ciphertext )
+        , [ind]     "r"     ( index )
+        , [offset]  "i"     ( offset ));
+
     c = stbrett->letters[c];
-    c = path_lookup[offset][index*LAST_DIMENSION+c];
+
+    // path_lookup[Offset+Index][(Cx)]
+    asm(
+        "movsb%z[c] %[path_lookup] + %c[offset] * %c[ld]( %[index], %[c] ), %[c]    \n\t"
+        : [c]           "+&r"   ( c )
+        : [path_lookup] "m"     ( path_lookup )
+        , [index]       "r"     ( index * LAST_DIMENSION )
+        , [offset]      "i"     ( offset )
+        , [ld]          "i"     ( LAST_DIMENSION ));
+
     return stbrett->letters[c];
 }
+
+static inline
+v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+{
+    size_t c;
+    size_t d;
+    size_t e;
+    size_t f;
+    asm(
+        "movsb%z[c] %[ctext] + %c[offset] + 0( %[ind] ),    %[c]    \n\t"
+        "movsb%z[d] %[ctext] + %c[offset] + 1( %[ind] ),    %[d]    \n\t"
+        "movsb%z[e] %[ctext] + %c[offset] + 2( %[ind] ),    %[e]    \n\t"
+        "movsb%z[f] %[ctext] + %c[offset] + 3( %[ind] ),    %[f]    \n\t"
+        : [c]       "=&r"    ( c )
+        , [d]       "=&r"    ( d )
+        , [e]       "=&r"    ( e )
+        , [f]       "=&r"    ( f )
+        : [ctext]   "m"     ( ciphertext )
+        , [ind]     "r"     ( index )
+        , [offset]  "i"     ( offset ));
+
+    c = stbrett->letters[c];
+    d = stbrett->letters[d];
+    e = stbrett->letters[e];
+    f = stbrett->letters[f];
+
+    // path_lookup[Offset+Index][(Cx)]
+    asm(
+        "movsb%z[c] %[path_lookup] + ( %c[offset] + 0 ) * %c[ld]( %[index], %[c] ),  %[c]    \n\t"
+        "movsb%z[d] %[path_lookup] + ( %c[offset] + 1 ) * %c[ld]( %[index], %[d] ),  %[d]    \n\t"
+        "movsb%z[e] %[path_lookup] + ( %c[offset] + 2 ) * %c[ld]( %[index], %[e] ),  %[e]    \n\t"
+        "movsb%z[f] %[path_lookup] + ( %c[offset] + 3 ) * %c[ld]( %[index], %[f] ),  %[f]    \n\t"
+
+        : [c]           "+&r"   ( c )
+        , [d]           "+&r"   ( d )
+        , [e]           "+&r"   ( e )
+        , [f]           "+&r"   ( f )
+        : [path_lookup] "m"     ( path_lookup )
+        , [index]       "r"     ( index * LAST_DIMENSION )
+        , [offset]      "i"     ( offset )
+        , [ld]          "i"     ( LAST_DIMENSION ));
+
+    v4pis ret = { stbrett->letters[c]
+                , stbrett->letters[d]
+                , stbrett->letters[e]
+                , stbrett->letters[f]
+                };
+    return ret;
+}
+
+#endif
+
+#ifdef __amd64__
+
+static inline
+size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett )
+{
+    size_t c;
+    asm(
+        "movsb%z[c] %c[offset] ( %[ctext], %[ind] ),    %[c]    \n\t"
+
+        : [c]       "=&r"   ( c )
+        : [ctext]   "r"     ( &ciphertext )
+        , [ind]     "r"     ( index )
+        , [offset]  "i"     ( offset ));
+
+    c = stbrett->letters[c];
+
+    // path_lookup[Offset+Index][(Cx)]
+    asm(
+        "movsb%z[c] ( %c[offset] + 0 ) * %c[ld]( %[p_lookup_ind], %[c] ),  %[c]    \n\t"
+
+        : [c]           "+&r"  ( c )
+        : [p_lookup_ind]"r"    ( path_lookup + index )
+        , [offset]      "i"     ( offset )
+        , [ld]          "i"     ( LAST_DIMENSION ));
+
+    return stbrett->letters[c];
+}
+
+static inline
+v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+{
+    size_t c;
+    size_t d;
+    size_t e;
+    size_t f;
+    asm(
+        "movsb%z[c] %c[offset] + 0( %[ctext], %[ind] ),    %[c]    \n\t"
+        "movsb%z[d] %c[offset] + 1( %[ctext], %[ind] ),    %[d]    \n\t"
+        "movsb%z[e] %c[offset] + 2( %[ctext], %[ind] ),    %[e]    \n\t"
+        "movsb%z[f] %c[offset] + 3( %[ctext], %[ind] ),    %[f]    \n\t"
+        : [c]       "=&r"    ( c )
+        , [d]       "=&r"    ( d )
+        , [e]       "=&r"    ( e )
+        , [f]       "=&r"    ( f )
+        : [ctext]   "r"     ( &ciphertext )
+        , [ind]     "r"     ( index )
+        , [offset]  "i"     ( offset ));
+
+    c = stbrett->letters[c];
+    d = stbrett->letters[d];
+    e = stbrett->letters[e];
+    f = stbrett->letters[f];
+
+    // path_lookup[Offset+Index][(Cx)]
+    asm(
+        "movsb%z[c] ( %c[offset] + 0 ) * %c[ld]( %[p_lookup_ind], %[c] ),  %[c]    \n\t"
+        "movsb%z[d] ( %c[offset] + 1 ) * %c[ld]( %[p_lookup_ind], %[d] ),  %[d]    \n\t"
+        "movsb%z[e] ( %c[offset] + 2 ) * %c[ld]( %[p_lookup_ind], %[e] ),  %[e]    \n\t"
+        "movsb%z[f] ( %c[offset] + 3 ) * %c[ld]( %[p_lookup_ind], %[f] ),  %[f]    \n\t"
+
+        : [c]           "+&r"  ( c )
+        , [d]           "+&r"  ( d )
+        , [e]           "+&r"  ( e )
+        , [f]           "+&r"  ( f )
+        : [p_lookup_ind]"r"    ( path_lookup + index )
+        , [offset]      "i"     ( offset )
+        , [ld]          "i"     ( LAST_DIMENSION ));
+
+    v4pis ret = { stbrett->letters[c]
+                , stbrett->letters[d]
+                , stbrett->letters[e]
+                , stbrett->letters[f]
+                };
+    return ret;
+}
+
+#endif
 
 static inline
 void Step1( int8_t* ringOffset )
