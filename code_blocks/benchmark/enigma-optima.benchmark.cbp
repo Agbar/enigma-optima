@@ -116,6 +116,16 @@
 			<Add option="-Wvector-operation-performance" />
 			<Add option="-fexceptions" />
 			<Add option="-pthread" />
+			<Add option="-fcall-used-xmm6" />
+			<Add option="-fcall-used-xmm7" />
+			<Add option="-fcall-used-xmm8" />
+			<Add option="-fcall-used-xmm9" />
+			<Add option="-fcall-used-xmm10" />
+			<Add option="-fcall-used-xmm11" />
+			<Add option="-fcall-used-xmm12" />
+			<Add option="-fcall-used-xmm13" />
+			<Add option="-fcall-used-xmm14" />
+			<Add option="-fcall-used-xmm15" />
 			<Add directory="$(#gbench.include)" />
 			<Add directory="../../libEnigma/include" />
 		</Compiler>
