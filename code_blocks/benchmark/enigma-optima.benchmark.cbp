@@ -16,6 +16,8 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-m64" />
+					<Add option="-mtune=generic" />
+					<Add option="-march=x86-64" />
 				</Compiler>
 				<Linker>
 					<Add option="-O3" />
@@ -34,6 +36,7 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-m64" />
+					<Add option="-march=x86-64" />
 				</Compiler>
 				<Linker>
 					<Add option="-O3" />
@@ -91,6 +94,7 @@
 				<Compiler>
 					<Add option="-m64" />
 					<Add option="-g" />
+					<Add option="-march=x86-64" />
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
@@ -113,6 +117,7 @@
 			<Add option="-Wvector-operation-performance" />
 			<Add option="-fexceptions" />
 			<Add option="-pthread" />
+			<Add option="-mtune=generic" />
 			<Add option="-fcall-used-xmm6" />
 			<Add option="-fcall-used-xmm7" />
 			<Add option="-fcall-used-xmm8" />

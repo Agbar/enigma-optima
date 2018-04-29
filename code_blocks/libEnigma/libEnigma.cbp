@@ -31,6 +31,7 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-m64" />
+					<Add option="-march=x86-64" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
@@ -88,6 +89,7 @@
 			<Add option="-fcall-used-xmm13" />
 			<Add option="-fcall-used-xmm14" />
 			<Add option="-fcall-used-xmm15" />
+			<Add option="-mtune=generic" />
 			<Add directory="../../libEnigma/include" />
 		</Compiler>
 		<Linker>
