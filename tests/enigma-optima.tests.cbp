@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-march=x86-64" />
 				</Compiler>
 				<Linker>
 					<Add directory="../code_blocks/libEnigma/bin/Debug/x64" />
@@ -27,6 +28,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-m64" />
+					<Add option="-march=x86-64" />
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
@@ -57,6 +59,7 @@
 			<Add option="-g" />
 			<Add option="-fexceptions" />
 			<Add option="-pthread" />
+			<Add option="-mtune=generic" />
 			<Add directory="$(#gtest.include)" />
 			<Add directory="../libEnigma/include" />
 		</Compiler>

@@ -18,6 +18,7 @@
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-m64" />
+					<Add option="-march=x86-64" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
@@ -120,6 +121,7 @@
 			<Add option="-fcall-used-xmm14" />
 			<Add option="-fcall-used-xmm15" />
 			<Add option="-save-temps" />
+			<Add option="-mtune=generic" />
 			<Add directory="../libEnigma/include" />
 		</Compiler>
 		<Linker>
