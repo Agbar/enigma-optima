@@ -12,12 +12,9 @@ tests/obj
 tests/bin
 
 # Code::Blocks
-code_blocks/enigma-opt.depend
-code_blocks/enigma-opt.layout
+*.depend
+*.layout
 enigma-opt.cscope_file_list
-tests/enigma-optima.tests.depend
-tests/enigma-optima.tests.layout
-enigma-optima.workspace.layout
 
 # CCCC
 code_blocks/.cccc
