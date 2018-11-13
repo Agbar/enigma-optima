@@ -39,4 +39,6 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     set(ENIGMA_WARNING_FLAGS "-Wall -Wcast-align -Wextra -Wfloat-equal -Wmissing-declarations -Wredundant-decls -Wshadow -Wunsafe-loop-optimizations")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ENIGMA_WARNING_FLAGS}")
 
+    set(ENIGMA_CUSTOM_CALL_CONVENTION_FLAGS "-fcall-used-xmm6 -fcall-used-xmm7 -fcall-used-xmm8 -fcall-used-xmm9 -fcall-used-xmm10 -fcall-used-xmm11 -fcall-used-xmm12 -fcall-used-xmm13 -fcall-used-xmm14 -fcall-used-xmm15")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ENIGMA_CUSTOM_CALL_CONVENTION_FLAGS}")
 endif()
