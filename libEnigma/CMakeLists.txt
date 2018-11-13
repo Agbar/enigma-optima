@@ -21,4 +21,12 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     if(GCC_HAS_IMPLICIT_FALLTHROUGH)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wimplicit-fallthrough=5")
     endif()
+
+    # treat some warnings as errors
+    set(ENIGMA_ERROR_WARNING_FLAGS "-Werror=implicit-function-declaration -Werror=return-type")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ENIGMA_ERROR_WARNING_FLAGS}")
+
+    set(ENIGMA_WARNING_FLAGS "-Wall -Wcast-align -Wextra -Wfloat-equal -Wmissing-declarations -Wredundant-decls -Wshadow -Wunsafe-loop-optimizations")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ENIGMA_WARNING_FLAGS}")
+
 endif()
