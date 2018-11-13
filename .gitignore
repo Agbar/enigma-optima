@@ -26,3 +26,5 @@ code_blocks/libEnigma/libEnigma\.depend
 
 #CMake
 /build/
+/lib/
+/bin/

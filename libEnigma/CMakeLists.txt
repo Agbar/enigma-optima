@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(Enigma LANGUAGES C)
-
 add_library(Enigma "")
 
 include(commonSources.cmake)
@@ -15,8 +13,7 @@ target_include_directories(Enigma PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURC
 
 target_compile_features(Enigma PUBLIC c_std_99)
 
-if(CMAKE_C_COMPILER_ID MATCHES "GNU")
-    option(ENIGMA_BUILD_32_BIT "Build 32 bit artifacts (x86)" OFF)
+if(CMAKE_C_COMPILER_ID MATCHES "GNU")    
     if(ENIGMA_BUILD_32_BIT)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32 -march=pentium3")
     else()

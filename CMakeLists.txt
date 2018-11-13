@@ -2,4 +2,19 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(enigma_optima_suite LANGUAGES C)
 
+if(CMAKE_C_COMPILER_ID MATCHES "GNU")
+    option(ENIGMA_BUILD_32_BIT "Build 32 bit artifacts (x86)" OFF)
+    if(ENIGMA_BUILD_32_BIT)
+        set(ENIGMA_BITS_DIRECTORY_NAME "/x86")
+    else()
+        set(ENIGMA_BITS_DIRECTORY_NAME "/x64")
+    endif()
+else()
+    set(ENIGMA_BITS_DIRECTORY_NAME "")
+endif()
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_HOME_DIRECTORY}/lib/${ENIGMA_BITS_DIRECTORY_NAME}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_HOME_DIRECTORY}/lib/${ENIGMA_BITS_DIRECTORY_NAME}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_HOME_DIRECTORY}/bin/${ENIGMA_BITS_DIRECTORY_NAME}")
+
 add_subdirectory(libEnigma)
