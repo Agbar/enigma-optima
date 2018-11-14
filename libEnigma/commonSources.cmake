@@ -21,4 +21,11 @@ PRIVATE
     "src/scoreNoInterleave.c"
     "src/scoreSimple.c"
     "src/stecker.c"
+
+
+    "src/x86/cipherAvx2.c"
+    "src/x86/cipherSsse3.c"
+    "src/x86/scoreAvx.c"
+    "src/x86/scoreAvx2.c"
+    "src/x86/scoreSsse3.c"
 )
