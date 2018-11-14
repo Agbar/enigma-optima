@@ -16,6 +16,11 @@ target_compile_features(Enigma PUBLIC c_std_99)
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")    
     if(ENIGMA_BUILD_32_BIT)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32 -march=pentium3")
+        
+        # Disable position independent code generation
+        # * default on Windows
+        # * without it Linux code is significantly slower
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-pic -fno-pie")
     else()
         # Official MinGW-w64 builds have changed arch
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -march=x86-64")
