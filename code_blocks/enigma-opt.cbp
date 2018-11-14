@@ -24,7 +24,7 @@
 				<Linker>
 					<Add option="-m64" />
 					<Add option="-O3" />
-					<Add directory="libEnigma/bin/Release/x64" />
+					<Add directory="../lib/x64" />
 				</Linker>
 			</Target>
 			<Target title="Release Windows x86">
@@ -44,7 +44,7 @@
 				<Linker>
 					<Add option="-m32" />
 					<Add option="-O3" />
-					<Add directory="libEnigma/bin/Release/x86" />
+					<Add directory="../lib/x86" />
 				</Linker>
 			</Target>
 			<Target title="Release Linux x64">
@@ -63,7 +63,7 @@
 				<Linker>
 					<Add option="-m64" />
 					<Add option="-O3" />
-					<Add directory="libEnigma/bin/Release/x64" />
+					<Add directory="../lib/x64" />
 				</Linker>
 			</Target>
 			<Target title="Debug x64">
@@ -79,7 +79,7 @@
 					<Add option="-DTESTING" />
 				</Compiler>
 				<Linker>
-					<Add directory="libEnigma/bin/Debug/x64" />
+					<Add directory="../lib/x64" />
 				</Linker>
 			</Target>
 			<Target title="List Includes">
