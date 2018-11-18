@@ -21,3 +21,7 @@ target_include_directories(EnigmaBenchmark PRIVATE "${GOOGLE_BENCHMARK_INCLUDE_D
 
 target_compile_features(EnigmaBenchmark PUBLIC cxx_std_11 c_std_99)
 target_link_libraries(EnigmaBenchmark Enigma benchmark Threads::Threads)
+
+if(WIN32)
+    target_link_libraries(EnigmaBenchmark shlwapi)
+endif()
