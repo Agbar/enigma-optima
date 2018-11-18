@@ -20,6 +20,8 @@ set_target_properties(EnigmaBenchmark
 target_include_directories(EnigmaBenchmark PRIVATE "${GOOGLE_BENCHMARK_INCLUDE_DIR}")
 
 target_compile_features(EnigmaBenchmark PUBLIC cxx_std_11 c_std_99)
+target_compile_options(EnigmaBenchmark PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fexceptions>)
+
 target_link_libraries(EnigmaBenchmark Enigma benchmark Threads::Threads)
 
 if(WIN32)

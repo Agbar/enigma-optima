@@ -50,7 +50,8 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         -Wmissing-declarations
         -Wredundant-decls
         -Wshadow
-        -Wunsafe-loop-optimizations)
+        -Wunsafe-loop-optimizations
+        -Wvector-operation-performance)
     # and change call convention
     add_compile_options(
         -fcall-used-xmm6
