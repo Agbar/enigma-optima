@@ -9,13 +9,12 @@ set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 include(FindThreads)
 
-
-include_directories(${GOOGLE_BENCHMARK_INCLUDE_DIR})
 link_directories(${GOOGLE_BENCHMARK_LIB_DIR})
-
 
 add_executable(EnigmaBenchmark "")
 include(sourceList.cmake)
+
+target_include_directories(EnigmaBenchmark PRIVATE "${GOOGLE_BENCHMARK_INCLUDE_DIR}")
 
 target_compile_features(EnigmaBenchmark PUBLIC cxx_std_11 c_std_99)
 target_link_libraries(EnigmaBenchmark Enigma benchmark Threads::Threads)
