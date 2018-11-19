@@ -24,9 +24,13 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         # * default on Windows
         # * without it Linux code is significantly slower
         add_compile_options(-fno-pic -fno-pie)
+        # add_link_options in CMake 3.13
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32")
     else()
         # Official MinGW-w64 builds have changed arch
         add_compile_options(-m64 -march=x86-64)
+        # add_link_options in CMake 3.13
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m64")
     endif()
     # Official MinGW-w64 builds have changed tune
     add_compile_options(-mtune=generic)
