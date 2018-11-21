@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(EnigmaBenchmark LANGUAGES C CXX)
-
 set(GOOGLE_BENCHMARK_INCLUDE_DIR "" CACHE PATH "Google Benchmark include dir")
 set(GOOGLE_BENCHMARK_LIB_DIR "" CACHE PATH "Google Benchmark library dir")
 

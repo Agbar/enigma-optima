@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(enigma_optima_suite LANGUAGES C)
+project(enigma_optima_suite LANGUAGES C CXX)
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     option(ENIGMA_BUILD_32_BIT "Build 32 bit artifacts (x86)" OFF)
@@ -74,4 +74,5 @@ add_subdirectory(libEnigma)
 
 add_subdirectory(benchmark)
 
-
+enable_testing()
+add_subdirectory(tests)
