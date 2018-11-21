@@ -2,6 +2,5 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="Enigma Optima">
 		<Project filename="code_blocks/enigma-opt.cbp" />
-		<Project filename="tests/enigma-optima.tests.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
