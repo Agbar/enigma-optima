@@ -72,6 +72,8 @@ endif()
 
 add_subdirectory(libEnigma)
 
+add_subdirectory(optima)
+
 add_subdirectory(benchmark)
 
 enable_testing()
