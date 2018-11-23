@@ -15,4 +15,7 @@ target_compile_features(Enigma PUBLIC c_std_99)
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     set_target_properties(Enigma PROPERTIES C_EXTENSIONS ON)
+    target_link_libraries(Enigma
+        -static-libgcc
+        -static-libstdc++)
 endif()

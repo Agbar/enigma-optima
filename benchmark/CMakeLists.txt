@@ -26,6 +26,9 @@ endif()
 
 
 target_link_libraries(EnigmaBenchmark Enigma benchmark Threads::Threads)
+target_link_libraries(EnigmaBenchmark
+        -static-libgcc
+        -static-libstdc++)
 
 if(WIN32)
     target_link_libraries(EnigmaBenchmark shlwapi)
