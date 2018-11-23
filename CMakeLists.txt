@@ -2,6 +2,16 @@ cmake_minimum_required(VERSION 3.0)
 
 project(enigma_optima_suite LANGUAGES C CXX)
 
+set(default_build_type "RelWithDebInfo")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_CONFIGURATION_TYPES "Debug RelWithDebInfo")
+    message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
+    set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
+        STRING "Choose the type of build." FORCE)
+    # Set the possible values of build type for cmake-gui
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "${CMAKE_CONFIGURATION_TYPES}")
+endif()
+
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     option(ENIGMA_BUILD_32_BIT "Build 32 bit artifacts (x86)" OFF)
     if(ENIGMA_BUILD_32_BIT)
