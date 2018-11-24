@@ -44,6 +44,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_HOME_DIRECTORY}/lib/${ENIGMA_BITS_DI
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_HOME_DIRECTORY}/bin/${ENIGMA_BITS_DIRECTORY_NAME}")
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
+    include(CheckCCompilerFlag)
+    include(CheckCXXCompilerFlag)
     if(ENIGMA_BUILD_32_BIT)
         add_compile_options(-m32 -march=pentium3)
         # Disable position independent code generation
@@ -51,7 +53,12 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         # * without it Linux code is significantly slower
         add_compile_options(-fno-pic -fno-pie)
         # add_link_options in CMake 3.13
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32 -no-pie")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32")
+
+        check_cxx_compiler_flag(-no-pie GCC_HAS_NO_PIE_OPTION)
+        if(GCC_HAS_NO_PIE_OPTION)
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
+        endif()
     else()
         # Official MinGW-w64 builds have changed arch
         add_compile_options(-m64 -march=x86-64)
@@ -61,7 +68,6 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     # Official MinGW-w64 builds have changed tune
     add_compile_options(-mtune=generic)
 
-    include(CheckCCompilerFlag)
     check_c_compiler_flag(-Wimplicit-fallthrough=5 GCC_HAS_IMPLICIT_FALLTHROUGH)
     if(GCC_HAS_IMPLICIT_FALLTHROUGH)
         add_compile_options(-Wimplicit-fallthrough=5)
