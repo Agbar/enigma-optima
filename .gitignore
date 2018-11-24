@@ -3,27 +3,6 @@
 *.ii
 *.s
 
-# binary compiler output
-code_blocks/obj
-code_blocks/bin
-code_blocks/libEnigma/obj
-code_blocks/libEnigma/bin
-tests/obj
-tests/bin
-
-# Code::Blocks
-*.depend
-*.layout
-enigma-opt.cscope_file_list
-
-# CCCC
-code_blocks/.cccc
-
-code_blocks/libEnigma/libEnigma\.depend
-
-/code_blocks/benchmark/obj/
-/code_blocks/benchmark/bin/
-
 #CMake
 /build/
 /lib/
