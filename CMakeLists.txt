@@ -9,7 +9,10 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
         STRING "Choose the type of build." FORCE)
     # Set the possible values of build type for cmake-gui
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "${CMAKE_CONFIGURATION_TYPES}")
+    # set_property accepts a semicolon separated list
+    set(CMAKE_CONFIGURATION_TYPE_LIST "${CMAKE_CONFIGURATION_TYPES}")
+    separate_arguments(CMAKE_CONFIGURATION_TYPE_LIST)
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_CONFIGURATION_TYPE_LIST})
 endif()
 
 # Substitute default flags (use -O3 instead of -O2)
