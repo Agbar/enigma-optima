@@ -100,6 +100,9 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         -fcall-used-xmm13
         -fcall-used-xmm14
         -fcall-used-xmm15)
+
+    set(ENIGMA_CXX_COMPILE_OPTIONS
+        -Wnon-virtual-dtor)
 endif()
 
 add_subdirectory(libEnigma)

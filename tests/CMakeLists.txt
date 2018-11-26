@@ -16,6 +16,8 @@ PRIVATE
 
 target_compile_features(EnigmaUnitTests PUBLIC cxx_std_11 c_std_99)
 target_compile_options(EnigmaUnitTests PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fexceptions>)
+target_compile_options(EnigmaUnitTests 
+    PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${ENIGMA_CXX_COMPILE_OPTIONS}>)
 
 target_include_directories(EnigmaUnitTests PRIVATE "${GOOGLE_TEST_INCLUDE_DIR}")
 

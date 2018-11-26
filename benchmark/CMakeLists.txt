@@ -19,6 +19,9 @@ target_include_directories(EnigmaBenchmark PRIVATE "${GOOGLE_BENCHMARK_INCLUDE_D
 
 target_compile_features(EnigmaBenchmark PUBLIC cxx_std_11 c_std_99)
 target_compile_options(EnigmaBenchmark PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fexceptions>)
+target_compile_options(EnigmaBenchmark 
+    PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${ENIGMA_CXX_COMPILE_OPTIONS}>)
+
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     set_target_properties(EnigmaBenchmark PROPERTIES C_EXTENSIONS ON)
