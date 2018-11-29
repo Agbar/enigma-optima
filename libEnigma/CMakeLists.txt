@@ -12,6 +12,10 @@ endif()
 target_include_directories(Enigma PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 target_compile_features(Enigma PUBLIC c_std_99)
+target_compile_options(Enigma
+    PRIVATE
+        ${ENIGMA_COMPILE_OPTIONS})
+
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     set_target_properties(Enigma PROPERTIES C_EXTENSIONS ON)

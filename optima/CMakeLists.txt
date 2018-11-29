@@ -13,6 +13,10 @@ set_target_properties(EnigmaOptima
     PROPERTIES OUTPUT_NAME "enigma-optima")
 
 target_compile_features(EnigmaOptima PUBLIC c_std_99 cxx_std_11)
+target_compile_options(EnigmaOptima
+    PRIVATE
+        ${ENIGMA_COMPILE_OPTIONS})
+
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     set_target_properties(EnigmaOptima PROPERTIES C_EXTENSIONS ON)

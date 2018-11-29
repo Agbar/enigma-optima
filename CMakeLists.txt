@@ -70,15 +70,15 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
 
     check_c_compiler_flag(-Wimplicit-fallthrough=5 GCC_HAS_IMPLICIT_FALLTHROUGH)
     if(GCC_HAS_IMPLICIT_FALLTHROUGH)
-        add_compile_options(-Wimplicit-fallthrough=5)
+        list(APPEND ENIGMA_COMPILE_OPTIONS -Wimplicit-fallthrough=5)        
     endif()
 
     # treat some warnings as errors
-    add_compile_options(
+    list(APPEND ENIGMA_COMPILE_OPTIONS    
         -Werror=implicit-function-declaration
         -Werror=return-type)
     # add some warnings
-    add_compile_options(
+    list(APPEND ENIGMA_COMPILE_OPTIONS
         -Wall
         -Wcast-align
         -Wextra
@@ -88,7 +88,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         -Wshadow
         -Wunsafe-loop-optimizations
         -Wvector-operation-performance)
-    # and change call convention
+    # and change call convention for all targets
     add_compile_options(
         -fcall-used-xmm6
         -fcall-used-xmm7
