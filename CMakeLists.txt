@@ -113,3 +113,5 @@ add_subdirectory(benchmark)
 
 enable_testing()
 add_subdirectory(tests)
+
+add_subdirectory(extern/gbench)
