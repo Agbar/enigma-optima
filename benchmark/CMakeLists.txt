@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
 
-set(GOOGLE_BENCHMARK_INCLUDE_DIR "NOTFOUND" CACHE PATH "Google Benchmark include dir")
-set(GOOGLE_BENCHMARK_LIB_DIR "NOTFOUND" CACHE PATH "Google Benchmark library dir")
-
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 include(FindThreads)
