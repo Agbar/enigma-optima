@@ -119,3 +119,5 @@ set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "")
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
 
 add_subdirectory(extern/gbench)
+
+add_subdirectory(extern/gtest/googletest)
