@@ -117,5 +117,8 @@ add_subdirectory(tests)
 set(BENCHMARK_BUILD_32_BITS ${ENIGMA_BUILD_32_BIT} CACHE BOOL "" FORCE)
 set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "")
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
-
 add_subdirectory(extern/gbench)
+
+set(INSTALL_GTEST OFF CACHE BOOL "")
+set(BUILD_GMOCK OFF CACHE BOOL "")
+add_subdirectory(extern/gtest)
