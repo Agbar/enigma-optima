@@ -7,3 +7,6 @@
 /build/
 /lib/
 /bin/
+
+# generated files
+optima/config/releaseVersion.cpp
