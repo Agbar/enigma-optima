@@ -23,3 +23,13 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
 endif()
 
 target_link_libraries(EnigmaOptima Enigma)
+
+
+find_package(Git REQUIRED)
+execute_process(COMMAND ${GIT_EXECUTABLE} describe --dirty 
+    OUTPUT_VARIABLE ENIGMA_GIT_DESCRIBE_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+configure_file (
+    "${CMAKE_CURRENT_SOURCE_DIR}/config/releaseVersion.cpp.in"
+    "${CMAKE_CURRENT_SOURCE_DIR}/config/releaseVersion.cpp"
+)

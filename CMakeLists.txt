@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(enigma_optima_suite LANGUAGES C CXX)
+project(enigma_optima_suite 
+    VERSION 1.1.1
+    LANGUAGES C CXX)
 
 set(default_build_type "RelWithDebInfo")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
