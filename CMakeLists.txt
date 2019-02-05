@@ -107,11 +107,18 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         -Wnon-virtual-dtor)
 endif()
 
+find_package(Git REQUIRED)
+execute_process(COMMAND ${GIT_EXECUTABLE} describe --dirty 
+    OUTPUT_VARIABLE ENIGMA_GIT_DESCRIBE_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+
 add_subdirectory(libEnigma)
 
 add_subdirectory(optima)
 
 add_subdirectory(benchmark)
+
+add_subdirectory(BOINC)
 
 enable_testing()
 add_subdirectory(tests)

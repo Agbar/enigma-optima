@@ -1,12 +1,12 @@
 <app_info>
 	<app>
 		<name>enigma_m4_2</name>
-		<user_friendly_name>Enigma Optima v1.1.0</user_friendly_name>
+		<user_friendly_name>Enigma Optima ${ENIGMA_GIT_DESCRIBE_VERSION}</user_friendly_name>
 		<non_cpu_intensive>0</non_cpu_intensive>
 	</app>
 	<app>
 		<name>enigma_m4_3</name>
-		<user_friendly_name>Enigma Optima AV v1.1.0</user_friendly_name>
+		<user_friendly_name>Enigma Optima AV ${ENIGMA_GIT_DESCRIBE_VERSION}</user_friendly_name>
 		<non_cpu_intensive>0</non_cpu_intensive>
 	</app>
 	<file_info>
@@ -17,10 +17,10 @@
 		-->
 	</file_info>
 	<file_info>
-		<name>wrapper_1.05_windows_x86_64.exe</name>
+		<name>wrapper_1.05_windows_intelx86.exe</name>
 		<executable/>
 		<!--
-		<download_url>http://download.enigmaathome.net/wrapper_1.05_windows_x86_64.exe</download_url>
+		<download_url>http://download.enigmaathome.net/wrapper_1.05_windows_intelx86.exe</download_url>
 		-->
 	</file_info>
 	<file_info>
@@ -67,7 +67,7 @@
 		<app_name>enigma_m4_3</app_name>
 		<version_num>105</version_num>
 		<file_ref>
-			<file_name>wrapper_1.05_windows_x86_64.exe</file_name>
+			<file_name>wrapper_1.05_windows_intelx86.exe</file_name>
 			<open_name>enigma_wrapper.exe</open_name>
 			<main_program/>
 		</file_ref>
