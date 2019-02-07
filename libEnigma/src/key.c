@@ -101,12 +101,6 @@ int keycmp(const Key *k1, const Key *k2)
 
 }
 
-extern inline
-void FixPermutationMapTail(PermutationMap_t* mapping);
-
-extern inline
-void Fill0To25(text_t array[static 26]);
-
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
  * of the General Public License (GPL), version 2. See doc/COPYING for details.

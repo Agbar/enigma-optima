@@ -14,7 +14,7 @@ void set_to_ct_freq(text_t var[], int len);
  * \param k int Letter to swap with i
  * \return void
  */
-inline
+static inline
 void SwapStbrett(Key* const key, int i, int k) {
   text_t store = key->stbrett.letters[i];
   key->stbrett.letters[i] = key->stbrett.letters[k];

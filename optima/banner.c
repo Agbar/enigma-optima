@@ -42,10 +42,11 @@ static char* osName = OS_NAME;
 
 void WriteStartupBanner( void ){
     fprintf(stderr,
-            "Enigma Optima %s %s%d\n"
+            "Enigma Optima %s %s%d (%s)\n"
             "Best ISA: %s\n"
             , releaseVersion
             , osName
             , pointerSize
+            , compilerVersion
             , cpuFlagsToString( enigma_cpu_flags ));
 }

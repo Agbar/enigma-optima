@@ -1,5 +1,4 @@
-#ifndef ERROR_H
-#define ERROR_H
+#pragma once
 
 #include <stdlib.h>
 #include "global.h"
@@ -36,8 +35,6 @@ void exit_d( int errorCode UNUSED ){
     exit( errorCode );
 #endif
 }
-#endif
-
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms

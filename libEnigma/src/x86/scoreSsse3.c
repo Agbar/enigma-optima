@@ -19,13 +19,6 @@ static int     uniscoreSsse3( const Key* const restrict key, scoreLength_t len )
 static int      biscoreSsse3( const Key* const restrict key, scoreLength_t len );
 static int     triscoreSsse3( const Key* const restrict key, scoreLength_t len );
 
-inline extern
-int     ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len );
-inline extern
-void    Unpack_v16qi( v16qi in, v8hi* lo, v8hi *hi );
-inline extern
-v16qi   MOVDQU( v16qi* p );
-
 enigma_score_function_t enigmaScoreSsse3 = { triscoreSsse3,  biscoreSsse3 , icscoreSsse3,  uniscoreSsse3 } ;
 
 union ScoringDecodedMessage decodedMsgPartSsse3;

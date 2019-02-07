@@ -7,7 +7,7 @@
 #include "common.h"
 #include "key.h"
 
-inline
+static inline
 void StepAllRings( struct RingsState* const restrict rings, const struct Turnovers_t turns )
 {
     // check if m,l rings will be turned
@@ -30,7 +30,7 @@ void StepAllRings( struct RingsState* const restrict rings, const struct Turnove
     }
 }
 
-inline
+static inline
 void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2] )
 {
     // setup r_rings forward and backward.
@@ -39,7 +39,7 @@ void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2]
 }
 
 //! \brief Return position of R ring on next turnover
-inline
+static inline
 int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns )
 {
     // turnover caused by M-ring (double step)
@@ -65,8 +65,7 @@ int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t 
     }
 }
 
-
-inline
+static inline
 void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key ) {
     int k;
     for( k = 0; k < 26; k++ ) {
@@ -84,7 +83,7 @@ void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struc
     FixPermutationMapTail( map );
 }
 
-inline
+static inline
 void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key ) {
     int k;
     for( k = 0; k < 26; k++ ) {

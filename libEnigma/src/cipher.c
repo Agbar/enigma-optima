@@ -16,9 +16,6 @@ void init_path_lookup_H_M3(const Key *key, int len);
 void init_path_lookup_ALL(const Key *key, int len);
 void enigma_prepare_decoder_lookups(const Key* key, int len);
 
-extern inline
-text_t decode(size_t offset,size_t index, const PermutationMap_t* const stbrett);
-
 /* Eintrittswalze */
 text_t etw[52] =
      {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
@@ -166,7 +163,6 @@ void enigma_prepare_decoder_lookups(const Key* key, int len)
     }
 }
 
-__attribute__(( unused ))
 static
 void CipherInit(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf ) {
     enigma_cipher_function_t* fun = &enigma_cipher_decoder_lookup;
@@ -188,71 +184,6 @@ void CipherInit(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_pr
         *cf = 0;// Hopefully causes exception early.
         return;
     }
-}
-
-__attribute__(( unused ))
-static
-void CipherInitScoreTesting(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf ) {
-    enigma_cipher_function_t* fs[2] = { &enigma_cipher_decoder_lookup };
-    if ( cpu & ( enigma_cpu_ssse3 | enigma_cpu_avx ) ) {
-        fs[1] = &enigma_cipher_decoder_lookup_ssse3;
-    }
-    if ( cpu & enigma_cpu_avx2 ) {
-        fs[1] = &enigma_cipher_DecoderLookupAvx2;
-    }
-    int j;
-    for ( j = 0 ; j < 2; j++ ) {
-        switch( machine_type ) {
-        case EnigmaModel_H:
-        case EnigmaModel_M3:
-            enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_M_H3;
-            break;
-        case EnigmaModel_M4:
-            enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_ALL;
-            break;
-        case EnigmaModel_Error:
-            *cf = 0;
-            return;
-        }
-    }
-    *cf = enigma_prepare_decoder_lookups;
-}
-
-__attribute__ (( unused ))
-static
-void CipherInitMulti(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf)
-{
-    enigma_cipher_function_t* fs[4];
-    int i = 0;
-
-    // FIXME: It is not very smart to always call all of them.
-    fs[i++] = &enigma_cipher_decoder_lookup;
-    if ( cpu & ( enigma_cpu_ssse3 | enigma_cpu_avx ) ) {
-        fs[i++] = &enigma_cipher_decoder_lookup_ssse3;
-    }
-    if ( cpu & enigma_cpu_avx2 ) {
-        fs[i++] = &enigma_cipher_DecoderLookupAvx2;
-    }
-
-    int j=0;
-    for (; j<i; j++)
-    {
-        switch(machine_type)
-        {
-        case EnigmaModel_H:
-        case EnigmaModel_M3:
-            enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_M_H3;
-            break;
-        case EnigmaModel_M4:
-            enigma_cipher_decoder_lookups_list[j] = fs[j]->prepare_decoder_lookup_ALL;
-            break;
-        case EnigmaModel_Error:
-            *cf = 0;
-            return;
-        }
-    }
-
-    *cf = enigma_prepare_decoder_lookups;
 }
 
 void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf){
@@ -588,15 +519,6 @@ double dgetic_ALL(const Key *key, int len)
   return S;
 
 }
-
-extern inline void Step1( int8_t* ringOffset );
-
-extern inline void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
-extern inline void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
-
-extern inline void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2] );
-extern inline void StepAllRings( struct RingsState* const restrict rings, const struct Turnovers_t turns );
-extern inline int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns );
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
