@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.3)
 
 project(enigma_optima_suite 
     VERSION 1.1.1
@@ -31,11 +31,12 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU"
 endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
-    option(ENIGMA_BUILD_32_BIT "Build 32 bit artifacts (x86)" OFF)
-    if(ENIGMA_BUILD_32_BIT)
-        set(ENIGMA_BITS_DIRECTORY_NAME "/x86")
-    else()
-        set(ENIGMA_BITS_DIRECTORY_NAME "/x64")
+    set(ENIGMA_BUILD_BITNESS "x64" CACHE STRING "Build artifacts bintess")
+    set(BITNESS_TYPES x64 x86 x32)
+    set_property(CACHE ENIGMA_BUILD_BITNESS PROPERTY STRINGS ${BITNESS_TYPES})
+    
+    if(ENIGMA_BUILD_BITNESS IN_LIST BITNESS_TYPES)
+        set(ENIGMA_BITS_DIRECTORY_NAME ${ENIGMA_BUILD_BITNESS})
     endif()
 else()
     set(ENIGMA_BITS_DIRECTORY_NAME "")
@@ -48,7 +49,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_HOME_DIRECTORY}/bin/${ENIGMA_BITS_DI
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     include(CheckCCompilerFlag)
     include(CheckCXXCompilerFlag)
-    if(ENIGMA_BUILD_32_BIT)
+    if(ENIGMA_BUILD_BITNESS STREQUAL "x86")
         add_compile_options(-m32 -march=pentium3)
         # Disable position independent code generation
         # * default on Windows
@@ -61,7 +62,20 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         if(GCC_HAS_NO_PIE_OPTION)
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
         endif()
-    else()
+    elseif(ENIGMA_BUILD_BITNESS STREQUAL "x32")
+        add_compile_options(-mx32 -march=x86-64)
+        # Disable position independent code generation
+        # * default on Windows
+        # * without it Linux code is significantly slower
+        add_compile_options(-fno-pic -fno-pie)
+        # add_link_options in CMake 3.13
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mx32")
+
+        check_cxx_compiler_flag(-no-pie GCC_HAS_NO_PIE_OPTION)
+        if(GCC_HAS_NO_PIE_OPTION)
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
+        endif()
+    elseif(ENIGMA_BUILD_BITNESS STREQUAL "x64")
         # Official MinGW-w64 builds have changed arch
         add_compile_options(-m64 -march=x86-64)
         # add_link_options in CMake 3.13
