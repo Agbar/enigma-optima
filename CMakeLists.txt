@@ -37,6 +37,8 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     
     if(ENIGMA_BUILD_BITNESS IN_LIST BITNESS_TYPES)
         set(ENIGMA_BITS_DIRECTORY_NAME ${ENIGMA_BUILD_BITNESS})
+    else()
+        message(WARNING "Not recognized Enigma Bitness value: ${ENIGMA_BUILD_BITNESS}")
     endif()
 else()
     set(ENIGMA_BITS_DIRECTORY_NAME "")
