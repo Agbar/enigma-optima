@@ -2,3 +2,5 @@
 
 char const* releaseVersion = "@ENIGMA_GIT_DESCRIBE_VERSION@";
 char const* compilerVersion = "${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}";
+char const* osName = "${CMAKE_SYSTEM_NAME}";
+char const* bitness = "${ENIGMA_BUILD_BITNESS}";
