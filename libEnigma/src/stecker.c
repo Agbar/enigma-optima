@@ -1,3 +1,5 @@
+#include  <stddef.h>
+
 #include "stecker.h"
 
 #include "ciphertext.h"
@@ -39,12 +41,12 @@ void rand_var(text_t var[])
 void set_to_ct_freq(text_t var[], int len)
 {
   int f[26] = {0};
-  int i, k, c;
+  int i, k;
   int max, pos = -1;
   int n = 0;
 
   for (i = 0; i < len; i++) {
-    c = ciphertext.plain[i];
+    size_t c = ec_0_based_index( ciphertext.plain[i] );
     f[c]++;
   }
 

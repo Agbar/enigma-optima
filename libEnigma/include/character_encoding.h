@@ -11,6 +11,11 @@ struct enigma_character
     int8_t encoded;
 };
 
+static inline
+size_t ec_0_based_index( struct enigma_character c ){
+    return c.encoded;
+}
+
 union v16_echar
 {
     struct enigma_character v_ec[16];

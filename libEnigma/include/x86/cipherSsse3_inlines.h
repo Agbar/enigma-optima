@@ -70,7 +70,7 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
         uint_least16_t lookupsToNextBite = PathLookupSsse3.nextBite[messageBite] - lookupNumber;
         v16qi cBite = {0};
         lookupNumber += lookupsToNextBite;
-        v16qi currentBite = ciphertext.vector16[messageBite];
+        v16qi currentBite = ciphertext.vector16[messageBite].vector;
         v16qi predecoded  = DecodeBiteForwardCommonSsse3( currentBite, currentRRingOffset, key );
 
         switch( lookupsToNextBite ) {

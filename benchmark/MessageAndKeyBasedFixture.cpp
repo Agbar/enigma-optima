@@ -30,7 +30,7 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st UNUSED )
 
     for( size_t i = 0 ; i < sizeof ct; ++i )
     {
-        ciphertext.plain[i] = code[ct[i]];
+        ciphertext.plain[i].encoded = code[ct[i]];
     }
 
 

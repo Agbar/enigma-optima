@@ -72,7 +72,7 @@ void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len, union 
         uint_least16_t lookupsToNextBite = PathLookupAvx2.nextBite[messageBite] - lookupNumber;
         v32qi cBite = {0};
         lookupNumber += lookupsToNextBite;
-        v32qi currentBite = ciphertext.vector32[messageBite];
+        v32qi currentBite = ciphertext.vector32[messageBite].vector;
         v32qi predecoded = DecodeBiteForwardCommonAvx2( currentBite, currentRRingOffset, key );
 
         switch( lookupsToNextBite ) {

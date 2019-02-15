@@ -11,6 +11,7 @@
 #include "ModMath.h"
 #include "config/array_sizes.h"
 #include "config/types.h"
+#include "character_encoding.h"
 
 struct Turnovers_t {
     int8_t r,
@@ -36,6 +37,11 @@ void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, e
 
 extern enigma_cipher_function_t enigma_cipher_decoder_lookup;
 extern text_t path_lookup[CT][LAST_DIMENSION];
+
+static inline 
+size_t triple_index( struct enigma_character in, struct enigma_char_delta offset ){
+    return in.encoded + offset.delta + 26;
+}
 
 /*
  * decoders common data

@@ -432,8 +432,7 @@ double dgetic_ALL(const Key *key, int len)
   double S = 0;
 
   int i;
-  text_t c;
-
+  
   int ukwnum = key->ukwnum;
   int g_slot = key->slot.g;
   int l_slot = key->slot.l;
@@ -497,8 +496,11 @@ double dgetic_ALL(const Key *key, int len)
       p3 = 0;
     }
 
-    c = ciphertext.plain[i];  /* no plugboard */
-    c = wal[r_slot][c+r_offset+26];
+    /* no plugboard */
+    text_t c;
+    struct enigma_character start_c = ciphertext.plain[ i ];
+    struct enigma_char_delta r_delta = { .delta= r_offset };
+    c = wal[r_slot][ triple_index( start_c, r_delta ) ];
     c = wal[m_slot][c-r_offset+m_offset+26];
     c = wal[l_slot][c-m_offset+l_offset+26];
     c = wal[g_slot][c-l_offset+g_offset+26];
