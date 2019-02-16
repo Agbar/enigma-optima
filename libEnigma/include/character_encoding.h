@@ -50,6 +50,16 @@ void char_delta_rot_1( struct enigma_char_delta* char_delta ){
     IncrementMod( &char_delta->delta, 26 );
 }
 
+static inline
+struct enigma_char_delta
+char_delta_sub( struct enigma_char_delta minuend,  struct enigma_char_delta subtrahend ){
+    assert( minuend.delta >= 0 && minuend.delta < 26 );
+    assert( subtrahend.delta >= 0 && subtrahend.delta < 26 );
+    int8_t diff = minuend.delta - subtrahend.delta;
+    if( diff < 0 ) diff += 26;
+    return (struct enigma_char_delta) { .delta = diff };
+}
+
 union v16_echar_delta
 {
     struct enigma_char_delta v_ecd[16];
