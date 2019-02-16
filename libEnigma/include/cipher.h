@@ -61,7 +61,6 @@ extern text_t wal_turn[9];
 extern const union DoublePermutationMap     wal[11];
 extern const union DoublePermutationMap rev_wal[11];
 extern text_t ukw[5][52];
-extern text_t etw[52];
 
 static inline
 size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett );

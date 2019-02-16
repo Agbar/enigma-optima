@@ -16,12 +16,6 @@ void init_path_lookup_H_M3(const Key *key, int len);
 void init_path_lookup_ALL(const Key *key, int len);
 void enigma_prepare_decoder_lookups(const Key* key, int len);
 
-/* Eintrittswalze */
-text_t etw[52] =
-     {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
-      0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
-
-
 /* null substitution for no greek wheel */
 #define WALZ_0  (struct PermutationMap26) { .map = { {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25} } }
 #define WALZ_1  (struct PermutationMap26) { .map = { {4},{10},{12},{5},{11},{6},{3},{16},{21},{25},{13},{19},{14},{22},{24},{7},{23},{20},{18},{15},{0},{8},{1},{17},{2},{9} } }
@@ -239,7 +233,7 @@ void init_path_lookup_H_M3(const Key *key, int len)
   int p2 = 0, p3 = 0;
 
 
-  /* calculate effective offset from ring and message settings */
+    /* calculate effective offset from ring and message settings */
     struct enigma_char_delta
         r_offset = make_char_delta_plus_minus( r_mesg, r_ring ),
         m_offset = make_char_delta_plus_minus( m_mesg, m_ring ),
@@ -322,7 +316,7 @@ void init_path_lookup_ALL(const Key *key, int len)
   int m_turn2 = -1, r_turn2 = -1;
   int p2 = 0, p3 = 0;
 
-  /* calculate effective offset from ring and message settings */
+    /* calculate effective offset from ring and message settings */
     struct enigma_char_delta
       r_offset = make_char_delta_plus_minus( r_mesg, r_ring ),
       m_offset = make_char_delta_plus_minus( m_mesg, m_ring ),
