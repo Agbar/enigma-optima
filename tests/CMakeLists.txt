@@ -5,6 +5,7 @@ include(FindThreads)
 add_executable(EnigmaUnitTests "main.cpp")
 target_sources(EnigmaUnitTests
 PRIVATE
+    "character_encoding.tests.cpp"
     "cipher.tests.cpp"
     "GetRSeed.tests.cpp"
 )
