@@ -38,6 +38,19 @@ void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, e
 extern enigma_cipher_function_t enigma_cipher_decoder_lookup;
 extern text_t path_lookup[CT][LAST_DIMENSION];
 
+struct PermutationMap26 {
+    struct enigma_character map[ 26 ];
+};
+
+union TriplePermutationMap {
+    struct enigma_character flat[ 26 * 3 ];
+    struct PermutationMap26 tri[ 3 ];
+};
+
+STATIC_ASSERT( 
+    sizeof(union TriplePermutationMap) == 3 * sizeof(struct PermutationMap26) 
+    , "Dense packing expected" );
+
 static inline 
 size_t triple_index( struct enigma_character in, struct enigma_char_delta offset ){
     return in.encoded + offset.delta + 26;
@@ -47,8 +60,8 @@ size_t triple_index( struct enigma_character in, struct enigma_char_delta offset
  * decoders common data
  *************************/
 extern text_t wal_turn[9];
-extern text_t     wal[11][78] ;
-extern text_t rev_wal[11][78];
+extern const union TriplePermutationMap     wal[11];
+extern const union TriplePermutationMap rev_wal[11];
 extern text_t ukw[5][52];
 extern text_t etw[52];
 
