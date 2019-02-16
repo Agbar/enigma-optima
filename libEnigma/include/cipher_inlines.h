@@ -70,11 +70,12 @@ void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struc
     int k;
     for( k = 0; k < 26; k++ ) {
         int8_t c = k;
-        c = wal[key->slot.m].flat[c + rings.m].encoded - rings.m + 26;
-        c = wal[key->slot.l].flat[c + rings.l].encoded - rings.l + 26;
-        c = ukw[key->ukwnum][c];
-        c = rev_wal[key->slot.l].flat[c + rings.l].encoded - rings.l + 26;
-        c = rev_wal[key->slot.m].flat[c + rings.m].encoded - rings.m;
+        c = wal[key->slot.m].flat[c + rings.m].encoded;
+        c = wal[key->slot.l].flat[c + rings.l - rings.m + 26].encoded;
+        c = ukw[key->ukwnum][c - rings.l + 26];
+        c = rev_wal[key->slot.l].flat[c + rings.l].encoded;
+        c = rev_wal[key->slot.m].flat[c + rings.m - rings.l + 26].encoded;
+        c = c - rings.m;
         if( c < 0 ) {
             c += 26;
         }
@@ -88,13 +89,14 @@ void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struc
     int k;
     for( k = 0; k < 26; k++ ) {
         int8_t c = k;
-        c = wal[key->slot.m].flat[c + rings.m].encoded - rings.m + 26;
-        c = wal[key->slot.l].flat[c + rings.l].encoded - rings.l + 26;
-        c = wal[key->slot.g].flat[c + rings.g].encoded - rings.g + 26;
-        c = ukw[key->ukwnum][c];
-        c = rev_wal[key->slot.g].flat[c + rings.g].encoded - rings.g + 26;
-        c = rev_wal[key->slot.l].flat[c + rings.l].encoded - rings.l + 26;
-        c = rev_wal[key->slot.m].flat[c + rings.m].encoded - rings.m;
+        c = wal[key->slot.m].flat[c + rings.m].encoded;
+        c = wal[key->slot.l].flat[c + rings.l - rings.m + 26].encoded;
+        c = wal[key->slot.g].flat[c + rings.g - rings.l + 26].encoded;
+        c = ukw[key->ukwnum][c - rings.g + 26];
+        c = rev_wal[key->slot.g].flat[c + rings.g].encoded;
+        c = rev_wal[key->slot.l].flat[c + rings.l - rings.g + 26].encoded;
+        c = rev_wal[key->slot.m].flat[c + rings.m - rings.l + 26].encoded;
+        c = c - rings.m;
         if( c < 0 ) {
             c += 26;
         }
