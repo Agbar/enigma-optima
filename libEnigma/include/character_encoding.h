@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "global.h"
 #include "config/types.h"
+#include "ModMath.h"
 
 struct enigma_character 
 {
@@ -42,6 +43,11 @@ make_char_delta_plus_minus( uint8_t plus_offset,  uint8_t minus_offset ){
     int8_t d = plus_offset - minus_offset;
     if( d < 0 ) d += 26;
     return (struct enigma_char_delta) { .delta = d };
+}
+
+static inline
+void char_delta_rot_1( struct enigma_char_delta* char_delta ){
+    IncrementMod( &char_delta->delta, 26 );
 }
 
 union v16_echar_delta

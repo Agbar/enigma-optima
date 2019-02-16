@@ -404,7 +404,6 @@ double dgetic_ALL(const Key *key, int len)
   int m_mesg = key->mesg.m;
   int r_mesg = key->mesg.r;
 
-  int g_offset, l_offset, m_offset, r_offset;
   int m_turn, r_turn;
   int m_turn2 = -1, r_turn2 = -1;
   int p2 = 0, p3 = 0;
@@ -413,11 +412,12 @@ double dgetic_ALL(const Key *key, int len)
   if (len < 2)
     return 0;
 
+  struct enigma_char_delta g_offset, l_offset, m_offset, r_offset;
   /* calculate effective offset from ring and message settings */
-  r_offset = (26 + r_mesg-r_ring) % 26;
-  m_offset = (26 + m_mesg-m_ring) % 26;
-  l_offset = (26 + l_mesg-l_ring) % 26;
-  g_offset = (26 + g_mesg-g_ring) % 26;
+  r_offset = make_char_delta_plus_minus( r_mesg, r_ring );
+  m_offset = make_char_delta_plus_minus( m_mesg, m_ring );
+  l_offset = make_char_delta_plus_minus( l_mesg, l_ring );
+  g_offset = make_char_delta_plus_minus( g_mesg, g_ring );
 
   /* calculate turnover points from ring settings */
   r_turn = (26 + wal_turn[r_slot]-r_ring) % 26;
@@ -432,42 +432,37 @@ double dgetic_ALL(const Key *key, int len)
   for (i = 0; i < len; i++) {
 
     /* determine if pawls are engaged */
-    if (r_offset == r_turn || r_offset == r_turn2)
+    if (r_offset.delta == r_turn || r_offset.delta == r_turn2)
       p2 = 1;
     /* in reality pawl 3 steps both m_wheel and l_wheel */
-    if (m_offset == m_turn || m_offset == m_turn2) {
+    if (m_offset.delta == m_turn || m_offset.delta == m_turn2) {
       p3 = 1;
       p2 = 1;
     }
 
-    r_offset++;
-    r_offset %= 26;
+    char_delta_rot_1( &r_offset );
     if (p2) {
-      m_offset++;
-      m_offset %= 26;
+      char_delta_rot_1( &m_offset );
       p2 = 0;
     }
     if (p3) {
-      l_offset++;
-      l_offset %= 26;
+      char_delta_rot_1( &l_offset );
       p3 = 0;
     }
 
     /* no plugboard */
-    text_t c;
-    struct enigma_character start_c = ciphertext.plain[ i ];
-    struct enigma_char_delta r_delta = { .delta= r_offset };
-    c = wal[r_slot].flat[ triple_index( start_c, r_delta ) ].encoded;
-    c = wal[m_slot].flat[c-r_offset+m_offset+26].encoded;
-    c = wal[l_slot].flat[c-m_offset+l_offset+26].encoded;
-    c = wal[g_slot].flat[c-l_offset+g_offset+26].encoded;
-    c = ukw[ukwnum][c-g_offset+26];
-    c = rev_wal[g_slot].flat[c+g_offset+26].encoded;
-    c = rev_wal[l_slot].flat[c+l_offset-g_offset+26].encoded;
-    c = rev_wal[m_slot].flat[c+m_offset-l_offset+26].encoded;
-    c = rev_wal[r_slot].flat[c+r_offset-m_offset+26].encoded;
-    c = etw[c-r_offset+26];
-    f[c]++;
+    struct enigma_character c = ciphertext.plain[ i ];
+    c = wal[r_slot].flat[ triple_index( c, r_offset ) ];
+    c = wal[m_slot].flat[ triple_index_2_minus_plus( c, r_offset, m_offset ) ];
+    c = wal[l_slot].flat[ triple_index_2_minus_plus( c, m_offset, l_offset ) ];
+    c = wal[g_slot].flat[ triple_index_2_minus_plus( c, l_offset, g_offset ) ];
+    c.encoded = ukw[ukwnum][ c.encoded - g_offset.delta + 26 ];
+    c = rev_wal[g_slot].flat[ triple_index( c, g_offset ) ];
+    c = rev_wal[l_slot].flat[ triple_index_2_plus_minus( c, l_offset, g_offset) ];
+    c = rev_wal[m_slot].flat[ triple_index_2_plus_minus( c, m_offset, l_offset) ];
+    c = rev_wal[r_slot].flat[ triple_index_2_plus_minus( c, r_offset, m_offset) ];
+    c.encoded = etw[ c.encoded - r_offset.delta + 26 ];
+    f[ ec_0_based_index(c) ]++;
 
   }
 
