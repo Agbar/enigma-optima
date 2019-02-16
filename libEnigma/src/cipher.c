@@ -34,21 +34,21 @@ text_t etw[52] =
 #define WALZ_8  (struct PermutationMap26) { .map = { {5},{10},{16},{7},{19},{11},{23},{14},{2},{1},{9},{18},{15},{3},{25},{17},{0},{12},{4},{22},{13},{8},{20},{24},{6},{21} } }
 #define WALZ_9  (struct PermutationMap26) { .map = { {11},{4},{24},{9},{21},{2},{13},{8},{23},{22},{15},{1},{16},{12},{3},{17},{19},{0},{10},{25},{6},{5},{20},{7},{14},{18} } }
 #define WALZ_10 (struct PermutationMap26) { .map = { {5},{18},{14},{10},{0},{13},{20},{4},{17},{7},{12},{1},{19},{8},{24},{2},{22},{11},{16},{15},{25},{23},{21},{6},{9},{3} } }
-#define TRIPLE_WALZ_AT( i ) [(i)] = { .tri = {WALZ_##i, WALZ_##i, WALZ_##i} }
+#define DOUBLE_WALZ_AT( i ) [(i)] = { .dbl = {WALZ_##i, WALZ_##i} }
 
 /* Walzen 1-8, B and G (M4): forward path */
-const union TriplePermutationMap wal[11] = {
-    TRIPLE_WALZ_AT(0),
-    TRIPLE_WALZ_AT(1),
-    TRIPLE_WALZ_AT(2),
-    TRIPLE_WALZ_AT(3),
-    TRIPLE_WALZ_AT(4),
-    TRIPLE_WALZ_AT(5),
-    TRIPLE_WALZ_AT(6),
-    TRIPLE_WALZ_AT(7),
-    TRIPLE_WALZ_AT(8),
-    TRIPLE_WALZ_AT(9),
-    TRIPLE_WALZ_AT(10)
+const union DoublePermutationMap wal[11] = {
+    DOUBLE_WALZ_AT(0),
+    DOUBLE_WALZ_AT(1),
+    DOUBLE_WALZ_AT(2),
+    DOUBLE_WALZ_AT(3),
+    DOUBLE_WALZ_AT(4),
+    DOUBLE_WALZ_AT(5),
+    DOUBLE_WALZ_AT(6),
+    DOUBLE_WALZ_AT(7),
+    DOUBLE_WALZ_AT(8),
+    DOUBLE_WALZ_AT(9),
+    DOUBLE_WALZ_AT(10)
 };
 
 
@@ -83,22 +83,22 @@ text_t ukw[5][52] = {
 #define REV_WALZ_8  (struct PermutationMap26) { .map = { {16},{9},{8},{13},{18},{0},{24},{3},{21},{10},{1},{5},{17},{20},{7},{12},{2},{15},{11},{4},{22},{25},{19},{6},{23},{14} } }
 #define REV_WALZ_9  (struct PermutationMap26) { .map = { {17},{11},{5},{14},{1},{21},{20},{23},{7},{3},{18},{0},{13},{6},{24},{10},{12},{15},{25},{16},{22},{4},{9},{8},{2},{19} } }
 #define REV_WALZ_10 (struct PermutationMap26) { .map = { {4},{11},{15},{25},{7},{0},{23},{9},{13},{24},{3},{17},{10},{5},{2},{19},{18},{8},{1},{12},{6},{22},{16},{21},{14},{20} } }
-#define TRIPLE_REV_WALZ_AT( i ) [(i)] = { .tri = {REV_WALZ_##i, REV_WALZ_##i, REV_WALZ_##i} }
+#define DOUBLE_REV_WALZ_AT( i ) [(i)] = { .dbl = {REV_WALZ_##i, REV_WALZ_##i} }
 
 /* Walzen 1-8, B and G (M4): reverse path */
-const union TriplePermutationMap rev_wal[11] = {
+const union DoublePermutationMap rev_wal[11] = {
     /* null substitution for no greek wheel */
-    TRIPLE_REV_WALZ_AT(0),
-    TRIPLE_REV_WALZ_AT(1),
-    TRIPLE_REV_WALZ_AT(2),
-    TRIPLE_REV_WALZ_AT(3),
-    TRIPLE_REV_WALZ_AT(4),
-    TRIPLE_REV_WALZ_AT(5),
-    TRIPLE_REV_WALZ_AT(6),
-    TRIPLE_REV_WALZ_AT(7),
-    TRIPLE_REV_WALZ_AT(8),
-    TRIPLE_REV_WALZ_AT(9),
-    TRIPLE_REV_WALZ_AT(10)
+    DOUBLE_REV_WALZ_AT(0),
+    DOUBLE_REV_WALZ_AT(1),
+    DOUBLE_REV_WALZ_AT(2),
+    DOUBLE_REV_WALZ_AT(3),
+    DOUBLE_REV_WALZ_AT(4),
+    DOUBLE_REV_WALZ_AT(5),
+    DOUBLE_REV_WALZ_AT(6),
+    DOUBLE_REV_WALZ_AT(7),
+    DOUBLE_REV_WALZ_AT(8),
+    DOUBLE_REV_WALZ_AT(9),
+    DOUBLE_REV_WALZ_AT(10)
 };
 
 
@@ -285,14 +285,14 @@ void init_path_lookup_H_M3(const Key *key, int len)
 
     for (int k = 0; k < 26; k++) {
       struct enigma_character c = { .encoded = k };
-      c = wal[r_slot].flat[ triple_index( c,   r_offset ) ];
-      c = wal[m_slot].flat[ triple_index( c, r_m_offset ) ];
-      c = wal[l_slot].flat[ triple_index( c, m_l_offset ) ];
+      c = wal[r_slot].flat[ double_index( c,   r_offset ) ];
+      c = wal[m_slot].flat[ double_index( c, r_m_offset ) ];
+      c = wal[l_slot].flat[ double_index( c, m_l_offset ) ];
       c.encoded = ukw[ukwnum][ c.encoded - l_offset.delta + 26 ];
-      c = rev_wal[l_slot].flat[ triple_index( c,   l_offset ) ];
-      c = rev_wal[m_slot].flat[ triple_index( c, l_m_offset ) ];
-      c = rev_wal[r_slot].flat[ triple_index( c, m_r_offset ) ];
-      c.encoded = etw[ c.encoded - r_offset.delta + 26 ];
+      c = rev_wal[l_slot].flat[ double_index( c,   l_offset ) ];
+      c = rev_wal[m_slot].flat[ double_index( c, l_m_offset ) ];
+      c = rev_wal[r_slot].flat[ double_index( c, m_r_offset ) ];
+      c = echar_sub_delta( c, r_offset );
       path_lookup[i][k] = c.encoded;
     }
   }
@@ -371,16 +371,16 @@ void init_path_lookup_ALL(const Key *key, int len)
 
     for (int k = 0; k < 26; k++) {
       struct enigma_character c = { .encoded = k };
-      c = wal[r_slot].flat[ triple_index( c,   r_offset ) ];
-      c = wal[m_slot].flat[ triple_index( c, r_m_offset ) ];
-      c = wal[l_slot].flat[ triple_index( c, m_l_offset ) ];
-      c = wal[g_slot].flat[ triple_index( c, l_g_offset ) ];
+      c = wal[r_slot].flat[ double_index( c,   r_offset ) ];
+      c = wal[m_slot].flat[ double_index( c, r_m_offset ) ];
+      c = wal[l_slot].flat[ double_index( c, m_l_offset ) ];
+      c = wal[g_slot].flat[ double_index( c, l_g_offset ) ];
       c.encoded = ukw[ukwnum][ c.encoded - g_offset.delta + 26 ];
-      c = rev_wal[g_slot].flat[ triple_index( c,   g_offset ) ];
-      c = rev_wal[l_slot].flat[ triple_index( c, g_l_offset ) ];
-      c = rev_wal[m_slot].flat[ triple_index( c, l_m_offset ) ];
-      c = rev_wal[r_slot].flat[ triple_index( c, m_r_offset ) ];
-      c.encoded = etw[ c.encoded -r_offset.delta + 26 ];
+      c = rev_wal[g_slot].flat[ double_index( c,   g_offset ) ];
+      c = rev_wal[l_slot].flat[ double_index( c, g_l_offset ) ];
+      c = rev_wal[m_slot].flat[ double_index( c, l_m_offset ) ];
+      c = rev_wal[r_slot].flat[ double_index( c, m_r_offset ) ];
+      c = echar_sub_delta( c, r_offset );
       path_lookup[i][k] = c.encoded;
     }
   }

@@ -76,11 +76,11 @@ void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struc
 
     for( int k = 0; k < 26; k++ ) {
         struct enigma_character c = { .encoded = (int8_t)k };
-        c = wal[key->slot.m].flat[ triple_index(c,   m_offset ) ];
-        c = wal[key->slot.l].flat[ triple_index(c, m_l_offset ) ];
+        c = wal[key->slot.m].flat[ double_index(c,   m_offset ) ];
+        c = wal[key->slot.l].flat[ double_index(c, m_l_offset ) ];
         c.encoded = ukw[key->ukwnum][ c.encoded - rings.l + 26 ];
-        c = rev_wal[key->slot.l].flat[ triple_index( c,   l_offset ) ];
-        c = rev_wal[key->slot.m].flat[ triple_index( c, l_m_offset ) ];
+        c = rev_wal[key->slot.l].flat[ double_index( c,   l_offset ) ];
+        c = rev_wal[key->slot.m].flat[ double_index( c, l_m_offset ) ];
         c = echar_sub_delta( c, m_offset );
         map->letters[k] = c.encoded;
     }
@@ -101,13 +101,13 @@ void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struc
 
     for( int k = 0; k < 26; k++ ) {
         struct enigma_character c = { .encoded = (int8_t)k };
-        c = wal[key->slot.m].flat[ triple_index( c,   m_offset ) ];
-        c = wal[key->slot.l].flat[ triple_index( c, m_l_offset ) ];
-        c = wal[key->slot.g].flat[ triple_index( c, l_g_offset ) ];
+        c = wal[key->slot.m].flat[ double_index( c,   m_offset ) ];
+        c = wal[key->slot.l].flat[ double_index( c, m_l_offset ) ];
+        c = wal[key->slot.g].flat[ double_index( c, l_g_offset ) ];
         c.encoded = ukw[key->ukwnum][ c.encoded - rings.g + 26 ];
-        c = rev_wal[key->slot.g].flat[ triple_index( c,   g_offset ) ];
-        c = rev_wal[key->slot.l].flat[ triple_index( c, g_l_offset ) ];
-        c = rev_wal[key->slot.m].flat[ triple_index( c, l_m_offset ) ];
+        c = rev_wal[key->slot.g].flat[ double_index( c,   g_offset ) ];
+        c = rev_wal[key->slot.l].flat[ double_index( c, g_l_offset ) ];
+        c = rev_wal[key->slot.m].flat[ double_index( c, l_m_offset ) ];
         c = echar_sub_delta( c, m_offset );
         map->letters[k] = c.encoded;
     }

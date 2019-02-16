@@ -40,26 +40,26 @@ struct PermutationMap26 {
     struct enigma_character map[ 26 ];
 };
 
-union TriplePermutationMap {
-    struct enigma_character flat[ 26 * 3 ];
-    struct PermutationMap26 tri[ 3 ];
+union DoublePermutationMap {
+    struct enigma_character flat[ 26 * 2 ];
+    struct PermutationMap26 dbl[ 2 ];
 };
 
 STATIC_ASSERT( 
-    sizeof(union TriplePermutationMap) == 3 * sizeof(struct PermutationMap26) 
+    sizeof(union DoublePermutationMap) == 2 * sizeof(struct PermutationMap26) 
     , "Dense packing expected" );
 
 static inline 
-size_t triple_index( struct enigma_character in, struct enigma_char_delta offset ){
-    return in.encoded + offset.delta + 26;
+size_t double_index( struct enigma_character in, struct enigma_char_delta offset ){
+    return in.encoded + offset.delta;
 }
 
 /*
  * decoders common data
  *************************/
 extern text_t wal_turn[9];
-extern const union TriplePermutationMap     wal[11];
-extern const union TriplePermutationMap rev_wal[11];
+extern const union DoublePermutationMap     wal[11];
+extern const union DoublePermutationMap rev_wal[11];
 extern text_t ukw[5][52];
 extern text_t etw[52];
 
