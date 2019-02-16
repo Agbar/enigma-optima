@@ -34,8 +34,8 @@ static inline
 void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2] )
 {
     // setup r_rings forward and backward.
-    memcpy( rRings[0].letters, wal[key->slot.r], 32 );
-    memcpy( rRings[1].letters, rev_wal[key->slot.r], 32 );
+    memcpy( rRings[0].letters, wal[key->slot.r].flat, 32 );
+    memcpy( rRings[1].letters, rev_wal[key->slot.r].flat, 32 );
 }
 
 //! \brief Return position of R ring on next turnover
@@ -70,11 +70,11 @@ void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struc
     int k;
     for( k = 0; k < 26; k++ ) {
         int8_t c = k;
-        c = wal[key->slot.m][c + rings.m] - rings.m + 26;
-        c = wal[key->slot.l][c + rings.l] - rings.l + 26;
+        c = wal[key->slot.m].flat[c + rings.m].encoded - rings.m + 26;
+        c = wal[key->slot.l].flat[c + rings.l].encoded - rings.l + 26;
         c = ukw[key->ukwnum][c];
-        c = rev_wal[key->slot.l][c + rings.l] - rings.l + 26;
-        c = rev_wal[key->slot.m][c + rings.m] - rings.m;
+        c = rev_wal[key->slot.l].flat[c + rings.l].encoded - rings.l + 26;
+        c = rev_wal[key->slot.m].flat[c + rings.m].encoded - rings.m;
         if( c < 0 ) {
             c += 26;
         }
@@ -88,13 +88,13 @@ void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struc
     int k;
     for( k = 0; k < 26; k++ ) {
         int8_t c = k;
-        c = wal[key->slot.m][c + rings.m] - rings.m + 26;
-        c = wal[key->slot.l][c + rings.l] - rings.l + 26;
-        c = wal[key->slot.g][c + rings.g] - rings.g + 26;
+        c = wal[key->slot.m].flat[c + rings.m].encoded - rings.m + 26;
+        c = wal[key->slot.l].flat[c + rings.l].encoded - rings.l + 26;
+        c = wal[key->slot.g].flat[c + rings.g].encoded - rings.g + 26;
         c = ukw[key->ukwnum][c];
-        c = rev_wal[key->slot.g][c + rings.g] - rings.g + 26;
-        c = rev_wal[key->slot.l][c + rings.l] - rings.l + 26;
-        c = rev_wal[key->slot.m][c + rings.m] - rings.m;
+        c = rev_wal[key->slot.g].flat[c + rings.g].encoded - rings.g + 26;
+        c = rev_wal[key->slot.l].flat[c + rings.l].encoded - rings.l + 26;
+        c = rev_wal[key->slot.m].flat[c + rings.m].encoded - rings.m;
         if( c < 0 ) {
             c += 26;
         }

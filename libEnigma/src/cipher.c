@@ -22,7 +22,7 @@ text_t etw[52] =
       0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
 
 
-     /* null substitution for no greek wheel */
+/* null substitution for no greek wheel */
 #define WALZ_0  (struct PermutationMap26) { .map = { {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25} } }
 #define WALZ_1  (struct PermutationMap26) { .map = { {4},{10},{12},{5},{11},{6},{3},{16},{21},{25},{13},{19},{14},{22},{24},{7},{23},{20},{18},{15},{0},{8},{1},{17},{2},{9} } }
 #define WALZ_2  (struct PermutationMap26) { .map = { {0},{9},{3},{10},{18},{8},{17},{20},{23},{1},{11},{7},{22},{19},{12},{2},{16},{6},{25},{13},{15},{24},{5},{21},{14},{4} } }
@@ -87,7 +87,7 @@ text_t ukw[5][52] = {
 
 /* Walzen 1-8, B and G (M4): reverse path */
 const union TriplePermutationMap rev_wal[11] = {
-     /* null substitution for no greek wheel */
+    /* null substitution for no greek wheel */
     TRIPLE_REV_WALZ_AT(0),
     TRIPLE_REV_WALZ_AT(1),
     TRIPLE_REV_WALZ_AT(2),
@@ -283,13 +283,13 @@ void init_path_lookup_H_M3(const Key *key, int len)
 
     for (k = 0; k < 26; k++) {
       c = k;
-      c = wal[r_slot][c+r_offset]-r_offset+26;
-      c = wal[m_slot][c+m_offset]-m_offset+26;
-      c = wal[l_slot][c+l_offset]-l_offset+26;
+      c = wal[r_slot].flat[c+r_offset].encoded-r_offset+26;
+      c = wal[m_slot].flat[c+m_offset].encoded-m_offset+26;
+      c = wal[l_slot].flat[c+l_offset].encoded-l_offset+26;
       c = ukw[ukwnum][c];
-      c = rev_wal[l_slot][c+l_offset]-l_offset+26;
-      c = rev_wal[m_slot][c+m_offset]-m_offset+26;
-      c = rev_wal[r_slot][c+r_offset]-r_offset+26;
+      c = rev_wal[l_slot].flat[c+l_offset].encoded-l_offset+26;
+      c = rev_wal[m_slot].flat[c+m_offset].encoded-m_offset+26;
+      c = rev_wal[r_slot].flat[c+r_offset].encoded-r_offset+26;
       c = etw[c];
       path_lookup[i][k] = c;
     }
@@ -365,15 +365,15 @@ void init_path_lookup_ALL(const Key *key, int len)
 
     for (k = 0; k < 26; k++) {
       c = k;
-      c = wal[r_slot][c+r_offset]-r_offset+26;
-      c = wal[m_slot][c+m_offset]-m_offset+26;
-      c = wal[l_slot][c+l_offset]-l_offset+26;
-      c = wal[g_slot][c+g_offset]-g_offset+26;
+      c = wal[r_slot].flat[c+r_offset].encoded-r_offset+26;
+      c = wal[m_slot].flat[c+m_offset].encoded-m_offset+26;
+      c = wal[l_slot].flat[c+l_offset].encoded-l_offset+26;
+      c = wal[g_slot].flat[c+g_offset].encoded-g_offset+26;
       c = ukw[ukwnum][c];
-      c = rev_wal[g_slot][c+g_offset]-g_offset+26;
-      c = rev_wal[l_slot][c+l_offset]-l_offset+26;
-      c = rev_wal[m_slot][c+m_offset]-m_offset+26;
-      c = rev_wal[r_slot][c+r_offset]-r_offset+26;
+      c = rev_wal[g_slot].flat[c+g_offset].encoded-g_offset+26;
+      c = rev_wal[l_slot].flat[c+l_offset].encoded-l_offset+26;
+      c = rev_wal[m_slot].flat[c+m_offset].encoded-m_offset+26;
+      c = rev_wal[r_slot].flat[c+r_offset].encoded-r_offset+26;
       c = etw[c];
       path_lookup[i][k] = c;
     }
@@ -457,15 +457,15 @@ double dgetic_ALL(const Key *key, int len)
     text_t c;
     struct enigma_character start_c = ciphertext.plain[ i ];
     struct enigma_char_delta r_delta = { .delta= r_offset };
-    c = wal[r_slot][ triple_index( start_c, r_delta ) ];
-    c = wal[m_slot][c-r_offset+m_offset+26];
-    c = wal[l_slot][c-m_offset+l_offset+26];
-    c = wal[g_slot][c-l_offset+g_offset+26];
+    c = wal[r_slot].flat[ triple_index( start_c, r_delta ) ].encoded;
+    c = wal[m_slot].flat[c-r_offset+m_offset+26].encoded;
+    c = wal[l_slot].flat[c-m_offset+l_offset+26].encoded;
+    c = wal[g_slot].flat[c-l_offset+g_offset+26].encoded;
     c = ukw[ukwnum][c-g_offset+26];
-    c = rev_wal[g_slot][c+g_offset+26];
-    c = rev_wal[l_slot][c+l_offset-g_offset+26];
-    c = rev_wal[m_slot][c+m_offset-l_offset+26];
-    c = rev_wal[r_slot][c+r_offset-m_offset+26];
+    c = rev_wal[g_slot].flat[c+g_offset+26].encoded;
+    c = rev_wal[l_slot].flat[c+l_offset-g_offset+26].encoded;
+    c = rev_wal[m_slot].flat[c+m_offset-l_offset+26].encoded;
+    c = rev_wal[r_slot].flat[c+r_offset-m_offset+26].encoded;
     c = etw[c-r_offset+26];
     f[c]++;
 
