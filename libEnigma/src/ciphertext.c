@@ -22,7 +22,6 @@ ciphertext_t ciphertext;
 void load_ciphertext(const char * const filename, int *const len, int resume)
 {
   int c;
-  text_t *p_ct;
   FILE *fp;
 
   if ((fp = fopen(filename, "r")) == NULL) {
@@ -41,10 +40,12 @@ void load_ciphertext(const char * const filename, int *const len, int resume)
       err_illegal_char_fatal(filename);
 
   rewind(fp);
-  p_ct = ciphertext.plain;
+  struct enigma_character *p_ct = ciphertext.plain;
   while ((c = fgetc(fp)) != EOF)
-    if (isalpha(c))
-      *p_ct++ = code[c];
+    if ( isalpha( c ) ) {
+      (*p_ct).encoded = code[c];
+      ++p_ct;
+    }
 
   fclose(fp);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config/types.h"
+#include "character_encoding.h"
 
 typedef struct {
   const Key *from;
@@ -11,7 +12,7 @@ typedef struct {
   int *pass;
   int *firstpass;
   int *max_score;
-  text_t *ciphertext;
+  struct enigma_character *ciphertext;
 } State;
 
 /*
