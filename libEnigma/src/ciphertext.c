@@ -15,7 +15,7 @@
 // I assume that 2048 characters should be enough in any realistic scenario,
 // especially that message is trimmed to 250 characters (CT in global.h).
 // Allegedly there exist messages longer than 1000 chars.
-ciphertext_t ciphertext;
+union ciphertext_t ciphertext;
 
 
 /* loads ciphertext into array, [A-Za-z] are converted to 0-25 */
