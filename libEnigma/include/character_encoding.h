@@ -60,6 +60,15 @@ char_delta_sub( struct enigma_char_delta minuend,  struct enigma_char_delta subt
     return (struct enigma_char_delta) { .delta = (uint8_t)diff };
 }
 
+static inline
+struct enigma_character
+echar_sub_delta( struct enigma_character c, struct enigma_char_delta sub ){
+    assert( sub.delta < 26 );
+    int8_t r = c.encoded - sub.delta;
+    if( r < 0 ) r +=26;
+    return (struct enigma_character) { .encoded = r };
+}
+
 union v16_echar_delta
 {
     struct enigma_char_delta v_ecd[16];

@@ -67,40 +67,49 @@ int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t 
 
 static inline
 void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key ) {
-    int k;
-    for( k = 0; k < 26; k++ ) {
-        int8_t c = k;
-        c = wal[key->slot.m].flat[c + rings.m].encoded;
-        c = wal[key->slot.l].flat[c + rings.l - rings.m + 26].encoded;
-        c = ukw[key->ukwnum][c - rings.l + 26];
-        c = rev_wal[key->slot.l].flat[c + rings.l].encoded;
-        c = rev_wal[key->slot.m].flat[c + rings.m - rings.l + 26].encoded;
-        c = c - rings.m;
-        if( c < 0 ) {
-            c += 26;
-        }
-        map->letters[k] = c;
+    struct enigma_char_delta
+        m_offset = { .delta = (uint8_t)rings.m },
+        l_offset = { .delta = (uint8_t)rings.l };
+    struct enigma_char_delta 
+        m_l_offset = char_delta_sub( l_offset, m_offset ),
+        l_m_offset = char_delta_sub( m_offset, l_offset );
+
+    for( int k = 0; k < 26; k++ ) {
+        struct enigma_character c = { .encoded = (int8_t)k };
+        c = wal[key->slot.m].flat[ triple_index(c,   m_offset ) ];
+        c = wal[key->slot.l].flat[ triple_index(c, m_l_offset ) ];
+        c.encoded = ukw[key->ukwnum][ c.encoded - rings.l + 26 ];
+        c = rev_wal[key->slot.l].flat[ triple_index( c,   l_offset ) ];
+        c = rev_wal[key->slot.m].flat[ triple_index( c, l_m_offset ) ];
+        c = echar_sub_delta( c, m_offset );
+        map->letters[k] = c.encoded;
     }
     FixPermutationMapTail( map );
 }
 
 static inline
 void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key ) {
-    int k;
-    for( k = 0; k < 26; k++ ) {
-        int8_t c = k;
-        c = wal[key->slot.m].flat[c + rings.m].encoded;
-        c = wal[key->slot.l].flat[c + rings.l - rings.m + 26].encoded;
-        c = wal[key->slot.g].flat[c + rings.g - rings.l + 26].encoded;
-        c = ukw[key->ukwnum][c - rings.g + 26];
-        c = rev_wal[key->slot.g].flat[c + rings.g].encoded;
-        c = rev_wal[key->slot.l].flat[c + rings.l - rings.g + 26].encoded;
-        c = rev_wal[key->slot.m].flat[c + rings.m - rings.l + 26].encoded;
-        c = c - rings.m;
-        if( c < 0 ) {
-            c += 26;
-        }
-        map->letters[k] = c;
+    struct enigma_char_delta
+        m_offset = { .delta = (uint8_t)rings.m },
+        l_offset = { .delta = (uint8_t)rings.l },
+        g_offset = { .delta = (uint8_t)rings.g };
+    struct enigma_char_delta 
+        m_l_offset = char_delta_sub( l_offset, m_offset ),
+        l_g_offset = char_delta_sub( g_offset, l_offset ),
+        g_l_offset = char_delta_sub( l_offset, g_offset ),
+        l_m_offset = char_delta_sub( m_offset, l_offset );
+
+    for( int k = 0; k < 26; k++ ) {
+        struct enigma_character c = { .encoded = (int8_t)k };
+        c = wal[key->slot.m].flat[ triple_index( c,   m_offset ) ];
+        c = wal[key->slot.l].flat[ triple_index( c, m_l_offset ) ];
+        c = wal[key->slot.g].flat[ triple_index( c, l_g_offset ) ];
+        c.encoded = ukw[key->ukwnum][ c.encoded - rings.g + 26 ];
+        c = rev_wal[key->slot.g].flat[ triple_index( c,   g_offset ) ];
+        c = rev_wal[key->slot.l].flat[ triple_index( c, g_l_offset ) ];
+        c = rev_wal[key->slot.m].flat[ triple_index( c, l_m_offset ) ];
+        c = echar_sub_delta( c, m_offset );
+        map->letters[k] = c.encoded;
     }
     FixPermutationMapTail( map );
 }
