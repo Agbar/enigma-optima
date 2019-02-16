@@ -283,14 +283,14 @@ void init_path_lookup_H_M3(const Key *key, int len)
 
     for (k = 0; k < 26; k++) {
       c = k;
-      c = wal[r_slot].flat[c+r_offset].encoded-r_offset+26;
-      c = wal[m_slot].flat[c+m_offset].encoded-m_offset+26;
-      c = wal[l_slot].flat[c+l_offset].encoded-l_offset+26;
-      c = ukw[ukwnum][c];
-      c = rev_wal[l_slot].flat[c+l_offset].encoded-l_offset+26;
-      c = rev_wal[m_slot].flat[c+m_offset].encoded-m_offset+26;
-      c = rev_wal[r_slot].flat[c+r_offset].encoded-r_offset+26;
-      c = etw[c];
+      c = wal[r_slot].flat[c+r_offset].encoded;
+      c = wal[m_slot].flat[c+m_offset-r_offset+26].encoded;
+      c = wal[l_slot].flat[c+l_offset-m_offset+26].encoded;
+      c = ukw[ukwnum][c-l_offset+26];
+      c = rev_wal[l_slot].flat[c+l_offset].encoded;
+      c = rev_wal[m_slot].flat[c+m_offset-l_offset+26].encoded;
+      c = rev_wal[r_slot].flat[c+r_offset-m_offset+26].encoded;
+      c = etw[c-r_offset+26];
       path_lookup[i][k] = c;
     }
   }
@@ -365,16 +365,16 @@ void init_path_lookup_ALL(const Key *key, int len)
 
     for (k = 0; k < 26; k++) {
       c = k;
-      c = wal[r_slot].flat[c+r_offset].encoded-r_offset+26;
-      c = wal[m_slot].flat[c+m_offset].encoded-m_offset+26;
-      c = wal[l_slot].flat[c+l_offset].encoded-l_offset+26;
-      c = wal[g_slot].flat[c+g_offset].encoded-g_offset+26;
-      c = ukw[ukwnum][c];
-      c = rev_wal[g_slot].flat[c+g_offset].encoded-g_offset+26;
-      c = rev_wal[l_slot].flat[c+l_offset].encoded-l_offset+26;
-      c = rev_wal[m_slot].flat[c+m_offset].encoded-m_offset+26;
-      c = rev_wal[r_slot].flat[c+r_offset].encoded-r_offset+26;
-      c = etw[c];
+      c = wal[r_slot].flat[c+r_offset].encoded;
+      c = wal[m_slot].flat[c+m_offset-r_offset+26].encoded;
+      c = wal[l_slot].flat[c+l_offset-m_offset+26].encoded;
+      c = wal[g_slot].flat[c+g_offset-l_offset+26].encoded;
+      c = ukw[ukwnum][c-g_offset+26];
+      c = rev_wal[g_slot].flat[c+g_offset].encoded;
+      c = rev_wal[l_slot].flat[c+l_offset-g_offset+26].encoded;
+      c = rev_wal[m_slot].flat[c+m_offset-l_offset+26].encoded;
+      c = rev_wal[r_slot].flat[c+r_offset-m_offset+26].encoded;
+      c = etw[c-r_offset+26];
       path_lookup[i][k] = c;
     }
   }
