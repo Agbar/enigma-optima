@@ -32,7 +32,7 @@ union v32_echar
 
 struct enigma_char_delta
 {
-    int8_t delta;
+    uint8_t delta;
 };
 
 static inline
@@ -42,22 +42,22 @@ make_char_delta_plus_minus( uint8_t plus_offset,  uint8_t minus_offset ){
     assert( minus_offset < 26 );
     int8_t d = plus_offset - minus_offset;
     if( d < 0 ) d += 26;
-    return (struct enigma_char_delta) { .delta = d };
+    return (struct enigma_char_delta) { .delta = (uint8_t)d };
 }
 
 static inline
 void char_delta_rot_1( struct enigma_char_delta* char_delta ){
-    IncrementMod( &char_delta->delta, 26 );
+    IncrementModU( &char_delta->delta, 26 );
 }
 
 static inline
 struct enigma_char_delta
 char_delta_sub( struct enigma_char_delta minuend,  struct enigma_char_delta subtrahend ){
-    assert( minuend.delta >= 0 && minuend.delta < 26 );
-    assert( subtrahend.delta >= 0 && subtrahend.delta < 26 );
+    assert( minuend.delta < 26 );
+    assert( subtrahend.delta < 26 );
     int8_t diff = minuend.delta - subtrahend.delta;
     if( diff < 0 ) diff += 26;
-    return (struct enigma_char_delta) { .delta = diff };
+    return (struct enigma_char_delta) { .delta = (uint8_t)diff };
 }
 
 union v16_echar_delta
