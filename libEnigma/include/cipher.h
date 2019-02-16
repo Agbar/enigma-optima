@@ -22,8 +22,6 @@ struct Turnovers_t {
 
 PURE_FUNCTION
 int scrambler_state(const Key *key, int len);
-PURE_FUNCTION
-double dgetic_ALL(const Key *key, int len);
 
 typedef void (*enigma_prepare_decoder_lookup_function_pt) (const Key *key, int len);
 
@@ -55,23 +53,6 @@ static inline
 size_t triple_index( struct enigma_character in, struct enigma_char_delta offset ){
     return in.encoded + offset.delta + 26;
 }
-
-static inline 
-size_t triple_index_2_minus_plus(
-        struct enigma_character  in
-      , struct enigma_char_delta minus
-      , struct enigma_char_delta plus ){
-    return in.encoded - minus.delta + plus.delta + 26;
-}
-
-static inline 
-size_t triple_index_2_plus_minus(
-        struct enigma_character  in
-      , struct enigma_char_delta plus
-      , struct enigma_char_delta minus ){
-    return triple_index_2_minus_plus(in, plus, minus );
-}
-
 
 /*
  * decoders common data
