@@ -5,7 +5,7 @@
 #include "score.h"
 
 struct LookupChunk_t {
-        PermutationMap_t mapping;
+        union PermutationMap_t mapping;
         v16qi mask;
 };
 
@@ -14,7 +14,7 @@ struct PathLookupSsse3_t
     struct LookupChunk_t lookups[24];
     uint_least16_t nextBite[24];        ///< First lookup number in next bite.
     // mapping forward and reverse
-    PermutationMap_t r_ring[2];
+    union PermutationMap_t r_ring[2];
     v16qi firstRRingOffset;
 };
 

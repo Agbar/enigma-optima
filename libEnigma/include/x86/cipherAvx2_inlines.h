@@ -4,7 +4,7 @@
 #include "cipherAvx2.h"
 
 static inline
-v32qi PermuteV32qi(const PermutationMap_t* map, v32qi vec ){
+v32qi PermuteV32qi(const union PermutationMap_t* map, v32qi vec ){
     /* Following line is needed to behave like __builtin_shuffle for all inputs and still being
     faster, but our data is always in interval [0,25] = [0,0x1A). */
     // vec &= 0x3F;

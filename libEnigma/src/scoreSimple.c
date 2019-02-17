@@ -22,7 +22,7 @@ uint16_t icscoreSimple( const Key* const restrict key, scoreLength_t len )
   if (len < 2)
     return 0;
 
-  const PermutationMap_t* const stbrett = &key->stbrett;
+  const union PermutationMap_t* const stbrett = &key->stbrett;
 
   for (i = 0; i < len; i++) {
     c = decode(0,i,stbrett);
@@ -42,7 +42,7 @@ int uniscoreSimple(const Key* const restrict key, scoreLength_t len)
   int i;
   int c;
   int s = 0;
-  const PermutationMap_t* const stbrett = &key->stbrett;
+  const union PermutationMap_t* const stbrett = &key->stbrett;
 
   for (i = 0; i < len; i++) {
     c = decode(0,i,stbrett);
@@ -58,7 +58,7 @@ int biscoreSimple(const Key* const restrict key, scoreLength_t len)
   int i;
   int c1, c2;
   int s = 0;
-  const PermutationMap_t* const stbrett = &key->stbrett;
+  const union PermutationMap_t* const stbrett = &key->stbrett;
 
   c1 = decode(0,0,stbrett);
 
@@ -79,7 +79,7 @@ int triscoreSimple(const Key* const restrict key,  scoreLength_t len)
   int i;
   int c1, c2, c3;
   int s = 0;
-  const PermutationMap_t* const stbrett = &key->stbrett;
+  const union PermutationMap_t* const stbrett = &key->stbrett;
 
   c1 = decode(0,0,stbrett);
 

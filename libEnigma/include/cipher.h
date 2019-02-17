@@ -63,15 +63,15 @@ extern const union DoublePermutationMap rev_wal[11];
 extern const union DoublePermutationMap     ukw[ 5];
 
 static inline
-size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett );
+size_t decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett );
 
 static inline
-v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett );
+v4pis decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett );
 
 #ifdef __i386__
 
 static inline
-size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett )
+size_t decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     asm(
@@ -96,7 +96,7 @@ size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett
 }
 
 static inline
-v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+v4pis decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     size_t d;
@@ -149,7 +149,7 @@ v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbret
 #ifdef __amd64__
 
 static inline
-size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett )
+size_t decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     asm(
@@ -175,7 +175,7 @@ size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett
 }
 
 static inline
-v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+v4pis decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     size_t d;

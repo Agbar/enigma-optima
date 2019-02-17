@@ -19,7 +19,7 @@ enigma_cipher_function_t enigma_cipher_DecoderLookupAvx2 = { prepare_decoder_loo
 
 struct PathLookupAvx2_t PathLookupAvx2;
 
-typedef void CalculatePermutationMap_f( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
+typedef void CalculatePermutationMap_f( union PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
 
 void CalculateLookupAvx2( int lookupNumber, struct RingsState rings, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap );
 void CalculateMaskAvx2( size_t lookupNumber, int8_t begin, int8_t end );

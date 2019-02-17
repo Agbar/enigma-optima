@@ -31,7 +31,7 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
   if (len < 2)
     return 0;
 
-  const PermutationMap_t* stbrett = &key->stbrett;
+  const union PermutationMap_t* stbrett = &key->stbrett;
 
   for (i = 0; i < len-15; i += 16) {
     v4pis c;
@@ -92,7 +92,7 @@ static int uniscoreBasic( const Key* key, scoreLength_t len )
   int i;
   int s;
 
-  const PermutationMap_t* stbrett = &key->stbrett;
+  const union PermutationMap_t* stbrett = &key->stbrett;
 
   s = 0;
   for (i = 0; i < len-15; i += 16) {
@@ -143,7 +143,7 @@ __attribute__ ((optimize("sched-stalled-insns=0"
                         ",sched-stalled-insns-dep=16")))
 int biscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
-    const PermutationMap_t* const stbrett = &key->stbrett;
+    const union PermutationMap_t* const stbrett = &key->stbrett;
     int s = 0;
 
     size_t c1 = decode(0,0,stbrett);
@@ -221,7 +221,7 @@ int triscoreBasic( const Key* const restrict key, scoreLength_t len )
 {
     int s = 0;
 
-    const PermutationMap_t* const stbrett = &key->stbrett;
+    const union PermutationMap_t* const stbrett = &key->stbrett;
 
     size_t c1 = decode(0,0,stbrett);
     size_t c2 = decode(1,0,stbrett);

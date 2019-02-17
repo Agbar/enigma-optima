@@ -31,7 +31,7 @@ void StepAllRings( struct RingsState* const restrict rings, const struct Turnove
 }
 
 static inline
-void CopyRRing2Lookup( const Key* const restrict key, PermutationMap_t rRings[2] )
+void CopyRRing2Lookup( const Key* const restrict key, union PermutationMap_t rRings[2] )
 {
     // setup r_rings forward and backward.
     memcpy( rRings[0].letters, wal[key->slot.r].flat, 32 );
@@ -66,7 +66,7 @@ int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t 
 }
 
 static inline
-void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key ) {
+void CalculatePermutationMap3Rotors( union PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key ) {
     struct echar_delta
         m_offset = { .delta = (uint8_t)rings.m },
         l_offset = { .delta = (uint8_t)rings.l };
@@ -89,7 +89,7 @@ void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struc
 }
 
 static inline
-void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key ) {
+void CalculatePermutationMap4Rotors( union PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key ) {
     struct echar_delta
         m_offset = { .delta = (uint8_t)rings.m },
         l_offset = { .delta = (uint8_t)rings.l },

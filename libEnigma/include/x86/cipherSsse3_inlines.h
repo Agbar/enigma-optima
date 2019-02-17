@@ -5,7 +5,7 @@
 #include "cipherSsse3.h"
 
 static inline
-v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec ){
+v16qi PermuteV16qi(const union PermutationMap_t* map, v16qi vec ){
     /* Following line is needed to behave like __builtin_shuffle for all inputs and still being
     faster, but our data is always in interval [0,25] = [0,0x1A). */
     // vec &= 0x1F;

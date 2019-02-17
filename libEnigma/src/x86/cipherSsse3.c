@@ -19,7 +19,7 @@ enigma_cipher_function_t enigma_cipher_decoder_lookup_ssse3 = {prepare_decoder_l
 
 struct PathLookupSsse3_t PathLookupSsse3;
 
-typedef void CalculatePermutationMap_f( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
+typedef void CalculatePermutationMap_f( union PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
 
 void CalculateLookup( int lookupNumber, struct RingsState rings, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap );
 void CalculateMask( size_t lookupNumber, int8_t begin, int8_t end );

@@ -8,17 +8,17 @@
 
 /* PermutationMap
  * * * * * * * * */
-typedef union _PermutationMap_t
+union PermutationMap_t
 {
     v32qi whole;
 
     v16qi half[2];
 
     text_t letters[32];
-} PermutationMap_t;
+};
 
 static inline
-void FixPermutationMapTail(PermutationMap_t* mapping){
+void FixPermutationMapTail(union PermutationMap_t* mapping){
     int k = 26;
     for(; k < 32; k++)
     {
@@ -61,7 +61,7 @@ struct RingsState
 /* Key
  * * * */
 typedef struct _key_t {
-    ALIGNED_16(PermutationMap_t stbrett);
+    ALIGNED_16(union PermutationMap_t stbrett);
     struct RingsState slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
     struct RingsState ring; ///< ringstellungen
     struct RingsState mesg; ///< message settings
