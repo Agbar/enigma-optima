@@ -37,11 +37,11 @@ extern enigma_cipher_function_t enigma_cipher_decoder_lookup;
 extern text_t path_lookup[CT][LAST_DIMENSION];
 
 struct PermutationMap26 {
-    struct enigma_character map[ 26 ];
+    struct echar map[ 26 ];
 };
 
 union DoublePermutationMap {
-    struct enigma_character flat[ 26 * 2 ];
+    struct echar flat[ 26 * 2 ];
     struct PermutationMap26 dbl[ 2 ];
 };
 
@@ -50,7 +50,7 @@ STATIC_ASSERT(
     , "Dense packing expected" );
 
 static inline 
-size_t double_index( struct enigma_character in, struct enigma_char_delta offset ){
+size_t double_index( struct echar in, struct enigma_char_delta offset ){
     return in.encoded + offset.delta;
 }
 

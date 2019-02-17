@@ -12,7 +12,7 @@ typedef struct {
   int *pass;
   int *firstpass;
   int *max_score;
-  struct enigma_character *ciphertext;
+  struct echar *ciphertext;
 } State;
 
 /*

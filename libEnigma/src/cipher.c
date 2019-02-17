@@ -274,7 +274,7 @@ void init_path_lookup_H_M3(const Key *key, int len)
         m_r_offset = char_delta_sub( r_offset, m_offset );
 
     for (int k = 0; k < 26; k++) {
-      struct enigma_character c = { .encoded = k };
+      struct echar c = { .encoded = k };
       c = wal[r_slot].flat[ double_index( c,     r_offset ) ];
       c = wal[m_slot].flat[ double_index( c,   r_m_offset ) ];
       c = wal[l_slot].flat[ double_index( c,   m_l_offset ) ];
@@ -362,7 +362,7 @@ void init_path_lookup_ALL(const Key *key, int len)
 
 
     for (int k = 0; k < 26; k++) {
-      struct enigma_character c = { .encoded = k };
+      struct echar c = { .encoded = k };
       c = wal[r_slot].flat[ double_index( c,     r_offset ) ];
       c = wal[m_slot].flat[ double_index( c,   r_m_offset ) ];
       c = wal[l_slot].flat[ double_index( c,   m_l_offset ) ];

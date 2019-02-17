@@ -6,7 +6,7 @@
 #include "config/types.h"
 #include "ModMath.h"
 
-struct enigma_character 
+struct echar 
 {
     // A - Z letters encoded as numbers in range [-10; 15]
     // This encoding is x86-shuffle-friendly
@@ -14,19 +14,19 @@ struct enigma_character
 };
 
 static inline
-size_t ec_0_based_index( struct enigma_character c ){
+size_t echar_0_based_index( struct echar c ){
     return c.encoded;
 }
 
 union v16_echar
 {
-    struct enigma_character v_ec[16];
+    struct echar v_ec[16];
     v16qi vector;
 };
 
 union v32_echar
 {
-    struct enigma_character v_ec[32];
+    struct echar v_ec[32];
     v32qi vector;
 };
 
@@ -70,12 +70,12 @@ char_delta_invert( struct enigma_char_delta d ){
 }
 
 static inline
-struct enigma_character
-echar_sub_delta( struct enigma_character c, struct enigma_char_delta sub ){
+struct echar
+echar_sub_delta( struct echar c, struct enigma_char_delta sub ){
     assert( sub.delta < 26 );
     int8_t r = c.encoded - sub.delta;
     if( r < 0 ) r +=26;
-    return (struct enigma_character) { .encoded = r };
+    return (struct echar) { .encoded = r };
 }
 
 union v16_echar_delta
@@ -90,7 +90,7 @@ union v32_echar_delta
     v32qi vector;
 };
 
-STATIC_ASSERT( sizeof(struct enigma_character) == 1, "enigma_character must be compact" );
+STATIC_ASSERT( sizeof(struct echar) == 1, "echar must be compact" );
 STATIC_ASSERT( sizeof(union v16_echar) == 16, "vector and array of characters must have the same length");
 STATIC_ASSERT( sizeof(union v32_echar) == 32, "vector and array of characters must have the same length");
 STATIC_ASSERT( sizeof(struct enigma_char_delta) == 1, "enigma_character_delta must be compact" );

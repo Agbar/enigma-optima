@@ -46,7 +46,7 @@ void set_to_ct_freq(text_t var[], int len)
   int n = 0;
 
   for (i = 0; i < len; i++) {
-    size_t c = ec_0_based_index( ciphertext.plain[i] );
+    size_t c = echar_0_based_index( ciphertext.plain[i] );
     f[c]++;
   }
 

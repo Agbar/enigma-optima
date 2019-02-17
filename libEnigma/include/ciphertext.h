@@ -9,7 +9,7 @@ void load_ciphertext(const char *filename, int *len, int resume);
 
 union ciphertext_t
 { 
-    struct enigma_character plain[2048];
+    struct echar plain[2048];
     union v16_echar vector16[128];
     union v32_echar vector32[64];
 };

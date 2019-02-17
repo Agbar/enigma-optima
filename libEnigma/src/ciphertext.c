@@ -40,7 +40,7 @@ void load_ciphertext(const char * const filename, int *const len, int resume)
       err_illegal_char_fatal(filename);
 
   rewind(fp);
-  struct enigma_character *p_ct = ciphertext.plain;
+  struct echar *p_ct = ciphertext.plain;
   while ((c = fgetc(fp)) != EOF)
     if ( isalpha( c ) ) {
       (*p_ct).encoded = code[c];
