@@ -50,7 +50,7 @@ STATIC_ASSERT(
     , "Dense packing expected" );
 
 static inline 
-size_t double_index( struct echar in, struct enigma_char_delta offset ){
+size_t double_index( struct echar in, struct echar_delta offset ){
     return in.encoded + offset.delta;
 }
 

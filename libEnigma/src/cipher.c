@@ -229,7 +229,7 @@ void init_path_lookup_H_M3(const Key *key, int len)
 
 
     /* calculate effective offset from ring and message settings */
-    struct enigma_char_delta
+    struct echar_delta
         r_offset = make_char_delta_plus_minus( r_mesg, r_ring ),
         m_offset = make_char_delta_plus_minus( m_mesg, m_ring ),
         l_offset = make_char_delta_plus_minus( l_mesg, l_ring );
@@ -266,7 +266,7 @@ void init_path_lookup_H_M3(const Key *key, int len)
       p3 = 0;
     }
 
-    const struct enigma_char_delta 
+    const struct echar_delta 
         r_m_offset = char_delta_sub( m_offset, r_offset ),
         m_l_offset = char_delta_sub( l_offset, m_offset ),
         inv_l_offset = char_delta_invert( l_offset ),
@@ -313,7 +313,7 @@ void init_path_lookup_ALL(const Key *key, int len)
   int p2 = 0, p3 = 0;
 
     /* calculate effective offset from ring and message settings */
-    struct enigma_char_delta
+    struct echar_delta
       r_offset = make_char_delta_plus_minus( r_mesg, r_ring ),
       m_offset = make_char_delta_plus_minus( m_mesg, m_ring ),
       l_offset = make_char_delta_plus_minus( l_mesg, l_ring ),
@@ -351,7 +351,7 @@ void init_path_lookup_ALL(const Key *key, int len)
       p3 = 0;
     }
 
-    struct enigma_char_delta 
+    struct echar_delta 
         r_m_offset = char_delta_sub( m_offset, r_offset ),
         m_l_offset = char_delta_sub( l_offset, m_offset ),
         l_g_offset = char_delta_sub( g_offset, l_offset ),

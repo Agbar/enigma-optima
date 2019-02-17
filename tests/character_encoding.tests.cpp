@@ -15,7 +15,7 @@ TEST( make_char_delta, plus_minus)
 
 TEST( char_delta, invert )
 {
-    struct enigma_char_delta x;
+    struct echar_delta x;
     x.delta = 0;
     EXPECT_EQ( 0, char_delta_invert( x ).delta );
     x.delta = 25;

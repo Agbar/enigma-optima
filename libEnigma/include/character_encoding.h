@@ -30,48 +30,48 @@ union v32_echar
     v32qi vector;
 };
 
-struct enigma_char_delta
+struct echar_delta
 {
     uint8_t delta;
 };
 
 static inline
-struct enigma_char_delta
+struct echar_delta
 make_char_delta_plus_minus( uint8_t plus_offset,  uint8_t minus_offset ){
     assert( plus_offset < 26 );
     assert( minus_offset < 26 );
     int8_t d = plus_offset - minus_offset;
     if( d < 0 ) d += 26;
-    return (struct enigma_char_delta) { .delta = (uint8_t)d };
+    return (struct echar_delta) { .delta = (uint8_t)d };
 }
 
 static inline
-void char_delta_rot_1( struct enigma_char_delta* char_delta ){
+void char_delta_rot_1( struct echar_delta* char_delta ){
     IncrementModU( &char_delta->delta, 26 );
 }
 
 static inline
-struct enigma_char_delta
-char_delta_sub( struct enigma_char_delta minuend,  struct enigma_char_delta subtrahend ){
+struct echar_delta
+char_delta_sub( struct echar_delta minuend,  struct echar_delta subtrahend ){
     assert( minuend.delta < 26 );
     assert( subtrahend.delta < 26 );
     int8_t diff = minuend.delta - subtrahend.delta;
     if( diff < 0 ) diff += 26;
-    return (struct enigma_char_delta) { .delta = (uint8_t)diff };
+    return (struct echar_delta) { .delta = (uint8_t)diff };
 }
 
 static inline
-struct enigma_char_delta
-char_delta_invert( struct enigma_char_delta d ){
+struct echar_delta
+char_delta_invert( struct echar_delta d ){
     assert( d.delta < 26 );
     int8_t inv = -d.delta;
     if( inv < 0 ) inv += 26;
-    return (struct enigma_char_delta) { .delta = (uint8_t)inv };
+    return (struct echar_delta) { .delta = (uint8_t)inv };
 }
 
 static inline
 struct echar
-echar_sub_delta( struct echar c, struct enigma_char_delta sub ){
+echar_sub_delta( struct echar c, struct echar_delta sub ){
     assert( sub.delta < 26 );
     int8_t r = c.encoded - sub.delta;
     if( r < 0 ) r +=26;
@@ -80,19 +80,19 @@ echar_sub_delta( struct echar c, struct enigma_char_delta sub ){
 
 union v16_echar_delta
 {
-    struct enigma_char_delta v_ecd[16];
+    struct echar_delta v_ecd[16];
     v16qi vector;
 };
 
 union v32_echar_delta
 {
-    struct enigma_char_delta v_ecd[32];
+    struct echar_delta v_ecd[32];
     v32qi vector;
 };
 
 STATIC_ASSERT( sizeof(struct echar) == 1, "echar must be compact" );
 STATIC_ASSERT( sizeof(union v16_echar) == 16, "vector and array of characters must have the same length");
 STATIC_ASSERT( sizeof(union v32_echar) == 32, "vector and array of characters must have the same length");
-STATIC_ASSERT( sizeof(struct enigma_char_delta) == 1, "enigma_character_delta must be compact" );
+STATIC_ASSERT( sizeof(struct echar_delta) == 1, "enigma_character_delta must be compact" );
 STATIC_ASSERT( sizeof(union v16_echar_delta) == 16, "vector and array of character deltas must have the same length");
 STATIC_ASSERT( sizeof(union v32_echar_delta) == 32, "vector and array of character deltas must have the same length");

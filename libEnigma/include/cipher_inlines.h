@@ -67,10 +67,10 @@ int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t 
 
 static inline
 void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key ) {
-    struct enigma_char_delta
+    struct echar_delta
         m_offset = { .delta = (uint8_t)rings.m },
         l_offset = { .delta = (uint8_t)rings.l };
-    struct enigma_char_delta 
+    struct echar_delta 
         m_l_offset = char_delta_sub( l_offset, m_offset ),
         inv_l_offset = char_delta_invert( l_offset ),
         l_m_offset = char_delta_sub( m_offset, l_offset );
@@ -90,11 +90,11 @@ void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struc
 
 static inline
 void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key ) {
-    struct enigma_char_delta
+    struct echar_delta
         m_offset = { .delta = (uint8_t)rings.m },
         l_offset = { .delta = (uint8_t)rings.l },
         g_offset = { .delta = (uint8_t)rings.g };
-    struct enigma_char_delta 
+    struct echar_delta 
         m_l_offset = char_delta_sub( l_offset, m_offset ),
         l_g_offset = char_delta_sub( g_offset, l_offset ),
         inv_g_offset = char_delta_invert( g_offset ),
