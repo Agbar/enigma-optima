@@ -45,25 +45,20 @@ const union DoublePermutationMap wal[11] = {
     DOUBLE_WALZ_AT(10)
 };
 
+#define UMKEHRWALZEN_A (struct PermutationMap26) { .map = {{4},{9},{12},{25},{0},{11},{24},{23},{21},{1},{22},{5},{2},{17},{16},{20},{14},{13},{19},{18},{15},{8},{10},{7},{6},{3}} }
+#define UMKEHRWALZEN_B (struct PermutationMap26) { .map = {{24},{17},{20},{7},{16},{18},{11},{3},{15},{23},{13},{6},{14},{10},{12},{8},{4},{1},{5},{25},{2},{22},{21},{9},{0},{19}} }
+#define UMKEHRWALZEN_C (struct PermutationMap26) { .map = {{5},{21},{15},{9},{8},{0},{14},{24},{4},{3},{17},{25},{23},{22},{6},{2},{19},{10},{20},{16},{18},{1},{13},{12},{7},{11}} }
+#define UMKEHRWALZEN_B_THIN (struct PermutationMap26) { .map = {{4},{13},{10},{16},{0},{20},{24},{22},{9},{8},{2},{14},{15},{1},{11},{12},{3},{23},{25},{21},{5},{19},{7},{17},{6},{18}} }
+#define UMKEHRWALZEN_C_THIN (struct PermutationMap26) { .map = {{17},{3},{14},{1},{9},{13},{19},{10},{21},{4},{7},{12},{11},{5},{2},{22},{25},{0},{23},{6},{24},{8},{15},{18},{20},{16}} }
+#define DOUBLE_UMKEHRWALZEN( name ) { .dbl = {UMKEHRWALZEN_##name, UMKEHRWALZEN_##name} }
 
 /* Umkehrwalzen A, B, C, B_THIN, C_THIN */
-text_t ukw[5][52] = {
-
-     {4,9,12,25,0,11,24,23,21,1,22,5,2,17,16,20,14,13,19,18,15,8,10,7,6,3,
-      4,9,12,25,0,11,24,23,21,1,22,5,2,17,16,20,14,13,19,18,15,8,10,7,6,3},
-
-     {24,17,20,7,16,18,11,3,15,23,13,6,14,10,12,8,4,1,5,25,2,22,21,9,0,19,
-      24,17,20,7,16,18,11,3,15,23,13,6,14,10,12,8,4,1,5,25,2,22,21,9,0,19},
-
-     {5,21,15,9,8,0,14,24,4,3,17,25,23,22,6,2,19,10,20,16,18,1,13,12,7,11,
-      5,21,15,9,8,0,14,24,4,3,17,25,23,22,6,2,19,10,20,16,18,1,13,12,7,11},
-
-     {4,13,10,16,0,20,24,22,9,8,2,14,15,1,11,12,3,23,25,21,5,19,7,17,6,18,
-      4,13,10,16,0,20,24,22,9,8,2,14,15,1,11,12,3,23,25,21,5,19,7,17,6,18},
-
-     {17,3,14,1,9,13,19,10,21,4,7,12,11,5,2,22,25,0,23,6,24,8,15,18,20,16,
-      17,3,14,1,9,13,19,10,21,4,7,12,11,5,2,22,25,0,23,6,24,8,15,18,20,16}
-
+const union DoublePermutationMap ukw[5] = {
+    DOUBLE_UMKEHRWALZEN(A),
+    DOUBLE_UMKEHRWALZEN(B),
+    DOUBLE_UMKEHRWALZEN(C),
+    DOUBLE_UMKEHRWALZEN(B_THIN),
+    DOUBLE_UMKEHRWALZEN(C_THIN)
 };
 
 #define REV_WALZ_0  (struct PermutationMap26) { .map = { {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25} } }
@@ -271,18 +266,19 @@ void init_path_lookup_H_M3(const Key *key, int len)
       p3 = 0;
     }
 
-    struct enigma_char_delta 
+    const struct enigma_char_delta 
         r_m_offset = char_delta_sub( m_offset, r_offset ),
         m_l_offset = char_delta_sub( l_offset, m_offset ),
+        inv_l_offset = char_delta_invert( l_offset ),
         l_m_offset = char_delta_sub( m_offset, l_offset ),
         m_r_offset = char_delta_sub( r_offset, m_offset );
 
     for (int k = 0; k < 26; k++) {
       struct enigma_character c = { .encoded = k };
-      c = wal[r_slot].flat[ double_index( c,   r_offset ) ];
-      c = wal[m_slot].flat[ double_index( c, r_m_offset ) ];
-      c = wal[l_slot].flat[ double_index( c, m_l_offset ) ];
-      c.encoded = ukw[ukwnum][ c.encoded - l_offset.delta + 26 ];
+      c = wal[r_slot].flat[ double_index( c,     r_offset ) ];
+      c = wal[m_slot].flat[ double_index( c,   r_m_offset ) ];
+      c = wal[l_slot].flat[ double_index( c,   m_l_offset ) ];
+      c = ukw[ukwnum].flat[ double_index( c, inv_l_offset ) ];
       c = rev_wal[l_slot].flat[ double_index( c,   l_offset ) ];
       c = rev_wal[m_slot].flat[ double_index( c, l_m_offset ) ];
       c = rev_wal[r_slot].flat[ double_index( c, m_r_offset ) ];
@@ -359,17 +355,19 @@ void init_path_lookup_ALL(const Key *key, int len)
         r_m_offset = char_delta_sub( m_offset, r_offset ),
         m_l_offset = char_delta_sub( l_offset, m_offset ),
         l_g_offset = char_delta_sub( g_offset, l_offset ),
+        inv_g_offset = char_delta_invert( g_offset ),
         g_l_offset = char_delta_sub( l_offset, g_offset ),
         l_m_offset = char_delta_sub( m_offset, l_offset ),
         m_r_offset = char_delta_sub( r_offset, m_offset );
 
+
     for (int k = 0; k < 26; k++) {
       struct enigma_character c = { .encoded = k };
-      c = wal[r_slot].flat[ double_index( c,   r_offset ) ];
-      c = wal[m_slot].flat[ double_index( c, r_m_offset ) ];
-      c = wal[l_slot].flat[ double_index( c, m_l_offset ) ];
-      c = wal[g_slot].flat[ double_index( c, l_g_offset ) ];
-      c.encoded = ukw[ukwnum][ c.encoded - g_offset.delta + 26 ];
+      c = wal[r_slot].flat[ double_index( c,     r_offset ) ];
+      c = wal[m_slot].flat[ double_index( c,   r_m_offset ) ];
+      c = wal[l_slot].flat[ double_index( c,   m_l_offset ) ];
+      c = wal[g_slot].flat[ double_index( c,   l_g_offset ) ];
+      c = ukw[ukwnum].flat[ double_index( c, inv_g_offset ) ];
       c = rev_wal[g_slot].flat[ double_index( c,   g_offset ) ];
       c = rev_wal[l_slot].flat[ double_index( c, g_l_offset ) ];
       c = rev_wal[m_slot].flat[ double_index( c, l_m_offset ) ];

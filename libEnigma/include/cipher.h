@@ -60,7 +60,7 @@ size_t double_index( struct enigma_character in, struct enigma_char_delta offset
 extern text_t wal_turn[9];
 extern const union DoublePermutationMap     wal[11];
 extern const union DoublePermutationMap rev_wal[11];
-extern text_t ukw[5][52];
+extern const union DoublePermutationMap     ukw[ 5];
 
 static inline
 size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett );

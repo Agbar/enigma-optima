@@ -72,13 +72,14 @@ void CalculatePermutationMap3Rotors( PermutationMap_t* const restrict map, struc
         l_offset = { .delta = (uint8_t)rings.l };
     struct enigma_char_delta 
         m_l_offset = char_delta_sub( l_offset, m_offset ),
+        inv_l_offset = char_delta_invert( l_offset ),
         l_m_offset = char_delta_sub( m_offset, l_offset );
 
     for( int k = 0; k < 26; k++ ) {
         struct enigma_character c = { .encoded = (int8_t)k };
-        c = wal[key->slot.m].flat[ double_index(c,   m_offset ) ];
-        c = wal[key->slot.l].flat[ double_index(c, m_l_offset ) ];
-        c.encoded = ukw[key->ukwnum][ c.encoded - rings.l + 26 ];
+        c = wal[key->slot.m].flat[ double_index( c,     m_offset ) ];
+        c = wal[key->slot.l].flat[ double_index( c,   m_l_offset ) ];
+        c = ukw[key->ukwnum].flat[ double_index( c, inv_l_offset ) ];
         c = rev_wal[key->slot.l].flat[ double_index( c,   l_offset ) ];
         c = rev_wal[key->slot.m].flat[ double_index( c, l_m_offset ) ];
         c = echar_sub_delta( c, m_offset );
@@ -96,15 +97,16 @@ void CalculatePermutationMap4Rotors( PermutationMap_t* const restrict map, struc
     struct enigma_char_delta 
         m_l_offset = char_delta_sub( l_offset, m_offset ),
         l_g_offset = char_delta_sub( g_offset, l_offset ),
+        inv_g_offset = char_delta_invert( g_offset ),
         g_l_offset = char_delta_sub( l_offset, g_offset ),
         l_m_offset = char_delta_sub( m_offset, l_offset );
 
     for( int k = 0; k < 26; k++ ) {
         struct enigma_character c = { .encoded = (int8_t)k };
-        c = wal[key->slot.m].flat[ double_index( c,   m_offset ) ];
-        c = wal[key->slot.l].flat[ double_index( c, m_l_offset ) ];
-        c = wal[key->slot.g].flat[ double_index( c, l_g_offset ) ];
-        c.encoded = ukw[key->ukwnum][ c.encoded - rings.g + 26 ];
+        c = wal[key->slot.m].flat[ double_index( c,     m_offset ) ];
+        c = wal[key->slot.l].flat[ double_index( c,   m_l_offset ) ];
+        c = wal[key->slot.g].flat[ double_index( c,   l_g_offset ) ];
+        c = ukw[key->ukwnum].flat[ double_index( c, inv_g_offset ) ];
         c = rev_wal[key->slot.g].flat[ double_index( c,   g_offset ) ];
         c = rev_wal[key->slot.l].flat[ double_index( c, g_l_offset ) ];
         c = rev_wal[key->slot.m].flat[ double_index( c, l_m_offset ) ];

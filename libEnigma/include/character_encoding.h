@@ -61,6 +61,15 @@ char_delta_sub( struct enigma_char_delta minuend,  struct enigma_char_delta subt
 }
 
 static inline
+struct enigma_char_delta
+char_delta_invert( struct enigma_char_delta d ){
+    assert( d.delta < 26 );
+    int8_t inv = -d.delta;
+    if( inv < 0 ) inv += 26;
+    return (struct enigma_char_delta) { .delta = (uint8_t)inv };
+}
+
+static inline
 struct enigma_character
 echar_sub_delta( struct enigma_character c, struct enigma_char_delta sub ){
     assert( sub.delta < 26 );
