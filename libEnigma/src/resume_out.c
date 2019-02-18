@@ -114,7 +114,7 @@ void print_state(FILE *fp, const State *state)
   }
 
   for (i = 0; i < gkey->count; i++)
-    stecker[i] = toupper(alpha[gkey->sf[i]]);
+    stecker[i] = toupper(alpha[ echar_0_based_index( gkey->sf.map[i] ) ]);
   stecker[i] = '\0';
   fprintf(fp, "%s=", stecker);
 

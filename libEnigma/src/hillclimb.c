@@ -175,7 +175,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                }
 
                /* complete ckey initialization */
-               Fill0To25(ckey.sf);
+               Fill0To25_echar( ckey.sf.map );
                Fill0To25_echar(ckey.stbrett.letters);
                ckey.count = 0;
 
@@ -212,9 +212,9 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  /* try reswapping each self-steckered with each pair,
                   * steepest ascent */
                  for (i = 0; i < ckey.count; i += 2) {
-                   SwapStbrett(&ckey, make_echar( ckey.sf[i] ), make_echar( ckey.sf[i+1] ) );
+                   SwapStbrett(&ckey, ckey.sf.map[i], ckey.sf.map[i+1] );
                    for (k = ckey.count; k < 26; k++) {
-                     SwapStbrett(&ckey, make_echar( ckey.sf[i] ), make_echar( ckey.sf[k] ) );
+                     SwapStbrett(&ckey, ckey.sf.map[i], ckey.sf.map[k] );
                      a = sf.triscore(&ckey, len);
                      if (a > bestscore) {
                        newtop = 1;
@@ -225,8 +225,8 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        ch.s1 = k;
                        ch.s2 = i;
                      }
-                     SwapStbrett(&ckey, make_echar( ckey.sf[i] ), make_echar( ckey.sf[k] ) );
-                     SwapStbrett(&ckey, make_echar( ckey.sf[i+1] ), make_echar( ckey.sf[k] ) );
+                     SwapStbrett(&ckey, ckey.sf.map[i], ckey.sf.map[k] );
+                     SwapStbrett(&ckey, ckey.sf.map[i+1], ckey.sf.map[k] );
                      a = sf.triscore(&ckey, len);
                      if (a > bestscore) {
                        newtop = 1;
@@ -237,13 +237,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        ch.s1 = k;
                        ch.s2 = i+1;
                      }
-                     SwapStbrett(&ckey, make_echar( ckey.sf[i+1] ), make_echar( ckey.sf[k] ) );
+                     SwapStbrett(&ckey, ckey.sf.map[i+1], ckey.sf.map[k] );
                    }
-                   SwapStbrett(&ckey, make_echar( ckey.sf[i] ), make_echar( ckey.sf[i+1] ) );
+                   SwapStbrett(&ckey, ckey.sf.map[i], ckey.sf.map[i+1] );
                  }
                  if (action == RESWAP) {
-                   SwapStbrett(&ckey, make_echar( ckey.sf[ch.u1] ), make_echar( ckey.sf[ch.u2] ) );
-                   SwapStbrett(&ckey, make_echar( ckey.sf[ch.s1] ), make_echar( ckey.sf[ch.s2] ) );
+                   SwapStbrett(&ckey, ckey.sf.map[ch.u1], ckey.sf.map[ch.u2] );
+                   SwapStbrett(&ckey, ckey.sf.map[ch.s1], ckey.sf.map[ch.s2] );
                    get_stecker(&ckey);
                  }
                  action = NONE;

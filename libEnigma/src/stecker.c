@@ -14,11 +14,11 @@ void get_stecker(Key *key)
   key->count = 0;
   for (i = 0; i < 26; i++) {
     if ( echar_0_based_index( key->stbrett.letters[i] ) > i) {
-      key->sf[key->count++] = i;
-      key->sf[key->count++] = echar_0_based_index( key->stbrett.letters[i] );
+      key->sf.map[key->count++] = make_echar( i );
+      key->sf.map[key->count++] = key->stbrett.letters[i];
     }
     else if ( echar_0_based_index( key->stbrett.letters[i] ) == i) {
-      key->sf[k--] = i;
+      key->sf.map[k--] =  make_echar( i );
     }
   }
 }

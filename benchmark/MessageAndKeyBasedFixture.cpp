@@ -41,7 +41,7 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st UNUSED )
     key.model = EnigmaModel_M3;
 
     Fill0To25_echar( key.stbrett.letters );
-    Fill0To25( key.sf );
+    Fill0To25_echar( key.sf.map );
     char stecker[] = "AXBZCNDPEOJMLSQV";
     set_stecker( &key, stecker );
     get_stecker( &key );

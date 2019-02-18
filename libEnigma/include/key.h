@@ -27,6 +27,10 @@ void FixPermutationMapTail(union PermutationMap_t* mapping){
     }
 }
 
+struct PermutationMap26 {
+    struct echar map[ 26 ];
+};
+
 __attribute__((optimize("unroll-loops")))
 static inline
 void Fill0To25( text_t array[26] )
@@ -73,7 +77,7 @@ typedef struct _key_t {
     struct RingsState mesg; ///< message settings
     int8_t ukwnum;
     enum ModelType_t model;
-    text_t sf[26];     /* swapped/free letters */
+    struct PermutationMap26 sf; //< swapped/free letters
     int count;      /* number of swapped letters */
     int score;      /* hillclimbing score */
 } Key;

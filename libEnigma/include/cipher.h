@@ -36,10 +36,6 @@ void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, e
 extern enigma_cipher_function_t enigma_cipher_decoder_lookup;
 extern text_t path_lookup[CT][LAST_DIMENSION];
 
-struct PermutationMap26 {
-    struct echar map[ 26 ];
-};
-
 union DoublePermutationMap {
     struct echar flat[ 26 * 2 ];
     struct PermutationMap26 dbl[ 2 ];

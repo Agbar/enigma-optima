@@ -64,7 +64,7 @@ void print_key(FILE *fp, const Key *key)
   fprintf(fp, "Date: %s\n", date);
 
   for (i = 0; i < key->count; i++)
-    stecker[i] = toupper(alpha[key->sf[i]]);
+    stecker[i] = toupper(alpha[ echar_0_based_index( key->sf.map[i] ) ]);
   stecker[i] = '\0';
 
   if (key->model != EnigmaModel_M4) {

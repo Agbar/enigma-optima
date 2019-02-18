@@ -167,7 +167,7 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
                } 
 
                /* complete ckey initialization */
-               Fill0To25( ckey.sf );
+               Fill0To25_echar( ckey.sf.map );
                Fill0To25_echar( ckey.stbrett.letters );
                ckey.count = 0;
 

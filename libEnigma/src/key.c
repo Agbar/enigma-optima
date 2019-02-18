@@ -22,7 +22,7 @@ int init_key_default( Key *key, enum ModelType_t model )
         return 0;
     }
     Fill0To25_echar(key->stbrett.letters);
-    Fill0To25(key->sf);
+    Fill0To25_echar( key->sf.map );
     return 1;
 }
 
@@ -46,7 +46,7 @@ int init_key_low( Key *key, enum ModelType_t model )
         return 0;
     }
     Fill0To25_echar(key->stbrett.letters);
-    Fill0To25(key->sf);
+    Fill0To25_echar( key->sf.map );
     return 1;
 }
 
