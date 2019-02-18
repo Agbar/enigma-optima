@@ -40,7 +40,7 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st UNUSED )
     key.ukwnum = 'B' - 'A';
     key.model = EnigmaModel_M3;
 
-    Fill0To25( key.stbrett.letters );
+    Fill0To25_echar( key.stbrett.letters );
     Fill0To25( key.sf );
     char stecker[] = "AXBZCNDPEOJMLSQV";
     set_stecker( &key, stecker );

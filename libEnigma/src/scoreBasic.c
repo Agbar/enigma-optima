@@ -34,7 +34,7 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
   const union PermutationMap_t* stbrett = &key->stbrett;
 
   for (i = 0; i < len-15; i += 16) {
-    v4pis c;
+    v4piu c;
     c = decode4(0,i,stbrett);
     f[c[0]]++;
     f[c[1]]++;
@@ -60,7 +60,7 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
     f[c[3]]++;
   }
   for (; i < len-3; i += 4) {
-    v4pis c = decode4(0,i,stbrett);
+    v4piu c = decode4(0,i,stbrett);
     f[c[0]]++;
     f[c[1]]++;
     f[c[2]]++;
@@ -96,7 +96,7 @@ static int uniscoreBasic( const Key* key, scoreLength_t len )
 
   s = 0;
   for (i = 0; i < len-15; i += 16) {
-    v4pis c;
+    v4piu c;
     c = decode4( 0, i, stbrett );
     UNISCORE_ADD( s, c[0] );
     UNISCORE_ADD( s, c[1] );
@@ -122,7 +122,7 @@ static int uniscoreBasic( const Key* key, scoreLength_t len )
     UNISCORE_ADD( s, c[3] );
   }
   for (; i < len-3; i += 4) {
-    v4pis c;
+    v4piu c;
     c = decode4( 0, i, stbrett );
     UNISCORE_ADD( s, c[0] );
     UNISCORE_ADD( s, c[1] );
@@ -150,7 +150,7 @@ int biscoreBasic( const Key* const restrict key, scoreLength_t len )
 
     int i = 1;
     for( ; i < len - 15; i += 16 ) {
-        v4pis d;
+        v4piu d;
         size_t c2;
         d = decode4( 0, i, stbrett );
         c2 = d[0];
@@ -193,7 +193,7 @@ int biscoreBasic( const Key* const restrict key, scoreLength_t len )
         BISCORE_ADD( s , c2, c1 );
     }
     for( ; i < len - 3; i += 4 ) {
-        v4pis d = decode4( 0, i, stbrett );
+        v4piu d = decode4( 0, i, stbrett );
         size_t c2 = d[0];
         BISCORE_ADD( s , c1, c2 );
         c1 = d[1];
@@ -229,7 +229,7 @@ int triscoreBasic( const Key* const restrict key, scoreLength_t len )
     int i = 2;
     for( ; i < len - 15; i += 16 ) {
         size_t c3;
-        v4pis d;
+        v4piu d;
         d = decode4( 0, i, stbrett );
         c3 = d[0];
         TRISCORE_ADD( s, c1, c2, c3 );
@@ -275,7 +275,7 @@ int triscoreBasic( const Key* const restrict key, scoreLength_t len )
     }
     for( ; i < len - 3; i += 4 ) {
         size_t c3;
-        v4pis d = decode4( 0, i, stbrett );
+        v4piu d = decode4( 0, i, stbrett );
         c3 = d[0];
         TRISCORE_ADD( s, c1, c2, c3 );
 

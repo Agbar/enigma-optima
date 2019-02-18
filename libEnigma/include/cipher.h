@@ -66,7 +66,7 @@ static inline
 size_t decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett );
 
 static inline
-v4pis decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett );
+v4piu decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett );
 
 #ifdef __i386__
 
@@ -81,7 +81,7 @@ size_t decode( size_t offset,size_t index, const union PermutationMap_t* const s
         , [ind]     "r"     ( index )
         , [offset]  "i"     ( offset ));
 
-    c = stbrett->letters[c];
+    c = echar_0_based_index( stbrett->letters[c] );
 
     // path_lookup[Offset+Index][(Cx)]
     asm(
@@ -92,11 +92,11 @@ size_t decode( size_t offset,size_t index, const union PermutationMap_t* const s
         , [offset]      "i"     ( offset )
         , [ld]          "i"     ( LAST_DIMENSION ));
 
-    return stbrett->letters[c];
+    return echar_0_based_index( stbrett->letters[c] );
 }
 
 static inline
-v4pis decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett )
+v4piu decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     size_t d;
@@ -115,10 +115,10 @@ v4pis decode4( size_t offset, size_t index, const union PermutationMap_t* const 
         , [ind]     "r"     ( index )
         , [offset]  "i"     ( offset ));
 
-    c = stbrett->letters[c];
-    d = stbrett->letters[d];
-    e = stbrett->letters[e];
-    f = stbrett->letters[f];
+    c = echar_0_based_index( stbrett->letters[c] );
+    d = echar_0_based_index( stbrett->letters[d] );
+    e = echar_0_based_index( stbrett->letters[e] );
+    f = echar_0_based_index( stbrett->letters[f] );
 
     // path_lookup[Offset+Index][(Cx)]
     asm(
@@ -136,10 +136,10 @@ v4pis decode4( size_t offset, size_t index, const union PermutationMap_t* const 
         , [offset]      "i"     ( offset )
         , [ld]          "i"     ( LAST_DIMENSION ));
 
-    v4pis ret = { stbrett->letters[c]
-                , stbrett->letters[d]
-                , stbrett->letters[e]
-                , stbrett->letters[f]
+    v4piu ret = { echar_0_based_index( stbrett->letters[c] )
+                , echar_0_based_index( stbrett->letters[d] )
+                , echar_0_based_index( stbrett->letters[e] )
+                , echar_0_based_index( stbrett->letters[f] )
                 };
     return ret;
 }
@@ -160,7 +160,7 @@ size_t decode( size_t offset,size_t index, const union PermutationMap_t* const s
         , [ind]     "r"     ( index )
         , [offset]  "i"     ( offset ));
 
-    c = stbrett->letters[c];
+    c = echar_0_based_index( stbrett->letters[c] );
 
     // path_lookup[Offset+Index][(Cx)]
     asm(
@@ -171,11 +171,11 @@ size_t decode( size_t offset,size_t index, const union PermutationMap_t* const s
         , [offset]      "i"     ( offset )
         , [ld]          "i"     ( LAST_DIMENSION ));
 
-    return stbrett->letters[c];
+    return echar_0_based_index( stbrett->letters[c] );
 }
 
 static inline
-v4pis decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett )
+v4piu decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     size_t d;
@@ -194,10 +194,10 @@ v4pis decode4( size_t offset, size_t index, const union PermutationMap_t* const 
         , [ind]     "r"     ( index )
         , [offset]  "i"     ( offset ));
 
-    c = stbrett->letters[c];
-    d = stbrett->letters[d];
-    e = stbrett->letters[e];
-    f = stbrett->letters[f];
+    c = echar_0_based_index( stbrett->letters[c] );
+    d = echar_0_based_index( stbrett->letters[d] );
+    e = echar_0_based_index( stbrett->letters[e] );
+    f = echar_0_based_index( stbrett->letters[f] );
 
     // path_lookup[Offset+Index][(Cx)]
     asm(
@@ -214,10 +214,10 @@ v4pis decode4( size_t offset, size_t index, const union PermutationMap_t* const 
         , [offset]      "i"     ( offset )
         , [ld]          "i"     ( LAST_DIMENSION ));
 
-    v4pis ret = { stbrett->letters[c]
-                , stbrett->letters[d]
-                , stbrett->letters[e]
-                , stbrett->letters[f]
+    v4piu ret = { echar_0_based_index( stbrett->letters[c] )
+                , echar_0_based_index( stbrett->letters[d] )
+                , echar_0_based_index( stbrett->letters[e] )
+                , echar_0_based_index( stbrett->letters[f] )
                 };
     return ret;
 }

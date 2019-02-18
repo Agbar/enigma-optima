@@ -2,10 +2,11 @@
 
 #include "key.h"
 #include "config/types.h"
+#include "character_encoding.h"
 
 void get_stecker(Key *key);
-void rand_var(text_t var[]);
-void set_to_ct_freq(text_t var[], int len);
+void rand_var( struct echar var[26] );
+void set_to_ct_freq( struct echar var[26], int len );
 
 /** \brief Swaps letters i and k
  *
@@ -15,10 +16,10 @@ void set_to_ct_freq(text_t var[], int len);
  * \return void
  */
 static inline
-void SwapStbrett(Key* const key, int i, int k) {
-  text_t store = key->stbrett.letters[i];
-  key->stbrett.letters[i] = key->stbrett.letters[k];
-  key->stbrett.letters[k] = store;
+void SwapStbrett(Key* const key, struct echar i, struct echar k) {
+  struct echar store = key->stbrett.letters[ echar_0_based_index( i ) ];
+  key->stbrett.letters[ echar_0_based_index( i ) ] = key->stbrett.letters[ echar_0_based_index( k ) ];
+  key->stbrett.letters[ echar_0_based_index( k ) ] = store;
 }
 
 /*

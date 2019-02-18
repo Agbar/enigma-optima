@@ -8,37 +8,37 @@
 /* extracts stecker from key->stbrett to key->sf */
 void get_stecker(Key *key)
 {
-  int i, k = 25;
+  size_t i;
+  int k = 25;
 
   key->count = 0;
   for (i = 0; i < 26; i++) {
-    if (key->stbrett.letters[i] > i) {
+    if ( echar_0_based_index( key->stbrett.letters[i] ) > i) {
       key->sf[key->count++] = i;
-      key->sf[key->count++] = key->stbrett.letters[i];
+      key->sf[key->count++] = echar_0_based_index( key->stbrett.letters[i] );
     }
-    else if (key->stbrett.letters[i] == i) {
+    else if ( echar_0_based_index( key->stbrett.letters[i] ) == i) {
       key->sf[k--] = i;
     }
   }
 }
 
 /* get new order for testing stecker */
-void rand_var(text_t var[])
+void rand_var( struct echar var[26] )
 {
   int count;
-  int store;
   int i;
 
   for (count = 25; count > 0; count--) {
     i = GetRandomNumber() % ( count + 1 );
-    store = var[count];
+    struct echar store = var[count];
     var[count] = var[i];
     var[i] = store;
   }
 }
 
 /* arrange var[] in order of frequency of letters in ciphertext */
-void set_to_ct_freq(text_t var[], int len)
+void set_to_ct_freq( struct echar var[26], int len )
 {
   int f[26] = {0};
   int i, k;
@@ -60,7 +60,7 @@ void set_to_ct_freq(text_t var[], int len)
     if (pos == -1)
       return;
     f[pos] = -1;
-    var[n++] = pos;
+    var[n++] = make_echar( pos );
   }
 }
 

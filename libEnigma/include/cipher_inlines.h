@@ -83,7 +83,7 @@ void CalculatePermutationMap3Rotors( union PermutationMap_t* const restrict map,
         c = rev_wal[key->slot.l].flat[ double_index( c,   l_offset ) ];
         c = rev_wal[key->slot.m].flat[ double_index( c, l_m_offset ) ];
         c = echar_sub_delta( c, m_offset );
-        map->letters[k] = c.encoded;
+        map->letters[k] = c;
     }
     FixPermutationMapTail( map );
 }
@@ -111,7 +111,7 @@ void CalculatePermutationMap4Rotors( union PermutationMap_t* const restrict map,
         c = rev_wal[key->slot.l].flat[ double_index( c, g_l_offset ) ];
         c = rev_wal[key->slot.m].flat[ double_index( c, l_m_offset ) ];
         c = echar_sub_delta( c, m_offset );
-        map->letters[k] = c.encoded;
+        map->letters[k] = c;
     }
     FixPermutationMapTail( map );
 }

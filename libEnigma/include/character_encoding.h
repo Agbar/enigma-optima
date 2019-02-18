@@ -1,7 +1,10 @@
 #pragma once
 
 #include <assert.h>
+#include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
+
 #include "global.h"
 #include "config/types.h"
 #include "ModMath.h"
@@ -13,9 +16,24 @@ struct echar
     int8_t encoded;
 };
 
+static inline 
+struct echar make_echar( int8_t zero_based ){
+    return (struct echar) { .encoded = zero_based };
+}
+
 static inline
 size_t echar_0_based_index( struct echar c ){
     return c.encoded;
+}
+
+static inline
+bool echar_eq( struct echar l, struct echar r ){
+    return l.encoded == r.encoded;
+}
+
+static inline
+bool echar_neq( struct echar l, struct echar r ){
+    return l.encoded != r.encoded;
 }
 
 union v16_echar

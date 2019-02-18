@@ -21,10 +21,11 @@
 #include "config/testing.h"
 #include "config/types.h"
 #include "OS/Os.h"
+#include "character_encoding.h"
 
-void OptimizeIcscore ( text_t var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );
-void OptimizeBiscore ( text_t var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );
-void OptimizeTriscore( text_t var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );
+void OptimizeIcscore ( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );
+void OptimizeBiscore ( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );
+void OptimizeTriscore( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );
 
 void save_state(State state)
 {
@@ -72,8 +73,8 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
   time_t lastsave;
   int m;
   int i, k;
-  text_t var[26];
-  Fill0To25(var);
+  struct echar var[26];
+  Fill0To25_echar(var);
   int pass, newtop, action;
   int bestscore, jbestscore, a, globalscore;
 
@@ -175,7 +176,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
                /* complete ckey initialization */
                Fill0To25(ckey.sf);
-               Fill0To25(ckey.stbrett.letters);
+               Fill0To25_echar(ckey.stbrett.letters);
                ckey.count = 0;
 
                /* initialize path_lookup */
@@ -211,9 +212,9 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                  /* try reswapping each self-steckered with each pair,
                   * steepest ascent */
                  for (i = 0; i < ckey.count; i += 2) {
-                   SwapStbrett(&ckey, ckey.sf[i], ckey.sf[i+1]);
+                   SwapStbrett(&ckey, make_echar( ckey.sf[i] ), make_echar( ckey.sf[i+1] ) );
                    for (k = ckey.count; k < 26; k++) {
-                     SwapStbrett(&ckey, ckey.sf[i], ckey.sf[k]);
+                     SwapStbrett(&ckey, make_echar( ckey.sf[i] ), make_echar( ckey.sf[k] ) );
                      a = sf.triscore(&ckey, len);
                      if (a > bestscore) {
                        newtop = 1;
@@ -224,8 +225,8 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        ch.s1 = k;
                        ch.s2 = i;
                      }
-                     SwapStbrett(&ckey, ckey.sf[i], ckey.sf[k]);
-                     SwapStbrett(&ckey, ckey.sf[i+1], ckey.sf[k]);
+                     SwapStbrett(&ckey, make_echar( ckey.sf[i] ), make_echar( ckey.sf[k] ) );
+                     SwapStbrett(&ckey, make_echar( ckey.sf[i+1] ), make_echar( ckey.sf[k] ) );
                      a = sf.triscore(&ckey, len);
                      if (a > bestscore) {
                        newtop = 1;
@@ -236,13 +237,13 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
                        ch.s1 = k;
                        ch.s2 = i+1;
                      }
-                     SwapStbrett(&ckey, ckey.sf[i+1], ckey.sf[k]);
+                     SwapStbrett(&ckey, make_echar( ckey.sf[i+1] ), make_echar( ckey.sf[k] ) );
                    }
-                   SwapStbrett(&ckey, ckey.sf[i], ckey.sf[i+1]);
+                   SwapStbrett(&ckey, make_echar( ckey.sf[i] ), make_echar( ckey.sf[i+1] ) );
                  }
                  if (action == RESWAP) {
-                   SwapStbrett(&ckey, ckey.sf[ch.u1], ckey.sf[ch.u2]);
-                   SwapStbrett(&ckey, ckey.sf[ch.s1], ckey.sf[ch.s2]);
+                   SwapStbrett(&ckey, make_echar( ckey.sf[ch.u1] ), make_echar( ckey.sf[ch.u2] ) );
+                   SwapStbrett(&ckey, make_echar( ckey.sf[ch.s1] ), make_echar( ckey.sf[ch.s2] ) );
                    get_stecker(&ckey);
                  }
                  action = NONE;
@@ -300,16 +301,23 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 }
 
-void OptimizeIcscore( text_t var[26], Key* const ckey, int len, const enigma_score_function_t* const sf ){
-    int i, z, x;
+void OptimizeIcscore( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf ){
+    int i;
+    struct echar x, z;
     enum Action_t action = NONE;
     uint16_t bestic = sf->icscore( ckey, len );
     uint16_t ic;
     for( i = 0; i < 26; i++ ) {
         int k;
         for( k = i + 1; k < 26; k++ ) {
-            if( ( var[i] == ckey->stbrett.letters[var[i]] && var[k] == ckey->stbrett.letters[var[k]] )
-             || ( var[i] == ckey->stbrett.letters[var[k]] && var[k] == ckey->stbrett.letters[var[i]] ) ) {
+            if(  ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+                && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] ) 
+                 )
+            || 
+                 ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+                && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] ) 
+                 )
+            ){
                 SwapStbrett( ckey, var[i], var[k] );
                 ic = sf->icscore( ckey, len );
                 if( ic - bestic > DBL_EPSILON ) {
@@ -318,9 +326,11 @@ void OptimizeIcscore( text_t var[26], Key* const ckey, int len, const enigma_sco
                 }
                 SwapStbrett( ckey, var[i], var[k] );
             }
-            else if( var[i] == ckey->stbrett.letters[var[i]] && var[k] != ckey->stbrett.letters[var[k]] ) {
+            else if(    echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] ) 
+                    && echar_neq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] ) 
+            ){
                 action = NONE;
-                z = ckey->stbrett.letters[var[k]];
+                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
                 SwapStbrett( ckey, var[k], z );
 
                 SwapStbrett( ckey, var[i], var[k] );
@@ -353,9 +363,11 @@ void OptimizeIcscore( text_t var[26], Key* const ckey, int len, const enigma_sco
                     break;
                 }
             }
-            else if( var[k] == ckey->stbrett.letters[var[k]] && var[i] != ckey->stbrett.letters[var[i]] ) {
+            else if(    echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+                    && echar_neq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+            ){
                 action = NONE;
-                x = ckey->stbrett.letters[var[i]];
+                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
                 SwapStbrett( ckey, var[i], x );
 
                 SwapStbrett( ckey, var[k], var[i] );
@@ -388,10 +400,12 @@ void OptimizeIcscore( text_t var[26], Key* const ckey, int len, const enigma_sco
                     break;
                 }
             }
-            else if( var[i] != ckey->stbrett.letters[var[i]] && var[k] != ckey->stbrett.letters[var[k]] ) {
+            else if(   echar_neq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+                    && echar_neq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] ) 
+            ){
                 action = NONE;
-                x = ckey->stbrett.letters[var[i]];
-                z = ckey->stbrett.letters[var[k]];
+                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
+                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
                 SwapStbrett( ckey, var[i], x );
                 SwapStbrett( ckey, var[k], z );
 
@@ -452,15 +466,22 @@ void OptimizeIcscore( text_t var[26], Key* const ckey, int len, const enigma_sco
     }
 }
 
-void OptimizeBiscore( text_t var[26], Key* const ckey, int len, const enigma_score_function_t* const sf ){
+void OptimizeBiscore( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf ){
     int bestscore = sf->biscore( ckey, len );
-    int i, a, z, x;
+    int i, a;
+    struct echar x, z;
     enum Action_t action;
     for( i = 0; i < 26; i++ ) {
         int k;
         for( k = i + 1; k < 26; k++ ) {
-            if( ( var[i] == ckey->stbrett.letters[var[i]] && var[k] == ckey->stbrett.letters[var[k]] )
-             || ( var[i] == ckey->stbrett.letters[var[k]] && var[k] == ckey->stbrett.letters[var[i]] ) ) {
+            if( ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+               && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+                )
+            || 
+                ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+               && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+                )
+            ){
                 SwapStbrett( ckey, var[i], var[k] );
                 a = sf->biscore( ckey, len );
                 if( a > bestscore ) {
@@ -469,9 +490,11 @@ void OptimizeBiscore( text_t var[26], Key* const ckey, int len, const enigma_sco
                 }
                 SwapStbrett( ckey, var[i], var[k] );
             }
-            else if( var[i] == ckey->stbrett.letters[var[i]] && var[k] != ckey->stbrett.letters[var[k]] ) {
+            else if(    echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+                    && echar_neq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+            ){
                 action = NONE;
-                z = ckey->stbrett.letters[var[k]];
+                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
                 SwapStbrett( ckey, var[k], z );
 
                 SwapStbrett( ckey, var[i], var[k] );
@@ -504,9 +527,11 @@ void OptimizeBiscore( text_t var[26], Key* const ckey, int len, const enigma_sco
                     break;
                 }
             }
-            else if( var[k] == ckey->stbrett.letters[var[k]] && var[i] != ckey->stbrett.letters[var[i]] ) {
+            else if(    echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+                    && echar_neq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+            ){
                 action = NONE;
-                x = ckey->stbrett.letters[var[i]];
+                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
                 SwapStbrett( ckey, var[i], x );
 
                 SwapStbrett( ckey, var[k], var[i] );
@@ -539,10 +564,12 @@ void OptimizeBiscore( text_t var[26], Key* const ckey, int len, const enigma_sco
                     break;
                 }
             }
-            else if( var[i] != ckey->stbrett.letters[var[i]] && var[k] != ckey->stbrett.letters[var[k]] ) {
+            else if(   echar_neq(var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+                    && echar_neq(var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+            ){
                 action = NONE;
-                x = ckey->stbrett.letters[var[i]];
-                z = ckey->stbrett.letters[var[k]];
+                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
+                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
                 SwapStbrett( ckey, var[i], x );
                 SwapStbrett( ckey, var[k], z );
 
@@ -603,15 +630,22 @@ void OptimizeBiscore( text_t var[26], Key* const ckey, int len, const enigma_sco
     }
 }
 
-void OptimizeTriscore( text_t var[26], Key* const ckey, int len, const enigma_score_function_t* const sf ){
+void OptimizeTriscore( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf ){
     int bestscore = sf->triscore( ckey, len );
-    int i, z, x, a;
+    int i, a;
+    struct echar x, z;
     enum Action_t action;
     for( i = 0; i < 26; i++ ) {
         int k;
         for( k = i + 1; k < 26; k++ ) {
-            if( ( var[i] == ckey->stbrett.letters[var[i]] && var[k] == ckey->stbrett.letters[var[k]] )
-             || ( var[i] == ckey->stbrett.letters[var[k]] && var[k] == ckey->stbrett.letters[var[i]] ) ) {
+            if( ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+               && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+                )
+            || 
+                ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+               && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+                )
+            ){
                 SwapStbrett( ckey, var[i], var[k] );
                 a = sf->triscore( ckey, len );
                 if( a > bestscore ) {
@@ -620,9 +654,11 @@ void OptimizeTriscore( text_t var[26], Key* const ckey, int len, const enigma_sc
                 }
                 SwapStbrett( ckey, var[i], var[k] );
             }
-            else if( var[i] == ckey->stbrett.letters[var[i]] && var[k] != ckey->stbrett.letters[var[k]] ) {
+            else if(    echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+                    && echar_neq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+            ){
                 action = NONE;
-                z = ckey->stbrett.letters[var[k]];
+                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
                 SwapStbrett( ckey, var[k], z );
 
                 SwapStbrett( ckey, var[i], var[k] );
@@ -655,9 +691,11 @@ void OptimizeTriscore( text_t var[26], Key* const ckey, int len, const enigma_sc
                     break;
                 }
             }
-            else if( var[k] == ckey->stbrett.letters[var[k]] && var[i] != ckey->stbrett.letters[var[i]] ) {
+            else if(    echar_eq(var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+                    && echar_neq(var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+            ){
                 action = NONE;
-                x = ckey->stbrett.letters[var[i]];
+                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
                 SwapStbrett( ckey, var[i], x );
 
                 SwapStbrett( ckey, var[k], var[i] );
@@ -690,10 +728,12 @@ void OptimizeTriscore( text_t var[26], Key* const ckey, int len, const enigma_sc
                     break;
                 }
             }
-            else if( var[i] != ckey->stbrett.letters[var[i]] && var[k] != ckey->stbrett.letters[var[k]] ) {
+            else if(   echar_neq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
+                    && echar_neq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
+            ){
                 action = NONE;
-                x = ckey->stbrett.letters[var[i]];
-                z = ckey->stbrett.letters[var[k]];
+                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
+                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
                 SwapStbrett( ckey, var[i], x );
                 SwapStbrett( ckey, var[k], z );
 

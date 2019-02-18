@@ -207,7 +207,7 @@ int set_stecker(Key *key, char *s)
   /* swap appropriate letters */
   x = s;
   while (*x != '\0') {
-    SwapStbrett(key, code[(unsigned char)*x], code[(unsigned char)*(x+1)]);
+    SwapStbrett(key, make_echar( code[(unsigned char)*x] ), make_echar( code[(unsigned char)*(x+1)] ) );
     x += 2;
   }
 

@@ -5,16 +5,17 @@
 
 #include "global.h"
 #include "config/types.h"
+#include "character_encoding.h"
 
 /* PermutationMap
  * * * * * * * * */
 union PermutationMap_t
 {
-    v32qi whole;
+    union v32_echar whole;
 
-    v16qi half[2];
+    union v16_echar half[2];
 
-    text_t letters[32];
+    struct echar letters[32];
 };
 
 static inline
@@ -28,7 +29,7 @@ void FixPermutationMapTail(union PermutationMap_t* mapping){
 
 __attribute__((optimize("unroll-loops")))
 static inline
-void Fill0To25(text_t array[26])
+void Fill0To25( text_t array[26] )
 {
     int32_t* arrayInt = (int32_t*)array;
     int i = 0;
@@ -40,6 +41,11 @@ void Fill0To25(text_t array[26])
     }
     int16_t* arrayShort = (int16_t*)array;
     arrayShort[12] = 0x1918;
+}
+
+static inline
+void Fill0To25_echar( struct echar array[26] ){
+    Fill0To25( &array[0].encoded );
 }
 
 /* RingsState
