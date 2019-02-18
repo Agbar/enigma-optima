@@ -115,6 +115,13 @@ union v32_echar_delta
     v32qi vector;
 };
 
+static inline
+union v32_echar_delta
+v32_echar_delta_rot_32( union v32_echar_delta ecd ){
+    ecd.vector = AddMod26_v32qi_int8( ecd.vector , 32 % 26 );
+    return ecd;
+}
+
 STATIC_ASSERT( sizeof(struct echar) == 1, "echar must be compact" );
 STATIC_ASSERT( sizeof(union v16_echar) == 16, "vector and array of characters must have the same length");
 STATIC_ASSERT( sizeof(union v32_echar) == 32, "vector and array of characters must have the same length");

@@ -15,7 +15,7 @@ struct PathLookupAvx2_t
     uint_least16_t nextBite[24];        ///< First lookup number in next bite.
     // mapping forward and reverse
     union PermutationMap_t r_ring[2];
-    v32qi firstRRingOffset;
+    union v32_echar_delta firstRRingOffset;
 };
 
 extern struct PathLookupAvx2_t PathLookupAvx2;

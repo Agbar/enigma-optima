@@ -18,13 +18,13 @@ v32qi PermuteV32qi(const union PermutationMap_t* map, v32qi vec ){
 }
 
 static inline
-v32qi DecodeBiteForwardCommonAvx2( v32qi bite, v32qi rRingOffset, const struct Key* const restrict key ) {
+v32qi DecodeBiteForwardCommonAvx2( v32qi bite, union v32_echar_delta rRingOffset, const struct Key* const restrict key ) {
     // stbrett forward
     bite = PermuteV32qi ( &key->stbrett, bite );
     // right ring forward
-    bite = AddMod26_v32qi( bite, rRingOffset );
+    bite = AddMod26_v32qi( bite, rRingOffset.vector );
     bite = PermuteV32qi( &PathLookupAvx2.r_ring[0], bite );
-    bite = SubMod26_v32qi( bite, rRingOffset );
+    bite = SubMod26_v32qi( bite, rRingOffset.vector );
     return bite;
 }
 
@@ -38,11 +38,11 @@ v32qi DecodeBiteMaskedPartAvx2( v32qi predecodedBite, int lookupNumber ) {
 }
 
 static inline
-v32qi DecodeBiteBackwardCommonAvx2( v32qi bite,  v32qi rRingOffset, const struct Key* const key ) {
+v32qi DecodeBiteBackwardCommonAvx2( v32qi bite, union v32_echar_delta rRingOffset, const struct Key* const key ) {
     // right ring backwards
-    bite = AddMod26_v32qi( bite, rRingOffset );
+    bite = AddMod26_v32qi( bite, rRingOffset.vector );
     bite = PermuteV32qi( &PathLookupAvx2.r_ring[1], bite );
-    bite = SubMod26_v32qi( bite, rRingOffset );
+    bite = SubMod26_v32qi( bite, rRingOffset.vector );
     //stbrett backwards
     bite = PermuteV32qi( &key->stbrett, bite );
     return bite;
@@ -54,7 +54,7 @@ void DecodeScoredMessagePartAvx2( const struct Key* const restrict key, int len,
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;
-    v32qi currentRRingOffset = PathLookupAvx2.firstRRingOffset;
+    union v32_echar_delta currentRRingOffset = PathLookupAvx2.firstRRingOffset;
     while( messageBite < ( len + 31 ) / 32 )
     {
         /* Worst case:
@@ -99,7 +99,7 @@ void DecodeScoredMessagePartAvx2( const struct Key* const restrict key, int len,
         // store whole decoded bite
         output -> vector32[messageBite] = cBite;
         messageBite++;
-        currentRRingOffset = AddMod26_v32qi_int8( currentRRingOffset, 32 % 26 );
+        currentRRingOffset = v32_echar_delta_rot_32( currentRRingOffset );
     }
 }
 
