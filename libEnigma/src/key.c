@@ -4,9 +4,9 @@
 /* initialize key to defaults */
 int init_key_default( Key *key, enum ModelType_t model )
 {
-    Key def_H  = {{{0}}, {0, 1, 2, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, 1, EnigmaModel_H, {0}, 0, 0};
-    Key def_M3 = {{{0}}, {0, 1, 2, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, 1, EnigmaModel_M3, {0}, 0, 0};
-    Key def_M4 = {{{0}}, {9, 1, 2, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, 3, EnigmaModel_M4, {0}, 0, 0};
+    Key def_H  = { .stbrett={{0}}, .slot={0, 1, 2, 3}, .ring={0, 0, 0, 0}, .mesg={0, 0, 0, 0}, .ukwnum=1, .model=EnigmaModel_H,  .sf={0}, .count=0, .score=0};
+    Key def_M3 = { .stbrett={{0}}, .slot={0, 1, 2, 3}, .ring={0, 0, 0, 0}, .mesg={0, 0, 0, 0}, .ukwnum=1, .model=EnigmaModel_M3, .sf={0}, .count=0, .score=0};
+    Key def_M4 = { .stbrett={{0}}, .slot={9, 1, 2, 3}, .ring={0, 0, 0, 0}, .mesg={0, 0, 0, 0}, .ukwnum=3, .model=EnigmaModel_M4, .sf={0}, .count=0, .score=0};
     switch( model ) {
     case EnigmaModel_H :
         *key = def_H;
@@ -28,9 +28,9 @@ int init_key_default( Key *key, enum ModelType_t model )
 /* initializes each key element to the lowest possible value */
 int init_key_low( Key *key, enum ModelType_t model )
 {
-    Key low_H  = {{{0}}, {0, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, 0, EnigmaModel_H, {0}, 0, 0};
-    Key low_M3 = {{{0}}, {0, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, 1, EnigmaModel_M3, {0}, 0, 0};
-    Key low_M4 = {{{0}}, {9, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, 3, EnigmaModel_M4, {0}, 0, 0};
+    Key low_H  = { .stbrett={{0}}, .slot={0, 1, 1, 1}, .ring={0, 0, 0, 0}, .mesg={0, 0, 0, 0}, .ukwnum=0, .model=EnigmaModel_H,  .sf={0}, .count=0, .score=0};
+    Key low_M3 = { .stbrett={{0}}, .slot={0, 1, 1, 1}, .ring={0, 0, 0, 0}, .mesg={0, 0, 0, 0}, .ukwnum=1, .model=EnigmaModel_M3, .sf={0}, .count=0, .score=0};
+    Key low_M4 = { .stbrett={{0}}, .slot={9, 1, 1, 1}, .ring={0, 0, 0, 0}, .mesg={0, 0, 0, 0}, .ukwnum=3, .model=EnigmaModel_M4, .sf={0}, .count=0, .score=0};
     switch( model ) {
     case EnigmaModel_H :
         *key = low_H;
