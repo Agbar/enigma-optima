@@ -102,6 +102,13 @@ union v16_echar_delta
     v16qi vector;
 };
 
+static inline
+union v16_echar_delta 
+v16_echar_delta_rot_16( union v16_echar_delta ecd ){
+    ecd.vector = AddMod26_v16qi_int8( ecd.vector, 16 );
+    return ecd;
+}
+
 union v32_echar_delta
 {
     struct echar_delta v_ecd[32];

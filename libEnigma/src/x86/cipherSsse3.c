@@ -35,7 +35,7 @@ void CalculateRRingOffets( int8_t rOffsetAtFirst ) {
         rOffsets[k] = rOffsetAtFirst++;
     }
     rOffsets -= ( rOffsets >= 26 ) & 26;
-    PathLookupSsse3.firstRRingOffset = rOffsets;
+    PathLookupSsse3.firstRRingOffset.vector = rOffsets;
 }
 
 void CalculateLookup( int lookupNumber, struct RingsState rings, const struct Key* const key, CalculatePermutationMap_f* calculatePermutationMap )

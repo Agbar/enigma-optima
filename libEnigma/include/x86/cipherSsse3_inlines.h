@@ -17,13 +17,13 @@ v16qi PermuteV16qi(const union PermutationMap_t* map, v16qi vec ){
 
 
 static inline
-v16qi DecodeBiteForwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const struct Key* const restrict key ){
+v16qi DecodeBiteForwardCommonSsse3( v16qi bite, union v16_echar_delta rRingOffset, const struct Key* const restrict key ){
     // stbrett forward
     bite = PermuteV16qi ( &key->stbrett, bite );
     // right ring forward
-    bite = AddMod26_v16qi( bite, rRingOffset );
+    bite = AddMod26_v16qi( bite, rRingOffset.vector );
     bite = PermuteV16qi( &PathLookupSsse3.r_ring[0], bite );
-    bite = SubMod26_v16qi( bite, rRingOffset );
+    bite = SubMod26_v16qi( bite, rRingOffset.vector );
     return bite;
 }
 
@@ -37,11 +37,11 @@ v16qi DecodeBiteMaskedPartSsse3( v16qi predecodedBite, int lookupNumber ) {
 }
 
 static inline
-v16qi DecodeBiteBackwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const struct Key* const restrict key ) {
+v16qi DecodeBiteBackwardCommonSsse3( v16qi bite, union v16_echar_delta rRingOffset, const struct Key* const restrict key ) {
     // right ring backwards
-    bite = AddMod26_v16qi( bite, rRingOffset );
+    bite = AddMod26_v16qi( bite, rRingOffset.vector );
     bite = PermuteV16qi( &PathLookupSsse3.r_ring[1], bite );
-    bite = SubMod26_v16qi( bite, rRingOffset );
+    bite = SubMod26_v16qi( bite, rRingOffset.vector );
     //stbrett backwards
     bite = PermuteV16qi( &key->stbrett, bite );
     return bite;
@@ -53,7 +53,7 @@ void DecodeScoredMessagePartSsse3( const struct Key* const restrict key, int len
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;
-    v16qi currentRRingOffset = PathLookupSsse3.firstRRingOffset;
+    union v16_echar_delta currentRRingOffset = PathLookupSsse3.firstRRingOffset;
     while( messageBite < ( len + 15 ) / 16 )
     {
         /* Worst case:
@@ -94,7 +94,7 @@ void DecodeScoredMessagePartSsse3( const struct Key* const restrict key, int len
         // store whole decoded bite
         output -> vector16[messageBite] = cBite;
         messageBite++;
-        currentRRingOffset = AddMod26_v16qi_int8( currentRRingOffset, 16 );
+        currentRRingOffset = v16_echar_delta_rot_16( currentRRingOffset );
     }
 }
 
