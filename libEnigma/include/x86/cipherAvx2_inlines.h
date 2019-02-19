@@ -25,7 +25,7 @@ DecodeBiteForwardCommonAvx2( union v32_echar bite, union v32_echar_delta rRingOf
     // right ring forward
     bite.vector = AddMod26_v32qi( bite.vector, rRingOffset.vector );
     bite.vector = PermuteV32qi( &PathLookupAvx2.r_ring[0], bite.vector );
-    bite.vector = SubMod26_v32qi( bite.vector, rRingOffset.vector );
+    bite = v32_echar_sub_delta( bite, rRingOffset );
     return bite;
 }
 
@@ -45,7 +45,7 @@ DecodeBiteBackwardCommonAvx2( union v32_echar bite, union v32_echar_delta rRingO
     // right ring backwards
     bite.vector = AddMod26_v32qi( bite.vector, rRingOffset.vector );
     bite.vector = PermuteV32qi( &PathLookupAvx2.r_ring[1], bite.vector );
-    bite.vector = SubMod26_v32qi( bite.vector, rRingOffset.vector );
+    bite = v32_echar_sub_delta( bite, rRingOffset );
     //stbrett backwards
     bite.vector = PermuteV32qi( &key->stbrett, bite.vector );
     return bite;

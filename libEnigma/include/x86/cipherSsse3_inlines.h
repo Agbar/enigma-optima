@@ -25,7 +25,7 @@ DecodeBiteForwardCommonSsse3( union v16_echar bite, union v16_echar_delta rRingO
     // right ring forward
     bite.vector = AddMod26_v16qi( bite.vector, rRingOffset.vector );
     bite.vector = PermuteV16qi( &PathLookupSsse3.r_ring[0], bite.vector );
-    bite.vector = SubMod26_v16qi( bite.vector, rRingOffset.vector );
+    bite = v16_echar_sub_delta( bite, rRingOffset );
     return bite;
 }
 
@@ -45,7 +45,7 @@ DecodeBiteBackwardCommonSsse3( union v16_echar bite, union v16_echar_delta rRing
     // right ring backwards
     bite.vector = AddMod26_v16qi( bite.vector, rRingOffset.vector );
     bite.vector = PermuteV16qi( &PathLookupSsse3.r_ring[1], bite.vector );
-    bite.vector = SubMod26_v16qi( bite.vector, rRingOffset.vector );
+    bite = v16_echar_sub_delta( bite, rRingOffset );
     //stbrett backwards
     bite.vector = PermuteV16qi( &key->stbrett, bite.vector );
     return bite;
