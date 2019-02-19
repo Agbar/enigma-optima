@@ -2,29 +2,16 @@
 
 #include "error.h"
 #include "cipherAvx2.h"
-
-static inline
-v32qi PermuteV32qi(const union PermutationMap_t* map, v32qi vec ){
-    /* Following line is needed to behave like __builtin_shuffle for all inputs and still being
-    faster, but our data is always in interval [0,25] = [0,0x1A). */
-    // vec &= 0x3F;
-    vec += ( char ) 0x70; // For every byte push value of bit[4] to bit[7].
-    vec ^= ( v32qi ) _mm256_set_epi32( 0x80808080, 0x80808080, 0x80808080, 0x80808080, 0, 0, 0, 0 );
-    v32qi pMap = map->whole.vector;
-    v32qi ret1 = __builtin_ia32_pshufb256( pMap, vec );
-    pMap = ( v32qi ) __builtin_ia32_permti256( ( v4di )pMap ,( v4di )pMap , 1 ); //VPERM2I128
-    v32qi ret2 = __builtin_ia32_pshufb256( pMap , vec ^ (char) 0x80 );
-    return ret1 | ret2;
-}
+#include "echar/echar_avx2.h"
 
 static inline
 union v32_echar
 DecodeBiteForwardCommonAvx2( union v32_echar bite, union v32_echar_delta rRingOffset, const struct Key* const restrict key ) {
     // stbrett forward
-    bite.vector = PermuteV32qi ( &key->stbrett, bite.vector );
+    bite = v32_echar_map ( bite, key->stbrett );
     // right ring forward
     bite = v32_echar_add_delta( bite, rRingOffset );
-    bite.vector = PermuteV32qi( &PathLookupAvx2.r_ring[0], bite.vector );
+    bite = v32_echar_map( bite, PathLookupAvx2.r_ring[0] );
     bite = v32_echar_sub_delta( bite, rRingOffset );
     return bite;
 }
@@ -32,11 +19,10 @@ DecodeBiteForwardCommonAvx2( union v32_echar bite, union v32_echar_delta rRingOf
 static inline
 union v32_echar
 DecodeBiteMaskedPartAvx2( union v32_echar predecodedBite, int lookupNumber ) {
-    v32qi bite = predecodedBite.vector;
     // m+l rings and ukw
-    bite  = PermuteV32qi( &PathLookupAvx2.lookups[lookupNumber].mapping,  bite );
-    bite &= PathLookupAvx2.lookups[lookupNumber].mask;
-    return (union v32_echar){ .vector = bite };
+    union v32_echar masked = v32_echar_map( predecodedBite, PathLookupAvx2.lookups[lookupNumber].mapping );
+    masked.vector &= PathLookupAvx2.lookups[lookupNumber].mask;
+    return masked;
 }
 
 static inline
@@ -44,10 +30,10 @@ union v32_echar
 DecodeBiteBackwardCommonAvx2( union v32_echar bite, union v32_echar_delta rRingOffset, const struct Key* const key ) {
     // right ring backwards
     bite = v32_echar_add_delta( bite, rRingOffset );
-    bite.vector = PermuteV32qi( &PathLookupAvx2.r_ring[1], bite.vector );
+    bite = v32_echar_map( bite, PathLookupAvx2.r_ring[1] );
     bite = v32_echar_sub_delta( bite, rRingOffset );
     //stbrett backwards
-    bite.vector = PermuteV32qi( &key->stbrett, bite.vector );
+    bite = v32_echar_map( bite, key->stbrett );
     return bite;
 }
 
