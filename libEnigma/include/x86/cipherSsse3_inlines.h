@@ -5,38 +5,27 @@
 #include "cipherSsse3.h"
 #include "character_encoding.h"
 
-static inline
-v16qi PermuteV16qi(const union PermutationMap_t* map, v16qi vec ){
-    /* Following line is needed to behave like __builtin_shuffle for all inputs and still being
-    faster, but our data is always in interval [0,25] = [0,0x1A). */
-    // vec &= 0x1F;
-    vec += (char) 0x70; // For every byte push value of bit[4] to bit[7].
-    v16qi ret1 = __builtin_ia32_pshufb128( map->half[0].vector, vec );
-    v16qi ret2 = __builtin_ia32_pshufb128( map->half[1].vector, vec ^ (char) 0x80 );
-    return ret1 | ret2;
-}
-
+#include "echar/echar_ssse3.h"
 
 static inline
 union v16_echar
 DecodeBiteForwardCommonSsse3( union v16_echar bite, union v16_echar_delta rRingOffset, const struct Key* const restrict key ){
     // stbrett forward
-    bite.vector = PermuteV16qi ( &key->stbrett, bite.vector );
+    bite = v16_echar_map( bite, key->stbrett );
     // right ring forward
     bite = v16_echar_add_delta( bite, rRingOffset );
-    bite.vector = PermuteV16qi( &PathLookupSsse3.r_ring[0], bite.vector );
+    bite = v16_echar_map( bite, PathLookupSsse3.r_ring[0] );
     bite = v16_echar_sub_delta( bite, rRingOffset );
     return bite;
 }
 
 static inline
 union v16_echar
-DecodeBiteMaskedPartSsse3( union v16_echar predecodedBite, int lookupNumber ) {
-    v16qi bite = predecodedBite.vector;
+DecodeBiteMaskedPartSsse3( union v16_echar predecodedBite, int lookupNumber ) {    
     // m+l rings and ukw
-    bite  = PermuteV16qi( &PathLookupSsse3.lookups[lookupNumber].mapping,  bite );
-    bite &= PathLookupSsse3.lookups[lookupNumber].mask;
-    return (union v16_echar){ .vector = bite };
+    union v16_echar masked = v16_echar_map( predecodedBite, PathLookupSsse3.lookups[lookupNumber].mapping );
+    masked.vector &= PathLookupSsse3.lookups[lookupNumber].mask;
+    return masked;
 }
 
 static inline
@@ -44,10 +33,10 @@ union v16_echar
 DecodeBiteBackwardCommonSsse3( union v16_echar bite, union v16_echar_delta rRingOffset, const struct Key* const restrict key ) {
     // right ring backwards
     bite = v16_echar_add_delta( bite, rRingOffset );
-    bite.vector = PermuteV16qi( &PathLookupSsse3.r_ring[1], bite.vector );
+    bite = v16_echar_map( bite, PathLookupSsse3.r_ring[1] );
     bite = v16_echar_sub_delta( bite, rRingOffset );
     //stbrett backwards
-    bite.vector = PermuteV16qi( &key->stbrett, bite.vector );
+    bite = v16_echar_map( bite, key->stbrett );
     return bite;
 }
 
