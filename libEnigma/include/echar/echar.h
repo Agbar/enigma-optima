@@ -43,9 +43,25 @@ echar_sub_delta( struct echar c, struct echar_delta sub ){
 CONST_FUNCTION
 static inline
 union v16_echar
+v16_echar_add_delta( union v16_echar c, union v16_echar_delta add ){
+    v16qi r = AddMod26_v16qi( c.vector, add.vector );
+    return (union v16_echar){ .vector = r };
+}
+
+CONST_FUNCTION
+static inline
+union v16_echar
 v16_echar_sub_delta( union v16_echar c, union v16_echar_delta sub ){
     v16qi r = SubMod26_v16qi( c.vector, sub.vector );
     return (union v16_echar){ .vector = r };
+}
+
+CONST_FUNCTION
+static inline
+union v32_echar
+v32_echar_add_delta( union v32_echar c, union v32_echar_delta add ){
+    v32qi r = AddMod26_v32qi( c.vector, add.vector );
+    return (union v32_echar){ .vector = r };
 }
 
 CONST_FUNCTION
@@ -55,4 +71,3 @@ v32_echar_sub_delta( union v32_echar c, union v32_echar_delta sub ){
     v32qi r = SubMod26_v32qi( c.vector, sub.vector );
     return (union v32_echar){ .vector = r };
 }
-
