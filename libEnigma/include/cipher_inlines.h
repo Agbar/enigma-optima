@@ -71,9 +71,9 @@ void CalculatePermutationMap3Rotors( union PermutationMap_t* const restrict map,
         m_offset = { .delta = (uint8_t)rings.m },
         l_offset = { .delta = (uint8_t)rings.l };
     struct echar_delta 
-        m_l_offset = char_delta_sub( l_offset, m_offset ),
-        inv_l_offset = char_delta_invert( l_offset ),
-        l_m_offset = char_delta_sub( m_offset, l_offset );
+        m_l_offset = echar_delta_sub( l_offset, m_offset ),
+        inv_l_offset = echar_delta_invert( l_offset ),
+        l_m_offset = echar_delta_sub( m_offset, l_offset );
 
     for( int k = 0; k < 26; k++ ) {
         struct echar c = { .encoded = (int8_t)k };
@@ -95,11 +95,11 @@ void CalculatePermutationMap4Rotors( union PermutationMap_t* const restrict map,
         l_offset = { .delta = (uint8_t)rings.l },
         g_offset = { .delta = (uint8_t)rings.g };
     struct echar_delta 
-        m_l_offset = char_delta_sub( l_offset, m_offset ),
-        l_g_offset = char_delta_sub( g_offset, l_offset ),
-        inv_g_offset = char_delta_invert( g_offset ),
-        g_l_offset = char_delta_sub( l_offset, g_offset ),
-        l_m_offset = char_delta_sub( m_offset, l_offset );
+        m_l_offset = echar_delta_sub( l_offset, m_offset ),
+        l_g_offset = echar_delta_sub( g_offset, l_offset ),
+        inv_g_offset = echar_delta_invert( g_offset ),
+        g_l_offset = echar_delta_sub( l_offset, g_offset ),
+        l_m_offset = echar_delta_sub( m_offset, l_offset );
 
     for( int k = 0; k < 26; k++ ) {
         struct echar c = { .encoded = (int8_t)k };

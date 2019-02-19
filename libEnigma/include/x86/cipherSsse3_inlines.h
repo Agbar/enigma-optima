@@ -3,6 +3,7 @@
 #include "error.h"
 #include "dict.h"
 #include "cipherSsse3.h"
+#include "character_encoding.h"
 
 static inline
 v16qi PermuteV16qi(const union PermutationMap_t* map, v16qi vec ){

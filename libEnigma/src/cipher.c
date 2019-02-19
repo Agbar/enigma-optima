@@ -256,22 +256,22 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
       p2 = 1;
     }
 
-    char_delta_rot_1( &r_offset );
+    echar_delta_rot_1( &r_offset );
     if (p2) {
-      char_delta_rot_1( &m_offset );
+      echar_delta_rot_1( &m_offset );
       p2 = 0;
     }
     if (p3) {
-      char_delta_rot_1( &l_offset );
+      echar_delta_rot_1( &l_offset );
       p3 = 0;
     }
 
     const struct echar_delta 
-        r_m_offset = char_delta_sub( m_offset, r_offset ),
-        m_l_offset = char_delta_sub( l_offset, m_offset ),
-        inv_l_offset = char_delta_invert( l_offset ),
-        l_m_offset = char_delta_sub( m_offset, l_offset ),
-        m_r_offset = char_delta_sub( r_offset, m_offset );
+        r_m_offset = echar_delta_sub( m_offset, r_offset ),
+        m_l_offset = echar_delta_sub( l_offset, m_offset ),
+        inv_l_offset = echar_delta_invert( l_offset ),
+        l_m_offset = echar_delta_sub( m_offset, l_offset ),
+        m_r_offset = echar_delta_sub( r_offset, m_offset );
 
     for (int k = 0; k < 26; k++) {
       struct echar c = { .encoded = k };
@@ -341,24 +341,24 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
       p2 = 1;
     }
 
-    char_delta_rot_1( &r_offset );
+    echar_delta_rot_1( &r_offset );
     if (p2) {
-      char_delta_rot_1( &m_offset );
+      echar_delta_rot_1( &m_offset );
       p2 = 0;
     }
     if (p3) {
-      char_delta_rot_1( &l_offset );
+      echar_delta_rot_1( &l_offset );
       p3 = 0;
     }
 
     struct echar_delta 
-        r_m_offset = char_delta_sub( m_offset, r_offset ),
-        m_l_offset = char_delta_sub( l_offset, m_offset ),
-        l_g_offset = char_delta_sub( g_offset, l_offset ),
-        inv_g_offset = char_delta_invert( g_offset ),
-        g_l_offset = char_delta_sub( l_offset, g_offset ),
-        l_m_offset = char_delta_sub( m_offset, l_offset ),
-        m_r_offset = char_delta_sub( r_offset, m_offset );
+        r_m_offset = echar_delta_sub( m_offset, r_offset ),
+        m_l_offset = echar_delta_sub( l_offset, m_offset ),
+        l_g_offset = echar_delta_sub( g_offset, l_offset ),
+        inv_g_offset = echar_delta_invert( g_offset ),
+        g_l_offset = echar_delta_sub( l_offset, g_offset ),
+        l_m_offset = echar_delta_sub( m_offset, l_offset ),
+        m_r_offset = echar_delta_sub( r_offset, m_offset );
 
 
     for (int k = 0; k < 26; k++) {

@@ -17,9 +17,9 @@ TEST( char_delta, invert )
 {
     struct echar_delta x;
     x.delta = 0;
-    EXPECT_EQ( 0, char_delta_invert( x ).delta );
+    EXPECT_EQ( 0, echar_delta_invert( x ).delta );
     x.delta = 25;
-    EXPECT_EQ( 1, char_delta_invert( x ).delta );
+    EXPECT_EQ( 1, echar_delta_invert( x ).delta );
     x.delta = 1;
-    EXPECT_EQ( 25, char_delta_invert( x ).delta );
+    EXPECT_EQ( 25, echar_delta_invert( x ).delta );
 }
