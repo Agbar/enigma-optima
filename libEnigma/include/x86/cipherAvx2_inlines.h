@@ -18,34 +18,43 @@ v32qi PermuteV32qi(const union PermutationMap_t* map, v32qi vec ){
 }
 
 static inline
-v32qi DecodeBiteForwardCommonAvx2( v32qi bite, union v32_echar_delta rRingOffset, const struct Key* const restrict key ) {
+union v32_echar
+DecodeBiteForwardCommonAvx2( union v32_echar bite, union v32_echar_delta rRingOffset, const struct Key* const restrict key ) {
     // stbrett forward
-    bite = PermuteV32qi ( &key->stbrett, bite );
+    bite.vector = PermuteV32qi ( &key->stbrett, bite.vector );
     // right ring forward
-    bite = AddMod26_v32qi( bite, rRingOffset.vector );
-    bite = PermuteV32qi( &PathLookupAvx2.r_ring[0], bite );
-    bite = SubMod26_v32qi( bite, rRingOffset.vector );
+    bite.vector = AddMod26_v32qi( bite.vector, rRingOffset.vector );
+    bite.vector = PermuteV32qi( &PathLookupAvx2.r_ring[0], bite.vector );
+    bite.vector = SubMod26_v32qi( bite.vector, rRingOffset.vector );
     return bite;
 }
 
 static inline
-v32qi DecodeBiteMaskedPartAvx2( v32qi predecodedBite, int lookupNumber ) {
-    v32qi bite = predecodedBite;
+union v32_echar
+DecodeBiteMaskedPartAvx2( union v32_echar predecodedBite, int lookupNumber ) {
+    v32qi bite = predecodedBite.vector;
     // m+l rings and ukw
     bite  = PermuteV32qi( &PathLookupAvx2.lookups[lookupNumber].mapping,  bite );
     bite &= PathLookupAvx2.lookups[lookupNumber].mask;
+    return (union v32_echar){ .vector = bite };
+}
+
+static inline
+union v32_echar
+DecodeBiteBackwardCommonAvx2( union v32_echar bite, union v32_echar_delta rRingOffset, const struct Key* const key ) {
+    // right ring backwards
+    bite.vector = AddMod26_v32qi( bite.vector, rRingOffset.vector );
+    bite.vector = PermuteV32qi( &PathLookupAvx2.r_ring[1], bite.vector );
+    bite.vector = SubMod26_v32qi( bite.vector, rRingOffset.vector );
+    //stbrett backwards
+    bite.vector = PermuteV32qi( &key->stbrett, bite.vector );
     return bite;
 }
 
 static inline
-v32qi DecodeBiteBackwardCommonAvx2( v32qi bite, union v32_echar_delta rRingOffset, const struct Key* const key ) {
-    // right ring backwards
-    bite = AddMod26_v32qi( bite, rRingOffset.vector );
-    bite = PermuteV32qi( &PathLookupAvx2.r_ring[1], bite );
-    bite = SubMod26_v32qi( bite, rRingOffset.vector );
-    //stbrett backwards
-    bite = PermuteV32qi( &key->stbrett, bite );
-    return bite;
+union v32_echar
+CombineMaskedPartsAvx2( union v32_echar l, union v32_echar r ){
+    return (union v32_echar){ .vector = l.vector | r.vector };
 }
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
@@ -70,26 +79,26 @@ void DecodeScoredMessagePartAvx2( const struct Key* const restrict key, int len,
          *  In the worst case there are 5 lookups per bite.
          */
         uint_least16_t lookupsToNextBite = PathLookupAvx2.nextBite[messageBite] - lookupNumber;
-        v32qi cBite = {0};
+        union v32_echar cBite = {};
         lookupNumber += lookupsToNextBite;
-        v32qi currentBite = ciphertext.vector32[messageBite].vector;
-        v32qi predecoded = DecodeBiteForwardCommonAvx2( currentBite, currentRRingOffset, key );
+        union v32_echar currentBite = ciphertext.vector32[messageBite];
+        union v32_echar predecoded = DecodeBiteForwardCommonAvx2( currentBite, currentRRingOffset, key );
 
         switch( lookupsToNextBite ) {
         case 5:
             cBite  = DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 5 );
             FALLTHROUGH();
         case 4:
-            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 4 );
+            cBite = CombineMaskedPartsAvx2( cBite, DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 4 ) );
             FALLTHROUGH();
         case 3:
-            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 3 );
+            cBite = CombineMaskedPartsAvx2( cBite, DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 3 ) );
             FALLTHROUGH();
         case 2:
-            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 2 );
+            cBite = CombineMaskedPartsAvx2( cBite, DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 2 ) );
             FALLTHROUGH();
         case 1:
-            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 1 );
+            cBite = CombineMaskedPartsAvx2( cBite, DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 1 ) );
             break;
         default:
             exit_d(5);
@@ -97,7 +106,7 @@ void DecodeScoredMessagePartAvx2( const struct Key* const restrict key, int len,
         }
         cBite = DecodeBiteBackwardCommonAvx2( cBite, currentRRingOffset, key );
         // store whole decoded bite
-        output -> vector32[messageBite] = cBite;
+        output -> vector32[messageBite] = cBite.vector;
         messageBite++;
         currentRRingOffset = v32_echar_delta_rot_32( currentRRingOffset );
     }
