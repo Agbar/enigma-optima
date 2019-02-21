@@ -36,17 +36,17 @@ void print_state(FILE *fp, const State *state)
     fprintf(fp,
     "%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=",
     toupper(alpha[from->ukwnum]),
-    from->slot.l, from->slot.m, from->slot.r,
+    from->slot.l.type, from->slot.m.type, from->slot.r.type,
     toupper(alpha[from->ring.m]), toupper(alpha[from->ring.r]),
     toupper(alpha[from->mesg.l]), toupper(alpha[from->mesg.m]),
     toupper(alpha[from->mesg.r]),
     toupper(alpha[to->ukwnum]),
-    to->slot.l, to->slot.m, to->slot.r,
+    to->slot.l.type, to->slot.m.type, to->slot.r.type,
     toupper(alpha[to->ring.m]), toupper(alpha[to->ring.r]),
     toupper(alpha[to->mesg.l]), toupper(alpha[to->mesg.m]),
     toupper(alpha[to->mesg.r]),
     toupper(alpha[ckey->ukwnum]),
-    ckey->slot.l, ckey->slot.m, ckey->slot.r,
+    ckey->slot.l.type, ckey->slot.m.type, ckey->slot.r.type,
     toupper(alpha[ckey->ring.m]), toupper(alpha[ckey->ring.r]),
     toupper(alpha[ckey->mesg.l]), toupper(alpha[ckey->mesg.m]),
     toupper(alpha[ckey->mesg.r]));
@@ -57,7 +57,7 @@ void print_state(FILE *fp, const State *state)
     // from
     from->ukwnum == 3 ? 'B' : 'C',
     //:
-    from->slot.g.type == GreekRingType_Beta ? 'B' : 'G', from->slot.l, from->slot.m, from->slot.r,
+    from->slot.g.type == GreekRingType_Beta ? 'B' : 'G', from->slot.l.type, from->slot.m.type, from->slot.r.type,
     //:
     toupper(alpha[from->ring.m]), toupper(alpha[from->ring.r]) ,
     //:
@@ -66,7 +66,7 @@ void print_state(FILE *fp, const State *state)
     //= // to
     to->ukwnum == 3 ? 'B' : 'C',
     //:
-    to->slot.g.type == GreekRingType_Beta ? 'B' : 'G', to->slot.l, to->slot.m, to->slot.r,
+    to->slot.g.type == GreekRingType_Beta ? 'B' : 'G', to->slot.l.type, to->slot.m.type, to->slot.r.type,
     //:
     toupper(alpha[to->ring.m]), toupper(alpha[to->ring.r]),
     //:
@@ -75,7 +75,7 @@ void print_state(FILE *fp, const State *state)
     //= // current
     ckey->ukwnum == 3 ? 'B' : 'C',
     //:
-    ckey->slot.g.type == GreekRingType_Beta ? 'B' : 'G', ckey->slot.l, ckey->slot.m, ckey->slot.r,
+    ckey->slot.g.type == GreekRingType_Beta ? 'B' : 'G', ckey->slot.l.type, ckey->slot.m.type, ckey->slot.r.type,
     //:
     toupper(alpha[ckey->ring.m]), toupper(alpha[ckey->ring.r]),
     //:
@@ -98,7 +98,7 @@ void print_state(FILE *fp, const State *state)
     fprintf(fp,
     "%c:%d%d%d:%c%c:%c%c%c=",
     toupper(alpha[gkey->ukwnum]),
-    gkey->slot.l, gkey->slot.m, gkey->slot.r,
+    gkey->slot.l.type, gkey->slot.m.type, gkey->slot.r.type,
     toupper(alpha[gkey->ring.m]), toupper(alpha[gkey->ring.r]),
     toupper(alpha[gkey->mesg.l]), toupper(alpha[gkey->mesg.m]),
     toupper(alpha[gkey->mesg.r]));
@@ -107,7 +107,7 @@ void print_state(FILE *fp, const State *state)
     fprintf(fp,
     "%c:%c%d%d%d:%c%c:%c%c%c%c=",
     gkey->ukwnum == 3 ? 'B' : 'C',
-    gkey->slot.g.type == GreekRingType_Beta ? 'B' : 'G', gkey->slot.l, gkey->slot.m, gkey->slot.r,
+    gkey->slot.g.type == GreekRingType_Beta ? 'B' : 'G', gkey->slot.l.type, gkey->slot.m.type, gkey->slot.r.type,
     toupper(alpha[gkey->ring.m]), toupper(alpha[gkey->ring.r]),
     toupper(alpha[gkey->mesg.g]), toupper(alpha[gkey->mesg.l]),
     toupper(alpha[gkey->mesg.m]), toupper(alpha[gkey->mesg.r]));
