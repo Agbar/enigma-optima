@@ -141,8 +141,8 @@ int scrambler_state(const struct Key* const key, int len)
 {
   int i;
 
-  int m_slot = key->slot.m;
-  int r_slot = key->slot.r;
+  struct RingType m_slot = key->slot.m;
+  struct RingType r_slot = key->slot.r;
 
   int l_ring = key->ring.l;
   int m_ring = key->ring.m;
@@ -163,13 +163,13 @@ int scrambler_state(const struct Key* const key, int len)
   l_offset = (26 + l_mesg-l_ring) % 26;
 
   /* calculate turnover points from ring settings */
-  r_turn = (26 + wal_turn[r_slot]-r_ring) % 26;
-  m_turn = (26 + wal_turn[m_slot]-m_ring) % 26;
+  r_turn = (26 + wal_turn[r_slot.type]-r_ring) % 26;
+  m_turn = (26 + wal_turn[m_slot.type]-m_ring) % 26;
 
   /* second turnover points for wheels 6,7,8 */
-  if (r_slot > 5)
+  if (r_slot.type > 5)
     r_turn2 = (26 + 25-r_ring) % 26;
-  if (m_slot > 5)
+  if (m_slot.type > 5)
     m_turn2 = (26 + 25-m_ring) % 26;
 
 
@@ -212,9 +212,9 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
 {
   int i;
 
-  int l_slot = key->slot.l;
-  int m_slot = key->slot.m;
-  int r_slot = key->slot.r;
+  struct RingType l_slot = key->slot.l;
+  struct RingType m_slot = key->slot.m;
+  struct RingType r_slot = key->slot.r;
   int l_ring = key->ring.l;
   int m_ring = key->ring.m;
   int r_ring = key->ring.r;
@@ -235,13 +235,13 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
         l_offset = make_char_delta_plus_minus( l_mesg, l_ring );
 
   /* calculate turnover points from ring settings */
-  r_turn = (26 + wal_turn[r_slot]-r_ring) % 26;
-  m_turn = (26 + wal_turn[m_slot]-m_ring) % 26;
+  r_turn = (26 + wal_turn[r_slot.type]-r_ring) % 26;
+  m_turn = (26 + wal_turn[m_slot.type]-m_ring) % 26;
 
   /* second turnover points for wheels 6,7,8 */
-  if (r_slot > 5)
+  if (r_slot.type > 5)
     r_turn2 = (26 + 25-r_ring) % 26;
-  if (m_slot > 5)
+  if (m_slot.type > 5)
     m_turn2 = (26 + 25-m_ring) % 26;
 
 
@@ -275,13 +275,13 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
 
     for (int k = 0; k < 26; k++) {
       struct echar c = make_echar( k );
-      c = wal[r_slot].flat[ double_index( c,     r_offset ) ];
-      c = wal[m_slot].flat[ double_index( c,   r_m_offset ) ];
-      c = wal[l_slot].flat[ double_index( c,   m_l_offset ) ];
+      c = wal[r_slot.type].flat[ double_index( c,     r_offset ) ];
+      c = wal[m_slot.type].flat[ double_index( c,   r_m_offset ) ];
+      c = wal[l_slot.type].flat[ double_index( c,   m_l_offset ) ];
       c = ukw[ukwnum].flat[ double_index( c, inv_l_offset ) ];
-      c = rev_wal[l_slot].flat[ double_index( c,   l_offset ) ];
-      c = rev_wal[m_slot].flat[ double_index( c, l_m_offset ) ];
-      c = rev_wal[r_slot].flat[ double_index( c, m_r_offset ) ];
+      c = rev_wal[l_slot.type].flat[ double_index( c,   l_offset ) ];
+      c = rev_wal[m_slot.type].flat[ double_index( c, l_m_offset ) ];
+      c = rev_wal[r_slot.type].flat[ double_index( c, m_r_offset ) ];
       c = echar_sub_delta( c, r_offset );
       path_lookup[i].letters[k] = c;
     }
@@ -296,10 +296,10 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
   int i;
 
   int ukwnum = key->ukwnum;
-  int g_slot = key->slot.g;
-  int l_slot = key->slot.l;
-  int m_slot = key->slot.m;
-  int r_slot = key->slot.r;
+  struct RingType g_slot = key->slot.g;
+  struct RingType l_slot = key->slot.l;
+  struct RingType m_slot = key->slot.m;
+  struct RingType r_slot = key->slot.r;
   int g_ring = key->ring.g;
   int l_ring = key->ring.l;
   int m_ring = key->ring.m;
@@ -321,13 +321,13 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
       g_offset = make_char_delta_plus_minus( g_mesg, g_ring );
 
   /* calculate turnover points from ring settings */
-  r_turn = (26 + wal_turn[r_slot]-r_ring) % 26;
-  m_turn = (26 + wal_turn[m_slot]-m_ring) % 26;
+  r_turn = (26 + wal_turn[r_slot.type]-r_ring) % 26;
+  m_turn = (26 + wal_turn[m_slot.type]-m_ring) % 26;
 
   /* second turnover points for wheels 6,7,8 */
-  if (r_slot > 5)
+  if (r_slot.type > 5)
     r_turn2 = (26 + 25-r_ring) % 26;
-  if (m_slot > 5)
+  if (m_slot.type > 5)
     m_turn2 = (26 + 25-m_ring) % 26;
 
 
@@ -364,15 +364,15 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
 
     for (int k = 0; k < 26; k++) {
       struct echar c = make_echar( k );
-      c = wal[r_slot].flat[ double_index( c,     r_offset ) ];
-      c = wal[m_slot].flat[ double_index( c,   r_m_offset ) ];
-      c = wal[l_slot].flat[ double_index( c,   m_l_offset ) ];
-      c = wal[g_slot].flat[ double_index( c,   l_g_offset ) ];
+      c = wal[r_slot.type].flat[ double_index( c,     r_offset ) ];
+      c = wal[m_slot.type].flat[ double_index( c,   r_m_offset ) ];
+      c = wal[l_slot.type].flat[ double_index( c,   m_l_offset ) ];
+      c = wal[g_slot.type].flat[ double_index( c,   l_g_offset ) ];
       c = ukw[ukwnum].flat[ double_index( c, inv_g_offset ) ];
-      c = rev_wal[g_slot].flat[ double_index( c,   g_offset ) ];
-      c = rev_wal[l_slot].flat[ double_index( c, g_l_offset ) ];
-      c = rev_wal[m_slot].flat[ double_index( c, l_m_offset ) ];
-      c = rev_wal[r_slot].flat[ double_index( c, m_r_offset ) ];
+      c = rev_wal[g_slot.type].flat[ double_index( c,   g_offset ) ];
+      c = rev_wal[l_slot.type].flat[ double_index( c, g_l_offset ) ];
+      c = rev_wal[m_slot.type].flat[ double_index( c, l_m_offset ) ];
+      c = rev_wal[r_slot.type].flat[ double_index( c, m_r_offset ) ];
       c = echar_sub_delta( c, r_offset );
       path_lookup[i].letters[k] = c;
     }

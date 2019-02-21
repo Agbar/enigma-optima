@@ -34,8 +34,8 @@ static inline
 void CopyRRing2Lookup( const struct Key* const restrict key, union PermutationMap_t rRings[2] )
 {
     // setup r_rings forward and backward.
-    memcpy( rRings[0].letters, wal[key->slot.r].flat, 32 );
-    memcpy( rRings[1].letters, rev_wal[key->slot.r].flat, 32 );
+    memcpy( rRings[0].letters, wal[key->slot.r.type].flat, 32 );
+    memcpy( rRings[1].letters, rev_wal[key->slot.r.type].flat, 32 );
 }
 
 //! \brief Return position of R ring on next turnover
@@ -77,11 +77,11 @@ void CalculatePermutationMap3Rotors( union PermutationMap_t* const restrict map,
 
     for( int k = 0; k < 26; k++ ) {
         struct echar c = make_echar( k );
-        c = wal[key->slot.m].flat[ double_index( c,     m_offset ) ];
-        c = wal[key->slot.l].flat[ double_index( c,   m_l_offset ) ];
+        c = wal[key->slot.m.type].flat[ double_index( c,     m_offset ) ];
+        c = wal[key->slot.l.type].flat[ double_index( c,   m_l_offset ) ];
         c = ukw[key->ukwnum].flat[ double_index( c, inv_l_offset ) ];
-        c = rev_wal[key->slot.l].flat[ double_index( c,   l_offset ) ];
-        c = rev_wal[key->slot.m].flat[ double_index( c, l_m_offset ) ];
+        c = rev_wal[key->slot.l.type].flat[ double_index( c,   l_offset ) ];
+        c = rev_wal[key->slot.m.type].flat[ double_index( c, l_m_offset ) ];
         c = echar_sub_delta( c, m_offset );
         map->letters[k] = c;
     }
@@ -103,13 +103,13 @@ void CalculatePermutationMap4Rotors( union PermutationMap_t* const restrict map,
 
     for( int k = 0; k < 26; k++ ) {
         struct echar c = make_echar( k );
-        c = wal[key->slot.m].flat[ double_index( c,     m_offset ) ];
-        c = wal[key->slot.l].flat[ double_index( c,   m_l_offset ) ];
-        c = wal[key->slot.g].flat[ double_index( c,   l_g_offset ) ];
+        c = wal[key->slot.m.type].flat[ double_index( c,     m_offset ) ];
+        c = wal[key->slot.l.type].flat[ double_index( c,   m_l_offset ) ];
+        c = wal[key->slot.g.type].flat[ double_index( c,   l_g_offset ) ];
         c = ukw[key->ukwnum].flat[ double_index( c, inv_g_offset ) ];
-        c = rev_wal[key->slot.g].flat[ double_index( c,   g_offset ) ];
-        c = rev_wal[key->slot.l].flat[ double_index( c, g_l_offset ) ];
-        c = rev_wal[key->slot.m].flat[ double_index( c, l_m_offset ) ];
+        c = rev_wal[key->slot.g.type].flat[ double_index( c,   g_offset ) ];
+        c = rev_wal[key->slot.l.type].flat[ double_index( c, g_l_offset ) ];
+        c = rev_wal[key->slot.m.type].flat[ double_index( c, l_m_offset ) ];
         c = echar_sub_delta( c, m_offset );
         map->letters[k] = c;
     }

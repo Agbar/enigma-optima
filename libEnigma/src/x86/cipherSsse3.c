@@ -71,18 +71,18 @@ void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const struct
 
     /* calculate turnover points from ring settings */
     struct Turnovers_t turns = {
-        .r = SubMod26( wal_turn[key->slot.r], key->ring.r ),
-        .m = SubMod26( wal_turn[key->slot.m], key->ring.m ),
+        .r = SubMod26( wal_turn[key->slot.r.type], key->ring.r ),
+        .m = SubMod26( wal_turn[key->slot.m.type], key->ring.m ),
     };
 
     /* second turnover points for wheels 6,7,8 */
-    if( key->slot.r > 5 ) {
+    if( key->slot.r.type > 5 ) {
         turns.r2 = SubMod26( SECOND_TURNOVER_POINT, key->ring.r );
     }
     else {
         turns.r2 = -1;
     }
-    if( key->slot.m > 5 ) {
+    if( key->slot.m.type > 5 ) {
         turns.m2 = SubMod26( SECOND_TURNOVER_POINT, key->ring.m );
     }
     else {

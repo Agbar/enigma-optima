@@ -4,10 +4,14 @@
 /* initialize key to defaults */
 int init_key_default( struct Key *const key, enum ModelType_t model )
 {
-    struct Key def_H  = { .slot={0, 1, 2, 3}, .ukwnum=1, .model=EnigmaModel_H  };
-    struct Key def_M3 = { .slot={0, 1, 2, 3}, .ukwnum=1, .model=EnigmaModel_M3 };
-    struct Key def_M4 = { .slot={9, 1, 2, 3}, .ukwnum=3, .model=EnigmaModel_M4 };
-
+    struct Key def_H  = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
+                          .ukwnum=1, 
+                          .model=EnigmaModel_H  };
+    struct Key def_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
+                          .ukwnum=1, .model=EnigmaModel_M3 };
+    struct Key def_M4 = { .slot={ { RingType_B }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
+                          .ukwnum=3,
+                          .model=EnigmaModel_M4 };
     switch( model ) {
     case EnigmaModel_H :
         *key = def_H;
@@ -29,9 +33,15 @@ int init_key_default( struct Key *const key, enum ModelType_t model )
 /* initializes each key element to the lowest possible value */
 int init_key_low( struct Key *const key, enum ModelType_t model )
 {
-    struct Key low_H  = { .slot={0, 1, 1, 1}, .ukwnum=0, .model=EnigmaModel_H  };
-    struct Key low_M3 = { .slot={0, 1, 1, 1}, .ukwnum=1, .model=EnigmaModel_M3 };
-    struct Key low_M4 = { .slot={9, 1, 1, 1}, .ukwnum=3, .model=EnigmaModel_M4 };
+    struct Key low_H  = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+                          .ukwnum=0,
+                          .model=EnigmaModel_H  };
+    struct Key low_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+                          .ukwnum=1,
+                          .model=EnigmaModel_M3 };
+    struct Key low_M4 = { .slot={ { RingType_B }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+                          .ukwnum=3,
+                          .model=EnigmaModel_M4 };
     switch( model ) {
     case EnigmaModel_H :
         *key = low_H;
@@ -58,20 +68,20 @@ int keycmp(const struct Key *k1, const struct Key *k2)
     if ( k1->ukwnum > k2->ukwnum ) return 1;
     else return -1;
   }
-  if (  k1->slot.g != k2->slot.g ) {
-    if ( k1->slot.g > k2->slot.g ) return 1;
+  if (   k1->slot.g.type != k2->slot.g.type ) {
+    if ( k1->slot.g.type >  k2->slot.g.type ) return 1;
     else return -1;
   }
-  if (  k1->slot.l != k2->slot.l ) {
-    if ( k1->slot.l > k2->slot.l ) return 1;
+  if (   k1->slot.l.type != k2->slot.l.type ) {
+    if ( k1->slot.l.type >  k2->slot.l.type ) return 1;
     else return -1;
   }
-  if (  k1->slot.m != k2->slot.m ) {
-    if ( k1->slot.m > k2->slot.m ) return 1;
+  if (   k1->slot.m.type != k2->slot.m.type ) {
+    if ( k1->slot.m.type >  k2->slot.m.type ) return 1;
     else return -1;
   }
-  if (  k1->slot.r != k2->slot.r ) {
-    if ( k1->slot.r > k2->slot.r ) return 1;
+  if (   k1->slot.r.type != k2->slot.r.type ) {
+    if ( k1->slot.r.type >  k2->slot.r.type ) return 1;
     else return -1;
   }
   if (  k1->ring.m != k2->ring.m ) {

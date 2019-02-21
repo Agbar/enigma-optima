@@ -59,6 +59,28 @@ struct RingsState
     int8_t g, l, m, r;
 };
 
+struct RingType {
+    enum ring_type_enum {
+        RingType_None = 0,
+        RingType_1    = 1,
+        RingType_2    = 2,
+        RingType_3    = 3,
+        RingType_4    = 4,
+        RingType_5    = 5,
+        RingType_6    = 6,
+        RingType_7    = 7,
+        RingType_8    = 8,
+        RingType_B    = 9,
+        RingType_G    = 10,
+        __RingType__enforce_signed_type = -1, 
+    } type;
+};
+
+struct RingTypes 
+{
+    struct RingType g, l, m, r;
+};
+
 /* Model
  * * * * */
  enum ModelType_t{
@@ -72,7 +94,7 @@ struct RingsState
  * * * */
 struct Key {
     ALIGNED_16(union PermutationMap_t stbrett);
-    struct RingsState slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
+    struct RingTypes  slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
     struct RingsState ring; ///< ringstellungen
     struct RingsState mesg; ///< message settings
     int8_t ukwnum;

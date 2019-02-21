@@ -94,14 +94,14 @@ int set_walze( struct Key *const key, char *s, enum ModelType_t model)
   x = s;
   if (model == EnigmaModel_M4) {
     if (*x == 'B' || *x == 'b')
-      key->slot.g = 9;
+      key->slot.g.type =  RingType_B;
     if (*x == 'G' || *x == 'g')
-      key->slot.g = 10;
+      key->slot.g.type = RingType_G;
     x++;
   }
-  key->slot.l = *x++ - '0';
-  key->slot.m = *x++ - '0';
-  key->slot.r = *x - '0';
+  key->slot.l.type = *x++ - '0';
+  key->slot.m.type = *x++ - '0';
+  key->slot.r.type = *x - '0';
 
   return 1;
 }
@@ -306,7 +306,7 @@ int set_key( struct Key *const key, const char *keystring, enum ModelType_t mode
 
 
     /* error checking for rings */
-    if ( key->slot.m > 5 && key->ring.m > 12 ) {
+    if ( key->slot.m.type > 5 && key->ring.m > 12 ) {
       if (adjust) {
         key->ring.m = (key->ring.m + 13) % 26;
         key->mesg.m = (key->mesg.m + 13) % 26;
@@ -314,7 +314,7 @@ int set_key( struct Key *const key, const char *keystring, enum ModelType_t mode
       else
         err_input_fatal(ERR_RING_SHORTCUT);
     }
-    if ( key->slot.r > 5 && key->ring.r > 12 ) {
+    if ( key->slot.r.type > 5 && key->ring.r > 12 ) {
       if (adjust) {
         key->ring.r = (key->ring.r + 13) % 26;
         key->mesg.r = (key->mesg.r + 13) % 26;

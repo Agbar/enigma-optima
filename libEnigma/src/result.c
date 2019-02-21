@@ -93,7 +93,7 @@ Rings: %c%c%c%c\n\
 Message key: %c%c%c%c\n\n",
     key->score,
     key->ukwnum == 3 ? 'B' : 'C',
-    key->slot.g == 9 ? 'B' : 'G', key->slot.l, key->slot.m, key->slot.r,
+    key->slot.g.type == RingType_B ? 'B' : 'G', key->slot.l, key->slot.m, key->slot.r,
     stecker,
     toupper(alpha[key->ring.g]), toupper(alpha[key->ring.l]),
     toupper(alpha[key->ring.m]), toupper(alpha[key->ring.r]),

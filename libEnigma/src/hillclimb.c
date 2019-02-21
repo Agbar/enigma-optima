@@ -133,16 +133,16 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
    firstloop = 1;
 
    for (ckey.ukwnum=lo.ukwnum; ckey.ukwnum<=hi[m][1]; ckey.ukwnum++) {
-    for (ckey.slot.g=lo.slot.g; ckey.slot.g<=hi[m][2]; ckey.slot.g++) {
-     for (ckey.slot.l=lo.slot.l; ckey.slot.l<=hi[m][3]; ckey.slot.l++) {
-      for (ckey.slot.m=lo.slot.m; ckey.slot.m<=hi[m][4]; ckey.slot.m++) {
-        if (ckey.slot.m == ckey.slot.l) continue;
-       for (ckey.slot.r=lo.slot.r; ckey.slot.r<=hi[m][5]; ckey.slot.r++) {
-         if (ckey.slot.r == ckey.slot.l || ckey.slot.r == ckey.slot.m) continue;
+    for (ckey.slot.g=lo.slot.g; ckey.slot.g.type<=hi[m][2]; ckey.slot.g.type++) {
+     for (ckey.slot.l=lo.slot.l; ckey.slot.l.type<=hi[m][3]; ckey.slot.l.type++) {
+      for (ckey.slot.m=lo.slot.m; ckey.slot.m.type<=hi[m][4]; ckey.slot.m.type++) {
+        if (ckey.slot.m.type == ckey.slot.l.type) continue;
+       for (ckey.slot.r=lo.slot.r; ckey.slot.r.type<=hi[m][5]; ckey.slot.r.type++) {
+         if (ckey.slot.r.type == ckey.slot.l.type || ckey.slot.r.type == ckey.slot.m.type) continue;
         for (ckey.ring.m=lo.ring.m; ckey.ring.m<=hi[m][6]; ckey.ring.m++) {
-          if (ckey.slot.m > 5 && ckey.ring.m > 12) continue;
+          if (ckey.slot.m.type > 5 && ckey.ring.m > 12) continue;
          for (ckey.ring.r=lo.ring.r; ckey.ring.r<=hi[m][7]; ckey.ring.r++) {
-           if (ckey.slot.r > 5 && ckey.ring.r > 12) continue;
+           if (ckey.slot.r.type > 5 && ckey.ring.r > 12) continue;
           for (ckey.mesg.g=lo.mesg.g; ckey.mesg.g<=hi[m][8]; ckey.mesg.g++) {
            for (ckey.mesg.l=lo.mesg.l; ckey.mesg.l<=hi[m][9]; ckey.mesg.l++) {
             for (ckey.mesg.m=lo.mesg.m; ckey.mesg.m<=hi[m][10]; ckey.mesg.m++) {

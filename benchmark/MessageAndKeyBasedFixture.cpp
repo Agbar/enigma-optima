@@ -7,6 +7,8 @@ extern "C"{
 #include "stecker.h"
 }
 
+using rt = RingType::ring_type_enum;
+
 void
 MessageAndKeyBasedFixture::SetUp( benchmark::State& st UNUSED )
 {
@@ -33,8 +35,7 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st UNUSED )
         ciphertext.plain[i] = make_echar( code[ct[i]] );
     }
 
-
-    key.slot = { /*.g:*/ 0, /*.l:*/ 5, /*.m:*/3, /*.r:*/ 2 };
+    key.slot = { /*.g:*/ {rt::RingType_None}, /*.l:*/ {rt::RingType_5}, /*.m:*/ {rt::RingType_3}, /*.r:*/ {rt::RingType_2} };
     key.ring = { /*.g:*/ 0, /*.l:*/ 0, /*.m:*/0, /*.r:*/ 0 }; // AAA
     key.mesg = { /*.g:*/ 0, /*.l:*/ 0, /*.m:*/'V' - 'A', /*.r:*/ 0 }; // AVA
     key.ukwnum = 'B' - 'A';
