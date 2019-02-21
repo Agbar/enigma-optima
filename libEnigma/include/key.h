@@ -70,15 +70,23 @@ struct RingType {
         RingType_6    = 6,
         RingType_7    = 7,
         RingType_8    = 8,
-        RingType_B    = 9,
-        RingType_G    = 10,
         __RingType__enforce_signed_type = -1, 
+    } type;
+};
+
+struct GreekRingType {
+    enum greek_ring_type_enum {
+        GreekRingType_None = 0,
+        GreekRingType_Beta    = 9,
+        GreekRingType_Gamma    = 10,
+        __GreekRingType__enforce_signed_type = -1, 
     } type;
 };
 
 struct RingTypes 
 {
-    struct RingType g, l, m, r;
+    struct GreekRingType g;
+    struct RingType l, m, r;
 };
 
 /* Model

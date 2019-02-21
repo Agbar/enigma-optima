@@ -9,7 +9,7 @@ int init_key_default( struct Key *const key, enum ModelType_t model )
                           .model=EnigmaModel_H  };
     struct Key def_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
                           .ukwnum=1, .model=EnigmaModel_M3 };
-    struct Key def_M4 = { .slot={ { RingType_B }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
+    struct Key def_M4 = { .slot={ { GreekRingType_Beta }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
                           .ukwnum=3,
                           .model=EnigmaModel_M4 };
     switch( model ) {
@@ -39,7 +39,7 @@ int init_key_low( struct Key *const key, enum ModelType_t model )
     struct Key low_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
                           .ukwnum=1,
                           .model=EnigmaModel_M3 };
-    struct Key low_M4 = { .slot={ { RingType_B }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+    struct Key low_M4 = { .slot={ { GreekRingType_Beta }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
                           .ukwnum=3,
                           .model=EnigmaModel_M4 };
     switch( model ) {

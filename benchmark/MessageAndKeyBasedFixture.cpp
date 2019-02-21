@@ -35,7 +35,7 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st UNUSED )
         ciphertext.plain[i] = make_echar( code[ct[i]] );
     }
 
-    key.slot = { /*.g:*/ {rt::RingType_None}, /*.l:*/ {rt::RingType_5}, /*.m:*/ {rt::RingType_3}, /*.r:*/ {rt::RingType_2} };
+    key.slot = { /*.g:*/ {}, /*.l:*/ {rt::RingType_5}, /*.m:*/ {rt::RingType_3}, /*.r:*/ {rt::RingType_2} };
     key.ring = { /*.g:*/ 0, /*.l:*/ 0, /*.m:*/0, /*.r:*/ 0 }; // AAA
     key.mesg = { /*.g:*/ 0, /*.l:*/ 0, /*.m:*/'V' - 'A', /*.r:*/ 0 }; // AVA
     key.ukwnum = 'B' - 'A';

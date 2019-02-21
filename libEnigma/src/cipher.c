@@ -296,10 +296,7 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
   int i;
 
   int ukwnum = key->ukwnum;
-  struct RingType g_slot = key->slot.g;
-  struct RingType l_slot = key->slot.l;
-  struct RingType m_slot = key->slot.m;
-  struct RingType r_slot = key->slot.r;
+  struct RingTypes slot = key->slot;
   int g_ring = key->ring.g;
   int l_ring = key->ring.l;
   int m_ring = key->ring.m;
@@ -321,13 +318,13 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
       g_offset = make_char_delta_plus_minus( g_mesg, g_ring );
 
   /* calculate turnover points from ring settings */
-  r_turn = (26 + wal_turn[r_slot.type]-r_ring) % 26;
-  m_turn = (26 + wal_turn[m_slot.type]-m_ring) % 26;
+  r_turn = (26 + wal_turn[slot.r.type]-r_ring) % 26;
+  m_turn = (26 + wal_turn[slot.m.type]-m_ring) % 26;
 
   /* second turnover points for wheels 6,7,8 */
-  if (r_slot.type > 5)
+  if (slot.r.type > 5)
     r_turn2 = (26 + 25-r_ring) % 26;
-  if (m_slot.type > 5)
+  if (slot.m.type > 5)
     m_turn2 = (26 + 25-m_ring) % 26;
 
 
@@ -364,15 +361,15 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
 
     for (int k = 0; k < 26; k++) {
       struct echar c = make_echar( k );
-      c = wal[r_slot.type].flat[ double_index( c,     r_offset ) ];
-      c = wal[m_slot.type].flat[ double_index( c,   r_m_offset ) ];
-      c = wal[l_slot.type].flat[ double_index( c,   m_l_offset ) ];
-      c = wal[g_slot.type].flat[ double_index( c,   l_g_offset ) ];
+      c = wal[slot.r.type].flat[ double_index( c,     r_offset ) ];
+      c = wal[slot.m.type].flat[ double_index( c,   r_m_offset ) ];
+      c = wal[slot.l.type].flat[ double_index( c,   m_l_offset ) ];
+      c = wal[slot.g.type].flat[ double_index( c,   l_g_offset ) ];
       c = ukw[ukwnum].flat[ double_index( c, inv_g_offset ) ];
-      c = rev_wal[g_slot.type].flat[ double_index( c,   g_offset ) ];
-      c = rev_wal[l_slot.type].flat[ double_index( c, g_l_offset ) ];
-      c = rev_wal[m_slot.type].flat[ double_index( c, l_m_offset ) ];
-      c = rev_wal[r_slot.type].flat[ double_index( c, m_r_offset ) ];
+      c = rev_wal[slot.g.type].flat[ double_index( c,   g_offset ) ];
+      c = rev_wal[slot.l.type].flat[ double_index( c, g_l_offset ) ];
+      c = rev_wal[slot.m.type].flat[ double_index( c, l_m_offset ) ];
+      c = rev_wal[slot.r.type].flat[ double_index( c, m_r_offset ) ];
       c = echar_sub_delta( c, r_offset );
       path_lookup[i].letters[k] = c;
     }

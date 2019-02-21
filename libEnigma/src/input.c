@@ -94,9 +94,9 @@ int set_walze( struct Key *const key, char *s, enum ModelType_t model)
   x = s;
   if (model == EnigmaModel_M4) {
     if (*x == 'B' || *x == 'b')
-      key->slot.g.type =  RingType_B;
+      key->slot.g.type =  GreekRingType_Beta;
     if (*x == 'G' || *x == 'g')
-      key->slot.g.type = RingType_G;
+      key->slot.g.type = GreekRingType_Gamma;
     x++;
   }
   key->slot.l.type = *x++ - '0';
