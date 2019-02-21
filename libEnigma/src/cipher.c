@@ -94,7 +94,7 @@ const union DoublePermutationMap rev_wal[11] = {
 /* Turnover points:  Walzen 1-5, Walzen 6-8 (/first/ turnover points) */
 text_t wal_turn[9] = {0, 16, 4, 21, 9, 25, 12, 12, 12};
 
-text_t path_lookup[CT][LAST_DIMENSION];
+union PermutationMap_t path_lookup[CT];
 
 enigma_cipher_function_t enigma_cipher_decoder_lookup = {init_path_lookup_H_M3, init_path_lookup_ALL};
 
@@ -283,8 +283,9 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
       c = rev_wal[m_slot].flat[ double_index( c, l_m_offset ) ];
       c = rev_wal[r_slot].flat[ double_index( c, m_r_offset ) ];
       c = echar_sub_delta( c, r_offset );
-      path_lookup[i][k] = c.encoded;
+      path_lookup[i].letters[k] = c;
     }
+    FixPermutationMapTail( &path_lookup[i] );
   }
 }
 
@@ -373,8 +374,9 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
       c = rev_wal[m_slot].flat[ double_index( c, l_m_offset ) ];
       c = rev_wal[r_slot].flat[ double_index( c, m_r_offset ) ];
       c = echar_sub_delta( c, r_offset );
-      path_lookup[i][k] = c.encoded;
+      path_lookup[i].letters[k] = c;
     }
+    FixPermutationMapTail( &path_lookup[i] );
   }
 
 }
