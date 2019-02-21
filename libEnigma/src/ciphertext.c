@@ -43,7 +43,7 @@ void load_ciphertext(const char * const filename, int *const len, int resume)
   struct echar *p_ct = ciphertext.plain;
   while ((c = fgetc(fp)) != EOF)
     if ( isalpha( c ) ) {
-      (*p_ct).encoded = code[c];
+      *p_ct = make_echar( code[c] );
       ++p_ct;
     }
 

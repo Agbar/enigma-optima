@@ -76,7 +76,7 @@ void CalculatePermutationMap3Rotors( union PermutationMap_t* const restrict map,
         l_m_offset = echar_delta_sub( m_offset, l_offset );
 
     for( int k = 0; k < 26; k++ ) {
-        struct echar c = { .encoded = (int8_t)k };
+        struct echar c = make_echar( k );
         c = wal[key->slot.m].flat[ double_index( c,     m_offset ) ];
         c = wal[key->slot.l].flat[ double_index( c,   m_l_offset ) ];
         c = ukw[key->ukwnum].flat[ double_index( c, inv_l_offset ) ];
@@ -102,7 +102,7 @@ void CalculatePermutationMap4Rotors( union PermutationMap_t* const restrict map,
         l_m_offset = echar_delta_sub( m_offset, l_offset );
 
     for( int k = 0; k < 26; k++ ) {
-        struct echar c = { .encoded = (int8_t)k };
+        struct echar c = make_echar( k );
         c = wal[key->slot.m].flat[ double_index( c,     m_offset ) ];
         c = wal[key->slot.l].flat[ double_index( c,   m_l_offset ) ];
         c = wal[key->slot.g].flat[ double_index( c,   l_g_offset ) ];
