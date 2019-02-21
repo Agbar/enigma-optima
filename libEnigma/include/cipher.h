@@ -60,7 +60,8 @@ extern const union DoublePermutationMap rev_wal[11];
 extern const union DoublePermutationMap     ukw[ 5];
 
 static inline
-size_t decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett );
+struct echar
+decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett );
 
 static inline
 v4piu decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett );
@@ -68,7 +69,8 @@ v4piu decode4( size_t offset, size_t index, const union PermutationMap_t* const 
 #ifdef __i386__
 
 static inline
-size_t decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett )
+struct echar
+decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     asm(
@@ -89,7 +91,7 @@ size_t decode( size_t offset,size_t index, const union PermutationMap_t* const s
         , [offset]      "i"     ( offset )
         , [ld]          "i"     ( LAST_DIMENSION ));
 
-    return echar_0_based_index( stbrett->letters[c] );
+    return stbrett->letters[c];
 }
 
 static inline
@@ -146,7 +148,8 @@ v4piu decode4( size_t offset, size_t index, const union PermutationMap_t* const 
 #ifdef __amd64__
 
 static inline
-size_t decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett )
+struct echar
+decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     asm(
@@ -168,7 +171,7 @@ size_t decode( size_t offset,size_t index, const union PermutationMap_t* const s
         , [offset]      "i"     ( offset )
         , [ld]          "i"     ( LAST_DIMENSION ));
 
-    return echar_0_based_index( stbrett->letters[c] );
+    return stbrett->letters[c];
 }
 
 static inline

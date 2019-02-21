@@ -67,8 +67,8 @@ static uint16_t icscoreBasic( const struct Key* const restrict key, scoreLength_
     f[c[3]]++;
   }
   for (; i < len; i++) {
-    text_t c1 = decode(0,i,stbrett);
-    f[c1]++;
+    struct echar c1 = decode(0,i,stbrett);
+    f[ echar_0_based_index( c1 ) ]++;
   }
 
   uint16_t S0, S1, S2, S3;
@@ -130,8 +130,8 @@ static int uniscoreBasic( const struct Key* const key, scoreLength_t len )
     UNISCORE_ADD( s, c[3] );
   }
   for (; i < len; i++) {
-    text_t c = decode(0,i,stbrett);
-    UNISCORE_ADD( s, c );
+    struct echar c = decode(0,i,stbrett);
+    UNISCORE_ADD( s, echar_0_based_index( c ) );
   }
 
   return s;
@@ -146,7 +146,7 @@ int biscoreBasic( const struct Key* const key, scoreLength_t len )
     const union PermutationMap_t* const stbrett = &key->stbrett;
     int s = 0;
 
-    size_t c1 = decode(0,0,stbrett);
+    size_t c1 = echar_0_based_index( decode(0,0,stbrett) );
 
     int i = 1;
     for( ; i < len - 15; i += 16 ) {
@@ -204,7 +204,7 @@ int biscoreBasic( const struct Key* const key, scoreLength_t len )
         BISCORE_ADD( s , c2, c1 );
     }
     for( ; i < len; i++ ) {
-        size_t c2 = decode( 0, i, stbrett );
+        size_t c2 = echar_0_based_index( decode( 0, i, stbrett ) );
         BISCORE_ADD( s , c1, c2 );
         c1 = c2;
     }
@@ -223,8 +223,8 @@ int triscoreBasic( const struct Key* const key, scoreLength_t len )
 
     const union PermutationMap_t* const stbrett = &key->stbrett;
 
-    size_t c1 = decode(0,0,stbrett);
-    size_t c2 = decode(1,0,stbrett);
+    size_t c1 = echar_0_based_index( decode(0,0,stbrett) );
+    size_t c2 = echar_0_based_index( decode(1,0,stbrett) );
 
     int i = 2;
     for( ; i < len - 15; i += 16 ) {
@@ -293,7 +293,7 @@ int triscoreBasic( const struct Key* const key, scoreLength_t len )
     }
     for( ; i < len; ++i ) {
         size_t c3;
-        c3 = decode( 0, i, stbrett );
+        c3 = echar_0_based_index( decode( 0, i, stbrett ) );
         TRISCORE_ADD( s, c1, c2, c3 );
 
         c1 = c2;

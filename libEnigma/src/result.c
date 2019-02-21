@@ -35,12 +35,11 @@ FILE *open_outfile(char *s)
 void print_plaintext(FILE *fp, const struct Key *const key, int len)
 {
   int i;
-  text_t c;
   enigma_cipher_decoder_lookup.prepare_decoder_lookup_ALL(key, len);
 
   for (i = 0; i < len; i++) {
-    c = decode(0,i,&key->stbrett);
-    fputc(alpha[c], fp);
+    struct echar c = decode(0,i,&key->stbrett);
+    fputc(alpha[ echar_0_based_index( c ) ], fp);
   }
   fputc('\n', fp);
   fputc('\n', fp);
