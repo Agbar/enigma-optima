@@ -36,7 +36,7 @@ static uint16_t icscoreNoInterleave( const struct Key* const restrict key, score
     uint8_t i;
     uint8_t length = len;
     for( i = 0; i < length; ++i ){
-        f[decodedMsgPartNoInterleave.plain[i]]++;
+        f[ echar_0_based_index( decodedMsgPartNoInterleave.plain[i] ) ]++;
     }
 
     uint16_t S0, S1, S2, S3;
@@ -60,7 +60,7 @@ static int uniscoreNoInterleave( const struct Key* const key, scoreLength_t len 
     uint8_t i;
     uint8_t length = len;
     for ( i = 0; i < length; i++) {
-        s += unidict[decodedMsgPartNoInterleave.plain[i]];
+        s += unidict[ echar_0_based_index( decodedMsgPartNoInterleave.plain[i] ) ];
     }
     return s;
 }

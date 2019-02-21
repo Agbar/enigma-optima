@@ -91,7 +91,7 @@ void DecodeScoredMessagePartSsse3( const struct Key* const restrict key, int len
         }
         cBite = DecodeBiteBackwardCommonSsse3( cBite, currentRRingOffset, key );
         // store whole decoded bite
-        output -> vector16[messageBite] = cBite.vector;
+        output -> vector16[messageBite] = cBite;
         messageBite++;
         currentRRingOffset = v16_echar_delta_rot_16( currentRRingOffset );
     }
@@ -104,7 +104,7 @@ uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, sc
     uint8_t ALIGNED_32( f[32] ) = {0};
     int i;
     for( i = 0; i < len; i++ ) {
-        f[msg->plain[i]]++;
+        f[ echar_0_based_index( msg->plain[i] ) ]++;
     }
     v16qi* const v = ( v16qi* ) f; // it makes v16hi[2];
     // short result[i] = v0[2*i] * ( v0[2*i] + minusOne ) + v0[2*i+1] * ( v0[2*i+1] + minusOne );
@@ -189,7 +189,9 @@ int ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLe
         }
     }
     for( ; i < len - 2; ++i ) {
-        score += tridict[msg->plain[i]][msg->plain[i + 1]][msg->plain[i + 2]];
+        score += tridict[ echar_0_based_index( msg->plain[i] ) ]
+                        [ echar_0_based_index( msg->plain[i + 1] ) ]
+                        [ echar_0_based_index( msg->plain[i + 2] ) ];
     }
     return score;
 }
@@ -220,7 +222,8 @@ int ComputeBiscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLen
         }
     }
     for( ; i < len - 1; ++i ) {
-        score += bidict[msg->plain[i]][msg->plain[i + 1]];
+        score += bidict[ echar_0_based_index( msg->plain[i] ) ]
+                       [ echar_0_based_index( msg->plain[i + 1] ) ];
     }
     return score;
 }

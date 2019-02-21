@@ -62,18 +62,10 @@ union ScoringDecodedMessage
 #if ((((CT)+15)/16) * 16) != (((CT)+15)&~15)
 # error Wrong ScoringDecodedMessage member sizes.
 #endif
-    v16qi vector16[(CT+15)/16];
-    v32qi vector32[(CT+31)/32];
-    text_t plain[(CT+15)&~15];
+    union v16_echar vector16[(CT+15)/16];
+    union v32_echar vector32[(CT+31)/32];
+    struct echar plain[(CT+15)&~15];
 };
-
-inline
-void PrintDecodedMessage( FILE* stream, union ScoringDecodedMessage* message, int length ){
-    int i = 0;
-    for ( ; i< length; ++i ){
-        fputc( message->plain[i] + 'A', stream );
-    }
-}
 
 void DecodeScoredMessagePartStandard(const struct Key* restrict key, int len, union ScoringDecodedMessage* restrict output);
 

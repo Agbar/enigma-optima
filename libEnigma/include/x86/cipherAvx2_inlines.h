@@ -92,7 +92,7 @@ void DecodeScoredMessagePartAvx2( const struct Key* const restrict key, int len,
         }
         cBite = DecodeBiteBackwardCommonAvx2( cBite, currentRRingOffset, key );
         // store whole decoded bite
-        output -> vector32[messageBite] = cBite.vector;
+        output -> vector32[messageBite] = cBite;
         messageBite++;
         currentRRingOffset = v32_echar_delta_rot_32( currentRRingOffset );
     }
@@ -105,7 +105,7 @@ uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, sco
     ALIGNED_32( uint8_t f[32] ) = {0};
     int i;
     for( i = 0; i < len; i++ ) {
-        f[msg->plain[i]]++;
+        f[ echar_0_based_index( msg->plain[i] ) ]++;
     }
 
     v32qi v;
