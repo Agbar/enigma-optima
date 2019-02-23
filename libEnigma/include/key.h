@@ -74,6 +74,9 @@ struct RingType {
     } type;
 };
 
+char
+RingType_to_ALPHA( struct RingType rt );
+
 struct GreekRingType {
     enum greek_ring_type_enum {
         GreekRingType_None = 0,
@@ -82,6 +85,9 @@ struct GreekRingType {
         __GreekRingType__enforce_signed_type = -1, 
     } type;
 };
+
+char
+GreekRingType_to_ALPHA( struct GreekRingType rt );
 
 struct RingTypes 
 {

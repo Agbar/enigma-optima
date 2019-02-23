@@ -11,6 +11,8 @@
 #include "state.h"
 #include "resume_out.h"
 
+static
+void print_key_rings( const struct Key * key, char buffer[16] );
 
 void print_state(FILE *fp, const State *state)
 {
@@ -32,56 +34,13 @@ void print_state(FILE *fp, const State *state)
   else if (from->model == EnigmaModel_M3) fprintf(fp, "M3=");
   else if (from->model == EnigmaModel_M4) fprintf(fp, "M4=");
 
-  if (from->model != EnigmaModel_M4) {
-    fprintf(fp,
-    "%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=",
-     UkwType_to_ALPHA( from->ukwnum ),
-    from->slot.l.type, from->slot.m.type, from->slot.r.type,
-    echar_delta_to_ALPHA( from->ring.m ), echar_delta_to_ALPHA( from->ring.r ),
-    echar_delta_to_ALPHA( from->mesg.l ), echar_delta_to_ALPHA( from->mesg.m ),
-    echar_delta_to_ALPHA( from->mesg.r ),
-    UkwType_to_ALPHA( to->ukwnum),
-    to->slot.l.type, to->slot.m.type, to->slot.r.type,
-    echar_delta_to_ALPHA( to->ring.m ), echar_delta_to_ALPHA( to->ring.r ),
-    echar_delta_to_ALPHA( to->mesg.l ), echar_delta_to_ALPHA( to->mesg.m ),
-    echar_delta_to_ALPHA( to->mesg.r ),
-    UkwType_to_ALPHA( ckey->ukwnum ),
-    ckey->slot.l.type, ckey->slot.m.type, ckey->slot.r.type,
-    echar_delta_to_ALPHA( ckey->ring.m ), echar_delta_to_ALPHA( ckey->ring.r ),
-    echar_delta_to_ALPHA( ckey->mesg.l ), echar_delta_to_ALPHA( ckey->mesg.m ),
-    echar_delta_to_ALPHA( ckey->mesg.r ));
-  }
-  else {
-    fprintf(fp,
-    "%c:%c%d%d%d:%c%c:%c%c%c%c=%c:%c%d%d%d:%c%c:%c%c%c%c=%c:%c%d%d%d:%c%c:%c%c%c%c=",
-    // from
-    UkwType_to_ALPHA( from->ukwnum ),
-    //:
-    from->slot.g.type == GreekRingType_Beta ? 'B' : 'G', from->slot.l.type, from->slot.m.type, from->slot.r.type,
-    //:
-    echar_delta_to_ALPHA( from->ring.m ), echar_delta_to_ALPHA( from->ring.r ) ,
-    //:
-    echar_delta_to_ALPHA( from->mesg.g ), echar_delta_to_ALPHA( from->mesg.l ) ,
-    echar_delta_to_ALPHA( from->mesg.m ), echar_delta_to_ALPHA( from->mesg.r ) ,
-    //= // to
-    UkwType_to_ALPHA( to->ukwnum ),
-    //:
-    to->slot.g.type == GreekRingType_Beta ? 'B' : 'G', to->slot.l.type, to->slot.m.type, to->slot.r.type,
-    //:
-    echar_delta_to_ALPHA( to->ring.m ), echar_delta_to_ALPHA( to->ring.r ),
-    //:
-    echar_delta_to_ALPHA( to->mesg.g ), echar_delta_to_ALPHA( to->mesg.l ),
-    echar_delta_to_ALPHA( to->mesg.m ), echar_delta_to_ALPHA( to->mesg.r ),
-    //= // current
-    UkwType_to_ALPHA( ckey->ukwnum ),
-    //:
-    ckey->slot.g.type == GreekRingType_Beta ? 'B' : 'G', ckey->slot.l.type, ckey->slot.m.type, ckey->slot.r.type,
-    //:
-    echar_delta_to_ALPHA( ckey->ring.m ), echar_delta_to_ALPHA( ckey->ring.r ),
-    //:
-    echar_delta_to_ALPHA( ckey->mesg.g ), echar_delta_to_ALPHA( ckey->mesg.l ),
-    echar_delta_to_ALPHA( ckey->mesg.m ), echar_delta_to_ALPHA( ckey->mesg.r ));
-  }
+    char from_buffer[16];
+    char to_buffer[16];
+    char ckey_buffer[16];
+    print_key_rings( from, from_buffer );
+    print_key_rings( to, to_buffer );
+    print_key_rings( ckey, ckey_buffer );
+    fprintf( fp, "%s%s%s", from_buffer, to_buffer, ckey_buffer );
 
   fprintf(fp, "%d=", *sw_mode);
   fprintf(fp, "%d=", *pass);
@@ -94,24 +53,9 @@ void print_state(FILE *fp, const State *state)
   else if (from->model == EnigmaModel_M3) fprintf(fp, "M3=");
   else if (from->model== EnigmaModel_M4) fprintf(fp, "M4=");
 
-  if (from->model != EnigmaModel_M4) {
-    fprintf(fp,
-    "%c:%d%d%d:%c%c:%c%c%c=",
-    UkwType_to_ALPHA( gkey->ukwnum ),
-    gkey->slot.l.type, gkey->slot.m.type, gkey->slot.r.type,
-    echar_delta_to_ALPHA( gkey->ring.m ), echar_delta_to_ALPHA( gkey->ring.r ),
-    echar_delta_to_ALPHA( gkey->mesg.l ), echar_delta_to_ALPHA( gkey->mesg.m ),
-    echar_delta_to_ALPHA( gkey->mesg.r ));
-  }
-  else {
-    fprintf(fp,
-    "%c:%c%d%d%d:%c%c:%c%c%c%c=",
-    UkwType_to_ALPHA( gkey->ukwnum ),
-    gkey->slot.g.type == GreekRingType_Beta ? 'B' : 'G', gkey->slot.l.type, gkey->slot.m.type, gkey->slot.r.type,
-    echar_delta_to_ALPHA( gkey->ring.m ), echar_delta_to_ALPHA( gkey->ring.r ),
-    echar_delta_to_ALPHA( gkey->mesg.g ), echar_delta_to_ALPHA( gkey->mesg.l ),
-    echar_delta_to_ALPHA( gkey->mesg.m ), echar_delta_to_ALPHA( gkey->mesg.r ));
-  }
+    char gkey_buffer[16];
+    print_key_rings( gkey, gkey_buffer );
+    fprintf( fp, "%s", gkey_buffer );
 
   for (i = 0; i < gkey->count; i++)
     stecker[i] = toupper(alpha[ echar_0_based_index( gkey->sf.map[i] ) ]);
@@ -128,6 +72,36 @@ void print_state(FILE *fp, const State *state)
   fsync(ofd);
 #endif
 }
+
+static
+void print_key_rings( const struct Key * key, char buffer[16] ){
+    size_t buflen = 16;
+    if( key->model  != EnigmaModel_M4 ){
+        snprintf ( buffer, buflen,
+          "%c:%c%c%c:%c%c:%c%c%c=",
+          UkwType_to_ALPHA( key->ukwnum ),
+          // :
+          RingType_to_ALPHA( key->slot.l ), RingType_to_ALPHA( key->slot.m ), RingType_to_ALPHA( key->slot.r),
+          // :
+          echar_delta_to_ALPHA( key->ring.m ), echar_delta_to_ALPHA( key->ring.r ),
+          // :
+          echar_delta_to_ALPHA( key->mesg.l ), echar_delta_to_ALPHA( key->mesg.m ),
+          echar_delta_to_ALPHA( key->mesg.r ) );
+    }
+    else {
+      snprintf ( buffer, buflen,
+        "%c:%c%c%c%c:%c%c:%c%c%c%c=",
+        UkwType_to_ALPHA( key->ukwnum ),
+        //:
+        GreekRingType_to_ALPHA( key->slot.g ), RingType_to_ALPHA( key->slot.l ), RingType_to_ALPHA( key->slot.m ), RingType_to_ALPHA( key->slot.r ),
+        //:
+        echar_delta_to_ALPHA( key->ring.m ), echar_delta_to_ALPHA( key->ring.r ) ,
+        //:
+        echar_delta_to_ALPHA( key->mesg.g ), echar_delta_to_ALPHA( key->mesg.l ) ,
+        echar_delta_to_ALPHA( key->mesg.m ), echar_delta_to_ALPHA( key->mesg.r ) );
+    }
+}
+
 
 
 /*

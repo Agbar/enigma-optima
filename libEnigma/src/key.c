@@ -2,6 +2,16 @@
 #include "key.h"
 
 char
+RingType_to_ALPHA( struct RingType rt ){
+    return '0' + rt.type;
+}
+
+char
+GreekRingType_to_ALPHA( struct GreekRingType rt ){
+    return "BG"[rt.type-9];
+}
+
+char
 UkwType_to_ALPHA( struct UkwType u ){
     return "ABCAB"[u.type];
 }
