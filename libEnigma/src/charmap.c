@@ -7,7 +7,6 @@
 
 
 text_t code[UCHAR_MAX+1];
-const unsigned char alpha[27] = "abcdefghijklmnopqrstuvwxyz";
 
 void init_charmap(void)
 {
@@ -17,8 +16,8 @@ void init_charmap(void)
     code[i] = 26;
 
   for (i = 0; i < 26; i++) {
-    code[alpha[i]] = i;
-    code[toupper(alpha[i])] = i;
+    code['a' + i] = i;
+    code['A' + i] = i;
   }
 }
 

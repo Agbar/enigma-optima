@@ -9,5 +9,5 @@ make_echar_delta_ascii( unsigned char ascii ){
 }
 
 char echar_delta_to_ALPHA( struct echar_delta d ){
-    return toupper( alpha[d.delta] );
+    return 'A' + d.delta;
 }

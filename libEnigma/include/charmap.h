@@ -5,7 +5,6 @@
 #include "config/types.h"
 
 extern text_t code[];
-extern const unsigned char alpha[];
 void init_charmap(void);
 
 #endif
