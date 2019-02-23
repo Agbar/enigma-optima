@@ -32,7 +32,7 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st UNUSED )
 
     for( size_t i = 0 ; i < sizeof ct; ++i )
     {
-        ciphertext.plain[i] = make_echar( code[ct[i]] );
+        ciphertext.plain[i] = make_echar_ascii( ct[i] );
     }
 
     key.slot = { /*.g:*/ {}, /*.l:*/ {rt::RingType_5}, /*.m:*/ {rt::RingType_3}, /*.r:*/ {rt::RingType_2} };

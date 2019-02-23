@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#include "charmap.h"
 #include "echar_data.h"
 #include "echar_delta_data.h"
 #include "global.h"
@@ -13,6 +14,17 @@
 static inline 
 struct echar make_echar( int8_t zero_based ){
     return (struct echar) { .encoded = zero_based };
+}
+
+static inline 
+bool
+echar_can_make_from_ascii( unsigned char ascii ){
+    return code[ascii] != 26;
+}
+
+static inline 
+struct echar make_echar_ascii( unsigned char ascii ){
+    return (struct echar) { .encoded = code[ascii] };
 }
 
 CONST_FUNCTION

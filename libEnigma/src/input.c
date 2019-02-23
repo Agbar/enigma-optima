@@ -125,8 +125,9 @@ int set_ring( struct Key *const key, char *s, enum ModelType_t model)
 
   x = s;
   while (*x != '\0') {
-    if (code[(unsigned char)*x] == 26)
+    if ( !echar_can_make_from_ascii( *x ) ){
       return 0;
+    }
     x++;
   }
 
@@ -160,8 +161,9 @@ int set_mesg( struct Key *const key, char *s, enum ModelType_t model)
 
   x = s;
   while (*x != '\0') {
-    if (code[(unsigned char)*x] == 26)
+    if ( !echar_can_make_from_ascii( *x ) ){
       return 0;
+    }
     x++;
   }
 
@@ -201,15 +203,16 @@ int set_stecker( struct Key *const key, char *s)
   x = s;
   while (*x != '\0') {
     /* alphabetic, no repetitions */
-    if (code[(unsigned char)*x] == 26 || strrchr(x, *x) != x)
+    if ( !echar_can_make_from_ascii( *x ) || strrchr(x, *x) != x){
       return 0;
+    }
     x++;
   }
 
   /* swap appropriate letters */
   x = s;
   while (*x != '\0') {
-    SwapStbrett(key, make_echar( code[(unsigned char)*x] ), make_echar( code[(unsigned char)*(x+1)] ) );
+    SwapStbrett(key, make_echar_ascii( x[0] ), make_echar_ascii( x[1] ) );
     x += 2;
   }
 
