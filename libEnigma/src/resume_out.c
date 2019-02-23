@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <ctype.h>
 
 #ifndef WINDOWS
 # include <unistd.h>
@@ -57,8 +56,9 @@ void print_state(FILE *fp, const State *state)
     print_key_rings( gkey, gkey_buffer );
     fprintf( fp, "%s", gkey_buffer );
 
-  for (i = 0; i < gkey->count; i++)
-    stecker[i] = toupper(alpha[ echar_0_based_index( gkey->sf.map[i] ) ]);
+  for (i = 0; i < gkey->count; i++){
+    stecker[i] =  echar_to_ALPHA( gkey->sf.map[i] );
+  }
   stecker[i] = '\0';
   fprintf(fp, "%s=", stecker);
 

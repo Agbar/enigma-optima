@@ -29,6 +29,16 @@ struct echar make_echar_ascii( unsigned char ascii ){
 
 CONST_FUNCTION
 static inline
+char echar_to_alpha( struct echar e ){
+    return e.encoded + 'a';
+}
+
+static inline
+char echar_to_ALPHA( struct echar e ){
+    return e.encoded + 'A';
+}
+
+static inline
 uint_fast8_t echar_0_based_index( struct echar c ){
     return c.encoded;
 }

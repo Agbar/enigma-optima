@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 #include <limits.h>
 
 #ifndef WINDOWS
@@ -39,7 +38,7 @@ void print_plaintext(FILE *fp, const struct Key *const key, int len)
 
   for (i = 0; i < len; i++) {
     struct echar c = decode(0,i,&key->stbrett);
-    fputc(alpha[ echar_0_based_index( c ) ], fp);
+    fputc( echar_to_alpha( c ), fp);
   }
   fputc('\n', fp);
   fputc('\n', fp);
@@ -62,8 +61,9 @@ void print_key(FILE *fp, const struct Key *const key)
   datestring(date);
   fprintf(fp, "Date: %s\n", date);
 
-  for (i = 0; i < key->count; i++)
-    stecker[i] = toupper(alpha[ echar_0_based_index( key->sf.map[i] ) ]);
+  for (i = 0; i < key->count; i++){
+    stecker[i] = echar_to_ALPHA ( key->sf.map[i] );
+  }
   stecker[i] = '\0';
 
   if (key->model != EnigmaModel_M4) {
