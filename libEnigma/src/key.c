@@ -84,32 +84,19 @@ int keycmp(const struct Key *k1, const struct Key *k2)
     if ( k1->slot.r.type >  k2->slot.r.type ) return 1;
     else return -1;
   }
-  if (  k1->ring.m != k2->ring.m ) {
-    if ( k1->ring.m > k2->ring.m ) return 1;
-    else return -1;
-  }
-  if (  k1->ring.r != k2->ring.r ) {
-    if ( k1->ring.r > k2->ring.r ) return 1;
-    else return -1;
-  }
-  if (  k1->mesg.g != k2->mesg.g ) {
-    if ( k1->mesg.g > k2->mesg.g ) return 1;
-    else return -1;
-  }
-  if (  k1->mesg.l != k2->mesg.l ) {
-    if ( k1->mesg.l > k2->mesg.l ) return 1;
-    else return -1;
-  }
-  if (  k1->mesg.m != k2->mesg.m ) {
-    if ( k1->mesg.m > k2->mesg.m ) return 1;
-    else return -1;
-  }
-  if (  k1->mesg.r != k2->mesg.r ) {
-    if ( k1->mesg.r > k2->mesg.r ) return 1;
-    else return -1;
-  }
-  return 0;
-
+  enum comparison_result cr;
+  cr = echar_delta_cmp( k1->ring.m, k2->ring.m );
+  if( cr != cmp_equal ) return cr;
+  cr = echar_delta_cmp( k1->ring.r, k2->ring.r );
+  if( cr != cmp_equal ) return cr;
+  cr = echar_delta_cmp( k1->mesg.g, k2->mesg.g );
+  if( cr != cmp_equal ) return cr;
+  cr = echar_delta_cmp( k1->mesg.l, k2->mesg.l );
+  if( cr != cmp_equal ) return cr;
+  cr = echar_delta_cmp( k1->mesg.m, k2->mesg.m );
+  if( cr != cmp_equal ) return cr;
+  cr = echar_delta_cmp( k1->mesg.r, k2->mesg.r );  
+  return cr;
 }
 
 /*

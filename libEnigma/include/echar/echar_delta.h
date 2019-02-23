@@ -1,23 +1,55 @@
 #pragma once
 
 #include <assert.h>
+#include <stdbool.h>
 
 #include "echar_delta_data.h"
+#include "turnover_data.h"
+
 #include "ModMath.h"
+
+enum comparison_result 
+{
+    cmp_less = -1,
+    cmp_equal = 0,
+    cmp_greater = 1
+};
+
+struct echar_delta
+make_echar_delta_ascii( unsigned char ascii );
 
 static inline
 struct echar_delta
-make_char_delta_plus_minus( uint8_t plus_offset,  uint8_t minus_offset ){
-    assert( plus_offset < 26 );
-    assert( minus_offset < 26 );
-    int8_t d = plus_offset - minus_offset;
-    if( d < 0 ) d += 26;
-    return (struct echar_delta) { .delta = (uint8_t)d };
+make_echar_delta_turnover( struct turnover t ){
+    return (struct echar_delta ){ .delta = t.notch };
 }
 
 static inline
 void echar_delta_rot_1( struct echar_delta* char_delta ){
     IncrementModU( &char_delta->delta, 26 );
+}
+
+static inline
+void echar_delta_rot_13( struct echar_delta* char_delta ){
+    char_delta->delta = AddMod26( char_delta->delta, 13 );
+}
+
+static inline
+void echar_delta_rot_15( struct echar_delta* char_delta ){
+    char_delta->delta = AddMod26( char_delta->delta, 15 );
+}
+
+static inline
+void echar_delta_rot_31( struct echar_delta* char_delta ){
+    char_delta->delta = AddMod26( char_delta->delta, 31 % 26 );
+}
+
+static inline
+enum comparison_result
+echar_delta_cmp( struct echar_delta l, struct echar_delta r ){
+    if( l.delta == r.delta ) return cmp_equal;
+    if( l.delta <  r.delta ) return cmp_less;
+    return cmp_greater;
 }
 
 static inline
@@ -38,6 +70,8 @@ echar_delta_invert( struct echar_delta d ){
     if( inv < 0 ) inv += 26;
     return (struct echar_delta) { .delta = (uint8_t)inv };
 }
+
+char echar_delta_to_ALPHA( struct echar_delta d );
 
 static inline
 union v16_echar_delta 

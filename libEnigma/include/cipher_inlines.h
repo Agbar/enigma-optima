@@ -7,26 +7,29 @@
 #include "common.h"
 #include "key.h"
 
+#include "echar/echar_delta.h"
+#include "echar/turnover.h"
+
 static inline
 void StepAllRings( struct RingsState* const restrict rings, const struct Turnovers_t turns )
 {
     // check if m,l rings will be turned
     bool p2 = 0, p3 = 0;
-    if( rings->r == turns.r || rings->r == turns.r2 ) {
+    if( turnover_eq_echar_delta( turns.r, rings->r ) || turnover_eq_echar_delta( turns.r2, rings->r ) ) {
         p2 = 1;
     }
     /* in reality pawl 3 steps both m_wheel and l_wheel */
-    if( rings->m == turns.m || rings->m == turns.m2 ) {
+    if( turnover_eq_echar_delta( turns.m, rings->m ) || turnover_eq_echar_delta( turns.m2, rings->m ) ) {
         p3 = 1;
         p2 = 1;
     }
     // turn rings
-    Step1( &rings->r );
+    echar_delta_rot_1( &rings->r );
     if( p2 ) {
-        Step1( &rings->m );
+        echar_delta_rot_1( &rings->m );
     }
     if( p3 ) {
-        Step1( &rings->l );
+        echar_delta_rot_1( &rings->l );
     }
 }
 
@@ -40,36 +43,27 @@ void CopyRRing2Lookup( const struct Key* const restrict key, union PermutationMa
 
 //! \brief Return position of R ring on next turnover
 static inline
-int8_t GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns )
+struct echar_delta
+GetNextTurnover( const struct RingsState rings, const struct Turnovers_t turns )
 {
     // turnover caused by M-ring (double step)
-    if ( turns.m2 == rings.m || turns.m == rings.m ) return rings.r; //Turnover now!
+    if ( turnover_eq_echar_delta( turns.m2,rings.m ) || turnover_eq_echar_delta( turns.m, rings.m ) ) return rings.r; //Turnover now!
     // normal Turnover caused by R-ring
-    if( turns.r2 == -1)
+    if( turnover_eq_absent( turns.r2 ) )
     {
-        return turns.r;
+        return make_echar_delta_turnover( turns.r );
     }
     // double notched R-ring
-    assert( turns.r2 > turns.r );
-    if( rings.r <= turns.r )
-    {
-        return turns.r;
-    }
-    else if ( rings.r <= turns.r2 )
-    {
-        return turns.r2;
-    }
-    else
-    {
-        return turns.r;
-    }
+    assert( turns.r2.notch > turns.r.notch );
+    struct turnover next = turnover_select_next( rings.r, turns.r, turns.r2);
+    return make_echar_delta_turnover( next );
 }
 
 static inline
 void CalculatePermutationMap3Rotors( union PermutationMap_t* const restrict map, struct RingsState rings, const struct Key* const restrict key ) {
     struct echar_delta
-        m_offset = { .delta = (uint8_t)rings.m },
-        l_offset = { .delta = (uint8_t)rings.l };
+        m_offset = rings.m ,
+        l_offset = rings.l ;
     struct echar_delta 
         m_l_offset = echar_delta_sub( l_offset, m_offset ),
         inv_l_offset = echar_delta_invert( l_offset ),
@@ -91,9 +85,9 @@ void CalculatePermutationMap3Rotors( union PermutationMap_t* const restrict map,
 static inline
 void CalculatePermutationMap4Rotors( union PermutationMap_t* const restrict map, struct RingsState rings, const struct Key* const restrict key ) {
     struct echar_delta
-        m_offset = { .delta = (uint8_t)rings.m },
-        l_offset = { .delta = (uint8_t)rings.l },
-        g_offset = { .delta = (uint8_t)rings.g };
+        m_offset = rings.m ,
+        l_offset = rings.l ,
+        g_offset = rings.g ;
     struct echar_delta 
         m_l_offset = echar_delta_sub( l_offset, m_offset ),
         l_g_offset = echar_delta_sub( g_offset, l_offset ),

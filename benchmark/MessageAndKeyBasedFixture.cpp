@@ -36,8 +36,11 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st UNUSED )
     }
 
     key.slot = { /*.g:*/ {}, /*.l:*/ {rt::RingType_5}, /*.m:*/ {rt::RingType_3}, /*.r:*/ {rt::RingType_2} };
-    key.ring = { /*.g:*/ 0, /*.l:*/ 0, /*.m:*/0, /*.r:*/ 0 }; // AAA
-    key.mesg = { /*.g:*/ 0, /*.l:*/ 0, /*.m:*/'V' - 'A', /*.r:*/ 0 }; // AVA
+    struct echar_delta 
+        dA = make_echar_delta_ascii( 'A' ),
+        dV = make_echar_delta_ascii( 'V' );
+    key.ring = { /*.g:*/ {}, /*.l:*/ dA, /*.m:*/ dA, /*.r:*/ dA }; // AAA
+    key.mesg = { /*.g:*/ {}, /*.l:*/ dA, /*.m:*/ dV, /*.r:*/ dA }; // AVA
     key.ukwnum = 'B' - 'A';
     key.model = EnigmaModel_M3;
 

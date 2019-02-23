@@ -28,4 +28,6 @@ PRIVATE
     "src/x86/scoreAvx.c"
     "src/x86/scoreAvx2.c"
     "src/x86/scoreSsse3.c"
+
+    "src/echar/echar_delta.c"
 )

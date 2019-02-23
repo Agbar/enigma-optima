@@ -139,14 +139,14 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
         if (ckey.slot.m.type == ckey.slot.l.type) continue;
        for (ckey.slot.r=lo.slot.r; ckey.slot.r.type<=hi[m][5]; ckey.slot.r.type++) {
          if (ckey.slot.r.type == ckey.slot.l.type || ckey.slot.r.type == ckey.slot.m.type) continue;
-        for (ckey.ring.m=lo.ring.m; ckey.ring.m<=hi[m][6]; ckey.ring.m++) {
-          if (ckey.slot.m.type > 5 && ckey.ring.m > 12) continue;
-         for (ckey.ring.r=lo.ring.r; ckey.ring.r<=hi[m][7]; ckey.ring.r++) {
-           if (ckey.slot.r.type > 5 && ckey.ring.r > 12) continue;
-          for (ckey.mesg.g=lo.mesg.g; ckey.mesg.g<=hi[m][8]; ckey.mesg.g++) {
-           for (ckey.mesg.l=lo.mesg.l; ckey.mesg.l<=hi[m][9]; ckey.mesg.l++) {
-            for (ckey.mesg.m=lo.mesg.m; ckey.mesg.m<=hi[m][10]; ckey.mesg.m++) {
-             for (ckey.mesg.r=lo.mesg.r; ckey.mesg.r<=hi[m][11]; ckey.mesg.r++) {
+        for (ckey.ring.m=lo.ring.m; ckey.ring.m.delta<=hi[m][6]; ckey.ring.m.delta++) {
+          if (ckey.slot.m.type > 5 && ckey.ring.m.delta > 12) continue;
+         for (ckey.ring.r=lo.ring.r; ckey.ring.r.delta<=hi[m][7]; ckey.ring.r.delta++) {
+           if (ckey.slot.r.type > 5 && ckey.ring.r.delta > 12) continue;
+          for (ckey.mesg.g=lo.mesg.g; ckey.mesg.g.delta<=hi[m][8]; ckey.mesg.g.delta++) {
+           for (ckey.mesg.l=lo.mesg.l; ckey.mesg.l.delta<=hi[m][9]; ckey.mesg.l.delta++) {
+            for (ckey.mesg.m=lo.mesg.m; ckey.mesg.m.delta<=hi[m][10]; ckey.mesg.m.delta++) {
+             for (ckey.mesg.r=lo.mesg.r; ckey.mesg.r.delta<=hi[m][11]; ckey.mesg.r.delta++) {
 
                if (doShutdown)
                  save_state_exit(state, 111);

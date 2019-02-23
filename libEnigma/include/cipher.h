@@ -15,7 +15,7 @@
 #include "character_encoding.h"
 
 struct Turnovers_t {
-    int8_t r,
+    struct turnover r,
      r2,
      m,
      m2;
@@ -54,7 +54,7 @@ size_t double_index( struct echar in, struct echar_delta offset ){
 /*
  * decoders common data
  *************************/
-extern text_t wal_turn[9];
+extern const struct turnover wal_turn[9];
 extern const union DoublePermutationMap     wal[11];
 extern const union DoublePermutationMap rev_wal[11];
 extern const union DoublePermutationMap     ukw[ 5];

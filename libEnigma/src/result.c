@@ -78,10 +78,10 @@ Message key: %c%c%c\n\n",
     toupper(alpha[key->ukwnum]),
     key->slot.l.type, key->slot.m.type, key->slot.r.type,
     stecker,
-    toupper(alpha[key->ring.l]), toupper(alpha[key->ring.m]),
-    toupper(alpha[key->ring.r]),
-    toupper(alpha[key->mesg.l]), toupper(alpha[key->mesg.m]),
-    toupper(alpha[key->mesg.r]));
+    echar_delta_to_ALPHA( key->ring.l ), echar_delta_to_ALPHA( key->ring.m ),
+    echar_delta_to_ALPHA( key->ring.r ),
+    echar_delta_to_ALPHA( key->mesg.l ), echar_delta_to_ALPHA( key->mesg.m ),
+    echar_delta_to_ALPHA( key->mesg.r ));
   }
   else {
     fprintf(fp,
@@ -95,10 +95,10 @@ Message key: %c%c%c%c\n\n",
     key->ukwnum == 3 ? 'B' : 'C',
     key->slot.g.type == GreekRingType_Beta ? 'B' : 'G', key->slot.l.type, key->slot.m.type, key->slot.r.type,
     stecker,
-    toupper(alpha[key->ring.g]), toupper(alpha[key->ring.l]),
-    toupper(alpha[key->ring.m]), toupper(alpha[key->ring.r]),
-    toupper(alpha[key->mesg.g]), toupper(alpha[key->mesg.l]),
-    toupper(alpha[key->mesg.m]), toupper(alpha[key->mesg.r]));
+    echar_delta_to_ALPHA( key->ring.g ), echar_delta_to_ALPHA( key->ring.l ),
+    echar_delta_to_ALPHA( key->ring.m ), echar_delta_to_ALPHA( key->ring.r ),
+    echar_delta_to_ALPHA( key->mesg.g ), echar_delta_to_ALPHA( key->mesg.l ),
+    echar_delta_to_ALPHA( key->mesg.m ), echar_delta_to_ALPHA( key->mesg.r ));
   }
 
   fflush(fp);

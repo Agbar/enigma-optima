@@ -56,7 +56,7 @@ void Fill0To25_echar( struct echar array[26] ){
  * * * * * * */
 struct RingsState
 {
-    int8_t g, l, m, r;
+    struct echar_delta g, l, m, r;
 };
 
 struct RingType {

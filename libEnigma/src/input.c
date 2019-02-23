@@ -131,11 +131,12 @@ int set_ring( struct Key *const key, char *s, enum ModelType_t model)
   }
 
   x = s;
-  if (model == EnigmaModel_M4)
-    key->ring.g = code[(unsigned char)*x++];
-  key->ring.l = code[(unsigned char)*x++];
-  key->ring.m = code[(unsigned char)*x++];
-  key->ring.r = code[(unsigned char)*x];
+  if (model == EnigmaModel_M4){
+      key->ring.g = make_echar_delta_ascii( *x++ );
+  }
+  key->ring.l = make_echar_delta_ascii( *x++ );
+  key->ring.m = make_echar_delta_ascii( *x++ );
+  key->ring.r = make_echar_delta_ascii( *x );
 
   return 1;
 }
@@ -165,11 +166,12 @@ int set_mesg( struct Key *const key, char *s, enum ModelType_t model)
   }
 
   x = s;
-  if (model == EnigmaModel_M4)
-    key->mesg.g = code[(unsigned char)*x++];
-  key->mesg.l = code[(unsigned char)*x++];
-  key->mesg.m = code[(unsigned char)*x++];
-  key->mesg.r = code[(unsigned char)*x];
+  if ( model == EnigmaModel_M4 ){
+    key->mesg.g = make_echar_delta_ascii( *x++ );
+  }
+  key->mesg.l = make_echar_delta_ascii( *x++ );
+  key->mesg.m = make_echar_delta_ascii( *x++ );
+  key->mesg.r = make_echar_delta_ascii( *x );
 
   return 1;
 }
@@ -306,18 +308,18 @@ int set_key( struct Key *const key, const char *keystring, enum ModelType_t mode
 
 
     /* error checking for rings */
-    if ( key->slot.m.type > 5 && key->ring.m > 12 ) {
+    if ( key->slot.m.type > 5 && key->ring.m.delta > 12 ) {
       if (adjust) {
-        key->ring.m = (key->ring.m + 13) % 26;
-        key->mesg.m = (key->mesg.m + 13) % 26;
+        echar_delta_rot_13( &key->ring.m );
+        echar_delta_rot_13( &key->mesg.m );
       }
       else
         err_input_fatal(ERR_RING_SHORTCUT);
     }
-    if ( key->slot.r.type > 5 && key->ring.r > 12 ) {
+    if ( key->slot.r.type > 5 && key->ring.r.delta > 12 ) {
       if (adjust) {
-        key->ring.r = (key->ring.r + 13) % 26;
-        key->mesg.r = (key->mesg.r + 13) % 26;
+        echar_delta_rot_13( &key->ring.r );
+        echar_delta_rot_13( &key->mesg.r );
       }
       else
         err_input_fatal(ERR_RING_SHORTCUT);

@@ -92,7 +92,7 @@ const union DoublePermutationMap rev_wal[11] = {
 
 
 /* Turnover points:  Walzen 1-5, Walzen 6-8 (/first/ turnover points) */
-text_t wal_turn[9] = {0, 16, 4, 21, 9, 25, 12, 12, 12};
+const struct turnover wal_turn[9] = {{0}, {16}, {4}, {21}, {9}, {25}, {12}, {12}, {12}};
 
 union PermutationMap_t path_lookup[CT];
 
@@ -144,42 +144,42 @@ int scrambler_state(const struct Key* const key, int len)
   struct RingType m_slot = key->slot.m;
   struct RingType r_slot = key->slot.r;
 
-  int l_ring = key->ring.l;
-  int m_ring = key->ring.m;
-  int r_ring = key->ring.r;
-  int l_mesg = key->mesg.l;
-  int m_mesg = key->mesg.m;
-  int r_mesg = key->mesg.r;
+  struct echar_delta l_ring = key->ring.l;
+  struct echar_delta m_ring = key->ring.m;
+  struct echar_delta r_ring = key->ring.r;
+  struct echar_delta l_mesg = key->mesg.l;
+  struct echar_delta m_mesg = key->mesg.m;
+  struct echar_delta r_mesg = key->mesg.r;
 
-  int l_offset, m_offset, r_offset;
-  int m_turn, r_turn;
-  int m_turn2 = -1, r_turn2 = -1;
+  struct echar_delta l_offset, m_offset, r_offset;
+  struct turnover m_turn, r_turn;
+  struct turnover m_turn2 = turnover_absent(), r_turn2 = turnover_absent();
   int p2 = 0, p3 = 0;
 
 
   /* calculate effective offset from ring and message settings */
-  r_offset = (26 + r_mesg-r_ring) % 26;
-  m_offset = (26 + m_mesg-m_ring) % 26;
-  l_offset = (26 + l_mesg-l_ring) % 26;
+  r_offset = echar_delta_sub( r_mesg, r_ring );
+  m_offset = echar_delta_sub( m_mesg, m_ring );
+  l_offset = echar_delta_sub( l_mesg, l_ring );
 
   /* calculate turnover points from ring settings */
-  r_turn = (26 + wal_turn[r_slot.type]-r_ring) % 26;
-  m_turn = (26 + wal_turn[m_slot.type]-m_ring) % 26;
+  r_turn = turnover_sub_echar_delta( wal_turn[r_slot.type], r_ring );
+  m_turn = turnover_sub_echar_delta( wal_turn[m_slot.type], m_ring );
 
   /* second turnover points for wheels 6,7,8 */
   if (r_slot.type > 5)
-    r_turn2 = (26 + 25-r_ring) % 26;
+    r_turn2 = turnover_sub_echar_delta( turnover_second_notch(), r_ring );
   if (m_slot.type > 5)
-    m_turn2 = (26 + 25-m_ring) % 26;
+    m_turn2 = turnover_sub_echar_delta( turnover_second_notch(), m_ring );
 
 
   for (i = 0; i < len; i++) {
 
     /* determine if pawls are engaged */
-    if (r_offset == r_turn || r_offset == r_turn2)
+    if ( turnover_eq_echar_delta( r_turn, r_offset ) || turnover_eq_echar_delta( r_turn2, r_offset ) )
       p2 = 1;
     /* in reality pawl 3 steps both m_wheel and l_wheel */
-    if (m_offset == m_turn || m_offset == m_turn2) {
+    if ( turnover_eq_echar_delta( m_turn, m_offset ) || turnover_eq_echar_delta( m_turn2, m_offset ) ) {
       p3 = 1;
       p2 = 1;
       if (i == 0)
@@ -188,16 +188,13 @@ int scrambler_state(const struct Key* const key, int len)
         return SW_OTHER;
     }
 
-    r_offset++;
-    r_offset %= 26;
+    echar_delta_rot_1( &r_offset );
     if (p2) {
-      m_offset++;
-      m_offset %= 26;
+      echar_delta_rot_1( &m_offset );
       p2 = 0;
     }
     if (p3) {
-      l_offset++;
-      l_offset %= 26;
+      echar_delta_rot_1( &l_offset );
       p3 = 0;
     }
 
@@ -215,43 +212,43 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
   struct RingType l_slot = key->slot.l;
   struct RingType m_slot = key->slot.m;
   struct RingType r_slot = key->slot.r;
-  int l_ring = key->ring.l;
-  int m_ring = key->ring.m;
-  int r_ring = key->ring.r;
-  int l_mesg = key->mesg.l;
-  int m_mesg = key->mesg.m;
-  int r_mesg = key->mesg.r;
+  struct echar_delta l_ring = key->ring.l;
+  struct echar_delta m_ring = key->ring.m;
+  struct echar_delta r_ring = key->ring.r;
+  struct echar_delta l_mesg = key->mesg.l;
+  struct echar_delta m_mesg = key->mesg.m;
+  struct echar_delta r_mesg = key->mesg.r;
   int ukwnum = key->ukwnum;
 
-  int m_turn, r_turn;
-  int m_turn2 = -1, r_turn2 = -1;
+  struct turnover m_turn, r_turn;
+  struct turnover m_turn2 = turnover_absent(), r_turn2 = turnover_absent();
   int p2 = 0, p3 = 0;
 
 
     /* calculate effective offset from ring and message settings */
     struct echar_delta
-        r_offset = make_char_delta_plus_minus( r_mesg, r_ring ),
-        m_offset = make_char_delta_plus_minus( m_mesg, m_ring ),
-        l_offset = make_char_delta_plus_minus( l_mesg, l_ring );
+        r_offset = echar_delta_sub( r_mesg, r_ring ),
+        m_offset = echar_delta_sub( m_mesg, m_ring ),
+        l_offset = echar_delta_sub( l_mesg, l_ring );
 
   /* calculate turnover points from ring settings */
-  r_turn = (26 + wal_turn[r_slot.type]-r_ring) % 26;
-  m_turn = (26 + wal_turn[m_slot.type]-m_ring) % 26;
+  r_turn = turnover_sub_echar_delta( wal_turn[r_slot.type], r_ring );
+  m_turn = turnover_sub_echar_delta( wal_turn[m_slot.type], m_ring );
 
   /* second turnover points for wheels 6,7,8 */
   if (r_slot.type > 5)
-    r_turn2 = (26 + 25-r_ring) % 26;
+    r_turn2 = turnover_sub_echar_delta( turnover_second_notch(), r_ring );
   if (m_slot.type > 5)
-    m_turn2 = (26 + 25-m_ring) % 26;
+    m_turn2 = turnover_sub_echar_delta( turnover_second_notch(), m_ring );
 
 
   for (i = 0; i < len; i++) {
 
     /* determine if pawls are engaged */
-    if (r_offset.delta == r_turn || r_offset.delta == r_turn2)
+    if ( turnover_eq_echar_delta( r_turn, r_offset ) || turnover_eq_echar_delta( r_turn2, r_offset) )
       p2 = 1;
     /* in reality pawl 3 steps both m_wheel and l_wheel */
-    if (m_offset.delta == m_turn || m_offset.delta == m_turn2) {
+    if ( turnover_eq_echar_delta( m_turn, m_offset ) || turnover_eq_echar_delta( m_turn2, m_offset ) ) {
       p3 = 1;
       p2 = 1;
     }
@@ -297,44 +294,44 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
 
   int ukwnum = key->ukwnum;
   struct RingTypes slot = key->slot;
-  int g_ring = key->ring.g;
-  int l_ring = key->ring.l;
-  int m_ring = key->ring.m;
-  int r_ring = key->ring.r;
-  int g_mesg = key->mesg.g;
-  int l_mesg = key->mesg.l;
-  int m_mesg = key->mesg.m;
-  int r_mesg = key->mesg.r;
+  struct echar_delta g_ring = key->ring.g;
+  struct echar_delta l_ring = key->ring.l;
+  struct echar_delta m_ring = key->ring.m;
+  struct echar_delta r_ring = key->ring.r;
+  struct echar_delta g_mesg = key->mesg.g;
+  struct echar_delta l_mesg = key->mesg.l;
+  struct echar_delta m_mesg = key->mesg.m;
+  struct echar_delta r_mesg = key->mesg.r;
 
-  int m_turn, r_turn;
-  int m_turn2 = -1, r_turn2 = -1;
+  struct turnover m_turn, r_turn;
+  struct turnover m_turn2 = turnover_absent(), r_turn2 = turnover_absent();
   int p2 = 0, p3 = 0;
 
     /* calculate effective offset from ring and message settings */
     struct echar_delta
-      r_offset = make_char_delta_plus_minus( r_mesg, r_ring ),
-      m_offset = make_char_delta_plus_minus( m_mesg, m_ring ),
-      l_offset = make_char_delta_plus_minus( l_mesg, l_ring ),
-      g_offset = make_char_delta_plus_minus( g_mesg, g_ring );
+      r_offset = echar_delta_sub( r_mesg, r_ring ),
+      m_offset = echar_delta_sub( m_mesg, m_ring ),
+      l_offset = echar_delta_sub( l_mesg, l_ring ),
+      g_offset = echar_delta_sub( g_mesg, g_ring );
 
   /* calculate turnover points from ring settings */
-  r_turn = (26 + wal_turn[slot.r.type]-r_ring) % 26;
-  m_turn = (26 + wal_turn[slot.m.type]-m_ring) % 26;
+  r_turn = turnover_sub_echar_delta( wal_turn[slot.r.type], r_ring );
+  m_turn = turnover_sub_echar_delta( wal_turn[slot.m.type], m_ring );
 
   /* second turnover points for wheels 6,7,8 */
   if (slot.r.type > 5)
-    r_turn2 = (26 + 25-r_ring) % 26;
+    r_turn2 = turnover_sub_echar_delta( turnover_second_notch(), r_ring );
   if (slot.m.type > 5)
-    m_turn2 = (26 + 25-m_ring) % 26;
+    m_turn2 = turnover_sub_echar_delta( turnover_second_notch(), m_ring );
 
 
   for (i = 0; i < len; i++) {
 
     /* determine if pawls are engaged */
-    if (r_offset.delta == r_turn || r_offset.delta == r_turn2)
+    if ( turnover_eq_echar_delta( r_turn, r_offset ) || turnover_eq_echar_delta( r_turn2, r_offset ))
       p2 = 1;
     /* in reality pawl 3 steps both m_wheel and l_wheel */
-    if (m_offset.delta == m_turn || m_offset.delta == m_turn2) {
+    if ( turnover_eq_echar_delta( m_turn, m_offset ) || turnover_eq_echar_delta( m_turn2, m_offset )) {
       p3 = 1;
       p2 = 1;
     }

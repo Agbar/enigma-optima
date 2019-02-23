@@ -23,18 +23,19 @@ typedef void CalculatePermutationMap_f( union PermutationMap_t* const restrict m
 
 void CalculateLookupAvx2( int lookupNumber, struct RingsState rings, const struct Key* restrict key, CalculatePermutationMap_f* calculatePermutationMap );
 void CalculateMaskAvx2( size_t lookupNumber, int8_t begin, int8_t end );
-void CalculateRRingOffetsAvx2( int8_t rOffsetAtFirst );
+void CalculateRRingOffetsAvx2( struct echar_delta rOffsetAtFirst );
 
-void CalculateRRingOffetsAvx2( int8_t rOffsetAtFirst ) {
+void CalculateRRingOffetsAvx2( struct echar_delta rOffsetAtFirst ) {
     int k;
+    int_fast8_t r = rOffsetAtFirst.delta;
     // calculate offsets used for cyclic permutation
     v32qi rOffsets;
     for( k = 0; k < 16; k++ ) {
-        rOffsets[k] = rOffsetAtFirst++;
+        rOffsets[k] = r++;
     }
-    if( rOffsetAtFirst >= 26 ) rOffsetAtFirst -= 26;
+    if( r >= 26 ) r -= 26;
     for ( ; k < 32; k++ ){
-        rOffsets[k] = rOffsetAtFirst++;
+        rOffsets[k] = r++;
     }
     rOffsets -= ( rOffsets >= 26 ) & 26;
     PathLookupAvx2.firstRRingOffset.vector = rOffsets;
@@ -64,35 +65,35 @@ void PrepareDecoderLookupAvx2( CalculatePermutationMap_f* calculateMap, const st
 
     // rings.r will be a position of R-ring for current lookup chunk
     struct RingsState rings = {
-        .r = SubMod26( key->mesg.r, key->ring.r ),
-        .m = SubMod26( key->mesg.m, key->ring.m ),
-        .l = SubMod26( key->mesg.l, key->ring.l ),
-        .g = SubMod26( key->mesg.g, key->ring.g ),
+        .r = echar_delta_sub( key->mesg.r, key->ring.r ),
+        .m = echar_delta_sub( key->mesg.m, key->ring.m ),
+        .l = echar_delta_sub( key->mesg.l, key->ring.l ),
+        .g = echar_delta_sub( key->mesg.g, key->ring.g ),
     };
 
     /* calculate turnover points from ring settings */
     struct Turnovers_t turns = {
-        .r = SubMod26( wal_turn[key->slot.r.type], key->ring.r ),
-        .m = SubMod26( wal_turn[key->slot.m.type], key->ring.m ),
+        .r = turnover_sub_echar_delta( wal_turn[key->slot.r.type], key->ring.r ),
+        .m = turnover_sub_echar_delta( wal_turn[key->slot.m.type], key->ring.m ),
     };
 
     /* second turnover points for wheels 6,7,8 */
     if( key->slot.r.type > 5 ) {
-        turns.r2 = SubMod26( SECOND_TURNOVER_POINT, key->ring.r );
+        turns.r2 = turnover_sub_echar_delta( turnover_second_notch(), key->ring.r );
     }
     else {
-        turns.r2 = -1;
+        turns.r2 = turnover_absent();
     }
     if( key->slot.m.type > 5 ) {
-        turns.m2 = SubMod26( SECOND_TURNOVER_POINT, key->ring.m );
+        turns.m2 = turnover_sub_echar_delta( turnover_second_notch(), key->ring.m );
     }
     else {
-        turns.m2 = -1;
+        turns.m2 = turnover_absent();
     }
 
     // simulate first key-press and get rid of possible first-press l,m-rings turn
     StepAllRings( &rings, turns );
-    int8_t rAtFirstPos = rings.r;       ///< Right ring state _after_ pressing a button.
+    struct echar_delta rAtFirstPos = rings.r; ///< Right ring state _after_ pressing a button.
     int messagePosition = 0;            ///< Index of first character decoded by current lookup.
     int biteCounter  = 0;               ///< Number of bite currently processed.
 
@@ -105,7 +106,8 @@ void PrepareDecoderLookupAvx2( CalculatePermutationMap_f* calculateMap, const st
         CalculateLookupAvx2( i, rings, key, calculateMap );
 
         // check whether next M-ring turn is within current text bite
-        int charsToNextTurnover = SubMod26( GetNextTurnover( rings, turns ), rings.r ) + 1;
+        struct echar_delta delta_next = echar_delta_sub( GetNextTurnover( rings, turns ), rings.r );
+        int charsToNextTurnover = delta_next.delta + 1;
         if( ( messagePosition & 31 ) + charsToNextTurnover < 32 ) {
             // set r ring on positoin (like buttons were pressed nextMTurn times)
             rings.r = GetNextTurnover( rings, turns );
@@ -115,9 +117,9 @@ void PrepareDecoderLookupAvx2( CalculatePermutationMap_f* calculateMap, const st
         }
         else {
             // turn r until messagePosition is next multiple of 32 mod 26
-            rAtFirstPos = AddMod26( rAtFirstPos, 31 % 26 );
-            rings.r     = rAtFirstPos;
-            Step1( &rAtFirstPos );
+            echar_delta_rot_31( &rAtFirstPos );
+            rings.r = rAtFirstPos;
+            echar_delta_rot_1( &rAtFirstPos );
             CalculateMaskAvx2( i, messagePosition & 31, 32 );
             // next chunk of message, but only R ring was turning
             messagePosition = ( messagePosition + 32 ) & ~31;
