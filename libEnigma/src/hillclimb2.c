@@ -124,7 +124,7 @@ void hillclimb2( const struct Key* const from, const struct Key* const to, const
 
    firstloop = 1;
 
-   for (ckey.ukwnum=lo.ukwnum; ckey.ukwnum<=hi[m][1]; ckey.ukwnum++) {
+   for (ckey.ukwnum=lo.ukwnum; ckey.ukwnum.type<=hi[m][1]; ckey.ukwnum.type++) {
     for (ckey.slot.g=lo.slot.g; ckey.slot.g.type<=hi[m][2]; ckey.slot.g.type++) {
      for (ckey.slot.l=lo.slot.l; ckey.slot.l.type<=hi[m][3]; ckey.slot.l.type++) {
       for (ckey.slot.m=lo.slot.m; ckey.slot.m.type<=hi[m][4]; ckey.slot.m.type++) {

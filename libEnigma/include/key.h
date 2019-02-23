@@ -89,6 +89,29 @@ struct RingTypes
     struct RingType l, m, r;
 };
 
+struct UkwType
+{
+    enum ukw_type_enum{
+        UkwType_A,
+        UkwType_B,
+        UkwType_C,
+        UkwType_B_Thin,
+        UkwType_C_Thin,
+        __UkwType__enforce_signed_type = -1, 
+    } type;
+};
+
+static inline
+enum comparison_result
+UkwType_cmp( struct UkwType l, struct UkwType r ){
+    if( l.type == r.type ) return cmp_equal;
+    if( l.type >  r.type ) return cmp_greater;
+    else return cmp_less;
+}
+
+char
+UkwType_to_ALPHA( struct UkwType u );
+
 /* Model
  * * * * */
  enum ModelType_t{
@@ -105,7 +128,7 @@ struct Key {
     struct RingTypes  slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
     struct RingsState ring; ///< ringstellungen
     struct RingsState mesg; ///< message settings
-    int8_t ukwnum;
+    struct UkwType ukwnum;
     enum ModelType_t model;
     struct PermutationMap26 sf; //< swapped/free letters
     int count;      /* number of swapped letters */

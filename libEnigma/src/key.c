@@ -1,16 +1,22 @@
 #include "global.h"
 #include "key.h"
 
+char
+UkwType_to_ALPHA( struct UkwType u ){
+    return "ABCAB"[u.type];
+}
+
 /* initialize key to defaults */
 int init_key_default( struct Key *const key, enum ModelType_t model )
 {
     struct Key def_H  = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
-                          .ukwnum=1, 
+                          .ukwnum.type = UkwType_B, 
                           .model=EnigmaModel_H  };
     struct Key def_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
-                          .ukwnum=1, .model=EnigmaModel_M3 };
+                          .ukwnum.type = UkwType_B,
+                          .model=EnigmaModel_M3 };
     struct Key def_M4 = { .slot={ { GreekRingType_Beta }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
-                          .ukwnum=3,
+                          .ukwnum.type = UkwType_B_Thin,
                           .model=EnigmaModel_M4 };
     switch( model ) {
     case EnigmaModel_H :
@@ -34,13 +40,13 @@ int init_key_default( struct Key *const key, enum ModelType_t model )
 int init_key_low( struct Key *const key, enum ModelType_t model )
 {
     struct Key low_H  = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
-                          .ukwnum=0,
+                          .ukwnum.type = UkwType_A,
                           .model=EnigmaModel_H  };
     struct Key low_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
-                          .ukwnum=1,
+                          .ukwnum.type = UkwType_B,
                           .model=EnigmaModel_M3 };
     struct Key low_M4 = { .slot={ { GreekRingType_Beta }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
-                          .ukwnum=3,
+                          .ukwnum.type = UkwType_B_Thin,
                           .model=EnigmaModel_M4 };
     switch( model ) {
     case EnigmaModel_H :
@@ -64,10 +70,9 @@ int init_key_low( struct Key *const key, enum ModelType_t model )
 /* returns -1 for k1 < k2, 0 for k1 == k2, 1 for k1 > k2    */
 int keycmp(const struct Key *k1, const struct Key *k2)
 {
-  if (  k1->ukwnum != k2->ukwnum ) {
-    if ( k1->ukwnum > k2->ukwnum ) return 1;
-    else return -1;
-  }
+  enum comparison_result cr;
+  cr = UkwType_cmp( k1->ukwnum, k2->ukwnum );
+  if( cr != cmp_equal ) return cr;
   if (   k1->slot.g.type != k2->slot.g.type ) {
     if ( k1->slot.g.type >  k2->slot.g.type ) return 1;
     else return -1;
@@ -84,7 +89,6 @@ int keycmp(const struct Key *k1, const struct Key *k2)
     if ( k1->slot.r.type >  k2->slot.r.type ) return 1;
     else return -1;
   }
-  enum comparison_result cr;
   cr = echar_delta_cmp( k1->ring.m, k2->ring.m );
   if( cr != cmp_equal ) return cr;
   cr = echar_delta_cmp( k1->ring.r, k2->ring.r );

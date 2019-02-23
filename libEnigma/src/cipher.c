@@ -218,7 +218,7 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
   struct echar_delta l_mesg = key->mesg.l;
   struct echar_delta m_mesg = key->mesg.m;
   struct echar_delta r_mesg = key->mesg.r;
-  int ukwnum = key->ukwnum;
+  struct UkwType ukwnum = key->ukwnum;
 
   struct turnover m_turn, r_turn;
   struct turnover m_turn2 = turnover_absent(), r_turn2 = turnover_absent();
@@ -275,7 +275,7 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
       c = wal[r_slot.type].flat[ double_index( c,     r_offset ) ];
       c = wal[m_slot.type].flat[ double_index( c,   r_m_offset ) ];
       c = wal[l_slot.type].flat[ double_index( c,   m_l_offset ) ];
-      c = ukw[ukwnum].flat[ double_index( c, inv_l_offset ) ];
+      c = ukw[ukwnum.type].flat[ double_index( c, inv_l_offset ) ];
       c = rev_wal[l_slot.type].flat[ double_index( c,   l_offset ) ];
       c = rev_wal[m_slot.type].flat[ double_index( c, l_m_offset ) ];
       c = rev_wal[r_slot.type].flat[ double_index( c, m_r_offset ) ];
@@ -292,7 +292,7 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
 {
   int i;
 
-  int ukwnum = key->ukwnum;
+  struct UkwType ukwnum = key->ukwnum;
   struct RingTypes slot = key->slot;
   struct echar_delta g_ring = key->ring.g;
   struct echar_delta l_ring = key->ring.l;
@@ -362,7 +362,7 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
       c = wal[slot.m.type].flat[ double_index( c,   r_m_offset ) ];
       c = wal[slot.l.type].flat[ double_index( c,   m_l_offset ) ];
       c = wal[slot.g.type].flat[ double_index( c,   l_g_offset ) ];
-      c = ukw[ukwnum].flat[ double_index( c, inv_g_offset ) ];
+      c = ukw[ukwnum.type].flat[ double_index( c, inv_g_offset ) ];
       c = rev_wal[slot.g.type].flat[ double_index( c,   g_offset ) ];
       c = rev_wal[slot.l.type].flat[ double_index( c, g_l_offset ) ];
       c = rev_wal[slot.m.type].flat[ double_index( c, l_m_offset ) ];

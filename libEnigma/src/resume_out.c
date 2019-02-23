@@ -35,17 +35,17 @@ void print_state(FILE *fp, const State *state)
   if (from->model != EnigmaModel_M4) {
     fprintf(fp,
     "%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=",
-    toupper(alpha[from->ukwnum]),
+     UkwType_to_ALPHA( from->ukwnum ),
     from->slot.l.type, from->slot.m.type, from->slot.r.type,
     echar_delta_to_ALPHA( from->ring.m ), echar_delta_to_ALPHA( from->ring.r ),
     echar_delta_to_ALPHA( from->mesg.l ), echar_delta_to_ALPHA( from->mesg.m ),
     echar_delta_to_ALPHA( from->mesg.r ),
-    toupper(alpha[to->ukwnum]),
+    UkwType_to_ALPHA( to->ukwnum),
     to->slot.l.type, to->slot.m.type, to->slot.r.type,
     echar_delta_to_ALPHA( to->ring.m ), echar_delta_to_ALPHA( to->ring.r ),
     echar_delta_to_ALPHA( to->mesg.l ), echar_delta_to_ALPHA( to->mesg.m ),
     echar_delta_to_ALPHA( to->mesg.r ),
-    toupper(alpha[ckey->ukwnum]),
+    UkwType_to_ALPHA( ckey->ukwnum ),
     ckey->slot.l.type, ckey->slot.m.type, ckey->slot.r.type,
     echar_delta_to_ALPHA( ckey->ring.m ), echar_delta_to_ALPHA( ckey->ring.r ),
     echar_delta_to_ALPHA( ckey->mesg.l ), echar_delta_to_ALPHA( ckey->mesg.m ),
@@ -55,7 +55,7 @@ void print_state(FILE *fp, const State *state)
     fprintf(fp,
     "%c:%c%d%d%d:%c%c:%c%c%c%c=%c:%c%d%d%d:%c%c:%c%c%c%c=%c:%c%d%d%d:%c%c:%c%c%c%c=",
     // from
-    from->ukwnum == 3 ? 'B' : 'C',
+    UkwType_to_ALPHA( from->ukwnum ),
     //:
     from->slot.g.type == GreekRingType_Beta ? 'B' : 'G', from->slot.l.type, from->slot.m.type, from->slot.r.type,
     //:
@@ -64,7 +64,7 @@ void print_state(FILE *fp, const State *state)
     echar_delta_to_ALPHA( from->mesg.g ), echar_delta_to_ALPHA( from->mesg.l ) ,
     echar_delta_to_ALPHA( from->mesg.m ), echar_delta_to_ALPHA( from->mesg.r ) ,
     //= // to
-    to->ukwnum == 3 ? 'B' : 'C',
+    UkwType_to_ALPHA( to->ukwnum ),
     //:
     to->slot.g.type == GreekRingType_Beta ? 'B' : 'G', to->slot.l.type, to->slot.m.type, to->slot.r.type,
     //:
@@ -73,7 +73,7 @@ void print_state(FILE *fp, const State *state)
     echar_delta_to_ALPHA( to->mesg.g ), echar_delta_to_ALPHA( to->mesg.l ),
     echar_delta_to_ALPHA( to->mesg.m ), echar_delta_to_ALPHA( to->mesg.r ),
     //= // current
-    ckey->ukwnum == 3 ? 'B' : 'C',
+    UkwType_to_ALPHA( ckey->ukwnum ),
     //:
     ckey->slot.g.type == GreekRingType_Beta ? 'B' : 'G', ckey->slot.l.type, ckey->slot.m.type, ckey->slot.r.type,
     //:
@@ -97,7 +97,7 @@ void print_state(FILE *fp, const State *state)
   if (from->model != EnigmaModel_M4) {
     fprintf(fp,
     "%c:%d%d%d:%c%c:%c%c%c=",
-    toupper(alpha[gkey->ukwnum]),
+    UkwType_to_ALPHA( gkey->ukwnum ),
     gkey->slot.l.type, gkey->slot.m.type, gkey->slot.r.type,
     echar_delta_to_ALPHA( gkey->ring.m ), echar_delta_to_ALPHA( gkey->ring.r ),
     echar_delta_to_ALPHA( gkey->mesg.l ), echar_delta_to_ALPHA( gkey->mesg.m ),
@@ -106,7 +106,7 @@ void print_state(FILE *fp, const State *state)
   else {
     fprintf(fp,
     "%c:%c%d%d%d:%c%c:%c%c%c%c=",
-    gkey->ukwnum == 3 ? 'B' : 'C',
+    UkwType_to_ALPHA( gkey->ukwnum ),
     gkey->slot.g.type == GreekRingType_Beta ? 'B' : 'G', gkey->slot.l.type, gkey->slot.m.type, gkey->slot.r.type,
     echar_delta_to_ALPHA( gkey->ring.m ), echar_delta_to_ALPHA( gkey->ring.r ),
     echar_delta_to_ALPHA( gkey->mesg.g ), echar_delta_to_ALPHA( gkey->mesg.l ),

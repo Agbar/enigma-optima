@@ -75,7 +75,7 @@ Stecker: %s\n\
 Rings: %c%c%c\n\
 Message key: %c%c%c\n\n",
     key->score,
-    toupper(alpha[key->ukwnum]),
+    UkwType_to_ALPHA( key->ukwnum ),
     key->slot.l.type, key->slot.m.type, key->slot.r.type,
     stecker,
     echar_delta_to_ALPHA( key->ring.l ), echar_delta_to_ALPHA( key->ring.m ),
@@ -92,7 +92,7 @@ Stecker: %s\n\
 Rings: %c%c%c%c\n\
 Message key: %c%c%c%c\n\n",
     key->score,
-    key->ukwnum == 3 ? 'B' : 'C',
+    UkwType_to_ALPHA( key->ukwnum ),
     key->slot.g.type == GreekRingType_Beta ? 'B' : 'G', key->slot.l.type, key->slot.m.type, key->slot.r.type,
     stecker,
     echar_delta_to_ALPHA( key->ring.g ), echar_delta_to_ALPHA( key->ring.l ),

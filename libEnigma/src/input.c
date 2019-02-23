@@ -27,22 +27,22 @@ int set_ukw( struct Key *const key, char *s, enum ModelType_t model)
 {
   if (strcmp(s, "A") == 0 || strcmp(s, "a") == 0) {
     switch (model) {
-      case EnigmaModel_H: key->ukwnum = 0; break;
+      case EnigmaModel_H: key->ukwnum.type = UkwType_A; break;
       default: return 0;
     }
     return 1;
   }
   if (strcmp(s, "B") == 0 || strcmp(s, "b") == 0) {
     switch (model) {
-      case EnigmaModel_M4: key->ukwnum = 3; break;
-      default: key->ukwnum = 1; break;
+      case EnigmaModel_M4: key->ukwnum.type = UkwType_B_Thin; break;
+      default: key->ukwnum.type = UkwType_B; break;
     }
     return 1;
   }
   if (strcmp(s, "C") == 0 || strcmp(s, "c") == 0) {
     switch (model) {
-      case EnigmaModel_M4: key->ukwnum = 4; break;
-      default: key->ukwnum = 2; break;
+      case EnigmaModel_M4: key->ukwnum.type = UkwType_C_Thin; break;
+      default: key->ukwnum.type = UkwType_C; break;
     }
     return 1;
   }
@@ -125,9 +125,8 @@ int set_ring( struct Key *const key, char *s, enum ModelType_t model)
 
   x = s;
   while (*x != '\0') {
-    if ( !echar_can_make_from_ascii( *x ) ){
+    if (code[(unsigned char)*x] == 26)
       return 0;
-    }
     x++;
   }
 
@@ -161,9 +160,8 @@ int set_mesg( struct Key *const key, char *s, enum ModelType_t model)
 
   x = s;
   while (*x != '\0') {
-    if ( !echar_can_make_from_ascii( *x ) ){
+    if (code[(unsigned char)*x] == 26)
       return 0;
-    }
     x++;
   }
 
@@ -203,16 +201,15 @@ int set_stecker( struct Key *const key, char *s)
   x = s;
   while (*x != '\0') {
     /* alphabetic, no repetitions */
-    if ( !echar_can_make_from_ascii( *x ) || strrchr(x, *x) != x){
+    if (code[(unsigned char)*x] == 26 || strrchr(x, *x) != x)
       return 0;
-    }
     x++;
   }
 
   /* swap appropriate letters */
   x = s;
   while (*x != '\0') {
-    SwapStbrett(key, make_echar_ascii( x[0] ), make_echar_ascii( x[1] ) );
+    SwapStbrett(key, make_echar( code[(unsigned char)*x] ), make_echar( code[(unsigned char)*(x+1)] ) );
     x += 2;
   }
 

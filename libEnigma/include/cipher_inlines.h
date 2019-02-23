@@ -73,7 +73,7 @@ void CalculatePermutationMap3Rotors( union PermutationMap_t* const restrict map,
         struct echar c = make_echar( k );
         c = wal[key->slot.m.type].flat[ double_index( c,     m_offset ) ];
         c = wal[key->slot.l.type].flat[ double_index( c,   m_l_offset ) ];
-        c = ukw[key->ukwnum].flat[ double_index( c, inv_l_offset ) ];
+        c = ukw[key->ukwnum.type].flat[ double_index( c, inv_l_offset ) ];
         c = rev_wal[key->slot.l.type].flat[ double_index( c,   l_offset ) ];
         c = rev_wal[key->slot.m.type].flat[ double_index( c, l_m_offset ) ];
         c = echar_sub_delta( c, m_offset );
@@ -100,7 +100,7 @@ void CalculatePermutationMap4Rotors( union PermutationMap_t* const restrict map,
         c = wal[key->slot.m.type].flat[ double_index( c,     m_offset ) ];
         c = wal[key->slot.l.type].flat[ double_index( c,   m_l_offset ) ];
         c = wal[key->slot.g.type].flat[ double_index( c,   l_g_offset ) ];
-        c = ukw[key->ukwnum].flat[ double_index( c, inv_g_offset ) ];
+        c = ukw[key->ukwnum.type].flat[ double_index( c, inv_g_offset ) ];
         c = rev_wal[key->slot.g.type].flat[ double_index( c,   g_offset ) ];
         c = rev_wal[key->slot.l.type].flat[ double_index( c, g_l_offset ) ];
         c = rev_wal[key->slot.m.type].flat[ double_index( c, l_m_offset ) ];
