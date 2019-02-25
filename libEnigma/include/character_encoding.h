@@ -22,7 +22,7 @@ struct echar make_echar( int8_t zero_based ){
 }
 
 static inline
-size_t echar_0_based_index( struct echar c ){
+uint_fast8_t echar_0_based_index( struct echar c ){
     return c.encoded;
 }
 
