@@ -17,9 +17,11 @@ void set_to_ct_freq( struct echar var[26], int len );
  */
 static inline
 void SwapStbrett(Key* const key, struct echar i, struct echar k) {
-  struct echar store = key->stbrett.letters[ echar_0_based_index( i ) ];
-  key->stbrett.letters[ echar_0_based_index( i ) ] = key->stbrett.letters[ echar_0_based_index( k ) ];
-  key->stbrett.letters[ echar_0_based_index( k ) ] = store;
+  struct echar* pi = &key->stbrett.letters[ echar_0_based_index( i ) ];
+  struct echar* pk = &key->stbrett.letters[ echar_0_based_index( k ) ];
+  int8_t store = pi->encoded;
+  pi->encoded = pk->encoded;
+  pk->encoded = store;
 }
 
 /*
