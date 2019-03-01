@@ -6,7 +6,7 @@
 #include "randomNumbers.h"
 
 /* extracts stecker from key->stbrett to key->sf */
-void get_stecker(Key *key)
+void get_stecker( struct Key *const key )
 {
   size_t i;
   int k = 25;

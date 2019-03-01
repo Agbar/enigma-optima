@@ -48,7 +48,7 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
     }
 }
 
-void DecodeScoredMessagePartStandard(const Key* const restrict key, int len, union ScoringDecodedMessage* restrict output){
+void DecodeScoredMessagePartStandard(const struct Key* const restrict key, int len, union ScoringDecodedMessage* restrict output){
     int i = 0;
     for( ; i < len; ++i ){
         output->plain[i] = decode( 0, i, &key->stbrett );

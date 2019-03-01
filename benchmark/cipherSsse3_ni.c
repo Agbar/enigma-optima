@@ -12,7 +12,7 @@
 #include "x86/cipherSsse3_inlines.h"
 
 __attribute__ ((flatten))
-void DecodeMessageSsse3( const Key* const restrict key, int len ) {
+void DecodeMessageSsse3( const struct Key* const restrict key, int len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartSsse3 );
 }
 

@@ -23,7 +23,7 @@ enum ModelType_t get_model(char *s)
 }
 
 /* set UKW */
-int set_ukw(Key *key, char *s, enum ModelType_t model)
+int set_ukw( struct Key *const key, char *s, enum ModelType_t model)
 {
   if (strcmp(s, "A") == 0 || strcmp(s, "a") == 0) {
     switch (model) {
@@ -58,7 +58,7 @@ int set_ukw(Key *key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_walze(Key *key, char *s, enum ModelType_t model)
+int set_walze( struct Key *const key, char *s, enum ModelType_t model)
 {
   char *x;
 
@@ -114,7 +114,7 @@ int set_walze(Key *key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_ring(Key *key, char *s, enum ModelType_t model)
+int set_ring( struct Key *const key, char *s, enum ModelType_t model)
 {
   char *x;
 
@@ -148,7 +148,7 @@ int set_ring(Key *key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_mesg(Key *key, char *s, enum ModelType_t model)
+int set_mesg( struct Key *const key, char *s, enum ModelType_t model)
 {
   char *x;
 
@@ -181,7 +181,7 @@ int set_mesg(Key *key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_stecker(Key *key, char *s)
+int set_stecker( struct Key *const key, char *s)
 {
   size_t len;
   char *x;
@@ -257,7 +257,7 @@ int get_firstpass(char *s)
  * \return int
  *
  */
-int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust)
+int set_key( struct Key *const key, const char *keystring, enum ModelType_t model, int adjust)
 {
     int i, d;
     unsigned int len;
@@ -336,7 +336,7 @@ int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust)
  * \return int
  *
  */
-int set_range(Key *from, Key *to, const char *kf, const char *kt, enum ModelType_t model)
+int set_range( struct Key *const restrict from, struct Key *const restrict to, const char *kf, const char *kt, enum ModelType_t model)
 {
   if (!set_key(from, kf, model, 0)) return 0;
   if (!set_key(to, kt, model, 0)) return 0;

@@ -12,16 +12,16 @@
 #include "x86/cipherAvx2_inlines.h"
 #include "cipher_inlines.h"
 
-void prepare_decoder_lookup_M_H3_avx2( const Key *key, int len );
-void prepare_decoder_lookup_ALL_avx2( const Key *key, int len );
+void prepare_decoder_lookup_M_H3_avx2( const struct Key *key, int len );
+void prepare_decoder_lookup_ALL_avx2( const struct Key *key, int len );
 
 enigma_cipher_function_t enigma_cipher_DecoderLookupAvx2 = { prepare_decoder_lookup_M_H3_avx2, prepare_decoder_lookup_ALL_avx2 };
 
 struct PathLookupAvx2_t PathLookupAvx2;
 
-typedef void CalculatePermutationMap_f( union PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
+typedef void CalculatePermutationMap_f( union PermutationMap_t* const restrict map, struct RingsState rings, const struct Key* restrict key );
 
-void CalculateLookupAvx2( int lookupNumber, struct RingsState rings, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap );
+void CalculateLookupAvx2( int lookupNumber, struct RingsState rings, const struct Key* restrict key, CalculatePermutationMap_f* calculatePermutationMap );
 void CalculateMaskAvx2( size_t lookupNumber, int8_t begin, int8_t end );
 void CalculateRRingOffetsAvx2( int8_t rOffsetAtFirst );
 
@@ -40,7 +40,7 @@ void CalculateRRingOffetsAvx2( int8_t rOffsetAtFirst ) {
     PathLookupAvx2.firstRRingOffset = rOffsets;
 }
 
-void CalculateLookupAvx2( int lookupNumber, struct RingsState rings, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap )
+void CalculateLookupAvx2( int lookupNumber, struct RingsState rings, const struct Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap )
 {
     // calculate m,l,(g),u,(g-1),l-1,m-1 mapping
     calculatePermutationMap( &PathLookupAvx2.lookups[lookupNumber].mapping, rings, key );
@@ -59,7 +59,7 @@ void CalculateMaskAvx2( size_t lookupNumber, int8_t begin, int8_t end )
 #define SECOND_TURNOVER_POINT 25
 
 inline extern
-void PrepareDecoderLookupAvx2( CalculatePermutationMap_f* calculateMap, const Key *const restrict key, int len ) {
+void PrepareDecoderLookupAvx2( CalculatePermutationMap_f* calculateMap, const struct Key *const restrict key, int len ) {
     CopyRRing2Lookup( key, PathLookupAvx2.r_ring );
 
     // rings.r will be a position of R-ring for current lookup chunk
@@ -132,10 +132,10 @@ void PrepareDecoderLookupAvx2( CalculatePermutationMap_f* calculateMap, const Ke
     }
 }
 
-void prepare_decoder_lookup_M_H3_avx2( const Key *const restrict key, int len ) {
+void prepare_decoder_lookup_M_H3_avx2( const struct Key *const restrict key, int len ) {
     PrepareDecoderLookupAvx2( &CalculatePermutationMap3Rotors, key, len );
 }
 
-void prepare_decoder_lookup_ALL_avx2( const Key *key, int len ) {
+void prepare_decoder_lookup_ALL_avx2( const struct Key *const restrict key, int len ) {
     PrepareDecoderLookupAvx2( &CalculatePermutationMap4Rotors, key, len );
 }

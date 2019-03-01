@@ -12,7 +12,7 @@
 #include "x86/scoreAvx.h"
 
 __attribute__ ((flatten))
-void DecodeMessageAvx( const Key* const restrict key, int len ) {
+void DecodeMessageAvx( const struct Key* const restrict key, int len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartAvx );
 }
 

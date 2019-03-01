@@ -70,7 +70,7 @@ struct RingsState
 
 /* Key
  * * * */
-typedef struct _key_t {
+struct Key {
     ALIGNED_16(union PermutationMap_t stbrett);
     struct RingsState slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
     struct RingsState ring; ///< ringstellungen
@@ -80,12 +80,12 @@ typedef struct _key_t {
     struct PermutationMap26 sf; //< swapped/free letters
     int count;      /* number of swapped letters */
     int score;      /* hillclimbing score */
-} Key;
+};
 
-int init_key_default(Key *key, enum ModelType_t model);
-int init_key_low(Key *key, enum ModelType_t model);
+int init_key_default( struct Key *key, enum ModelType_t model);
+int init_key_low( struct Key *key, enum ModelType_t model);
 PURE_FUNCTION
-int keycmp(const Key *k1, const Key *k2);
+int keycmp(const struct Key *k1, const struct Key *k2);
 
 #endif
 

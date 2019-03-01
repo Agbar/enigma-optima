@@ -32,7 +32,7 @@ FILE *open_outfile(char *s)
   return fp;
 }
 
-void print_plaintext(FILE *fp, const Key *const key, int len)
+void print_plaintext(FILE *fp, const struct Key *const key, int len)
 {
   int i;
   text_t c;
@@ -54,7 +54,7 @@ void print_plaintext(FILE *fp, const Key *const key, int len)
 #endif
 }
 
-void print_key(FILE *fp, const Key *key)
+void print_key(FILE *fp, const struct Key *const key)
 {
   char date[DATELEN];
   char stecker[27];

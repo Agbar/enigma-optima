@@ -17,7 +17,7 @@ v16qi PermuteV16qi(const union PermutationMap_t* map, v16qi vec ){
 
 
 static inline
-v16qi DecodeBiteForwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key ){
+v16qi DecodeBiteForwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const struct Key* const restrict key ){
     // stbrett forward
     bite = PermuteV16qi ( &key->stbrett, bite );
     // right ring forward
@@ -37,7 +37,7 @@ v16qi DecodeBiteMaskedPartSsse3( v16qi predecodedBite, int lookupNumber ) {
 }
 
 static inline
-v16qi DecodeBiteBackwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key ) {
+v16qi DecodeBiteBackwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const struct Key* const restrict key ) {
     // right ring backwards
     bite = AddMod26_v16qi( bite, rRingOffset );
     bite = PermuteV16qi( &PathLookupSsse3.r_ring[1], bite );
@@ -49,7 +49,7 @@ v16qi DecodeBiteBackwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* 
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 static inline
-void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union ScoringDecodedMessage* output )
+void DecodeScoredMessagePartSsse3( const struct Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;

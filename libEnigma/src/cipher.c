@@ -12,9 +12,9 @@
 #include "x86/cipherSsse3.h"
 #include "x86/cipherAvx2.h"
 
-void init_path_lookup_H_M3(const Key *key, int len);
-void init_path_lookup_ALL(const Key *key, int len);
-void enigma_prepare_decoder_lookups(const Key* key, int len);
+void init_path_lookup_H_M3(const struct Key *key, int len);
+void init_path_lookup_ALL(const struct Key *key, int len);
+void enigma_prepare_decoder_lookups(const struct Key* key, int len);
 
 /* null substitution for no greek wheel */
 #define WALZ_0  (struct PermutationMap26) { .map = { {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25} } }
@@ -100,7 +100,7 @@ enigma_cipher_function_t enigma_cipher_decoder_lookup = {init_path_lookup_H_M3, 
 
 enigma_prepare_decoder_lookup_function_pt enigma_cipher_decoder_lookups_list[4];
 
-void enigma_prepare_decoder_lookups(const Key* key, int len)
+void enigma_prepare_decoder_lookups(const struct Key* key, int len)
 {
     enigma_prepare_decoder_lookup_function_pt *f = enigma_cipher_decoder_lookups_list;
     for(; *f ; f++)
@@ -137,7 +137,7 @@ void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, e
 }
 
 /* Check for slow wheel movement */
-int scrambler_state(const Key *key, int len)
+int scrambler_state(const struct Key* const key, int len)
 {
   int i;
 
@@ -208,7 +208,7 @@ int scrambler_state(const Key *key, int len)
 }
 
 /* initialize lookup table for paths through scramblers, models H, M3 */
-void init_path_lookup_H_M3(const Key *key, int len)
+void init_path_lookup_H_M3(const struct Key* const key, int len)
 {
   int i;
 
@@ -290,7 +290,7 @@ void init_path_lookup_H_M3(const Key *key, int len)
 
 
 /* initialize lookup table for paths through scramblers, all models */
-void init_path_lookup_ALL(const Key *key, int len)
+void init_path_lookup_ALL(const struct Key* const key, int len)
 {
   int i;
 

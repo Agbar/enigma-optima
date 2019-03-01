@@ -23,9 +23,9 @@
 #include "OS/Os.h"
 #include "character_encoding.h"
 
-void OptimizeIcscore ( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );
-void OptimizeBiscore ( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );
-void OptimizeTriscore( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf );
+void OptimizeIcscore ( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+void OptimizeBiscore ( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+void OptimizeTriscore( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
 
 void save_state(State state)
 {
@@ -56,13 +56,13 @@ void save_state_exit(State state, int retval)
   exit(retval);
 }
 
-void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
+void hillclimb( const struct Key* const from, const struct Key* const to, const struct Key* const ckey_res, const struct Key* const gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
                 FILE *outfile, int act_on_sig, int len )
 {
-  Key ckey;
-  Key gkey;
-  Key lo;
+  struct Key ckey;
+  struct Key gkey;
+  struct Key lo;
   text_t hi[3][12] = {
     {EnigmaModel_H ,2, 0,5,5,5,25,25, 0,25,25,25},
     {EnigmaModel_M3,2, 0,8,8,8,25,25, 0,25,25,25},
@@ -301,7 +301,7 @@ void hillclimb( const Key *from, const Key *to, const Key *ckey_res, const Key *
 
 }
 
-void OptimizeIcscore( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf ){
+void OptimizeIcscore( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf ){
     int i;
     struct echar x, z;
     enum Action_t action = NONE;
@@ -466,7 +466,7 @@ void OptimizeIcscore( struct echar var[26], Key* const ckey, int len, const enig
     }
 }
 
-void OptimizeBiscore( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf ){
+void OptimizeBiscore( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf ){
     int bestscore = sf->biscore( ckey, len );
     int i, a;
     struct echar x, z;
@@ -630,7 +630,7 @@ void OptimizeBiscore( struct echar var[26], Key* const ckey, int len, const enig
     }
 }
 
-void OptimizeTriscore( struct echar var[26], Key* const ckey, int len, const enigma_score_function_t* const sf ){
+void OptimizeTriscore( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf ){
     int bestscore = sf->triscore( ckey, len );
     int i, a;
     struct echar x, z;

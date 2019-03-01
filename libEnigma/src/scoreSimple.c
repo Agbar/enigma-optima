@@ -5,15 +5,15 @@
 #include "cipher.h"
 
 
-uint16_t icscoreSimple( const Key* const restrict key, scoreLength_t len );
-int     uniscoreSimple( const Key* const restrict key, scoreLength_t len );
-int      biscoreSimple( const Key* const restrict key, scoreLength_t len );
-int     triscoreSimple( const Key* const restrict key, scoreLength_t len );
+uint16_t icscoreSimple( const struct Key* const restrict key, scoreLength_t len );
+int     uniscoreSimple( const struct Key* const restrict key, scoreLength_t len );
+int      biscoreSimple( const struct Key* const restrict key, scoreLength_t len );
+int     triscoreSimple( const struct Key* const restrict key, scoreLength_t len );
 
 enigma_score_function_t enigmaScoreSimple = { triscoreSimple, biscoreSimple, icscoreSimple, uniscoreSimple};
 
 PURE_FUNCTION
-uint16_t icscoreSimple( const Key* const restrict key, scoreLength_t len )
+uint16_t icscoreSimple( const struct Key* const restrict key, scoreLength_t len )
 {
   int f[26] = {0};  
   int i;
@@ -37,7 +37,7 @@ uint16_t icscoreSimple( const Key* const restrict key, scoreLength_t len )
 }
 
 PURE_FUNCTION
-int uniscoreSimple(const Key* const restrict key, scoreLength_t len)
+int uniscoreSimple(const struct Key* const restrict key, scoreLength_t len)
 {
   int i;
   int c;
@@ -53,7 +53,7 @@ int uniscoreSimple(const Key* const restrict key, scoreLength_t len)
 }
 
 PURE_FUNCTION
-int biscoreSimple(const Key* const restrict key, scoreLength_t len)
+int biscoreSimple(const struct Key* const restrict key, scoreLength_t len)
 {
   int i;
   int c1, c2;
@@ -74,7 +74,7 @@ int biscoreSimple(const Key* const restrict key, scoreLength_t len)
 }
 
 PURE_FUNCTION
-int triscoreSimple(const Key* const restrict key,  scoreLength_t len)
+int triscoreSimple(const struct Key* const restrict key,  scoreLength_t len)
 {
   int i;
   int c1, c2, c3;

@@ -12,16 +12,16 @@
 #include "cipher_inlines.h"
 #include "x86/cipherSsse3_inlines.h"
 
-void prepare_decoder_lookup_M_H3_ssse3( const Key *key, int len );
-void prepare_decoder_lookup_ALL_ssse3( const Key *key, int len );
+void prepare_decoder_lookup_M_H3_ssse3( const struct Key *key, int len );
+void prepare_decoder_lookup_ALL_ssse3( const struct Key *key, int len );
 
 enigma_cipher_function_t enigma_cipher_decoder_lookup_ssse3 = {prepare_decoder_lookup_M_H3_ssse3, prepare_decoder_lookup_ALL_ssse3};
 
 struct PathLookupSsse3_t PathLookupSsse3;
 
-typedef void CalculatePermutationMap_f( union PermutationMap_t* const restrict map, struct RingsState rings, const Key* const restrict key );
+typedef void CalculatePermutationMap_f( union PermutationMap_t* const restrict map, struct RingsState rings, const struct Key* restrict key );
 
-void CalculateLookup( int lookupNumber, struct RingsState rings, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap );
+void CalculateLookup( int lookupNumber, struct RingsState rings, const struct Key* restrict key, CalculatePermutationMap_f* calculatePermutationMap );
 void CalculateMask( size_t lookupNumber, int8_t begin, int8_t end );
 void CalculateRRingOffets( int8_t rOffsetAtFirst );
 void PrintLookup( FILE* file, v32qi vec, const char* const restrict name );
@@ -38,7 +38,7 @@ void CalculateRRingOffets( int8_t rOffsetAtFirst ) {
     PathLookupSsse3.firstRRingOffset = rOffsets;
 }
 
-void CalculateLookup( int lookupNumber, struct RingsState rings, const Key* const restrict key, CalculatePermutationMap_f* calculatePermutationMap )
+void CalculateLookup( int lookupNumber, struct RingsState rings, const struct Key* const key, CalculatePermutationMap_f* calculatePermutationMap )
 {
     // calculate m,l,(g),u,(g-1),l-1,m-1 mapping
     calculatePermutationMap( &PathLookupSsse3.lookups[lookupNumber].mapping, rings, key );
@@ -58,7 +58,7 @@ void CalculateMask( size_t lookupNumber, int8_t begin, int8_t end )
 #define SECOND_TURNOVER_POINT 25
 
 inline extern
-void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const Key *const restrict key, int len ) {
+void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const struct Key *const restrict key, int len ) {
     CopyRRing2Lookup( key, PathLookupSsse3.r_ring );
 
     // rings.r will be a position of R-ring for current lookup chunk
@@ -131,11 +131,11 @@ void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const Key *c
     }
 }
 
-void prepare_decoder_lookup_M_H3_ssse3( const Key *const restrict key, int len ) {
+void prepare_decoder_lookup_M_H3_ssse3( const struct Key *const restrict key, int len ) {
     PrepareDecoderLookup( &CalculatePermutationMap3Rotors, key, len );
 }
 
-void prepare_decoder_lookup_ALL_ssse3( const Key *key, int len ) {
+void prepare_decoder_lookup_ALL_ssse3( const struct Key *const restrict key, int len ) {
     PrepareDecoderLookup( &CalculatePermutationMap4Rotors, key, len );
 }
 

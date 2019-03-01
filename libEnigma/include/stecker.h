@@ -4,7 +4,7 @@
 #include "config/types.h"
 #include "character_encoding.h"
 
-void get_stecker(Key *key);
+void get_stecker( struct Key *key );
 void rand_var( struct echar var[26] );
 void set_to_ct_freq( struct echar var[26], int len );
 
@@ -16,7 +16,7 @@ void set_to_ct_freq( struct echar var[26], int len );
  * \return void
  */
 static inline
-void SwapStbrett(Key* const key, struct echar i, struct echar k) {
+void SwapStbrett( struct Key* const key, struct echar i, struct echar k) {
   struct echar* pi = &key->stbrett.letters[ echar_0_based_index( i ) ];
   struct echar* pk = &key->stbrett.letters[ echar_0_based_index( k ) ];
   int8_t store = pi->encoded;

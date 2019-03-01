@@ -6,10 +6,10 @@
 #include "hillclimb.h"
 #include "hillclimb2.h"
 
-typedef void OptimizerFun( const Key *from
-                  , const Key *to
-                  , const Key *ckey_res
-                  , const Key *gkey_res
+typedef void OptimizerFun( const struct Key *from
+                  , const struct Key *to
+                  , const struct Key *ckey_res
+                  , const struct Key *gkey_res
                   , int sw_mode
                   , int max_pass
                   , int firstpass
@@ -53,10 +53,10 @@ void loadDictionaries( const char * const firstDict, const char * const secondDi
     exit( 1 );
 }
 
-void optimizeScore( const Key *from
-                  , const Key *to
-                  , const Key *ckey_res
-                  , const Key *gkey_res
+void optimizeScore( const struct Key *from
+                  , const struct Key *to
+                  , const struct Key *ckey_res
+                  , const struct Key *gkey_res
                   , int sw_mode
                   , int max_pass
                   , int firstpass

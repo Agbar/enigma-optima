@@ -22,10 +22,10 @@ STATIC_ASSERT (  1 << ( sizeof( scoreLength_t ) * 8 ) > CT , "scoreLength_t is t
 STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT value. Use ie. uint32_t." );
 
 typedef struct _enigma_score_function_t{
-    int      (*triscore) ( const Key* const restrict key, scoreLength_t length );
-    int      (* biscore) ( const Key* const restrict key, scoreLength_t length );
-    uint16_t (* icscore) ( const Key* const restrict key, scoreLength_t length );
-    int      (*uniscore) ( const Key* const restrict key, scoreLength_t length );
+    int      (*triscore) ( const struct Key* restrict key, scoreLength_t length );
+    int      (* biscore) ( const struct Key* restrict key, scoreLength_t length );
+    uint16_t (* icscore) ( const struct Key* restrict key, scoreLength_t length );
+    int      (*uniscore) ( const struct Key* restrict key, scoreLength_t length );
 } enigma_score_function_t;
 
 // Flags are used to allow combining.
@@ -55,7 +55,7 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* restrict
   */
 extern enigma_score_function_t enigma_score_orig;
 
-int get_triscore(const Key *key, int len);
+int get_triscore(const struct Key *key, int len);
 
 union ScoringDecodedMessage
 {
@@ -75,7 +75,7 @@ void PrintDecodedMessage( FILE* stream, union ScoringDecodedMessage* message, in
     }
 }
 
-void DecodeScoredMessagePartStandard(const Key* const restrict key, int len, union ScoringDecodedMessage* restrict output);
+void DecodeScoredMessagePartStandard(const struct Key* restrict key, int len, union ScoringDecodedMessage* restrict output);
 
 bool GetDifferences( union ScoringDecodedMessage* restrict reference, union ScoringDecodedMessage* restrict tested, char* restrict output, int len );
 

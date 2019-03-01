@@ -2,11 +2,11 @@
 #include "key.h"
 
 /* initialize key to defaults */
-int init_key_default( Key *key, enum ModelType_t model )
+int init_key_default( struct Key *const key, enum ModelType_t model )
 {
-    Key def_H  = { .slot={0, 1, 2, 3}, .ukwnum=1, .model=EnigmaModel_H  };
-    Key def_M3 = { .slot={0, 1, 2, 3}, .ukwnum=1, .model=EnigmaModel_M3 };
-    Key def_M4 = { .slot={9, 1, 2, 3}, .ukwnum=3, .model=EnigmaModel_M4 };
+    struct Key def_H  = { .slot={0, 1, 2, 3}, .ukwnum=1, .model=EnigmaModel_H  };
+    struct Key def_M3 = { .slot={0, 1, 2, 3}, .ukwnum=1, .model=EnigmaModel_M3 };
+    struct Key def_M4 = { .slot={9, 1, 2, 3}, .ukwnum=3, .model=EnigmaModel_M4 };
 
     switch( model ) {
     case EnigmaModel_H :
@@ -27,11 +27,11 @@ int init_key_default( Key *key, enum ModelType_t model )
 }
 
 /* initializes each key element to the lowest possible value */
-int init_key_low( Key *key, enum ModelType_t model )
+int init_key_low( struct Key *const key, enum ModelType_t model )
 {
-    Key low_H  = { .slot={0, 1, 1, 1}, .ukwnum=0, .model=EnigmaModel_H  };
-    Key low_M3 = { .slot={0, 1, 1, 1}, .ukwnum=1, .model=EnigmaModel_M3 };
-    Key low_M4 = { .slot={9, 1, 1, 1}, .ukwnum=3, .model=EnigmaModel_M4 };
+    struct Key low_H  = { .slot={0, 1, 1, 1}, .ukwnum=0, .model=EnigmaModel_H  };
+    struct Key low_M3 = { .slot={0, 1, 1, 1}, .ukwnum=1, .model=EnigmaModel_M3 };
+    struct Key low_M4 = { .slot={9, 1, 1, 1}, .ukwnum=3, .model=EnigmaModel_M4 };
     switch( model ) {
     case EnigmaModel_H :
         *key = low_H;
@@ -52,7 +52,7 @@ int init_key_low( Key *key, enum ModelType_t model )
 
 /* compares ukwnum thru r_mesg, omits g_ring, l_ring        */
 /* returns -1 for k1 < k2, 0 for k1 == k2, 1 for k1 > k2    */
-int keycmp(const Key *k1, const Key *k2)
+int keycmp(const struct Key *k1, const struct Key *k2)
 {
   if (  k1->ukwnum != k2->ukwnum ) {
     if ( k1->ukwnum > k2->ukwnum ) return 1;

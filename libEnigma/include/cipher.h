@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "ciphertext.h"
+#include "common.h"
 #include "cpu.h"
 #include "global.h"
 #include "key.h"
@@ -21,9 +22,9 @@ struct Turnovers_t {
 };
 
 PURE_FUNCTION
-int scrambler_state(const Key *key, int len);
+int scrambler_state(const struct Key *restrict key, int len);
 
-typedef void (*enigma_prepare_decoder_lookup_function_pt) (const Key *key, int len);
+typedef void (*enigma_prepare_decoder_lookup_function_pt) (const struct Key *key, int len);
 
 typedef struct _enigma_cipher_function_t
 {

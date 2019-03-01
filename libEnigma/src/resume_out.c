@@ -17,10 +17,10 @@ void print_state(FILE *fp, const State *state)
   char stecker[27];
   int i;
 
-  const Key *from = state->from;
-  const Key *to = state->to;
-  Key *ckey = state->ckey;
-  Key *gkey = state->gkey;
+  const struct Key *from = state->from;
+  const struct Key *to = state->to;
+  struct Key *ckey = state->ckey;
+  struct Key *gkey = state->gkey;
   int *sw_mode = state->sw_mode;
   int *pass = state->pass;
   int *firstpass = state->firstpass;

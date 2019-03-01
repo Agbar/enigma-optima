@@ -49,13 +49,13 @@ void save_state_exit2(State state, int retval)
   exit(retval);
 }
 
-void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
+void hillclimb2( const struct Key* const from, const struct Key* const to, const struct Key* const ckey_res, const struct Key* const gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
                 FILE *outfile, int act_on_sig, int len )
 {
-  Key ckey;
-  Key gkey;
-  Key lo;
+  struct Key ckey;
+  struct Key gkey;
+  struct Key lo;
   text_t hi[3][12] = {
     {EnigmaModel_H ,2, 0,5,5,5,25,25, 0,25,25,25},
     {EnigmaModel_M3,2, 0,8,8,8,25,25, 0,25,25,25},

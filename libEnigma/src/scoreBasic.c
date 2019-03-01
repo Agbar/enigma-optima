@@ -10,10 +10,10 @@
 #include "config/types.h"
 
 // default scores
-static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t length );
-static int     uniscoreBasic( const Key* const restrict key, scoreLength_t length );
-static int      biscoreBasic( const Key* const restrict key, scoreLength_t length );
-static int     triscoreBasic( const Key* const restrict key, scoreLength_t length );
+static uint16_t icscoreBasic( const struct Key* const restrict key, scoreLength_t length );
+static int     uniscoreBasic( const struct Key* const restrict key, scoreLength_t length );
+static int      biscoreBasic( const struct Key* const restrict key, scoreLength_t length );
+static int     triscoreBasic( const struct Key* const restrict key, scoreLength_t length );
 
 enigma_score_function_t enigmaScoreBasic = { triscoreBasic, biscoreBasic, icscoreBasic, uniscoreBasic };
 
@@ -23,7 +23,7 @@ union ScoringDecodedMessage decodedMsgPartBasic;
  * opti scores
  ************************/
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
+static uint16_t icscoreBasic( const struct Key* const restrict key, scoreLength_t len )
 {
   int f[26] = {0};
   int i;
@@ -87,7 +87,7 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
 
 #define UNISCORE_ADD(S,A)\
     asm( "add  %1, %0": "+q"( (S) ): "m"( unidict[(A)] ) )
-static int uniscoreBasic( const Key* key, scoreLength_t len )
+static int uniscoreBasic( const struct Key* const key, scoreLength_t len )
 {
   int i;
   int s;
@@ -141,7 +141,7 @@ static int uniscoreBasic( const Key* key, scoreLength_t len )
     asm( "add  %1, %0": "+q"( (S) ): "m"( bidict[(A)][(B)] ) )
 __attribute__ ((optimize("sched-stalled-insns=0"
                         ",sched-stalled-insns-dep=16")))
-int biscoreBasic( const Key* const restrict key, scoreLength_t len )
+int biscoreBasic( const struct Key* const key, scoreLength_t len )
 {
     const union PermutationMap_t* const stbrett = &key->stbrett;
     int s = 0;
@@ -217,7 +217,7 @@ int biscoreBasic( const Key* const restrict key, scoreLength_t len )
 __attribute__ ((optimize("sched-stalled-insns=0"
                          ",sched-stalled-insns-dep=16"
                )))
-int triscoreBasic( const Key* const restrict key, scoreLength_t len )
+int triscoreBasic( const struct Key* const key, scoreLength_t len )
 {
     int s = 0;
 
