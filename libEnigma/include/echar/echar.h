@@ -15,6 +15,7 @@ struct echar make_echar( int8_t zero_based ){
     return (struct echar) { .encoded = zero_based };
 }
 
+CONST_FUNCTION
 static inline
 uint_fast8_t echar_0_based_index( struct echar c ){
     return c.encoded;
