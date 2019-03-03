@@ -93,6 +93,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
 
     # treat some warnings as errors
     list(APPEND ENIGMA_COMPILE_OPTIONS
+        -Werror=discarded-qualifiers
         -Werror=implicit-function-declaration
         -Werror=incompatible-pointer-types
         -Werror=missing-braces

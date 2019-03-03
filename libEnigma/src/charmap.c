@@ -6,18 +6,19 @@
 #include "config/types.h"
 
 
-text_t code[UCHAR_MAX+1];
+const text_t code[UCHAR_MAX+1];
 
 void init_charmap(void)
 {
   int i;
+  text_t *init_code = (text_t*)code;
 
   for (i = 0; i < UCHAR_MAX+1; i++)
-    code[i] = 26;
+    init_code[i] = 26;
 
   for (i = 0; i < 26; i++) {
-    code['a' + i] = i;
-    code['A' + i] = i;
+    init_code['a' + i] = i;
+    init_code['A' + i] = i;
   }
 }
 
