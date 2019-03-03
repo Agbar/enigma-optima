@@ -190,10 +190,24 @@ int ComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, s
         }
     }
     i *= 16;
-    for( ; i < len - 2; ++i ) {
-        score += tridict[ echar_0_based_index( msg->plain[i] ) ]
-                        [ echar_0_based_index( msg->plain[i + 1] ) ]
-                        [ echar_0_based_index( msg->plain[i + 2] ) ];
+    uint_fast8_t c0 = echar_0_based_index( msg->plain[i] );
+    uint_fast8_t c1 = echar_0_based_index( msg->plain[i + 1] );
+    int k = i + 2; 
+    for( ; k + 3 < len; k += 4 ) {
+        uint_fast8_t k0 = echar_0_based_index( msg->plain[k] );
+        score += tridict[ c0 ][ c1 ][ k0 ];
+        uint_fast8_t k1 = echar_0_based_index( msg->plain[k + 1] );
+        score += tridict[ c1 ][ k0 ][ k1 ];
+        uint_fast8_t k2 = echar_0_based_index( msg->plain[k + 2] );
+        score += tridict[ k0 ][ k1 ][ k2 ];
+        uint_fast8_t k3 = echar_0_based_index( msg->plain[k + 3] );
+        score += tridict[ k1 ][ k2 ][ k3 ];
+        c0 = k2;
+        c1 = k3;
+    }
+    for( ; k < len; ++k ) {
+        uint8_t c2 = echar_0_based_index( msg->plain[k] );
+        score += tridict[ c0 ][ c1 ][ c2 ];
     }
     return score;
 }
@@ -225,9 +239,23 @@ int ComputeBiscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, sc
         }
     }
     i *= 16;
-    for( ; i < len - 1; ++i ) {
-        score += bidict[ echar_0_based_index( msg->plain[i] ) ]
-                       [ echar_0_based_index( msg->plain[i + 1] ) ];
+    uint_fast8_t c0 = echar_0_based_index( msg->plain[i] );
+    int j = i + 1;
+    for( ; j + 3 < len; j += 4 ) {
+        uint_fast8_t j0 = echar_0_based_index( msg->plain[j] );
+        score += bidict[ c0 ][ j0 ];
+        uint_fast8_t j1 = echar_0_based_index( msg->plain[j + 1] );
+        score += bidict[ j0 ][ j1 ];
+        uint_fast8_t j2 = echar_0_based_index( msg->plain[j + 2] );
+        score += bidict[ j1 ][ j2 ];
+        uint_fast8_t j3 = echar_0_based_index( msg->plain[j + 3] );
+        score += bidict[ j2 ][ j3 ];
+        c0 = j3;
+    }    
+    for( ; j < len; ++j ) {
+        uint_fast8_t j0 = echar_0_based_index( msg->plain[j] );
+        score += bidict[ c0 ][ j0 ];
+        c0 = j0;
     }
     return score;
 }
