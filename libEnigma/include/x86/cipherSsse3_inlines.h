@@ -155,27 +155,28 @@ void Unpack_v8hi( v8hi in, v4si* lo, v4si* hi ){
 }
 
 static inline
-v16qi MOVDQU( v16qi* p ){
+v16qi MOVDQU( const v16qi* p ){
     return __builtin_ia32_loaddqu( (char*) p );
 }
 
 __attribute__ ((optimize("unroll-loops")))
 static inline
-int ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len ){
+int ComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, scoreLength_t len ){
     int score = 0;
     int i;
-    for( i = 0; i + 15 < len - 2; i += 16 ) {
-        v16qi a = *(v16qi*)( msg->plain + i );
+    for( i = 0; i * 16 + 15 < len - 2; ++i ) {
+        v16qi a = msg->vector16[i].vector;
         v8hi aLo, aHi;
         Unpack_v16qi( a, &aLo, &aHi );
         aLo *= 32 * 32;
         aHi *= 32 * 32;
-        v16qi b = MOVDQU( (v16qi*) ( msg->plain + i + 1 ) );
+        const void* a_addr = &msg->vector16[i].vector ;
+        v16qi b = MOVDQU( a_addr + 1 );
         v8hi bLo, bHi;
         Unpack_v16qi( b, &bLo, &bHi );
         bLo *= 32;
         bHi *= 32;
-        v16qi c = MOVDQU( (v16qi*) ( msg->plain + i + 2 ) );
+        v16qi c = MOVDQU( a_addr + 2 );
         v8hi cLo, cHi;
         Unpack_v16qi( c, &cLo, &cHi );
 
@@ -188,6 +189,7 @@ int ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLe
             score += *( ( dict_t* ) tridict + aHi[j] );
         }
     }
+    i *= 16;
     for( ; i < len - 2; ++i ) {
         score += tridict[ echar_0_based_index( msg->plain[i] ) ]
                         [ echar_0_based_index( msg->plain[i + 1] ) ]
@@ -199,16 +201,17 @@ int ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLe
 
 __attribute__ ((optimize("unroll-loops")))
 static inline
-int ComputeBiscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len ){
+int ComputeBiscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, scoreLength_t len ){
     int score = 0;
     int i;
-    for( i = 0; i + 15 < len - 1; i += 16 ) {
-        v16qi a = *(v16qi*)( msg->plain + i );
+    for( i = 0; i * 16 + 15 < len - 1; ++i ) {
+        v16qi a = msg->vector16[i].vector;
         v8hi aLo, aHi;
         Unpack_v16qi( a, &aLo, &aHi );
         aLo *= 32;
         aHi *= 32;
-        v16qi b = MOVDQU( (v16qi*) ( msg->plain + i + 1 ) );
+        const void* a_addr = &msg->vector16[i].vector;
+        v16qi b = MOVDQU( a_addr + 1 );
         v8hi bLo, bHi;
         Unpack_v16qi( b, &bLo, &bHi );
 
@@ -221,6 +224,7 @@ int ComputeBiscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLen
             score += *( ( dict_t* ) bidict + aHi[j] );
         }
     }
+    i *= 16;
     for( ; i < len - 1; ++i ) {
         score += bidict[ echar_0_based_index( msg->plain[i] ) ]
                        [ echar_0_based_index( msg->plain[i + 1] ) ];
