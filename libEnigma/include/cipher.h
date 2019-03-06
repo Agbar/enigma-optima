@@ -48,7 +48,7 @@ STATIC_ASSERT(
 
 static inline 
 size_t double_index( struct echar in, struct echar_delta offset ){
-    return in.encoded + offset.delta;
+    return echar_0_based_index( in ) + offset.delta;
 }
 
 /*
