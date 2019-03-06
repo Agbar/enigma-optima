@@ -6,7 +6,7 @@
 
 struct LookupChunkAvx2_t {
         union PermutationMap_t mapping;
-        v32qi mask;
+        v32qu mask;
 };
 
 struct PathLookupAvx2_t

@@ -6,7 +6,7 @@
 
 struct LookupChunk_t {
         union PermutationMap_t mapping;
-        v16qi mask;
+        v16qu mask;
 };
 
 struct PathLookupSsse3_t
