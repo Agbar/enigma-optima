@@ -1,5 +1,7 @@
 #pragma once
 
+#include <immintrin.h>
+
 #include "echar.h"
 #include "global.h"
 #include "key.h"
