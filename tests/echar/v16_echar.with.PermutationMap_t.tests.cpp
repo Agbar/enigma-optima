@@ -17,8 +17,10 @@ extern "C"
 
 #include "v_tools.hpp"
 
-TEST( v16_echar__PermutationMap, map_identity )
-{
+TEST( v16_echar__PermutationMap, map_identity ){
+    if( !__builtin_cpu_supports("ssse3") ) {
+        return;
+    }
     PermutationMap_t map;
     for( size_t i = 0; i < sizeof(map.letters); i++ )
     {
@@ -39,8 +41,10 @@ TEST( v16_echar__PermutationMap, map_identity )
     }
 }
 
-TEST( v16_echar__PermutationMap, map_rot1 )
-{
+TEST( v16_echar__PermutationMap, map_rot1 ){
+    if( !__builtin_cpu_supports("ssse3") ) {
+        return;
+    }
     PermutationMap_t map;
     for( size_t i = 0; i < sizeof(map.letters); i++ )
     {

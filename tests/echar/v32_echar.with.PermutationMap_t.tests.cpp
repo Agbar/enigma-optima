@@ -13,6 +13,9 @@ extern "C" {
 #include "v_tools.hpp"
 
 TEST( v32_echar__PermutationMap, v32_echar_map ){
+    if( !__builtin_cpu_supports("avx2") ) {
+        return;
+    }
     PermutationMap_t map;
     for( size_t i = 0; i < sizeof(map.letters); i++ ){
         map.letters[i] = make_echar( i % 26 );
@@ -28,8 +31,10 @@ TEST( v32_echar__PermutationMap, v32_echar_map ){
     }
 }
 
-TEST( v32_echar__PermutationMap, map_rot1 )
-{
+TEST( v32_echar__PermutationMap, map_rot1 ){
+    if( !__builtin_cpu_supports("avx2") ) {
+        return;
+    }
     PermutationMap_t map;
     for( size_t i = 0; i < sizeof(map.letters); i++ )
     {
