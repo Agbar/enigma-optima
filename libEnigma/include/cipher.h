@@ -5,26 +5,26 @@
 #include <stdio.h>
 
 #include "ciphertext.h"
+#include "common.h"
 #include "cpu.h"
 #include "global.h"
 #include "key.h"
 #include "ModMath.h"
 #include "config/array_sizes.h"
 #include "config/types.h"
+#include "character_encoding.h"
 
 struct Turnovers_t {
-    int8_t r,
+    struct turnover r,
      r2,
      m,
      m2;
 };
 
 PURE_FUNCTION
-int scrambler_state(const Key *key, int len);
-PURE_FUNCTION
-double dgetic_ALL(const Key *key, int len);
+int scrambler_state(const struct Key *restrict key, int len);
 
-typedef void (*enigma_prepare_decoder_lookup_function_pt) (const Key *key, int len);
+typedef void (*enigma_prepare_decoder_lookup_function_pt) (const struct Key *key, int len);
 
 typedef struct _enigma_cipher_function_t
 {
@@ -35,27 +35,42 @@ typedef struct _enigma_cipher_function_t
 void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, enigma_prepare_decoder_lookup_function_pt* cf);
 
 extern enigma_cipher_function_t enigma_cipher_decoder_lookup;
-extern text_t path_lookup[CT][LAST_DIMENSION];
+extern union PermutationMap_t path_lookup[CT];
+
+union DoublePermutationMap {
+    struct echar flat[ 26 * 2 ];
+    struct PermutationMap26 dbl[ 2 ];
+};
+
+STATIC_ASSERT( 
+    sizeof(union DoublePermutationMap) == 2 * sizeof(struct PermutationMap26) 
+    , "Dense packing expected" );
+
+static inline 
+size_t double_index( struct echar in, struct echar_delta offset ){
+    return echar_0_based_index( in ) + offset.delta;
+}
 
 /*
  * decoders common data
  *************************/
-extern text_t wal_turn[9];
-extern text_t     wal[11][78] ;
-extern text_t rev_wal[11][78];
-extern text_t ukw[5][52];
-extern text_t etw[52];
+extern const struct turnover wal_turn[9];
+extern const union DoublePermutationMap     wal[11];
+extern const union DoublePermutationMap rev_wal[11];
+extern const union DoublePermutationMap     ukw[ 5];
 
 static inline
-size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett );
+struct echar
+decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett );
 
 static inline
-v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett );
+v4piu decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett );
 
 #ifdef __i386__
 
 static inline
-size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett )
+struct echar
+decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     asm(
@@ -65,7 +80,7 @@ size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett
         , [ind]     "r"     ( index )
         , [offset]  "i"     ( offset ));
 
-    c = stbrett->letters[c];
+    c = echar_0_based_index( stbrett->letters[c] );
 
     // path_lookup[Offset+Index][(Cx)]
     asm(
@@ -80,7 +95,7 @@ size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett
 }
 
 static inline
-v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+v4piu decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     size_t d;
@@ -99,10 +114,10 @@ v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbret
         , [ind]     "r"     ( index )
         , [offset]  "i"     ( offset ));
 
-    c = stbrett->letters[c];
-    d = stbrett->letters[d];
-    e = stbrett->letters[e];
-    f = stbrett->letters[f];
+    c = echar_0_based_index( stbrett->letters[c] );
+    d = echar_0_based_index( stbrett->letters[d] );
+    e = echar_0_based_index( stbrett->letters[e] );
+    f = echar_0_based_index( stbrett->letters[f] );
 
     // path_lookup[Offset+Index][(Cx)]
     asm(
@@ -120,10 +135,10 @@ v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbret
         , [offset]      "i"     ( offset )
         , [ld]          "i"     ( LAST_DIMENSION ));
 
-    v4pis ret = { stbrett->letters[c]
-                , stbrett->letters[d]
-                , stbrett->letters[e]
-                , stbrett->letters[f]
+    v4piu ret = { echar_0_based_index( stbrett->letters[c] )
+                , echar_0_based_index( stbrett->letters[d] )
+                , echar_0_based_index( stbrett->letters[e] )
+                , echar_0_based_index( stbrett->letters[f] )
                 };
     return ret;
 }
@@ -133,7 +148,8 @@ v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbret
 #ifdef __amd64__
 
 static inline
-size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett )
+struct echar
+decode( size_t offset,size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     asm(
@@ -144,7 +160,7 @@ size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett
         , [ind]     "r"     ( index )
         , [offset]  "i"     ( offset ));
 
-    c = stbrett->letters[c];
+    c = echar_0_based_index( stbrett->letters[c] );
 
     // path_lookup[Offset+Index][(Cx)]
     asm(
@@ -159,7 +175,7 @@ size_t decode( size_t offset,size_t index, const PermutationMap_t* const stbrett
 }
 
 static inline
-v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbrett )
+v4piu decode4( size_t offset, size_t index, const union PermutationMap_t* const stbrett )
 {
     size_t c;
     size_t d;
@@ -178,10 +194,10 @@ v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbret
         , [ind]     "r"     ( index )
         , [offset]  "i"     ( offset ));
 
-    c = stbrett->letters[c];
-    d = stbrett->letters[d];
-    e = stbrett->letters[e];
-    f = stbrett->letters[f];
+    c = echar_0_based_index( stbrett->letters[c] );
+    d = echar_0_based_index( stbrett->letters[d] );
+    e = echar_0_based_index( stbrett->letters[e] );
+    f = echar_0_based_index( stbrett->letters[f] );
 
     // path_lookup[Offset+Index][(Cx)]
     asm(
@@ -198,10 +214,10 @@ v4pis decode4( size_t offset, size_t index, const PermutationMap_t* const stbret
         , [offset]      "i"     ( offset )
         , [ld]          "i"     ( LAST_DIMENSION ));
 
-    v4pis ret = { stbrett->letters[c]
-                , stbrett->letters[d]
-                , stbrett->letters[e]
-                , stbrett->letters[f]
+    v4piu ret = { echar_0_based_index( stbrett->letters[c] )
+                , echar_0_based_index( stbrett->letters[d] )
+                , echar_0_based_index( stbrett->letters[e] )
+                , echar_0_based_index( stbrett->letters[f] )
                 };
     return ret;
 }

@@ -5,28 +5,27 @@
 #include "cipher.h"
 
 
-uint16_t icscoreSimple( const Key* const restrict key, scoreLength_t len );
-int     uniscoreSimple( const Key* const restrict key, scoreLength_t len );
-int      biscoreSimple( const Key* const restrict key, scoreLength_t len );
-int     triscoreSimple( const Key* const restrict key, scoreLength_t len );
+uint16_t icscoreSimple( const struct Key* const restrict key, scoreLength_t len );
+int     uniscoreSimple( const struct Key* const restrict key, scoreLength_t len );
+int      biscoreSimple( const struct Key* const restrict key, scoreLength_t len );
+int     triscoreSimple( const struct Key* const restrict key, scoreLength_t len );
 
 enigma_score_function_t enigmaScoreSimple = { triscoreSimple, biscoreSimple, icscoreSimple, uniscoreSimple};
 
 PURE_FUNCTION
-uint16_t icscoreSimple( const Key* const restrict key, scoreLength_t len )
+uint16_t icscoreSimple( const struct Key* const restrict key, scoreLength_t len )
 {
   int f[26] = {0};  
   int i;
-  int c;
 
   if (len < 2)
     return 0;
 
-  const PermutationMap_t* const stbrett = &key->stbrett;
+  const union PermutationMap_t* const stbrett = &key->stbrett;
 
   for (i = 0; i < len; i++) {
-    c = decode(0,i,stbrett);
-    f[c]++;
+    struct echar c = decode(0,i,stbrett);
+    f[ echar_0_based_index( c ) ]++;
   }
 
   uint16_t S = 0;
@@ -37,35 +36,33 @@ uint16_t icscoreSimple( const Key* const restrict key, scoreLength_t len )
 }
 
 PURE_FUNCTION
-int uniscoreSimple(const Key* const restrict key, scoreLength_t len)
+int uniscoreSimple(const struct Key* const restrict key, scoreLength_t len)
 {
   int i;
-  int c;
   int s = 0;
-  const PermutationMap_t* const stbrett = &key->stbrett;
+  const union PermutationMap_t* const stbrett = &key->stbrett;
 
   for (i = 0; i < len; i++) {
-    c = decode(0,i,stbrett);
-    s += unidict[c];
+    struct echar c = decode(0,i,stbrett);
+    s += unidict[ echar_0_based_index( c ) ];
   }
 
   return s;
 }
 
 PURE_FUNCTION
-int biscoreSimple(const Key* const restrict key, scoreLength_t len)
+int biscoreSimple(const struct Key* const restrict key, scoreLength_t len)
 {
   int i;
-  int c1, c2;
   int s = 0;
-  const PermutationMap_t* const stbrett = &key->stbrett;
+  const union PermutationMap_t* const stbrett = &key->stbrett;
 
-  c1 = decode(0,0,stbrett);
+  struct echar c1 = decode(0,0,stbrett);
 
   for (i = 1; i < len; i++) {
-    c2 = decode(0,i,stbrett);
-    s += bidict[c1][c2];
-
+    struct echar c2 = decode(0,i,stbrett);
+    s += bidict[ echar_0_based_index( c1 ) ]
+               [ echar_0_based_index( c2 ) ];
     c1 = c2;
   }
 
@@ -74,20 +71,21 @@ int biscoreSimple(const Key* const restrict key, scoreLength_t len)
 }
 
 PURE_FUNCTION
-int triscoreSimple(const Key* const restrict key,  scoreLength_t len)
+int triscoreSimple(const struct Key* const restrict key,  scoreLength_t len)
 {
   int i;
-  int c1, c2, c3;
   int s = 0;
-  const PermutationMap_t* const stbrett = &key->stbrett;
+  const union PermutationMap_t* const stbrett = &key->stbrett;
 
-  c1 = decode(0,0,stbrett);
+  struct echar c1 = decode(0,0,stbrett);
 
-  c2 = decode(1,0,stbrett);
+  struct echar c2 = decode(1,0,stbrett);
 
   for (i = 2; i < len; i++) {
-    c3 = decode(0,i,stbrett);
-    s += tridict[c1][c2][c3];
+    struct echar c3 = decode(0,i,stbrett);
+    s += tridict[ echar_0_based_index( c1 ) ]
+                [ echar_0_based_index( c2 ) ]
+                [ echar_0_based_index( c3 ) ];
 
     c1 = c2;
     c2 = c3;

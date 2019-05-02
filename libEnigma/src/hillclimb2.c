@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "character_encoding.h"
 #include "cipher.h"
 #include "ciphertext.h"
 #include "dict.h"
@@ -48,13 +49,13 @@ void save_state_exit2(State state, int retval)
   exit(retval);
 }
 
-void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key *gkey_res,
+void hillclimb2( const struct Key* const from, const struct Key* const to, const struct Key* const ckey_res, const struct Key* const gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
                 FILE *outfile, int act_on_sig, int len )
 {
-  Key ckey;
-  Key gkey;
-  Key lo;
+  struct Key ckey;
+  struct Key gkey;
+  struct Key lo;
   text_t hi[3][12] = {
     {EnigmaModel_H ,2, 0,5,5,5,25,25, 0,25,25,25},
     {EnigmaModel_M3,2, 0,8,8,8,25,25, 0,25,25,25},
@@ -63,9 +64,10 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
   State state;
   time_t lastsave;
   int m;
-  int p, q, i, k, x, z, u, v;
-  text_t var[26];
-  Fill0To25(var);
+  int p, q;
+  struct echar i, k, x, z, u, v;
+  struct echar var[26];
+  Fill0To25_echar(var);
   int pass;
   int bestscore, jbestscore, a, globalscore;
   uint16_t bestic, ic;
@@ -122,21 +124,21 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 
    firstloop = 1;
 
-   for (ckey.ukwnum=lo.ukwnum; ckey.ukwnum<=hi[m][1]; ckey.ukwnum++) {
-    for (ckey.slot.g=lo.slot.g; ckey.slot.g<=hi[m][2]; ckey.slot.g++) {
-     for (ckey.slot.l=lo.slot.l; ckey.slot.l<=hi[m][3]; ckey.slot.l++) {
-      for (ckey.slot.m=lo.slot.m; ckey.slot.m<=hi[m][4]; ckey.slot.m++) {
-        if (ckey.slot.m == ckey.slot.l) continue;
-       for (ckey.slot.r=lo.slot.r; ckey.slot.r<=hi[m][5]; ckey.slot.r++) {
-         if (ckey.slot.r == ckey.slot.l || ckey.slot.r == ckey.slot.m) continue;
-        for (ckey.ring.m=lo.ring.m; ckey.ring.m<=hi[m][6]; ckey.ring.m++) {
-          if (ckey.slot.m > 5 && ckey.ring.m > 12) continue;
-         for (ckey.ring.r=lo.ring.r; ckey.ring.r<=hi[m][7]; ckey.ring.r++) {
-           if (ckey.slot.r > 5 && ckey.ring.r > 12) continue;
-          for (ckey.mesg.g=lo.mesg.g; ckey.mesg.g<=hi[m][8]; ckey.mesg.g++) {
-           for (ckey.mesg.l=lo.mesg.l; ckey.mesg.l<=hi[m][9]; ckey.mesg.l++) {
-            for (ckey.mesg.m=lo.mesg.m; ckey.mesg.m<=hi[m][10]; ckey.mesg.m++) {
-             for (ckey.mesg.r=lo.mesg.r; ckey.mesg.r<=hi[m][11]; ckey.mesg.r++) {
+   for (ckey.ukwnum=lo.ukwnum; ckey.ukwnum.type<=hi[m][1]; ckey.ukwnum.type++) {
+    for (ckey.slot.g=lo.slot.g; ckey.slot.g.type<=hi[m][2]; ckey.slot.g.type++) {
+     for (ckey.slot.l=lo.slot.l; ckey.slot.l.type<=hi[m][3]; ckey.slot.l.type++) {
+      for (ckey.slot.m=lo.slot.m; ckey.slot.m.type<=hi[m][4]; ckey.slot.m.type++) {
+        if (ckey.slot.m.type == ckey.slot.l.type) continue;
+       for (ckey.slot.r=lo.slot.r; ckey.slot.r.type<=hi[m][5]; ckey.slot.r.type++) {
+         if (ckey.slot.r.type == ckey.slot.l.type || ckey.slot.r.type == ckey.slot.m.type) continue;
+        for (ckey.ring.m=lo.ring.m; ckey.ring.m.delta<=hi[m][6]; ckey.ring.m.delta++) {
+          if (ckey.slot.m.type > 5 && ckey.ring.m.delta > 12) continue;
+         for (ckey.ring.r=lo.ring.r; ckey.ring.r.delta<=hi[m][7]; ckey.ring.r.delta++) {
+           if (ckey.slot.r.type > 5 && ckey.ring.r.delta > 12) continue;
+          for (ckey.mesg.g=lo.mesg.g; ckey.mesg.g.delta<=hi[m][8]; ckey.mesg.g.delta++) {
+           for (ckey.mesg.l=lo.mesg.l; ckey.mesg.l.delta<=hi[m][9]; ckey.mesg.l.delta++) {
+            for (ckey.mesg.m=lo.mesg.m; ckey.mesg.m.delta<=hi[m][10]; ckey.mesg.m.delta++) {
+             for (ckey.mesg.r=lo.mesg.r; ckey.mesg.r.delta<=hi[m][11]; ckey.mesg.r.delta++) {
 
                if (doShutdown)
                  save_state_exit2(state, 111);
@@ -165,8 +167,8 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
                } 
 
                /* complete ckey initialization */
-               Fill0To25( ckey.sf );
-               Fill0To25( ckey.stbrett.letters );
+               Fill0To25_echar( ckey.sf.map );
+               Fill0To25_echar( ckey.stbrett.letters );
                ckey.count = 0;
 
                /* initialize path_lookup */
@@ -178,26 +180,26 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 				   for (q = p + 1; q < 26; q++) {
 					   i = var[p];
 					   k = var[q];
-					   x = ckey.stbrett.letters[i];
-					   z = ckey.stbrett.letters[k];
-					   u = ckey.stbrett.letters[x];
-					   v = ckey.stbrett.letters[z];
+					   x = ckey.stbrett.letters[ echar_0_based_index( i ) ];
+					   z = ckey.stbrett.letters[ echar_0_based_index( k ) ];
+					   u = ckey.stbrett.letters[ echar_0_based_index( x ) ];
+					   v = ckey.stbrett.letters[ echar_0_based_index( z ) ];
 
-					   if (x == k) {
-						   ckey.stbrett.letters[i] = i;
-						   ckey.stbrett.letters[k] = k;
+					   if ( echar_eq( x, k ) ){
+						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
+						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
 					   }
 					   else {
-						   if (x != i) {
-							   ckey.stbrett.letters[i] = i;
-							   ckey.stbrett.letters[x] = x;
+						   if ( echar_neq( x, i ) ){
+							   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
+							   ckey.stbrett.letters[ echar_0_based_index( x ) ] = x;
 						   };
-						   if (z != k) {
-							   ckey.stbrett.letters[k] = k;
-							   ckey.stbrett.letters[z] = z;
+						   if ( echar_neq( z, k ) ){
+							   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
+							   ckey.stbrett.letters[ echar_0_based_index( z ) ] = z;
 						   };
-						   ckey.stbrett.letters[i] = k;
-						   ckey.stbrett.letters[k] = i;
+						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = k;
+						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = i;
 					   }
 
 					   ic = sf.icscore( &ckey, len );
@@ -206,10 +208,10 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   bestic = ic;
 					   }
 					   else {
-						   ckey.stbrett.letters[z] = v;
-						   ckey.stbrett.letters[x] = u;
-						   ckey.stbrett.letters[k] = z;
-						   ckey.stbrett.letters[i] = x;
+						   ckey.stbrett.letters[ echar_0_based_index( z ) ] = v;
+						   ckey.stbrett.letters[ echar_0_based_index( x ) ] = u;
+						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = z;
+						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = x;
 					   }
 
 				   }
@@ -220,26 +222,26 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 				   for (q = p + 1; q < 26; q++) {
 					   i = var[p];
 					   k = var[q];
-					   x = ckey.stbrett.letters[i];
-					   z = ckey.stbrett.letters[k];
-					   u = ckey.stbrett.letters[x];
-					   v = ckey.stbrett.letters[z];
+					   x = ckey.stbrett.letters[ echar_0_based_index( i ) ];
+					   z = ckey.stbrett.letters[ echar_0_based_index( k ) ];
+					   u = ckey.stbrett.letters[ echar_0_based_index( x ) ];
+					   v = ckey.stbrett.letters[ echar_0_based_index( z ) ];
 
-					   if (x == k) {
-						   ckey.stbrett.letters[i] = i;
-						   ckey.stbrett.letters[k] = k;
+					   if ( echar_eq( x, k ) ){
+						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
+						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
 					   }
 					   else {
-						   if (x != i) {
-							   ckey.stbrett.letters[i] = i;
-							   ckey.stbrett.letters[x] = x;
+						   if ( echar_neq( x, i ) ){
+							   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
+							   ckey.stbrett.letters[ echar_0_based_index( x ) ] = x;
 						   };
-						   if (z != k) {
-							   ckey.stbrett.letters[k] = k;
-							   ckey.stbrett.letters[z] = z;
+						   if ( echar_neq( z, k ) ){
+							   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
+							   ckey.stbrett.letters[ echar_0_based_index( z ) ] = z;
 						   };
-						   ckey.stbrett.letters[i] = k;
-						   ckey.stbrett.letters[k] = i;
+						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = k;
+						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = i;
 					   }
 
 					   a = sf.uniscore( &ckey, len );
@@ -248,10 +250,10 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   bestscore = a;
 					   }
 					   else {
-						   ckey.stbrett.letters[z] = v;
-						   ckey.stbrett.letters[x] = u;
-						   ckey.stbrett.letters[k] = z;
-						   ckey.stbrett.letters[i] = x;
+						   ckey.stbrett.letters[ echar_0_based_index( z ) ] = v;
+						   ckey.stbrett.letters[ echar_0_based_index( x ) ] = u;
+						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = z;
+						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = x;
 					   }
 
 				   }
@@ -265,26 +267,26 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
                    for (q = p+1; q < 26; q++) {
 					   i = var[p];
 					   k = var[q];
-					   x = ckey.stbrett.letters[i];
-					   z = ckey.stbrett.letters[k];
-					   u = ckey.stbrett.letters[x];
-					   v = ckey.stbrett.letters[z];
+					   x = ckey.stbrett.letters[ echar_0_based_index( i ) ];
+					   z = ckey.stbrett.letters[ echar_0_based_index( k ) ];
+					   u = ckey.stbrett.letters[ echar_0_based_index( x ) ];
+					   v = ckey.stbrett.letters[ echar_0_based_index( z ) ];
 
-					   if (x == k) {
-						   ckey.stbrett.letters[i] = i;
-						   ckey.stbrett.letters[k] = k;
+					   if ( echar_eq( x, k ) ){
+						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
+						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
 					   }
 					   else {
-						   if (x != i) {
-							   ckey.stbrett.letters[i] = i;
-							   ckey.stbrett.letters[x] = x;
+						   if ( echar_neq( x, i ) ){
+							   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
+							   ckey.stbrett.letters[ echar_0_based_index( x ) ] = x;
 						   };
-						   if (z != k) {
-							   ckey.stbrett.letters[k] = k;
-							   ckey.stbrett.letters[z] = z;
+						   if ( echar_neq( z, k ) ){
+							   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
+							   ckey.stbrett.letters[ echar_0_based_index( z ) ] = z;
 						   };
-						   ckey.stbrett.letters[i] = k;
-						   ckey.stbrett.letters[k] = i;
+						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = k;
+						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = i;
 					   }
 
                        a = sf.triscore( &ckey, len );
@@ -293,10 +295,10 @@ void hillclimb2( const Key *from, const Key *to, const Key *ckey_res, const Key 
 						   bestscore = a;
                        }
 					   else {
-						   ckey.stbrett.letters[z] = v;
-						   ckey.stbrett.letters[x] = u;
-						   ckey.stbrett.letters[k] = z;
-						   ckey.stbrett.letters[i] = x;
+						   ckey.stbrett.letters[ echar_0_based_index( z ) ] = v;
+						   ckey.stbrett.letters[ echar_0_based_index( x ) ] = u;
+						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = z;
+						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = x;
 					   }
                      
                    }

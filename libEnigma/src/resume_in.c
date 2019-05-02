@@ -25,7 +25,7 @@ char *getline_resume(char *dest, int n, FILE *fp)
 }
 
 /* sets state according to 00hc.resume */
-int set_state( Key *from, Key *to, Key *ckey_res, Key *gkey_res, int *sw_mode,
+int set_state( struct Key *const restrict from, struct Key *const restrict to, struct Key *const restrict ckey_res, struct Key *const restrict gkey_res, int *sw_mode,
                int *max_pass, int *firstpass, int *max_score )
 {
   FILE *fp;

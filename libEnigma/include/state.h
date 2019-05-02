@@ -1,17 +1,18 @@
 #pragma once
 
 #include "config/types.h"
+#include "character_encoding.h"
 
 typedef struct {
-  const Key *from;
-  const Key *to;
-  Key *ckey;
-  Key *gkey;
+  const struct Key *from;
+  const struct Key *to;
+  struct Key *ckey;
+  struct Key *gkey;
   int *sw_mode;
   int *pass;
   int *firstpass;
   int *max_score;
-  text_t *ciphertext;
+  struct echar *ciphertext;
 } State;
 
 /*

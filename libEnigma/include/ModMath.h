@@ -43,6 +43,12 @@ void IncrementMod(int8_t* number, int8_t modulo)
     if( ++*number == modulo  ) *number = 0;
 }
 
+static inline
+void IncrementModU(uint8_t* number, uint8_t modulo)
+{
+    if( ++*number == modulo  ) *number = 0;
+}
+
 /* v16qi
  * * * * * */
 CONST_FUNCTION

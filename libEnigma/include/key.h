@@ -5,20 +5,21 @@
 
 #include "global.h"
 #include "config/types.h"
+#include "character_encoding.h"
 
 /* PermutationMap
  * * * * * * * * */
-typedef union _PermutationMap_t
+union PermutationMap_t
 {
-    v32qi whole;
+    union v32_echar whole;
 
-    v16qi half[2];
+    union v16_echar half[2];
 
-    text_t letters[32];
-} PermutationMap_t;
+    struct echar letters[32];
+};
 
 static inline
-void FixPermutationMapTail(PermutationMap_t* mapping){
+void FixPermutationMapTail(union PermutationMap_t* mapping){
     int k = 26;
     for(; k < 32; k++)
     {
@@ -26,9 +27,13 @@ void FixPermutationMapTail(PermutationMap_t* mapping){
     }
 }
 
+struct PermutationMap26 {
+    struct echar map[ 26 ];
+};
+
 __attribute__((optimize("unroll-loops")))
 static inline
-void Fill0To25(text_t array[26])
+void Fill0To25( text_t array[26] )
 {
     int32_t* arrayInt = (int32_t*)array;
     int i = 0;
@@ -42,12 +47,76 @@ void Fill0To25(text_t array[26])
     arrayShort[12] = 0x1918;
 }
 
+static inline
+void Fill0To25_echar( struct echar array[26] ){
+    Fill0To25( &array[0].encoded );
+}
+
 /* RingsState
  * * * * * * */
 struct RingsState
 {
-    int8_t g, l, m, r;
+    struct echar_delta g, l, m, r;
 };
+
+struct RingType {
+    enum ring_type_enum {
+        RingType_None = 0,
+        RingType_1    = 1,
+        RingType_2    = 2,
+        RingType_3    = 3,
+        RingType_4    = 4,
+        RingType_5    = 5,
+        RingType_6    = 6,
+        RingType_7    = 7,
+        RingType_8    = 8,
+        __RingType__enforce_signed_type = -1, 
+    } type;
+};
+
+char
+RingType_to_ALPHA( struct RingType rt );
+
+struct GreekRingType {
+    enum greek_ring_type_enum {
+        GreekRingType_None = 0,
+        GreekRingType_Beta    = 9,
+        GreekRingType_Gamma    = 10,
+        __GreekRingType__enforce_signed_type = -1, 
+    } type;
+};
+
+char
+GreekRingType_to_ALPHA( struct GreekRingType rt );
+
+struct RingTypes 
+{
+    struct GreekRingType g;
+    struct RingType l, m, r;
+};
+
+struct UkwType
+{
+    enum ukw_type_enum{
+        UkwType_A,
+        UkwType_B,
+        UkwType_C,
+        UkwType_B_Thin,
+        UkwType_C_Thin,
+        __UkwType__enforce_signed_type = -1, 
+    } type;
+};
+
+static inline
+enum comparison_result
+UkwType_cmp( struct UkwType l, struct UkwType r ){
+    if( l.type == r.type ) return cmp_equal;
+    if( l.type >  r.type ) return cmp_greater;
+    else return cmp_less;
+}
+
+char
+UkwType_to_ALPHA( struct UkwType u );
 
 /* Model
  * * * * */
@@ -60,22 +129,22 @@ struct RingsState
 
 /* Key
  * * * */
-typedef struct _key_t {
-    ALIGNED_16(PermutationMap_t stbrett);
-    struct RingsState slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
+struct Key {
+    ALIGNED_16(union PermutationMap_t stbrett);
+    struct RingTypes  slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
     struct RingsState ring; ///< ringstellungen
     struct RingsState mesg; ///< message settings
-    int8_t ukwnum;
+    struct UkwType ukwnum;
     enum ModelType_t model;
-    text_t sf[26];     /* swapped/free letters */
+    struct PermutationMap26 sf; //< swapped/free letters
     int count;      /* number of swapped letters */
     int score;      /* hillclimbing score */
-} Key;
+};
 
-int init_key_default(Key *key, enum ModelType_t model);
-int init_key_low(Key *key, enum ModelType_t model);
+int init_key_default( struct Key *key, enum ModelType_t model);
+int init_key_low( struct Key *key, enum ModelType_t model);
 PURE_FUNCTION
-int keycmp(const Key *k1, const Key *k2);
+int keycmp(const struct Key *k1, const struct Key *k2);
 
 #endif
 

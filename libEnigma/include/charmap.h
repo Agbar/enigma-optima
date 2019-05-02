@@ -4,8 +4,7 @@
 #include <stdint.h>
 #include "config/types.h"
 
-extern text_t code[];
-extern const unsigned char alpha[];
+extern const text_t code[];
 void init_charmap(void);
 
 #endif

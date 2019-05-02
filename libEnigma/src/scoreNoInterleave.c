@@ -6,10 +6,10 @@
 #include "scoreNoInterleave_inlines.h"
 
 // default scores
-static int     uniscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
-static int      biscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
-static int     triscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
-static uint16_t icscoreNoInterleave( const Key* const restrict key, scoreLength_t len );
+static int     uniscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len );
+static int      biscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len );
+static int     triscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len );
+static uint16_t icscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len );
 
 union ScoringDecodedMessage decodedMsgPartNoInterleave;
 
@@ -20,13 +20,13 @@ enigma_score_function_t enigmaScoreOptNoInterleave = {
     uniscoreNoInterleave };
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-int triscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
+int triscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
     return ComputeTriscoreFromDecodedMsg( &decodedMsgPartNoInterleave, len );
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static uint16_t icscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
+static uint16_t icscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len ) {
     if (len < 2) {
         return 0;
     }
@@ -36,7 +36,7 @@ static uint16_t icscoreNoInterleave( const Key* const restrict key, scoreLength_
     uint8_t i;
     uint8_t length = len;
     for( i = 0; i < length; ++i ){
-        f[decodedMsgPartNoInterleave.plain[i]]++;
+        f[ echar_0_based_index( decodedMsgPartNoInterleave.plain[i] ) ]++;
     }
 
     uint16_t S0, S1, S2, S3;
@@ -54,19 +54,19 @@ static uint16_t icscoreNoInterleave( const Key* const restrict key, scoreLength_
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static int uniscoreNoInterleave( const Key* key, scoreLength_t len ) {
+static int uniscoreNoInterleave( const struct Key* const key, scoreLength_t len ) {
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
     int s = 0;
     uint8_t i;
     uint8_t length = len;
     for ( i = 0; i < length; i++) {
-        s += unidict[decodedMsgPartNoInterleave.plain[i]];
+        s += unidict[ echar_0_based_index( decodedMsgPartNoInterleave.plain[i] ) ];
     }
     return s;
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static int biscoreNoInterleave( const Key* const restrict key, scoreLength_t len ) {
+static int biscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );
     return ComputeBiscoreFromDecodedMsg( &decodedMsgPartNoInterleave, len );
 }

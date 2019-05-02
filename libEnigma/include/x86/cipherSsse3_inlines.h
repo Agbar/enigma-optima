@@ -3,57 +3,56 @@
 #include "error.h"
 #include "dict.h"
 #include "cipherSsse3.h"
+#include "character_encoding.h"
+
+#include "echar/echar_ssse3.h"
 
 static inline
-v16qi PermuteV16qi(const PermutationMap_t* map, v16qi vec ){
-    /* Following line is needed to behave like __builtin_shuffle for all inputs and still being
-    faster, but our data is always in interval [0,25] = [0,0x1A). */
-    // vec &= 0x1F;
-    vec += (char) 0x70; // For every byte push value of bit[4] to bit[7].
-    v16qi ret1 = __builtin_ia32_pshufb128( map->half[0], vec );
-    v16qi ret2 = __builtin_ia32_pshufb128( map->half[1], vec ^ (char) 0x80 );
-    return ret1 | ret2;
-}
-
-
-static inline
-v16qi DecodeBiteForwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key ){
+union v16_echar
+DecodeBiteForwardCommonSsse3( union v16_echar bite, union v16_echar_delta rRingOffset, const struct Key* const restrict key ){
     // stbrett forward
-    bite = PermuteV16qi ( &key->stbrett, bite );
+    bite = v16_echar_map( bite, key->stbrett );
     // right ring forward
-    bite = AddMod26_v16qi( bite, rRingOffset );
-    bite = PermuteV16qi( &PathLookupSsse3.r_ring[0], bite );
-    bite = SubMod26_v16qi( bite, rRingOffset );
+    bite = v16_echar_add_delta( bite, rRingOffset );
+    bite = v16_echar_map( bite, PathLookupSsse3.r_ring[0] );
+    bite = v16_echar_sub_delta( bite, rRingOffset );
     return bite;
 }
 
 static inline
-v16qi DecodeBiteMaskedPartSsse3( v16qi predecodedBite, int lookupNumber ) {
-    v16qi bite = predecodedBite;
+union v16_echar
+DecodeBiteMaskedPartSsse3( union v16_echar predecodedBite, int lookupNumber ) {    
     // m+l rings and ukw
-    bite  = PermuteV16qi( &PathLookupSsse3.lookups[lookupNumber].mapping,  bite );
-    bite &= PathLookupSsse3.lookups[lookupNumber].mask;
+    union v16_echar masked = v16_echar_map( predecodedBite, PathLookupSsse3.lookups[lookupNumber].mapping );
+    masked.vector &= PathLookupSsse3.lookups[lookupNumber].mask;
+    return masked;
+}
+
+static inline
+union v16_echar
+DecodeBiteBackwardCommonSsse3( union v16_echar bite, union v16_echar_delta rRingOffset, const struct Key* const restrict key ) {
+    // right ring backwards
+    bite = v16_echar_add_delta( bite, rRingOffset );
+    bite = v16_echar_map( bite, PathLookupSsse3.r_ring[1] );
+    bite = v16_echar_sub_delta( bite, rRingOffset );
+    //stbrett backwards
+    bite = v16_echar_map( bite, key->stbrett );
     return bite;
 }
 
 static inline
-v16qi DecodeBiteBackwardCommonSsse3( v16qi bite,  v16qi rRingOffset, const Key* const restrict key ) {
-    // right ring backwards
-    bite = AddMod26_v16qi( bite, rRingOffset );
-    bite = PermuteV16qi( &PathLookupSsse3.r_ring[1], bite );
-    bite = SubMod26_v16qi( bite, rRingOffset );
-    //stbrett backwards
-    bite = PermuteV16qi( &key->stbrett, bite );
-    return bite;
+union v16_echar
+CombineMaskedPartsSsse3( union v16_echar l, union v16_echar r ){
+    return (union v16_echar){ .vector = l.vector | r.vector };
 }
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 static inline
-void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union ScoringDecodedMessage* output )
+void DecodeScoredMessagePartSsse3( const struct Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;
-    v16qi currentRRingOffset = PathLookupSsse3.firstRRingOffset;
+    union v16_echar_delta currentRRingOffset = PathLookupSsse3.firstRRingOffset;
     while( messageBite < ( len + 15 ) / 16 )
     {
         /* Worst case:
@@ -68,23 +67,23 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
          *  In the worst case there are 4 lookups per bite.
          */
         uint_least16_t lookupsToNextBite = PathLookupSsse3.nextBite[messageBite] - lookupNumber;
-        v16qi cBite = {0};
+        union v16_echar cBite = {};
         lookupNumber += lookupsToNextBite;
-        v16qi currentBite = ciphertext.vector16[messageBite];
-        v16qi predecoded  = DecodeBiteForwardCommonSsse3( currentBite, currentRRingOffset, key );
+        union v16_echar currentBite = ciphertext.vector16[messageBite];
+        union v16_echar predecoded  = DecodeBiteForwardCommonSsse3( currentBite, currentRRingOffset, key );
 
         switch( lookupsToNextBite ) {
         case 4:
             cBite  = DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 4 );
             FALLTHROUGH();
         case 3:
-            cBite |= DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 3 );
+            cBite = CombineMaskedPartsSsse3( cBite, DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 3 ) );
             FALLTHROUGH();
         case 2:
-            cBite |= DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 2 );
+            cBite = CombineMaskedPartsSsse3( cBite, DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 2 ) );
             FALLTHROUGH();
         case 1:
-            cBite |= DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 1 );
+            cBite = CombineMaskedPartsSsse3( cBite, DecodeBiteMaskedPartSsse3( predecoded, lookupNumber - 1 ) );
             break;
         default:
             exit_d(5);
@@ -94,7 +93,7 @@ void DecodeScoredMessagePartSsse3( const Key* const restrict key, int len, union
         // store whole decoded bite
         output -> vector16[messageBite] = cBite;
         messageBite++;
-        currentRRingOffset = AddMod26_v16qi_int8( currentRRingOffset, 16 );
+        currentRRingOffset = v16_echar_delta_rot_16( currentRRingOffset );
     }
 }
 
@@ -105,7 +104,7 @@ uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, sc
     uint8_t ALIGNED_32( f[32] ) = {0};
     int i;
     for( i = 0; i < len; i++ ) {
-        f[msg->plain[i]]++;
+        f[ echar_0_based_index( msg->plain[i] ) ]++;
     }
     v16qi* const v = ( v16qi* ) f; // it makes v16hi[2];
     // short result[i] = v0[2*i] * ( v0[2*i] + minusOne ) + v0[2*i+1] * ( v0[2*i+1] + minusOne );
@@ -156,27 +155,28 @@ void Unpack_v8hi( v8hi in, v4si* lo, v4si* hi ){
 }
 
 static inline
-v16qi MOVDQU( v16qi* p ){
+v16qi MOVDQU( const v16qi* p ){
     return __builtin_ia32_loaddqu( (char*) p );
 }
 
 __attribute__ ((optimize("unroll-loops")))
 static inline
-int ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len ){
+int ComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, scoreLength_t len ){
     int score = 0;
     int i;
-    for( i = 0; i + 15 < len - 2; i += 16 ) {
-        v16qi a = *(v16qi*)( msg->plain + i );
+    for( i = 0; i * 16 + 15 < len - 2; ++i ) {
+        v16qi a = msg->vector16[i].vector;
         v8hi aLo, aHi;
         Unpack_v16qi( a, &aLo, &aHi );
         aLo *= 32 * 32;
         aHi *= 32 * 32;
-        v16qi b = MOVDQU( (v16qi*) ( msg->plain + i + 1 ) );
+        const void* a_addr = &msg->vector16[i].vector ;
+        v16qi b = MOVDQU( a_addr + 1 );
         v8hi bLo, bHi;
         Unpack_v16qi( b, &bLo, &bHi );
         bLo *= 32;
         bHi *= 32;
-        v16qi c = MOVDQU( (v16qi*) ( msg->plain + i + 2 ) );
+        v16qi c = MOVDQU( a_addr + 2 );
         v8hi cLo, cHi;
         Unpack_v16qi( c, &cLo, &cHi );
 
@@ -189,8 +189,25 @@ int ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLe
             score += *( ( dict_t* ) tridict + aHi[j] );
         }
     }
-    for( ; i < len - 2; ++i ) {
-        score += tridict[msg->plain[i]][msg->plain[i + 1]][msg->plain[i + 2]];
+    i *= 16;
+    uint_fast8_t c0 = echar_0_based_index( msg->plain[i] );
+    uint_fast8_t c1 = echar_0_based_index( msg->plain[i + 1] );
+    int k = i + 2; 
+    for( ; k + 3 < len; k += 4 ) {
+        uint_fast8_t k0 = echar_0_based_index( msg->plain[k] );
+        score += tridict[ c0 ][ c1 ][ k0 ];
+        uint_fast8_t k1 = echar_0_based_index( msg->plain[k + 1] );
+        score += tridict[ c1 ][ k0 ][ k1 ];
+        uint_fast8_t k2 = echar_0_based_index( msg->plain[k + 2] );
+        score += tridict[ k0 ][ k1 ][ k2 ];
+        uint_fast8_t k3 = echar_0_based_index( msg->plain[k + 3] );
+        score += tridict[ k1 ][ k2 ][ k3 ];
+        c0 = k2;
+        c1 = k3;
+    }
+    for( ; k < len; ++k ) {
+        uint8_t c2 = echar_0_based_index( msg->plain[k] );
+        score += tridict[ c0 ][ c1 ][ c2 ];
     }
     return score;
 }
@@ -198,16 +215,17 @@ int ComputeTriscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLe
 
 __attribute__ ((optimize("unroll-loops")))
 static inline
-int ComputeBiscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLength_t len ){
+int ComputeBiscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, scoreLength_t len ){
     int score = 0;
     int i;
-    for( i = 0; i + 15 < len - 1; i += 16 ) {
-        v16qi a = *(v16qi*)( msg->plain + i );
+    for( i = 0; i * 16 + 15 < len - 1; ++i ) {
+        v16qi a = msg->vector16[i].vector;
         v8hi aLo, aHi;
         Unpack_v16qi( a, &aLo, &aHi );
         aLo *= 32;
         aHi *= 32;
-        v16qi b = MOVDQU( (v16qi*) ( msg->plain + i + 1 ) );
+        const void* a_addr = &msg->vector16[i].vector;
+        v16qi b = MOVDQU( a_addr + 1 );
         v8hi bLo, bHi;
         Unpack_v16qi( b, &bLo, &bHi );
 
@@ -220,8 +238,24 @@ int ComputeBiscoreFromDecodedMsgSse2( union ScoringDecodedMessage* msg, scoreLen
             score += *( ( dict_t* ) bidict + aHi[j] );
         }
     }
-    for( ; i < len - 1; ++i ) {
-        score += bidict[msg->plain[i]][msg->plain[i + 1]];
+    i *= 16;
+    uint_fast8_t c0 = echar_0_based_index( msg->plain[i] );
+    int j = i + 1;
+    for( ; j + 3 < len; j += 4 ) {
+        uint_fast8_t j0 = echar_0_based_index( msg->plain[j] );
+        score += bidict[ c0 ][ j0 ];
+        uint_fast8_t j1 = echar_0_based_index( msg->plain[j + 1] );
+        score += bidict[ j0 ][ j1 ];
+        uint_fast8_t j2 = echar_0_based_index( msg->plain[j + 2] );
+        score += bidict[ j1 ][ j2 ];
+        uint_fast8_t j3 = echar_0_based_index( msg->plain[j + 3] );
+        score += bidict[ j2 ][ j3 ];
+        c0 = j3;
+    }    
+    for( ; j < len; ++j ) {
+        uint_fast8_t j0 = echar_0_based_index( msg->plain[j] );
+        score += bidict[ c0 ][ j0 ];
+        c0 = j0;
     }
     return score;
 }

@@ -1,20 +1,21 @@
 #pragma once
 
+#include "common.h"
 #include "key.h"
 
 PURE_FUNCTION
 enum ModelType_t get_model(char *s);
-int set_ukw(Key *key, char *s, enum ModelType_t model);
-int set_walze(Key *key, char *s, enum ModelType_t model);
-int set_ring(Key *key, char *s, enum ModelType_t model);
-int set_mesg(Key *key, char *s, enum ModelType_t model);
-int set_stecker(Key *key, char *s);
+int set_ukw( struct Key *key, char *s, enum ModelType_t model);
+int set_walze( struct Key *key, char *s, enum ModelType_t model);
+int set_ring( struct Key *key, char *s, enum ModelType_t model);
+int set_mesg( struct Key *key, char *s, enum ModelType_t model);
+int set_stecker( struct Key *key, char *s);
 PURE_FUNCTION
 int get_sw_mode(char *s);
 PURE_FUNCTION
 int get_firstpass(char *s);
-int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust);
-int set_range(Key *from, Key *to, const char *kf, const char *kt, enum ModelType_t model);
+int set_key( struct Key *key, const char *keystring, enum ModelType_t model, int adjust);
+int set_range( struct Key *restrict from, struct Key *restrict to, const char *kf, const char *kt, enum ModelType_t model );
 
 
 /*

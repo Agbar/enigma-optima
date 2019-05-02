@@ -10,10 +10,10 @@
 #include "config/types.h"
 
 // default scores
-static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t length );
-static int     uniscoreBasic( const Key* const restrict key, scoreLength_t length );
-static int      biscoreBasic( const Key* const restrict key, scoreLength_t length );
-static int     triscoreBasic( const Key* const restrict key, scoreLength_t length );
+static uint16_t icscoreBasic( const struct Key* const restrict key, scoreLength_t length );
+static int     uniscoreBasic( const struct Key* const restrict key, scoreLength_t length );
+static int      biscoreBasic( const struct Key* const restrict key, scoreLength_t length );
+static int     triscoreBasic( const struct Key* const restrict key, scoreLength_t length );
 
 enigma_score_function_t enigmaScoreBasic = { triscoreBasic, biscoreBasic, icscoreBasic, uniscoreBasic };
 
@@ -23,7 +23,7 @@ union ScoringDecodedMessage decodedMsgPartBasic;
  * opti scores
  ************************/
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
+static uint16_t icscoreBasic( const struct Key* const restrict key, scoreLength_t len )
 {
   int f[26] = {0};
   int i;
@@ -31,10 +31,10 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
   if (len < 2)
     return 0;
 
-  const PermutationMap_t* stbrett = &key->stbrett;
+  const union PermutationMap_t* stbrett = &key->stbrett;
 
   for (i = 0; i < len-15; i += 16) {
-    v4pis c;
+    v4piu c;
     c = decode4(0,i,stbrett);
     f[c[0]]++;
     f[c[1]]++;
@@ -60,15 +60,15 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
     f[c[3]]++;
   }
   for (; i < len-3; i += 4) {
-    v4pis c = decode4(0,i,stbrett);
+    v4piu c = decode4(0,i,stbrett);
     f[c[0]]++;
     f[c[1]]++;
     f[c[2]]++;
     f[c[3]]++;
   }
   for (; i < len; i++) {
-    text_t c1 = decode(0,i,stbrett);
-    f[c1]++;
+    struct echar c1 = decode(0,i,stbrett);
+    f[ echar_0_based_index( c1 ) ]++;
   }
 
   uint16_t S0, S1, S2, S3;
@@ -87,16 +87,16 @@ static uint16_t icscoreBasic( const Key* const restrict key, scoreLength_t len )
 
 #define UNISCORE_ADD(S,A)\
     asm( "add  %1, %0": "+q"( (S) ): "m"( unidict[(A)] ) )
-static int uniscoreBasic( const Key* key, scoreLength_t len )
+static int uniscoreBasic( const struct Key* const key, scoreLength_t len )
 {
   int i;
   int s;
 
-  const PermutationMap_t* stbrett = &key->stbrett;
+  const union PermutationMap_t* stbrett = &key->stbrett;
 
   s = 0;
   for (i = 0; i < len-15; i += 16) {
-    v4pis c;
+    v4piu c;
     c = decode4( 0, i, stbrett );
     UNISCORE_ADD( s, c[0] );
     UNISCORE_ADD( s, c[1] );
@@ -122,7 +122,7 @@ static int uniscoreBasic( const Key* key, scoreLength_t len )
     UNISCORE_ADD( s, c[3] );
   }
   for (; i < len-3; i += 4) {
-    v4pis c;
+    v4piu c;
     c = decode4( 0, i, stbrett );
     UNISCORE_ADD( s, c[0] );
     UNISCORE_ADD( s, c[1] );
@@ -130,8 +130,8 @@ static int uniscoreBasic( const Key* key, scoreLength_t len )
     UNISCORE_ADD( s, c[3] );
   }
   for (; i < len; i++) {
-    text_t c = decode(0,i,stbrett);
-    UNISCORE_ADD( s, c );
+    struct echar c = decode(0,i,stbrett);
+    UNISCORE_ADD( s, echar_0_based_index( c ) );
   }
 
   return s;
@@ -141,16 +141,16 @@ static int uniscoreBasic( const Key* key, scoreLength_t len )
     asm( "add  %1, %0": "+q"( (S) ): "m"( bidict[(A)][(B)] ) )
 __attribute__ ((optimize("sched-stalled-insns=0"
                         ",sched-stalled-insns-dep=16")))
-int biscoreBasic( const Key* const restrict key, scoreLength_t len )
+int biscoreBasic( const struct Key* const key, scoreLength_t len )
 {
-    const PermutationMap_t* const stbrett = &key->stbrett;
+    const union PermutationMap_t* const stbrett = &key->stbrett;
     int s = 0;
 
-    size_t c1 = decode(0,0,stbrett);
+    size_t c1 = echar_0_based_index( decode(0,0,stbrett) );
 
     int i = 1;
     for( ; i < len - 15; i += 16 ) {
-        v4pis d;
+        v4piu d;
         size_t c2;
         d = decode4( 0, i, stbrett );
         c2 = d[0];
@@ -193,7 +193,7 @@ int biscoreBasic( const Key* const restrict key, scoreLength_t len )
         BISCORE_ADD( s , c2, c1 );
     }
     for( ; i < len - 3; i += 4 ) {
-        v4pis d = decode4( 0, i, stbrett );
+        v4piu d = decode4( 0, i, stbrett );
         size_t c2 = d[0];
         BISCORE_ADD( s , c1, c2 );
         c1 = d[1];
@@ -204,7 +204,7 @@ int biscoreBasic( const Key* const restrict key, scoreLength_t len )
         BISCORE_ADD( s , c2, c1 );
     }
     for( ; i < len; i++ ) {
-        size_t c2 = decode( 0, i, stbrett );
+        size_t c2 = echar_0_based_index( decode( 0, i, stbrett ) );
         BISCORE_ADD( s , c1, c2 );
         c1 = c2;
     }
@@ -217,19 +217,19 @@ int biscoreBasic( const Key* const restrict key, scoreLength_t len )
 __attribute__ ((optimize("sched-stalled-insns=0"
                          ",sched-stalled-insns-dep=16"
                )))
-int triscoreBasic( const Key* const restrict key, scoreLength_t len )
+int triscoreBasic( const struct Key* const key, scoreLength_t len )
 {
     int s = 0;
 
-    const PermutationMap_t* const stbrett = &key->stbrett;
+    const union PermutationMap_t* const stbrett = &key->stbrett;
 
-    size_t c1 = decode(0,0,stbrett);
-    size_t c2 = decode(1,0,stbrett);
+    size_t c1 = echar_0_based_index( decode(0,0,stbrett) );
+    size_t c2 = echar_0_based_index( decode(1,0,stbrett) );
 
     int i = 2;
     for( ; i < len - 15; i += 16 ) {
         size_t c3;
-        v4pis d;
+        v4piu d;
         d = decode4( 0, i, stbrett );
         c3 = d[0];
         TRISCORE_ADD( s, c1, c2, c3 );
@@ -275,7 +275,7 @@ int triscoreBasic( const Key* const restrict key, scoreLength_t len )
     }
     for( ; i < len - 3; i += 4 ) {
         size_t c3;
-        v4pis d = decode4( 0, i, stbrett );
+        v4piu d = decode4( 0, i, stbrett );
         c3 = d[0];
         TRISCORE_ADD( s, c1, c2, c3 );
 
@@ -293,7 +293,7 @@ int triscoreBasic( const Key* const restrict key, scoreLength_t len )
     }
     for( ; i < len; ++i ) {
         size_t c3;
-        c3 = decode( 0, i, stbrett );
+        c3 = echar_0_based_index( decode( 0, i, stbrett ) );
         TRISCORE_ADD( s, c1, c2, c3 );
 
         c1 = c2;

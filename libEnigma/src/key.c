@@ -1,12 +1,33 @@
 #include "global.h"
 #include "key.h"
 
+char
+RingType_to_ALPHA( struct RingType rt ){
+    return '0' + rt.type;
+}
+
+char
+GreekRingType_to_ALPHA( struct GreekRingType rt ){
+    return "BG"[rt.type-9];
+}
+
+char
+UkwType_to_ALPHA( struct UkwType u ){
+    return "ABCAB"[u.type];
+}
+
 /* initialize key to defaults */
-int init_key_default( Key *key, enum ModelType_t model )
+int init_key_default( struct Key *const key, enum ModelType_t model )
 {
-    Key def_H  = {{{0}}, {0, 1, 2, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, 1, EnigmaModel_H, {0}, 0, 0};
-    Key def_M3 = {{{0}}, {0, 1, 2, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, 1, EnigmaModel_M3, {0}, 0, 0};
-    Key def_M4 = {{{0}}, {9, 1, 2, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, 3, EnigmaModel_M4, {0}, 0, 0};
+    struct Key def_H  = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
+                          .ukwnum.type = UkwType_B, 
+                          .model=EnigmaModel_H  };
+    struct Key def_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
+                          .ukwnum.type = UkwType_B,
+                          .model=EnigmaModel_M3 };
+    struct Key def_M4 = { .slot={ { GreekRingType_Beta }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
+                          .ukwnum.type = UkwType_B_Thin,
+                          .model=EnigmaModel_M4 };
     switch( model ) {
     case EnigmaModel_H :
         *key = def_H;
@@ -20,17 +41,23 @@ int init_key_default( Key *key, enum ModelType_t model )
     default:
         return 0;
     }
-    Fill0To25(key->stbrett.letters);
-    Fill0To25(key->sf);
+    Fill0To25_echar(key->stbrett.letters);
+    Fill0To25_echar( key->sf.map );
     return 1;
 }
 
 /* initializes each key element to the lowest possible value */
-int init_key_low( Key *key, enum ModelType_t model )
+int init_key_low( struct Key *const key, enum ModelType_t model )
 {
-    Key low_H  = {{{0}}, {0, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, 0, EnigmaModel_H, {0}, 0, 0};
-    Key low_M3 = {{{0}}, {0, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, 1, EnigmaModel_M3, {0}, 0, 0};
-    Key low_M4 = {{{0}}, {9, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, 3, EnigmaModel_M4, {0}, 0, 0};
+    struct Key low_H  = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+                          .ukwnum.type = UkwType_A,
+                          .model=EnigmaModel_H  };
+    struct Key low_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+                          .ukwnum.type = UkwType_B,
+                          .model=EnigmaModel_M3 };
+    struct Key low_M4 = { .slot={ { GreekRingType_Beta }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+                          .ukwnum.type = UkwType_B_Thin,
+                          .model=EnigmaModel_M4 };
     switch( model ) {
     case EnigmaModel_H :
         *key = low_H;
@@ -44,61 +71,46 @@ int init_key_low( Key *key, enum ModelType_t model )
     default:
         return 0;
     }
-    Fill0To25(key->stbrett.letters);
-    Fill0To25(key->sf);
+    Fill0To25_echar(key->stbrett.letters);
+    Fill0To25_echar( key->sf.map );
     return 1;
 }
 
 /* compares ukwnum thru r_mesg, omits g_ring, l_ring        */
 /* returns -1 for k1 < k2, 0 for k1 == k2, 1 for k1 > k2    */
-int keycmp(const Key *k1, const Key *k2)
+int keycmp(const struct Key *k1, const struct Key *k2)
 {
-  if (  k1->ukwnum != k2->ukwnum ) {
-    if ( k1->ukwnum > k2->ukwnum ) return 1;
+  enum comparison_result cr;
+  cr = UkwType_cmp( k1->ukwnum, k2->ukwnum );
+  if( cr != cmp_equal ) return cr;
+  if (   k1->slot.g.type != k2->slot.g.type ) {
+    if ( k1->slot.g.type >  k2->slot.g.type ) return 1;
     else return -1;
   }
-  if (  k1->slot.g != k2->slot.g ) {
-    if ( k1->slot.g > k2->slot.g ) return 1;
+  if (   k1->slot.l.type != k2->slot.l.type ) {
+    if ( k1->slot.l.type >  k2->slot.l.type ) return 1;
     else return -1;
   }
-  if (  k1->slot.l != k2->slot.l ) {
-    if ( k1->slot.l > k2->slot.l ) return 1;
+  if (   k1->slot.m.type != k2->slot.m.type ) {
+    if ( k1->slot.m.type >  k2->slot.m.type ) return 1;
     else return -1;
   }
-  if (  k1->slot.m != k2->slot.m ) {
-    if ( k1->slot.m > k2->slot.m ) return 1;
+  if (   k1->slot.r.type != k2->slot.r.type ) {
+    if ( k1->slot.r.type >  k2->slot.r.type ) return 1;
     else return -1;
   }
-  if (  k1->slot.r != k2->slot.r ) {
-    if ( k1->slot.r > k2->slot.r ) return 1;
-    else return -1;
-  }
-  if (  k1->ring.m != k2->ring.m ) {
-    if ( k1->ring.m > k2->ring.m ) return 1;
-    else return -1;
-  }
-  if (  k1->ring.r != k2->ring.r ) {
-    if ( k1->ring.r > k2->ring.r ) return 1;
-    else return -1;
-  }
-  if (  k1->mesg.g != k2->mesg.g ) {
-    if ( k1->mesg.g > k2->mesg.g ) return 1;
-    else return -1;
-  }
-  if (  k1->mesg.l != k2->mesg.l ) {
-    if ( k1->mesg.l > k2->mesg.l ) return 1;
-    else return -1;
-  }
-  if (  k1->mesg.m != k2->mesg.m ) {
-    if ( k1->mesg.m > k2->mesg.m ) return 1;
-    else return -1;
-  }
-  if (  k1->mesg.r != k2->mesg.r ) {
-    if ( k1->mesg.r > k2->mesg.r ) return 1;
-    else return -1;
-  }
-  return 0;
-
+  cr = echar_delta_cmp( k1->ring.m, k2->ring.m );
+  if( cr != cmp_equal ) return cr;
+  cr = echar_delta_cmp( k1->ring.r, k2->ring.r );
+  if( cr != cmp_equal ) return cr;
+  cr = echar_delta_cmp( k1->mesg.g, k2->mesg.g );
+  if( cr != cmp_equal ) return cr;
+  cr = echar_delta_cmp( k1->mesg.l, k2->mesg.l );
+  if( cr != cmp_equal ) return cr;
+  cr = echar_delta_cmp( k1->mesg.m, k2->mesg.m );
+  if( cr != cmp_equal ) return cr;
+  cr = echar_delta_cmp( k1->mesg.r, k2->mesg.r );  
+  return cr;
 }
 
 /*

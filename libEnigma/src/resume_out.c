@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <ctype.h>
 
 #ifndef WINDOWS
 # include <unistd.h>
@@ -11,16 +10,18 @@
 #include "state.h"
 #include "resume_out.h"
 
+static
+void print_key_rings( const struct Key * key, char buffer[16] );
 
 void print_state(FILE *fp, const State *state)
 {
   char stecker[27];
   int i;
 
-  const Key *from = state->from;
-  const Key *to = state->to;
-  Key *ckey = state->ckey;
-  Key *gkey = state->gkey;
+  const struct Key *from = state->from;
+  const struct Key *to = state->to;
+  struct Key *ckey = state->ckey;
+  struct Key *gkey = state->gkey;
   int *sw_mode = state->sw_mode;
   int *pass = state->pass;
   int *firstpass = state->firstpass;
@@ -32,56 +33,13 @@ void print_state(FILE *fp, const State *state)
   else if (from->model == EnigmaModel_M3) fprintf(fp, "M3=");
   else if (from->model == EnigmaModel_M4) fprintf(fp, "M4=");
 
-  if (from->model != EnigmaModel_M4) {
-    fprintf(fp,
-    "%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=%c:%d%d%d:%c%c:%c%c%c=",
-    toupper(alpha[from->ukwnum]),
-    from->slot.l, from->slot.m, from->slot.r,
-    toupper(alpha[from->ring.m]), toupper(alpha[from->ring.r]),
-    toupper(alpha[from->mesg.l]), toupper(alpha[from->mesg.m]),
-    toupper(alpha[from->mesg.r]),
-    toupper(alpha[to->ukwnum]),
-    to->slot.l, to->slot.m, to->slot.r,
-    toupper(alpha[to->ring.m]), toupper(alpha[to->ring.r]),
-    toupper(alpha[to->mesg.l]), toupper(alpha[to->mesg.m]),
-    toupper(alpha[to->mesg.r]),
-    toupper(alpha[ckey->ukwnum]),
-    ckey->slot.l, ckey->slot.m, ckey->slot.r,
-    toupper(alpha[ckey->ring.m]), toupper(alpha[ckey->ring.r]),
-    toupper(alpha[ckey->mesg.l]), toupper(alpha[ckey->mesg.m]),
-    toupper(alpha[ckey->mesg.r]));
-  }
-  else {
-    fprintf(fp,
-    "%c:%c%d%d%d:%c%c:%c%c%c%c=%c:%c%d%d%d:%c%c:%c%c%c%c=%c:%c%d%d%d:%c%c:%c%c%c%c=",
-    // from
-    from->ukwnum == 3 ? 'B' : 'C',
-    //:
-    from->slot.g == 9 ? 'B' : 'G', from->slot.l, from->slot.m, from->slot.r,
-    //:
-    toupper(alpha[from->ring.m]), toupper(alpha[from->ring.r]) ,
-    //:
-    toupper(alpha[from->mesg.g]), toupper(alpha[from->mesg.l]) ,
-    toupper(alpha[from->mesg.m]), toupper(alpha[from->mesg.r]) ,
-    //= // to
-    to->ukwnum == 3 ? 'B' : 'C',
-    //:
-    to->slot.g == 9 ? 'B' : 'G', to->slot.l, to->slot.m, to->slot.r,
-    //:
-    toupper(alpha[to->ring.m]), toupper(alpha[to->ring.r]),
-    //:
-    toupper(alpha[to->mesg.g]), toupper(alpha[to->mesg.l]),
-    toupper(alpha[to->mesg.m]), toupper(alpha[to->mesg.r]),
-    //= // current
-    ckey->ukwnum == 3 ? 'B' : 'C',
-    //:
-    ckey->slot.g == 9 ? 'B' : 'G', ckey->slot.l, ckey->slot.m, ckey->slot.r,
-    //:
-    toupper(alpha[ckey->ring.m]), toupper(alpha[ckey->ring.r]),
-    //:
-    toupper(alpha[ckey->mesg.g]), toupper(alpha[ckey->mesg.l]),
-    toupper(alpha[ckey->mesg.m]), toupper(alpha[ckey->mesg.r]));
-  }
+    char from_buffer[16];
+    char to_buffer[16];
+    char ckey_buffer[16];
+    print_key_rings( from, from_buffer );
+    print_key_rings( to, to_buffer );
+    print_key_rings( ckey, ckey_buffer );
+    fprintf( fp, "%s%s%s", from_buffer, to_buffer, ckey_buffer );
 
   fprintf(fp, "%d=", *sw_mode);
   fprintf(fp, "%d=", *pass);
@@ -94,27 +52,13 @@ void print_state(FILE *fp, const State *state)
   else if (from->model == EnigmaModel_M3) fprintf(fp, "M3=");
   else if (from->model== EnigmaModel_M4) fprintf(fp, "M4=");
 
-  if (from->model != EnigmaModel_M4) {
-    fprintf(fp,
-    "%c:%d%d%d:%c%c:%c%c%c=",
-    toupper(alpha[gkey->ukwnum]),
-    gkey->slot.l, gkey->slot.m, gkey->slot.r,
-    toupper(alpha[gkey->ring.m]), toupper(alpha[gkey->ring.r]),
-    toupper(alpha[gkey->mesg.l]), toupper(alpha[gkey->mesg.m]),
-    toupper(alpha[gkey->mesg.r]));
-  }
-  else {
-    fprintf(fp,
-    "%c:%c%d%d%d:%c%c:%c%c%c%c=",
-    gkey->ukwnum == 3 ? 'B' : 'C',
-    gkey->slot.g == 9 ? 'B' : 'G', gkey->slot.l, gkey->slot.m, gkey->slot.r,
-    toupper(alpha[gkey->ring.m]), toupper(alpha[gkey->ring.r]),
-    toupper(alpha[gkey->mesg.g]), toupper(alpha[gkey->mesg.l]),
-    toupper(alpha[gkey->mesg.m]), toupper(alpha[gkey->mesg.r]));
-  }
+    char gkey_buffer[16];
+    print_key_rings( gkey, gkey_buffer );
+    fprintf( fp, "%s", gkey_buffer );
 
-  for (i = 0; i < gkey->count; i++)
-    stecker[i] = toupper(alpha[gkey->sf[i]]);
+  for (i = 0; i < gkey->count; i++){
+    stecker[i] =  echar_to_ALPHA( gkey->sf.map[i] );
+  }
   stecker[i] = '\0';
   fprintf(fp, "%s=", stecker);
 
@@ -128,6 +72,36 @@ void print_state(FILE *fp, const State *state)
   fsync(ofd);
 #endif
 }
+
+static
+void print_key_rings( const struct Key * key, char buffer[16] ){
+    size_t buflen = 16;
+    if( key->model  != EnigmaModel_M4 ){
+        snprintf ( buffer, buflen,
+          "%c:%c%c%c:%c%c:%c%c%c=",
+          UkwType_to_ALPHA( key->ukwnum ),
+          // :
+          RingType_to_ALPHA( key->slot.l ), RingType_to_ALPHA( key->slot.m ), RingType_to_ALPHA( key->slot.r),
+          // :
+          echar_delta_to_ALPHA( key->ring.m ), echar_delta_to_ALPHA( key->ring.r ),
+          // :
+          echar_delta_to_ALPHA( key->mesg.l ), echar_delta_to_ALPHA( key->mesg.m ),
+          echar_delta_to_ALPHA( key->mesg.r ) );
+    }
+    else {
+      snprintf ( buffer, buflen,
+        "%c:%c%c%c%c:%c%c:%c%c%c%c=",
+        UkwType_to_ALPHA( key->ukwnum ),
+        //:
+        GreekRingType_to_ALPHA( key->slot.g ), RingType_to_ALPHA( key->slot.l ), RingType_to_ALPHA( key->slot.m ), RingType_to_ALPHA( key->slot.r ),
+        //:
+        echar_delta_to_ALPHA( key->ring.m ), echar_delta_to_ALPHA( key->ring.r ) ,
+        //:
+        echar_delta_to_ALPHA( key->mesg.g ), echar_delta_to_ALPHA( key->mesg.l ) ,
+        echar_delta_to_ALPHA( key->mesg.m ), echar_delta_to_ALPHA( key->mesg.r ) );
+    }
+}
+
 
 
 /*

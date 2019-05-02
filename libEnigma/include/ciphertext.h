@@ -3,17 +3,18 @@
 
 #include <stdint.h>
 #include "config/types.h"
+#include "character_encoding.h"
 
 void load_ciphertext(const char *filename, int *len, int resume);
 
-typedef union _Ciphertext
-{
-    text_t plain[2048];
-    v16qi  vector16[128];
-    v32qi  vector32[64];
-} ciphertext_t;
+union ciphertext_t
+{ 
+    struct echar plain[2048];
+    union v16_echar vector16[128];
+    union v32_echar vector32[64];
+};
 
-extern ciphertext_t ciphertext;
+extern union ciphertext_t ciphertext;
 
 #endif
 

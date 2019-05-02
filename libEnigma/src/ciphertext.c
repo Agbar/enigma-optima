@@ -15,14 +15,13 @@
 // I assume that 2048 characters should be enough in any realistic scenario,
 // especially that message is trimmed to 250 characters (CT in global.h).
 // Allegedly there exist messages longer than 1000 chars.
-ciphertext_t ciphertext;
+union ciphertext_t ciphertext;
 
 
 /* loads ciphertext into array, [A-Za-z] are converted to 0-25 */
 void load_ciphertext(const char * const filename, int *const len, int resume)
 {
   int c;
-  text_t *p_ct;
   FILE *fp;
 
   if ((fp = fopen(filename, "r")) == NULL) {
@@ -41,10 +40,12 @@ void load_ciphertext(const char * const filename, int *const len, int resume)
       err_illegal_char_fatal(filename);
 
   rewind(fp);
-  p_ct = ciphertext.plain;
+  struct echar *p_ct = ciphertext.plain;
   while ((c = fgetc(fp)) != EOF)
-    if (isalpha(c))
-      *p_ct++ = code[c];
+    if ( isalpha( c ) ) {
+      *p_ct = make_echar_ascii( c );
+      ++p_ct;
+    }
 
   fclose(fp);
 }

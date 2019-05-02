@@ -32,8 +32,8 @@ void SetupOsThingsAndStuff( void ) {
 
 int main(int argc, char **argv)
 {
-  Key key;
-  Key from, to, ckey_res, gkey_res;
+  struct Key key;
+  struct Key from, to, ckey_res, gkey_res;
   int len, clen;
   enum ModelType_t model = EnigmaModel_H;
   int opt;

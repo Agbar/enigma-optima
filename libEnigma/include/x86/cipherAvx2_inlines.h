@@ -2,59 +2,54 @@
 
 #include "error.h"
 #include "cipherAvx2.h"
+#include "echar/echar_avx2.h"
 
 static inline
-v32qi PermuteV32qi(const PermutationMap_t* map, v32qi vec ){
-    /* Following line is needed to behave like __builtin_shuffle for all inputs and still being
-    faster, but our data is always in interval [0,25] = [0,0x1A). */
-    // vec &= 0x3F;
-    vec += ( char ) 0x70; // For every byte push value of bit[4] to bit[7].
-    vec ^= ( v32qi ) _mm256_set_epi32( 0x80808080, 0x80808080, 0x80808080, 0x80808080, 0, 0, 0, 0 );
-    v32qi pMap = map->whole;
-    v32qi ret1 = __builtin_ia32_pshufb256( pMap, vec );
-    pMap = ( v32qi ) __builtin_ia32_permti256( ( v4di )pMap ,( v4di )pMap , 1 ); //VPERM2I128
-    v32qi ret2 = __builtin_ia32_pshufb256( pMap , vec ^ (char) 0x80 );
-    return ret1 | ret2;
-}
-
-static inline
-v32qi DecodeBiteForwardCommonAvx2( v32qi bite, v32qi rRingOffset, const Key* const restrict key ) {
+union v32_echar
+DecodeBiteForwardCommonAvx2( union v32_echar bite, union v32_echar_delta rRingOffset, const struct Key* const restrict key ) {
     // stbrett forward
-    bite = PermuteV32qi ( &key->stbrett, bite );
+    bite = v32_echar_map ( bite, key->stbrett );
     // right ring forward
-    bite = AddMod26_v32qi( bite, rRingOffset );
-    bite = PermuteV32qi( &PathLookupAvx2.r_ring[0], bite );
-    bite = SubMod26_v32qi( bite, rRingOffset );
+    bite = v32_echar_add_delta( bite, rRingOffset );
+    bite = v32_echar_map( bite, PathLookupAvx2.r_ring[0] );
+    bite = v32_echar_sub_delta( bite, rRingOffset );
     return bite;
 }
 
 static inline
-v32qi DecodeBiteMaskedPartAvx2( v32qi predecodedBite, int lookupNumber ) {
-    v32qi bite = predecodedBite;
+union v32_echar
+DecodeBiteMaskedPartAvx2( union v32_echar predecodedBite, int lookupNumber ) {
     // m+l rings and ukw
-    bite  = PermuteV32qi( &PathLookupAvx2.lookups[lookupNumber].mapping,  bite );
-    bite &= PathLookupAvx2.lookups[lookupNumber].mask;
+    union v32_echar masked = v32_echar_map( predecodedBite, PathLookupAvx2.lookups[lookupNumber].mapping );
+    masked.vector &= PathLookupAvx2.lookups[lookupNumber].mask;
+    return masked;
+}
+
+static inline
+union v32_echar
+DecodeBiteBackwardCommonAvx2( union v32_echar bite, union v32_echar_delta rRingOffset, const struct Key* const key ) {
+    // right ring backwards
+    bite = v32_echar_add_delta( bite, rRingOffset );
+    bite = v32_echar_map( bite, PathLookupAvx2.r_ring[1] );
+    bite = v32_echar_sub_delta( bite, rRingOffset );
+    //stbrett backwards
+    bite = v32_echar_map( bite, key->stbrett );
     return bite;
 }
 
 static inline
-v32qi DecodeBiteBackwardCommonAvx2( v32qi bite,  v32qi rRingOffset, const Key* const restrict key ) {
-    // right ring backwards
-    bite = AddMod26_v32qi( bite, rRingOffset );
-    bite = PermuteV32qi( &PathLookupAvx2.r_ring[1], bite );
-    bite = SubMod26_v32qi( bite, rRingOffset );
-    //stbrett backwards
-    bite = PermuteV32qi( &key->stbrett, bite );
-    return bite;
+union v32_echar
+CombineMaskedPartsAvx2( union v32_echar l, union v32_echar r ){
+    return (union v32_echar){ .vector = l.vector | r.vector };
 }
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 static inline
-void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len, union ScoringDecodedMessage* output )
+void DecodeScoredMessagePartAvx2( const struct Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;
-    v32qi currentRRingOffset = PathLookupAvx2.firstRRingOffset;
+    union v32_echar_delta currentRRingOffset = PathLookupAvx2.firstRRingOffset;
     while( messageBite < ( len + 31 ) / 32 )
     {
         /* Worst case:
@@ -70,26 +65,26 @@ void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len, union 
          *  In the worst case there are 5 lookups per bite.
          */
         uint_least16_t lookupsToNextBite = PathLookupAvx2.nextBite[messageBite] - lookupNumber;
-        v32qi cBite = {0};
+        union v32_echar cBite = {};
         lookupNumber += lookupsToNextBite;
-        v32qi currentBite = ciphertext.vector32[messageBite];
-        v32qi predecoded = DecodeBiteForwardCommonAvx2( currentBite, currentRRingOffset, key );
+        union v32_echar currentBite = ciphertext.vector32[messageBite];
+        union v32_echar predecoded = DecodeBiteForwardCommonAvx2( currentBite, currentRRingOffset, key );
 
         switch( lookupsToNextBite ) {
         case 5:
             cBite  = DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 5 );
             FALLTHROUGH();
         case 4:
-            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 4 );
+            cBite = CombineMaskedPartsAvx2( cBite, DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 4 ) );
             FALLTHROUGH();
         case 3:
-            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 3 );
+            cBite = CombineMaskedPartsAvx2( cBite, DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 3 ) );
             FALLTHROUGH();
         case 2:
-            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 2 );
+            cBite = CombineMaskedPartsAvx2( cBite, DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 2 ) );
             FALLTHROUGH();
         case 1:
-            cBite |= DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 1 );
+            cBite = CombineMaskedPartsAvx2( cBite, DecodeBiteMaskedPartAvx2( predecoded, lookupNumber - 1 ) );
             break;
         default:
             exit_d(5);
@@ -99,7 +94,7 @@ void DecodeScoredMessagePartAvx2( const Key* const restrict key, int len, union 
         // store whole decoded bite
         output -> vector32[messageBite] = cBite;
         messageBite++;
-        currentRRingOffset = AddMod26_v32qi_int8( currentRRingOffset, 32 % 26 );
+        currentRRingOffset = v32_echar_delta_rot_32( currentRRingOffset );
     }
 }
 
@@ -110,7 +105,7 @@ uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, sco
     ALIGNED_32( uint8_t f[32] ) = {0};
     int i;
     for( i = 0; i < len; i++ ) {
-        f[msg->plain[i]]++;
+        f[ echar_0_based_index( msg->plain[i] ) ]++;
     }
 
     v32qi v;

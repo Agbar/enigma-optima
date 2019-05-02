@@ -1,50 +1,52 @@
+#include  <stddef.h>
+
 #include "stecker.h"
 
 #include "ciphertext.h"
 #include "randomNumbers.h"
 
 /* extracts stecker from key->stbrett to key->sf */
-void get_stecker(Key *key)
+void get_stecker( struct Key *const key )
 {
-  int i, k = 25;
+  size_t i;
+  int k = 25;
 
   key->count = 0;
   for (i = 0; i < 26; i++) {
-    if (key->stbrett.letters[i] > i) {
-      key->sf[key->count++] = i;
-      key->sf[key->count++] = key->stbrett.letters[i];
+    if ( echar_0_based_index( key->stbrett.letters[i] ) > i) {
+      key->sf.map[key->count++] = make_echar( i );
+      key->sf.map[key->count++] = key->stbrett.letters[i];
     }
-    else if (key->stbrett.letters[i] == i) {
-      key->sf[k--] = i;
+    else if ( echar_0_based_index( key->stbrett.letters[i] ) == i) {
+      key->sf.map[k--] =  make_echar( i );
     }
   }
 }
 
 /* get new order for testing stecker */
-void rand_var(text_t var[])
+void rand_var( struct echar var[26] )
 {
   int count;
-  int store;
   int i;
 
   for (count = 25; count > 0; count--) {
     i = GetRandomNumber() % ( count + 1 );
-    store = var[count];
+    struct echar store = var[count];
     var[count] = var[i];
     var[i] = store;
   }
 }
 
 /* arrange var[] in order of frequency of letters in ciphertext */
-void set_to_ct_freq(text_t var[], int len)
+void set_to_ct_freq( struct echar var[26], int len )
 {
   int f[26] = {0};
-  int i, k, c;
+  int i, k;
   int max, pos = -1;
   int n = 0;
 
   for (i = 0; i < len; i++) {
-    c = ciphertext.plain[i];
+    size_t c = echar_0_based_index( ciphertext.plain[i] );
     f[c]++;
   }
 
@@ -58,7 +60,7 @@ void set_to_ct_freq(text_t var[], int len)
     if (pos == -1)
       return;
     f[pos] = -1;
-    var[n++] = pos;
+    var[n++] = make_echar( pos );
   }
 }
 

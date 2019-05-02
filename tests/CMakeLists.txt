@@ -8,6 +8,7 @@ PRIVATE
     "cipher.tests.cpp"
     "GetRSeed.tests.cpp"
 )
+include("echar/echar.cmake")
 
 target_compile_features(EnigmaUnitTests PUBLIC cxx_std_11 c_std_99)
 target_compile_options(EnigmaUnitTests PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-fexceptions>)

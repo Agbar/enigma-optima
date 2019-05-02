@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 #include <limits.h>
 
 #ifndef WINDOWS
@@ -32,15 +31,14 @@ FILE *open_outfile(char *s)
   return fp;
 }
 
-void print_plaintext(FILE *fp, const Key *const key, int len)
+void print_plaintext(FILE *fp, const struct Key *const key, int len)
 {
   int i;
-  text_t c;
   enigma_cipher_decoder_lookup.prepare_decoder_lookup_ALL(key, len);
 
   for (i = 0; i < len; i++) {
-    c = decode(0,i,&key->stbrett);
-    fputc(alpha[c], fp);
+    struct echar c = decode(0,i,&key->stbrett);
+    fputc( echar_to_alpha( c ), fp);
   }
   fputc('\n', fp);
   fputc('\n', fp);
@@ -54,7 +52,7 @@ void print_plaintext(FILE *fp, const Key *const key, int len)
 #endif
 }
 
-void print_key(FILE *fp, const Key *key)
+void print_key(FILE *fp, const struct Key *const key)
 {
   char date[DATELEN];
   char stecker[27];
@@ -63,8 +61,9 @@ void print_key(FILE *fp, const Key *key)
   datestring(date);
   fprintf(fp, "Date: %s\n", date);
 
-  for (i = 0; i < key->count; i++)
-    stecker[i] = toupper(alpha[key->sf[i]]);
+  for (i = 0; i < key->count; i++){
+    stecker[i] = echar_to_ALPHA ( key->sf.map[i] );
+  }
   stecker[i] = '\0';
 
   if (key->model != EnigmaModel_M4) {
@@ -76,13 +75,13 @@ Stecker: %s\n\
 Rings: %c%c%c\n\
 Message key: %c%c%c\n\n",
     key->score,
-    toupper(alpha[key->ukwnum]),
-    key->slot.l, key->slot.m, key->slot.r,
+    UkwType_to_ALPHA( key->ukwnum ),
+    key->slot.l.type, key->slot.m.type, key->slot.r.type,
     stecker,
-    toupper(alpha[key->ring.l]), toupper(alpha[key->ring.m]),
-    toupper(alpha[key->ring.r]),
-    toupper(alpha[key->mesg.l]), toupper(alpha[key->mesg.m]),
-    toupper(alpha[key->mesg.r]));
+    echar_delta_to_ALPHA( key->ring.l ), echar_delta_to_ALPHA( key->ring.m ),
+    echar_delta_to_ALPHA( key->ring.r ),
+    echar_delta_to_ALPHA( key->mesg.l ), echar_delta_to_ALPHA( key->mesg.m ),
+    echar_delta_to_ALPHA( key->mesg.r ));
   }
   else {
     fprintf(fp,
@@ -93,13 +92,13 @@ Stecker: %s\n\
 Rings: %c%c%c%c\n\
 Message key: %c%c%c%c\n\n",
     key->score,
-    key->ukwnum == 3 ? 'B' : 'C',
-    key->slot.g == 9 ? 'B' : 'G', key->slot.l, key->slot.m, key->slot.r,
+    UkwType_to_ALPHA( key->ukwnum ),
+    key->slot.g.type == GreekRingType_Beta ? 'B' : 'G', key->slot.l.type, key->slot.m.type, key->slot.r.type,
     stecker,
-    toupper(alpha[key->ring.g]), toupper(alpha[key->ring.l]),
-    toupper(alpha[key->ring.m]), toupper(alpha[key->ring.r]),
-    toupper(alpha[key->mesg.g]), toupper(alpha[key->mesg.l]),
-    toupper(alpha[key->mesg.m]), toupper(alpha[key->mesg.r]));
+    echar_delta_to_ALPHA( key->ring.g ), echar_delta_to_ALPHA( key->ring.l ),
+    echar_delta_to_ALPHA( key->ring.m ), echar_delta_to_ALPHA( key->ring.r ),
+    echar_delta_to_ALPHA( key->mesg.g ), echar_delta_to_ALPHA( key->mesg.l ),
+    echar_delta_to_ALPHA( key->mesg.m ), echar_delta_to_ALPHA( key->mesg.r ));
   }
 
   fflush(fp);

@@ -23,26 +23,26 @@ enum ModelType_t get_model(char *s)
 }
 
 /* set UKW */
-int set_ukw(Key *key, char *s, enum ModelType_t model)
+int set_ukw( struct Key *const key, char *s, enum ModelType_t model)
 {
   if (strcmp(s, "A") == 0 || strcmp(s, "a") == 0) {
     switch (model) {
-      case EnigmaModel_H: key->ukwnum = 0; break;
+      case EnigmaModel_H: key->ukwnum.type = UkwType_A; break;
       default: return 0;
     }
     return 1;
   }
   if (strcmp(s, "B") == 0 || strcmp(s, "b") == 0) {
     switch (model) {
-      case EnigmaModel_M4: key->ukwnum = 3; break;
-      default: key->ukwnum = 1; break;
+      case EnigmaModel_M4: key->ukwnum.type = UkwType_B_Thin; break;
+      default: key->ukwnum.type = UkwType_B; break;
     }
     return 1;
   }
   if (strcmp(s, "C") == 0 || strcmp(s, "c") == 0) {
     switch (model) {
-      case EnigmaModel_M4: key->ukwnum = 4; break;
-      default: key->ukwnum = 2; break;
+      case EnigmaModel_M4: key->ukwnum.type = UkwType_C_Thin; break;
+      default: key->ukwnum.type = UkwType_C; break;
     }
     return 1;
   }
@@ -58,7 +58,7 @@ int set_ukw(Key *key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_walze(Key *key, char *s, enum ModelType_t model)
+int set_walze( struct Key *const key, char *s, enum ModelType_t model)
 {
   char *x;
 
@@ -94,14 +94,14 @@ int set_walze(Key *key, char *s, enum ModelType_t model)
   x = s;
   if (model == EnigmaModel_M4) {
     if (*x == 'B' || *x == 'b')
-      key->slot.g = 9;
+      key->slot.g.type =  GreekRingType_Beta;
     if (*x == 'G' || *x == 'g')
-      key->slot.g = 10;
+      key->slot.g.type = GreekRingType_Gamma;
     x++;
   }
-  key->slot.l = *x++ - '0';
-  key->slot.m = *x++ - '0';
-  key->slot.r = *x - '0';
+  key->slot.l.type = *x++ - '0';
+  key->slot.m.type = *x++ - '0';
+  key->slot.r.type = *x - '0';
 
   return 1;
 }
@@ -114,7 +114,7 @@ int set_walze(Key *key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_ring(Key *key, char *s, enum ModelType_t model)
+int set_ring( struct Key *const key, char *s, enum ModelType_t model)
 {
   char *x;
 
@@ -131,11 +131,12 @@ int set_ring(Key *key, char *s, enum ModelType_t model)
   }
 
   x = s;
-  if (model == EnigmaModel_M4)
-    key->ring.g = code[(unsigned char)*x++];
-  key->ring.l = code[(unsigned char)*x++];
-  key->ring.m = code[(unsigned char)*x++];
-  key->ring.r = code[(unsigned char)*x];
+  if (model == EnigmaModel_M4){
+      key->ring.g = make_echar_delta_ascii( *x++ );
+  }
+  key->ring.l = make_echar_delta_ascii( *x++ );
+  key->ring.m = make_echar_delta_ascii( *x++ );
+  key->ring.r = make_echar_delta_ascii( *x );
 
   return 1;
 }
@@ -148,7 +149,7 @@ int set_ring(Key *key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_mesg(Key *key, char *s, enum ModelType_t model)
+int set_mesg( struct Key *const key, char *s, enum ModelType_t model)
 {
   char *x;
 
@@ -165,11 +166,12 @@ int set_mesg(Key *key, char *s, enum ModelType_t model)
   }
 
   x = s;
-  if (model == EnigmaModel_M4)
-    key->mesg.g = code[(unsigned char)*x++];
-  key->mesg.l = code[(unsigned char)*x++];
-  key->mesg.m = code[(unsigned char)*x++];
-  key->mesg.r = code[(unsigned char)*x];
+  if ( model == EnigmaModel_M4 ){
+    key->mesg.g = make_echar_delta_ascii( *x++ );
+  }
+  key->mesg.l = make_echar_delta_ascii( *x++ );
+  key->mesg.m = make_echar_delta_ascii( *x++ );
+  key->mesg.r = make_echar_delta_ascii( *x );
 
   return 1;
 }
@@ -181,7 +183,7 @@ int set_mesg(Key *key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_stecker(Key *key, char *s)
+int set_stecker( struct Key *const key, char *s)
 {
   size_t len;
   char *x;
@@ -207,7 +209,7 @@ int set_stecker(Key *key, char *s)
   /* swap appropriate letters */
   x = s;
   while (*x != '\0') {
-    SwapStbrett(key, code[(unsigned char)*x], code[(unsigned char)*(x+1)]);
+    SwapStbrett(key, make_echar( code[(unsigned char)*x] ), make_echar( code[(unsigned char)*(x+1)] ) );
     x += 2;
   }
 
@@ -257,7 +259,7 @@ int get_firstpass(char *s)
  * \return int
  *
  */
-int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust)
+int set_key( struct Key *const key, const char *keystring, enum ModelType_t model, int adjust)
 {
     int i, d;
     unsigned int len;
@@ -306,18 +308,18 @@ int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust)
 
 
     /* error checking for rings */
-    if ( key->slot.m > 5 && key->ring.m > 12 ) {
+    if ( key->slot.m.type > 5 && key->ring.m.delta > 12 ) {
       if (adjust) {
-        key->ring.m = (key->ring.m + 13) % 26;
-        key->mesg.m = (key->mesg.m + 13) % 26;
+        echar_delta_rot_13( &key->ring.m );
+        echar_delta_rot_13( &key->mesg.m );
       }
       else
         err_input_fatal(ERR_RING_SHORTCUT);
     }
-    if ( key->slot.r > 5 && key->ring.r > 12 ) {
+    if ( key->slot.r.type > 5 && key->ring.r.delta > 12 ) {
       if (adjust) {
-        key->ring.r = (key->ring.r + 13) % 26;
-        key->mesg.r = (key->mesg.r + 13) % 26;
+        echar_delta_rot_13( &key->ring.r );
+        echar_delta_rot_13( &key->mesg.r );
       }
       else
         err_input_fatal(ERR_RING_SHORTCUT);
@@ -336,7 +338,7 @@ int set_key(Key *key, const char *keystring, enum ModelType_t model, int adjust)
  * \return int
  *
  */
-int set_range(Key *from, Key *to, const char *kf, const char *kt, enum ModelType_t model)
+int set_range( struct Key *const restrict from, struct Key *const restrict to, const char *kf, const char *kt, enum ModelType_t model)
 {
   if (!set_key(from, kf, model, 0)) return 0;
   if (!set_key(to, kt, model, 0)) return 0;
