@@ -24,29 +24,21 @@ enigma_score_function_t enigmaScoreAvx = { triscoreAvx,  biscoreAvx , icscoreAvx
 
 union ScoringDecodedMessage decodedMsgPartAvx;
 
-__attribute__ ((flatten))
-__attribute__ ((optimize("unroll-loops")))
 static uint16_t icscoreAvx( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartAvx );
     return ComputeIcscoreFromDecodedMsgSsse3( &decodedMsgPartAvx, len );
 }
 
-__attribute__ ((flatten))
-__attribute__ ((optimize("unroll-loops")))
 static int uniscoreAvx( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartAvx );
     return ComputeUniscoreFromDecodedMsg( &decodedMsgPartAvx, len );
 }
 
-__attribute__ ((flatten))
-__attribute__ ((optimize("unroll-loops")))
 static int biscoreAvx( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartAvx );
     return ComputeBiscoreFromDecodedMsgSse2( &decodedMsgPartAvx, len );
 }
 
-__attribute__ ((flatten))
-__attribute__ ((optimize("unroll-loops")))
 static int triscoreAvx( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartAvx );
     return ComputeTriscoreFromDecodedMsgSse2( &decodedMsgPartAvx, len );

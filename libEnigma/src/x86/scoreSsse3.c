@@ -23,29 +23,21 @@ enigma_score_function_t enigmaScoreSsse3 = { triscoreSsse3,  biscoreSsse3 , icsc
 
 union ScoringDecodedMessage decodedMsgPartSsse3;
 
-__attribute__ ((flatten))
-__attribute__ ((optimize("unroll-loops")))
 static uint16_t icscoreSsse3( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartSsse3 );
     return ComputeIcscoreFromDecodedMsgSsse3( &decodedMsgPartSsse3, len );
 }
 
-__attribute__ ((flatten))
-__attribute__ ((optimize("unroll-loops")))
 static int uniscoreSsse3( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartSsse3 );
     return ComputeUniscoreFromDecodedMsg( &decodedMsgPartSsse3, len );
 }
 
-__attribute__ ((flatten))
-__attribute__ ((optimize("unroll-loops")))
 static int biscoreSsse3( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartSsse3 );
     return ComputeBiscoreFromDecodedMsgSse2( &decodedMsgPartSsse3, len );
 }
 
-__attribute__ ((flatten))
-__attribute__ ((optimize("unroll-loops")))
 static int triscoreSsse3( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartSsse3 );
     return ComputeTriscoreFromDecodedMsgSse2( &decodedMsgPartSsse3, len );
