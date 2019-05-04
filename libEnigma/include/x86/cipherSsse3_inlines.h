@@ -208,6 +208,8 @@ int ComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, s
     for( ; k < len; ++k ) {
         uint8_t c2 = echar_0_based_index( msg->plain[k] );
         score += tridict[ c0 ][ c1 ][ c2 ];
+        c0 = c1;
+        c1 = c2;
     }
     return score;
 }
