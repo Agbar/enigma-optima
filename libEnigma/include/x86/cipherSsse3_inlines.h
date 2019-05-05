@@ -147,18 +147,6 @@ void Unpack_v16qu( v16qu in, v8hu *lo, v8hu *hi ){
     *hi = (v8hu) _mm_unpackhi_epi8( (__m128i)in, zero );
 }
 
-static inline
-void Unpack_v8hi( v8hi in, v4si* lo, v4si* hi ){
-    v8hi zero = { 0 };
-    *lo = (v4si) __builtin_ia32_punpcklwd128( in, zero );
-    *hi = (v4si) __builtin_ia32_punpckhwd128( in, zero );
-}
-
-static inline
-v16qi MOVDQU( const v16qi* p ){
-    return __builtin_ia32_loaddqu( (char*) p );
-}
-
 __attribute__ ((optimize("unroll-loops")))
 static inline
 int ComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, scoreLength_t len ){
