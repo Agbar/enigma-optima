@@ -29,7 +29,7 @@ void CalculateRRingOffetsAvx2( struct echar_delta rOffsetAtFirst ) {
     int k;
     int_fast8_t r = rOffsetAtFirst.delta;
     // calculate offsets used for cyclic permutation
-    v32qi rOffsets;
+    v32qu rOffsets;
     for( k = 0; k < 16; k++ ) {
         rOffsets[k] = r++;
     }

@@ -165,7 +165,7 @@ int ComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, s
     int score = 0;
     int i;
     for( i = 0; i * 16 + 15 < len - 2; ++i ) {
-        v16qi a = msg->vector16[i].vector;
+        v16qi a = (v16qi) msg->vector16[i].vector;
         v8hi aLo, aHi;
         Unpack_v16qi( a, &aLo, &aHi );
         aLo *= 32 * 32;
@@ -221,7 +221,7 @@ int ComputeBiscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, sc
     int score = 0;
     int i;
     for( i = 0; i * 16 + 15 < len - 1; ++i ) {
-        v16qi a = msg->vector16[i].vector;
+        v16qi a = (v16qi)msg->vector16[i].vector;
         v8hi aLo, aHi;
         Unpack_v16qi( a, &aLo, &aHi );
         aLo *= 32;

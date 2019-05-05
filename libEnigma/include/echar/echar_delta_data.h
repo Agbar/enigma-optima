@@ -13,13 +13,13 @@ struct echar_delta
 union v16_echar_delta
 {
     struct echar_delta v_ecd[16];
-    v16qi vector;
+    v16qu vector;
 };
 
 union v32_echar_delta
 {
     struct echar_delta v_ecd[32];
-    v32qi vector;
+    v32qu vector;
 };
 
 STATIC_ASSERT( sizeof(struct echar_delta) == 1, "enigma_character_delta must be compact" );

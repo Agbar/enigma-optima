@@ -30,7 +30,7 @@ void CalculateRRingOffets( struct echar_delta rOffsetAtFirst ) {
     int k;
     uint_fast8_t r = rOffsetAtFirst.delta;
     // calculate offsets used for cyclic permutation
-    v16qi rOffsets;
+    v16qu rOffsets;
     for( k = 0; k < 16 ; k++ )
     {
         rOffsets[k] = r++;

@@ -49,9 +49,14 @@ typedef signed char     v4qs    __attribute__ ((vector_size(4)));
  /*
  * 128 bit vectors
  */
+
+/** \brief Vector of 16 signed bytes. 128 bit.
+ */
+typedef int8_t          v16qs   __attribute__ ((vector_size(16)));
+
 /** \brief Vector of 16 unsigned bytes. 128 bit.
  */
-typedef unsigned char   v16qu   __attribute__ ((vector_size(16)));
+typedef uint8_t         v16qu   __attribute__ ((vector_size(16)));
 
 /** \brief Vector of 16 bytes. 128 bit, default signedness.
  */
@@ -72,9 +77,14 @@ typedef int             v4si    __attribute__ ((vector_size(16)));
 /*
  * 256 bit vectors
  */
+
+/** \brief Vector of 32 signed bytes. 256 bit.
+ */
+typedef int8_t          v32qs   __attribute__ ((vector_size(32)));
+
 /** \brief Vector of 32 unsigned bytes. 256 bit.
  */
-typedef unsigned char   v32qu   __attribute__ ((vector_size(32)));
+typedef uint8_t         v32qu   __attribute__ ((vector_size(32)));
 
 /** \brief vector of 32 bytes. 256 bit, default signedness.
  */

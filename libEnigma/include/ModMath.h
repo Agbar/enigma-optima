@@ -53,16 +53,16 @@ void IncrementModU(uint8_t* number, uint8_t modulo)
  * * * * * */
 CONST_FUNCTION
 static inline
-v16qi AddMod26_v16qi_int8( v16qi a, int8_t b ){
-    v16qi value = a + b;
+v16qu AddMod26_v16qu_uint8( v16qu a, uint8_t b ){
+    v16qu value = a + b;
     value -= ( value >= 26 ) & 26;
     return value;
 }
 
 CONST_FUNCTION
 static inline
-v16qi AddMod26_v16qi( v16qi a, v16qi b ){
-    v16qi value = a + b;
+v16qs AddMod26_v16qs_v16qu( v16qs a, v16qu b ){
+    v16qs value = a + (v16qs)b;
     value -= ( value >= 26 ) & 26;
     return value;
 }
@@ -77,8 +77,8 @@ v16qi SubMod26_v16qi_int8( v16qi a, int8_t b ){
 
 CONST_FUNCTION
 static inline
-v16qi SubMod26_v16qi( v16qi a, v16qi b ){
-    v16qi value = a - b;
+v16qs SubMod26_v16qs_v16qu( v16qs a, v16qu b ){
+    v16qs value = a - (v16qs) b;
     value += ( value < 0 ) & 26;
     return value;
 }
@@ -87,16 +87,16 @@ v16qi SubMod26_v16qi( v16qi a, v16qi b ){
  * * * * * */
 CONST_FUNCTION
 static inline
-v32qi AddMod26_v32qi_int8( v32qi a, int8_t b ){
-    v32qi value = a + b;
+v32qu AddMod26_v32qu_uint8( v32qu a, uint8_t b ){
+    v32qu value = a + b;
     value -= ( value >= 26 ) & 26;
     return value;
 }
 
 CONST_FUNCTION
 static inline
-v32qi AddMod26_v32qi( v32qi a, v32qi b ){
-    v32qi value = a + b;
+v32qs AddMod26_v32qs_v32qu( v32qs a, v32qu b ){
+    v32qs value = a + (v32qs)b;
     value -= ( value >= 26 ) & 26;
     return value;
 }
@@ -111,8 +111,8 @@ v32qi SubMod26_v32qi_int8( v32qi a, int8_t b ){
 
 CONST_FUNCTION
 static inline
-v32qi SubMod26_v32qi( v32qi a, v32qi b ){
-    v32qi value = a - b;
+v32qs SubMod26_v32qs_v32qu( v32qs a, v32qu b ){
+    v32qs value = a - (v32qs)b;
     value += ( value < 0 ) & 26;
     return value;
 }
