@@ -65,6 +65,13 @@ echar_sub_delta( struct echar c, struct echar_delta sub ){
 
 CONST_FUNCTION
 static inline
+v16qu
+v16_echar_0_based_index( union v16_echar v ){
+    return (v16qu)(v.vector);
+}
+
+CONST_FUNCTION
+static inline
 union v16_echar
 v16_echar_add_delta( union v16_echar c, union v16_echar_delta add ){
     v16qs r = AddMod26_v16qs_v16qu( c.vector, add.vector );

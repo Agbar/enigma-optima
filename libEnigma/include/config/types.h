@@ -62,6 +62,10 @@ typedef uint8_t         v16qu   __attribute__ ((vector_size(16)));
  */
 typedef char            v16qi   __attribute__ ((vector_size(16)));
 
+/** \brief Vector of 8 unsigned words. 128 bit.
+ */
+typedef uint16_t        v8hu    __attribute__ ((vector_size(16)));
+
 /** \brief Vector of 8 words. 128 bit, default signedness.
  */
 typedef short           v8hi    __attribute__ ((vector_size(16)));

@@ -141,10 +141,10 @@ uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, sc
 }
 
 static inline
-void Unpack_v16qi( v16qi in, v8hi* lo, v8hi *hi ){
-    v16qi zero = { 0 };
-    *lo = (v8hi) __builtin_ia32_punpcklbw128 ( in, zero );
-    *hi = (v8hi) __builtin_ia32_punpckhbw128 ( in, zero );
+void Unpack_v16qu( v16qu in, v8hu *lo, v8hu *hi ){
+    __m128i zero = {};
+    *lo = (v8hu) _mm_unpacklo_epi8( (__m128i)in, zero );
+    *hi = (v8hu) _mm_unpackhi_epi8( (__m128i)in, zero );
 }
 
 static inline
@@ -165,20 +165,22 @@ int ComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, s
     int score = 0;
     int i;
     for( i = 0; i * 16 + 15 < len - 2; ++i ) {
-        v16qi a = (v16qi) msg->vector16[i].vector;
-        v8hi aLo, aHi;
-        Unpack_v16qi( a, &aLo, &aHi );
+        v16qu a = v16_echar_0_based_index( msg->vector16[i] );
+        v8hu aLo, aHi;
+        Unpack_v16qu( a, &aLo, &aHi );
         aLo *= 32 * 32;
         aHi *= 32 * 32;
         const void* a_addr = &msg->vector16[i].vector ;
-        v16qi b = MOVDQU( a_addr + 1 );
-        v8hi bLo, bHi;
-        Unpack_v16qi( b, &bLo, &bHi );
+        union v16_echar b_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 1 ) };
+        v16qu b = v16_echar_0_based_index( b_vector );
+        v8hu bLo, bHi;
+        Unpack_v16qu( b, &bLo, &bHi );
         bLo *= 32;
         bHi *= 32;
-        v16qi c = MOVDQU( a_addr + 2 );
-        v8hi cLo, cHi;
-        Unpack_v16qi( c, &cLo, &cHi );
+        union v16_echar c_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 2 ) };
+        v16qu c = v16_echar_0_based_index( c_vector );
+        v8hu cLo, cHi;
+        Unpack_v16qu( c, &cLo, &cHi );
 
         aLo += bLo + cLo;
         aHi += bHi + cHi;
@@ -221,15 +223,16 @@ int ComputeBiscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, sc
     int score = 0;
     int i;
     for( i = 0; i * 16 + 15 < len - 1; ++i ) {
-        v16qi a = (v16qi)msg->vector16[i].vector;
-        v8hi aLo, aHi;
-        Unpack_v16qi( a, &aLo, &aHi );
+        v16qu a = v16_echar_0_based_index( msg->vector16[i] );
+        v8hu aLo, aHi;
+        Unpack_v16qu( a, &aLo, &aHi );
         aLo *= 32;
         aHi *= 32;
-        const void* a_addr = &msg->vector16[i].vector;
-        v16qi b = MOVDQU( a_addr + 1 );
-        v8hi bLo, bHi;
-        Unpack_v16qi( b, &bLo, &bHi );
+        const void* a_addr = &msg->vector16[i];
+        const union v16_echar b_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 1 ) };
+        const v16qu b = v16_echar_0_based_index( b_vector );
+        v8hu bLo, bHi;
+        Unpack_v16qu( b, &bLo, &bHi );
 
         aLo += bLo;
         aHi += bHi;
