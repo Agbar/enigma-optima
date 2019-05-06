@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tmmintrin.h>
+
 #include "error.h"
 #include "dict.h"
 #include "cipherSsse3.h"
@@ -108,17 +110,29 @@ __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 static inline
 uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scoreLength_t len ){
-    uint8_t ALIGNED_32( f[32] ) = {0};
+    ALIGNED_32( uint8_t f[32] ) = {};
     int i;
     for( i = 0; i < len; i++ ) {
         f[ echar_0_based_index( msg->plain[i] ) ]++;
     }
-    v16qi* const v = ( v16qi* ) f; // it makes v16hi[2];
-    // short result[i] = v0[2*i] * ( v0[2*i] + minusOne ) + v0[2*i+1] * ( v0[2*i+1] + minusOne );
-    v8hi foo = __builtin_ia32_pmaddubsw128( v[0], v[0] + -1 );
-    v8hi bar = __builtin_ia32_pmaddubsw128( v[1], v[1] + -1 );
+    v8hu foo;
+    v8hu bar;
+    v16qu* const v = ( v16qu* ) f; // it makes v16hi[2];
+    // pmaddubsw will overflow and saturate for 182 and higher
+    if( len <= 181 ) {
+        // short result[i] = v0[2*i] * ( v0[2*i] + minusOne ) + v0[2*i+1] * ( v0[2*i+1] + minusOne );
+        // multiply-add sign-saturated
+        foo = (v8hu)_mm_maddubs_epi16( (__m128i)v[0], (__m128i) (v[0] + -1 ) );
+        bar = (v8hu)_mm_maddubs_epi16( (__m128i)v[1], (__m128i) (v[1] + -1 ) );
+    } else {
+        v8hu lo, hi;
+        Unpack_v16qu( v[0], &lo, &hi );
+        foo = lo * ( lo + -1 ) + hi * (hi + -1);
+        Unpack_v16qu( v[1], &lo, &hi );
+        bar = lo * ( lo + -1 ) + hi * (hi + -1);
+    }
     foo += bar;
-    v8hi hexFF00 = ( v8hi )_mm_set1_epi16( 0xFF00 );
+    v8hu hexFF00 = ( v8hu )_mm_set1_epi16( 0xFF00 );
 
 #if defined( __AVX__ )
     asm(
@@ -138,11 +152,12 @@ uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, sc
     );
 #endif
 
-    v16qi zero = {0};
-    v8hi high =  ( v8hi ) __builtin_ia32_psadbw128( ( v16qi ) foo, zero );
-    v8hi low  =  ( v8hi ) __builtin_ia32_psadbw128( ( v16qi ) bar, zero );
-
-    uint16_t sum = ( high[0] + high[4] )* 256 + low[0] + low[4];
+    const __m128i zero = {};
+    const __m128i high_sum = _mm_sad_epu8( ( __m128i ) foo, zero );
+    const v8hu high =  ( v8hu ) _mm_slli_si128( high_sum, 1 ); // * 256
+    const v8hu low  =  ( v8hu ) _mm_sad_epu8( ( __m128i ) bar, zero );
+    const v8hu vSum = high + low;
+    const uint16_t sum =  vSum[0] + vSum[4];
 
     return sum;
 }
