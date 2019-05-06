@@ -97,6 +97,13 @@ void DecodeScoredMessagePartSsse3( const struct Key* const restrict key, int len
     }
 }
 
+static inline
+void Unpack_v16qu( v16qu in, v8hu *lo, v8hu *hi ){
+    __m128i zero = {};
+    *lo = (v8hu) _mm_unpacklo_epi8( (__m128i)in, zero );
+    *hi = (v8hu) _mm_unpackhi_epi8( (__m128i)in, zero );
+}
+
 __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 static inline
@@ -138,13 +145,6 @@ uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, sc
     uint16_t sum = ( high[0] + high[4] )* 256 + low[0] + low[4];
 
     return sum;
-}
-
-static inline
-void Unpack_v16qu( v16qu in, v8hu *lo, v8hu *hi ){
-    __m128i zero = {};
-    *lo = (v8hu) _mm_unpacklo_epi8( (__m128i)in, zero );
-    *hi = (v8hu) _mm_unpackhi_epi8( (__m128i)in, zero );
 }
 
 __attribute__ ((optimize("unroll-loops")))
