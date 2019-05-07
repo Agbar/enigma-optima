@@ -132,25 +132,10 @@ uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, sc
         bar = lo * ( lo + -1 ) + hi * (hi + -1);
     }
     foo += bar;
-    v8hu hexFF00 = ( v8hu )_mm_set1_epi16( 0xFF00 );
+    __m128i hexFF00 = _mm_set1_epi16( 0xFF00 );
 
-#if defined( __AVX__ )
-    asm(
-        "vpandn %[hi], %[mask], %[lo]\n\t"
-        "vpand  %[hi], %[mask], %[hi]\n\t" :
-        [hi] "+x" (foo), [lo] "=&x" (bar) :
-        [mask]"x" (hexFF00)
-    );
-#else
-    v8hi temp = temp; //disable uninitialized warning
-    asm(
-        "movdqa %[hi],      %[tmp]\n\t"
-        "pand   %[lo],      %[hi]\n\t"
-        "pandn  %[tmp],     %[lo]\n\t" :
-        [hi] "+x" ( foo ), [lo] "=x" ( bar ) :
-        "1" ( hexFF00 ), [tmp] "x" ( temp )
-    );
-#endif
+    bar = (v8hu)_mm_andnot_si128( hexFF00, (__m128i)foo );
+    foo = (v8hu)_mm_and_si128( hexFF00, (__m128i)foo );
 
     const __m128i zero = {};
     const __m128i high_sum = _mm_sad_epu8( ( __m128i ) foo, zero );
