@@ -1,6 +1,6 @@
 #pragma GCC target ("ssse3")
 
-#include <immintrin.h>
+#include <tmmintrin.h>
 
 #ifndef __SSSE3__
 # error SSSE3 not defined
