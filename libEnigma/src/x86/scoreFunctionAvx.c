@@ -9,6 +9,7 @@
 #include "dict.h"
 #include "ciphertext.h"
 #include "x86/computeScoreSse2Vex.h"
+#include "x86/computeScoreSsse3Vex.h"
 #include "x86/scoreAvx.h"
 #include "x86/scoreSsse3.h"
 #include "x86/cipherSsse3.h"
@@ -27,7 +28,7 @@ union ScoringDecodedMessage decodedMsgPartAvx;
 
 static uint16_t icscoreAvx( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartAvx );
-    return ComputeIcscoreFromDecodedMsgSsse3( &decodedMsgPartAvx, len );
+    return ComputeIcscoreFromDecodedMsgSsse3Vex( &decodedMsgPartAvx, len );
 }
 
 static int uniscoreAvx( const struct Key* const restrict key, scoreLength_t len ) {

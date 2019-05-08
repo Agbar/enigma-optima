@@ -8,6 +8,7 @@
 
 #include "cipherAvx_ni.h"
 #include "x86/computeScoreSse2Vex.h"
+#include "x86/computeScoreSsse3Vex.h"
 #include "x86/cipherSsse3_inlines.h"
 #include "x86/scoreAvx.h"
 
@@ -18,7 +19,7 @@ void DecodeMessageAvx( const struct Key* const restrict key, int len ) {
 
 __attribute__ ((flatten))
 int  IcscoreAvx( scoreLength_t len ){
-    return ComputeIcscoreFromDecodedMsgSsse3( &decodedMsgPartAvx, len );
+    return ComputeIcscoreFromDecodedMsgSsse3Vex( &decodedMsgPartAvx, len );
 }
 
 __attribute__ ((flatten))
