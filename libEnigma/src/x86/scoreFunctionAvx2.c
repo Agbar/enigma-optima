@@ -8,11 +8,11 @@
 
 #include "dict.h"
 #include "ciphertext.h"
+#include "x86/computeScoreSse2.h"
 #include "x86/scoreAvx2.h"
 #include "x86/cipherAvx2.h"
 #include "x86/cipherAvx2_inlines.h"
 #include "score_inlines.h"
-#include "x86/cipherSsse3_inlines.h"
 
 // SSSE3 scores
 static uint16_t icscoreAvx2( const struct Key* restrict key, scoreLength_t len );

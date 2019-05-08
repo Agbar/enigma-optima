@@ -25,6 +25,7 @@ PRIVATE
 
     "src/x86/cipherAvx2.c"
     "src/x86/cipherSsse3.c"
+    "src/x86/computeScoreSse2.c"
     "src/x86/scoreFunctionAvx.c"
     "src/x86/scoreFunctionAvx2.c"
     "src/x86/scoreFunctionSsse3.c"

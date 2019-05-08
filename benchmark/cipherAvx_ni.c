@@ -7,7 +7,7 @@
 #include <immintrin.h>
 
 #include "cipherAvx_ni.h"
-#include "score_inlines.h"
+#include "x86/computeScoreSse2.h"
 #include "x86/cipherSsse3_inlines.h"
 #include "x86/scoreAvx.h"
 
