@@ -8,13 +8,13 @@
 
 #include "dict.h"
 #include "ciphertext.h"
-#include "x86/computeScoreSse2.h"
+#include "x86/computeScoreSse2Vex.h"
 #include "x86/scoreAvx2.h"
 #include "x86/cipherAvx2.h"
 #include "x86/cipherAvx2_inlines.h"
 #include "score_inlines.h"
 
-// SSSE3 scores
+// AVX2 scores
 static uint16_t icscoreAvx2( const struct Key* restrict key, scoreLength_t len );
 static int     uniscoreAvx2( const struct Key* restrict key, scoreLength_t len );
 static int      biscoreAvx2( const struct Key* restrict key, scoreLength_t len );
@@ -41,5 +41,5 @@ static int biscoreAvx2( const struct Key* const restrict key, scoreLength_t len 
 
 static int triscoreAvx2( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartAvx2( key, len, &decodedMsgPartAvx2 );
-    return ComputeTriscoreFromDecodedMsgSse2( &decodedMsgPartAvx2, len );
+    return ComputeTriscoreFromDecodedMsgSse2Vex( &decodedMsgPartAvx2, len );
 }
