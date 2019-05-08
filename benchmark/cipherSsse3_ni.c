@@ -9,7 +9,9 @@
 
 #include "cipherSsse3_ni.h"
 #include "score_inlines.h"
-#include "x86/cipherSsse3_inlines.h"
+#include "x86/cipherSsse3.h"
+#include "x86/decodeMessageSsse3.h"
+#include "x86/computeScoreSsse3.h"
 
 __attribute__ ((flatten))
 void DecodeMessageSsse3( const struct Key* const restrict key, int len ) {

@@ -9,9 +9,9 @@ PRIVATE
     "src/hillclimb.c"
     "src/hillclimb2.c"
     "src/input.c"
-    "src/key.c"    
+    "src/key.c"
     "src/optimizer.c"
-    "src/randomNumbers.c"    
+    "src/randomNumbers.c"
     "src/result.c"
     "src/resume_in.c"
     "src/resume_out.c"
@@ -22,12 +22,23 @@ PRIVATE
     "src/scoreSimple.c"
     "src/stecker.c"
 
-
-    "src/x86/cipherAvx2.c"
+    
     "src/x86/cipherSsse3.c"
-    "src/x86/scoreAvx.c"
-    "src/x86/scoreAvx2.c"
-    "src/x86/scoreSsse3.c"
+    "src/x86/cipherAvx2.c"
+    
+    "src/x86/computeScoreSse2.c"
+    "src/x86/computeScoreSse2Vex.c"
+    "src/x86/computeScoreSsse3.c"
+    "src/x86/computeScoreSsse3Vex.c"
+    "src/x86/computeScoreAvx2.c"
+    
+    "src/x86/decodeMessageSsse3"
+    "src/x86/decodeMessageSsse3Vex"
+    "src/x86/decodeMessageAvx2.c"
+
+    "src/x86/scoreFunctionAvx.c"
+    "src/x86/scoreFunctionAvx2.c"
+    "src/x86/scoreFunctionSsse3.c"
 
     "src/echar/echar_delta.c"
 )

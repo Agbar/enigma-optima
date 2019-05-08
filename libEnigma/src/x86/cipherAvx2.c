@@ -9,7 +9,7 @@
 #include <string.h>
 
 #include "x86/cipherAvx2.h"
-#include "x86/cipherAvx2_inlines.h"
+#include "x86/decodeMessageAvx2.h"
 #include "cipher_inlines.h"
 
 void prepare_decoder_lookup_M_H3_avx2( const struct Key *key, int len );

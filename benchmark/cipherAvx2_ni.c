@@ -4,11 +4,9 @@
 # error AVX2 not defined
 #endif
 
-#include <immintrin.h>
-
 #include "cipherAvx2_ni.h"
-#include "score_inlines.h"
-#include "x86/cipherAvx2_inlines.h"
+#include "x86/computeScoreAvx2.h"
+#include "x86/decodeMessageAvx2.h"
 #include "x86/scoreAvx2.h"
 
 __attribute__ ((flatten))
