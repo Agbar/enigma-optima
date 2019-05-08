@@ -1,8 +1,10 @@
-#pragma once
+#pragma GCC target("avx2")
 
-#include "error.h"
-#include "cipherAvx2.h"
+
 #include "echar/echar_avx2.h"
+#include "error.h"
+#include "x86/cipherAvx2.h"
+#include "x86/decodeMessageAvx2.h"
 
 static inline
 union v32_echar
@@ -44,7 +46,6 @@ CombineMaskedPartsAvx2( union v32_echar l, union v32_echar r ){
 }
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
-static inline
 void DecodeScoredMessagePartAvx2( const struct Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
