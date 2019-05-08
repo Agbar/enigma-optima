@@ -9,6 +9,7 @@
 #include "dict.h"
 #include "ciphertext.h"
 #include "x86/computeScoreSse2Vex.h"
+#include "x86/computeScoreAvx2.h"
 #include "x86/scoreAvx2.h"
 #include "x86/cipherAvx2.h"
 #include "x86/cipherAvx2_inlines.h"
