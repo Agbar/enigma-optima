@@ -13,13 +13,13 @@ struct echar
 union v16_echar
 {
     struct echar v_ec[16];
-    v16qi vector;
+    v16qs vector;
 };
 
 union v32_echar
 {
     struct echar v_ec[32];
-    v32qi vector;
+    v32qs vector;
 };
 
 STATIC_ASSERT( sizeof(struct echar) == 1, "echar must be compact" );

@@ -11,18 +11,18 @@
 #include "global.h"
 #include "ModMath.h"
 
-static inline 
+static inline
 struct echar make_echar( int8_t zero_based ){
     return (struct echar) { .encoded = zero_based };
 }
 
-static inline 
+static inline
 bool
 echar_can_make_from_ascii( unsigned char ascii ){
     return code[ascii] != 26;
 }
 
-static inline 
+static inline
 struct echar make_echar_ascii( unsigned char ascii ){
     return (struct echar) { .encoded = code[ascii] };
 }
@@ -65,9 +65,16 @@ echar_sub_delta( struct echar c, struct echar_delta sub ){
 
 CONST_FUNCTION
 static inline
+v16qu
+v16_echar_0_based_index( union v16_echar v ){
+    return (v16qu)(v.vector);
+}
+
+CONST_FUNCTION
+static inline
 union v16_echar
 v16_echar_add_delta( union v16_echar c, union v16_echar_delta add ){
-    v16qi r = AddMod26_v16qi( c.vector, add.vector );
+    v16qs r = AddMod26_v16qs_v16qu( c.vector, add.vector );
     return (union v16_echar){ .vector = r };
 }
 
@@ -75,7 +82,7 @@ CONST_FUNCTION
 static inline
 union v16_echar
 v16_echar_sub_delta( union v16_echar c, union v16_echar_delta sub ){
-    v16qi r = SubMod26_v16qi( c.vector, sub.vector );
+    v16qs r = SubMod26_v16qs_v16qu( c.vector, sub.vector );
     return (union v16_echar){ .vector = r };
 }
 
@@ -83,7 +90,7 @@ CONST_FUNCTION
 static inline
 union v32_echar
 v32_echar_add_delta( union v32_echar c, union v32_echar_delta add ){
-    v32qi r = AddMod26_v32qi( c.vector, add.vector );
+    v32qs r = AddMod26_v32qs_v32qu( c.vector, add.vector );
     return (union v32_echar){ .vector = r };
 }
 
@@ -91,6 +98,6 @@ CONST_FUNCTION
 static inline
 union v32_echar
 v32_echar_sub_delta( union v32_echar c, union v32_echar_delta sub ){
-    v32qi r = SubMod26_v32qi( c.vector, sub.vector );
+    v32qs r = SubMod26_v32qs_v32qu( c.vector, sub.vector );
     return (union v32_echar){ .vector = r };
 }

@@ -8,7 +8,7 @@
 
 #include "ModMath.h"
 
-enum comparison_result 
+enum comparison_result
 {
     cmp_less = -1,
     cmp_equal = 0,
@@ -74,15 +74,15 @@ echar_delta_invert( struct echar_delta d ){
 char echar_delta_to_ALPHA( struct echar_delta d );
 
 static inline
-union v16_echar_delta 
+union v16_echar_delta
 v16_echar_delta_rot_16( union v16_echar_delta ecd ){
-    ecd.vector = AddMod26_v16qi_int8( ecd.vector, 16 );
+    ecd.vector = AddMod26_v16qu_uint8( ecd.vector, 16 );
     return ecd;
 }
 
 static inline
 union v32_echar_delta
 v32_echar_delta_rot_32( union v32_echar_delta ecd ){
-    ecd.vector = AddMod26_v32qi_int8( ecd.vector , 32 % 26 );
+    ecd.vector = AddMod26_v32qu_uint8( ecd.vector , 32 % 26 );
     return ecd;
 }

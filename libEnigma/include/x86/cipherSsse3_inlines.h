@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tmmintrin.h>
+
 #include "error.h"
 #include "dict.h"
 #include "cipherSsse3.h"
@@ -97,66 +99,52 @@ void DecodeScoredMessagePartSsse3( const struct Key* const restrict key, int len
     }
 }
 
+static inline
+void Unpack_v16qu( v16qu in, v8hu *lo, v8hu *hi ){
+    __m128i zero = {};
+    *lo = (v8hu) _mm_unpacklo_epi8( (__m128i)in, zero );
+    *hi = (v8hu) _mm_unpackhi_epi8( (__m128i)in, zero );
+}
+
 __attribute__ ((optimize("unroll-loops")))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 static inline
 uint16_t ComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* msg, scoreLength_t len ){
-    uint8_t ALIGNED_32( f[32] ) = {0};
+    ALIGNED_32( uint8_t f[32] ) = {};
     int i;
     for( i = 0; i < len; i++ ) {
         f[ echar_0_based_index( msg->plain[i] ) ]++;
     }
-    v16qi* const v = ( v16qi* ) f; // it makes v16hi[2];
-    // short result[i] = v0[2*i] * ( v0[2*i] + minusOne ) + v0[2*i+1] * ( v0[2*i+1] + minusOne );
-    v8hi foo = __builtin_ia32_pmaddubsw128( v[0], v[0] + -1 );
-    v8hi bar = __builtin_ia32_pmaddubsw128( v[1], v[1] + -1 );
+    v8hu foo;
+    v8hu bar;
+    v16qu* const v = ( v16qu* ) f; // it makes v16hi[2];
+    // pmaddubsw will overflow and saturate for 182 and higher
+    if( len <= 181 ) {
+        // short result[i] = v0[2*i] * ( v0[2*i] + minusOne ) + v0[2*i+1] * ( v0[2*i+1] + minusOne );
+        // multiply-add sign-saturated
+        foo = (v8hu)_mm_maddubs_epi16( (__m128i)v[0], (__m128i) (v[0] + -1 ) );
+        bar = (v8hu)_mm_maddubs_epi16( (__m128i)v[1], (__m128i) (v[1] + -1 ) );
+    } else {
+        v8hu lo, hi;
+        Unpack_v16qu( v[0], &lo, &hi );
+        foo = lo * ( lo + -1 ) + hi * (hi + -1);
+        Unpack_v16qu( v[1], &lo, &hi );
+        bar = lo * ( lo + -1 ) + hi * (hi + -1);
+    }
     foo += bar;
-    v8hi hexFF00 = ( v8hi )_mm_set1_epi16( 0xFF00 );
+    __m128i hexFF00 = _mm_set1_epi16( 0xFF00 );
 
-#if defined( __AVX__ )
-    asm(
-        "vpandn %[hi], %[mask], %[lo]\n\t"
-        "vpand  %[hi], %[mask], %[hi]\n\t" :
-        [hi] "+x" (foo), [lo] "=&x" (bar) :
-        [mask]"x" (hexFF00)
-    );
-#else
-    v8hi temp = temp; //disable uninitialized warning
-    asm(
-        "movdqa %[hi],      %[tmp]\n\t"
-        "pand   %[lo],      %[hi]\n\t"
-        "pandn  %[tmp],     %[lo]\n\t" :
-        [hi] "+x" ( foo ), [lo] "=x" ( bar ) :
-        "1" ( hexFF00 ), [tmp] "x" ( temp )
-    );
-#endif
+    bar = (v8hu)_mm_andnot_si128( hexFF00, (__m128i)foo );
+    foo = (v8hu)_mm_and_si128( hexFF00, (__m128i)foo );
 
-    v16qi zero = {0};
-    v8hi high =  ( v8hi ) __builtin_ia32_psadbw128( ( v16qi ) foo, zero );
-    v8hi low  =  ( v8hi ) __builtin_ia32_psadbw128( ( v16qi ) bar, zero );
-
-    uint16_t sum = ( high[0] + high[4] )* 256 + low[0] + low[4];
+    const __m128i zero = {};
+    const __m128i high_sum = _mm_sad_epu8( ( __m128i ) foo, zero );
+    const v8hu high =  ( v8hu ) _mm_slli_si128( high_sum, 1 ); // * 256
+    const v8hu low  =  ( v8hu ) _mm_sad_epu8( ( __m128i ) bar, zero );
+    const v8hu vSum = high + low;
+    const uint16_t sum =  vSum[0] + vSum[4];
 
     return sum;
-}
-
-static inline
-void Unpack_v16qi( v16qi in, v8hi* lo, v8hi *hi ){
-    v16qi zero = { 0 };
-    *lo = (v8hi) __builtin_ia32_punpcklbw128 ( in, zero );
-    *hi = (v8hi) __builtin_ia32_punpckhbw128 ( in, zero );
-}
-
-static inline
-void Unpack_v8hi( v8hi in, v4si* lo, v4si* hi ){
-    v8hi zero = { 0 };
-    *lo = (v4si) __builtin_ia32_punpcklwd128( in, zero );
-    *hi = (v4si) __builtin_ia32_punpckhwd128( in, zero );
-}
-
-static inline
-v16qi MOVDQU( const v16qi* p ){
-    return __builtin_ia32_loaddqu( (char*) p );
 }
 
 __attribute__ ((optimize("unroll-loops")))
@@ -165,20 +153,22 @@ int ComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, s
     int score = 0;
     int i;
     for( i = 0; i * 16 + 15 < len - 2; ++i ) {
-        v16qi a = msg->vector16[i].vector;
-        v8hi aLo, aHi;
-        Unpack_v16qi( a, &aLo, &aHi );
+        v16qu a = v16_echar_0_based_index( msg->vector16[i] );
+        v8hu aLo, aHi;
+        Unpack_v16qu( a, &aLo, &aHi );
         aLo *= 32 * 32;
         aHi *= 32 * 32;
         const void* a_addr = &msg->vector16[i].vector ;
-        v16qi b = MOVDQU( a_addr + 1 );
-        v8hi bLo, bHi;
-        Unpack_v16qi( b, &bLo, &bHi );
+        union v16_echar b_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 1 ) };
+        v16qu b = v16_echar_0_based_index( b_vector );
+        v8hu bLo, bHi;
+        Unpack_v16qu( b, &bLo, &bHi );
         bLo *= 32;
         bHi *= 32;
-        v16qi c = MOVDQU( a_addr + 2 );
-        v8hi cLo, cHi;
-        Unpack_v16qi( c, &cLo, &cHi );
+        union v16_echar c_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 2 ) };
+        v16qu c = v16_echar_0_based_index( c_vector );
+        v8hu cLo, cHi;
+        Unpack_v16qu( c, &cLo, &cHi );
 
         aLo += bLo + cLo;
         aHi += bHi + cHi;
@@ -221,15 +211,16 @@ int ComputeBiscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, sc
     int score = 0;
     int i;
     for( i = 0; i * 16 + 15 < len - 1; ++i ) {
-        v16qi a = msg->vector16[i].vector;
-        v8hi aLo, aHi;
-        Unpack_v16qi( a, &aLo, &aHi );
+        v16qu a = v16_echar_0_based_index( msg->vector16[i] );
+        v8hu aLo, aHi;
+        Unpack_v16qu( a, &aLo, &aHi );
         aLo *= 32;
         aHi *= 32;
-        const void* a_addr = &msg->vector16[i].vector;
-        v16qi b = MOVDQU( a_addr + 1 );
-        v8hi bLo, bHi;
-        Unpack_v16qi( b, &bLo, &bHi );
+        const void* a_addr = &msg->vector16[i];
+        const union v16_echar b_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 1 ) };
+        const v16qu b = v16_echar_0_based_index( b_vector );
+        v8hu bLo, bHi;
+        Unpack_v16qu( b, &bLo, &bHi );
 
         aLo += bLo;
         aHi += bHi;
