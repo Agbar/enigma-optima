@@ -1,9 +1,11 @@
 #pragma once
 
 #include "error.h"
-#include "cipherSsse3.h"
-#include "character_encoding.h"
 
+#include "x86/cipherSsse3.h"
+
+#include "echar/echar.h"
+#include "echar/echar_delta.h"
 #include "echar/echar_ssse3.h"
 
 static inline
@@ -47,7 +49,7 @@ CombineMaskedPartsSsse3( union v16_echar l, union v16_echar r ){
 
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 static inline
-void DecodeScoredMessagePartSsse3( const struct Key* const restrict key, int len, union ScoringDecodedMessage* output )
+void staticDecodeScoredMessagePartSsse3( const struct Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
     uint_least16_t lookupNumber = 0;

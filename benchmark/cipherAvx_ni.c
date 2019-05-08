@@ -9,12 +9,12 @@
 #include "cipherAvx_ni.h"
 #include "x86/computeScoreSse2Vex.h"
 #include "x86/computeScoreSsse3Vex.h"
-#include "x86/cipherSsse3_inlines.h"
+#include "x86/decodeMessageSsse3Vex.h"
 #include "x86/scoreAvx.h"
 
 __attribute__ ((flatten))
 void DecodeMessageAvx( const struct Key* const restrict key, int len ) {
-    DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartAvx );
+    DecodeScoredMessagePartSsse3Vex( key, len, &decodedMsgPartAvx );
 }
 
 __attribute__ ((flatten))

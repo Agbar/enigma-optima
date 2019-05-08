@@ -10,9 +10,9 @@
 #include "ciphertext.h"
 #include "x86/computeScoreSse2.h"
 #include "x86/computeScoreSsse3.h"
+#include "x86/decodeMessageSsse3.h"
 #include "x86/scoreSsse3.h"
 #include "x86/cipherSsse3.h"
-#include "x86/cipherSsse3_inlines.h"
 #include "score_inlines.h"
 
 // SSSE3 scores

@@ -10,7 +10,6 @@
 
 #include "x86/cipherSsse3.h"
 #include "cipher_inlines.h"
-#include "x86/cipherSsse3_inlines.h"
 
 void prepare_decoder_lookup_M_H3_ssse3( const struct Key *key, int len );
 void prepare_decoder_lookup_ALL_ssse3( const struct Key *key, int len );
