@@ -4,7 +4,7 @@
 
 #include "x86/computeScoreAvx2.h"
 
-__attribute__ ((optimize("unroll-loops")))
+__attribute__ ((hot))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, scoreLength_t len ){
     ALIGNED_32( uint8_t f[32] ) = {0};

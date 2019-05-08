@@ -1,6 +1,5 @@
 #pragma GCC target("avx2")
 
-
 #include "echar/echar_avx2.h"
 #include "error.h"
 #include "x86/cipherAvx2.h"
@@ -45,6 +44,7 @@ CombineMaskedPartsAvx2( union v32_echar l, union v32_echar r ){
     return (union v32_echar){ .vector = l.vector | r.vector };
 }
 
+__attribute__ ((hot))
 __attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 void DecodeScoredMessagePartAvx2( const struct Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
