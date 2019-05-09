@@ -94,6 +94,10 @@ typedef uint8_t         v32qu   __attribute__ ((vector_size(32)));
  */
 typedef char            v32qi   __attribute__ ((vector_size(32)));
 
+/** \brief Vector of 16 unsigned words. 256 bit.
+ */
+typedef uint16_t        v16hu    __attribute__ ((vector_size(32)));
+
 typedef short           v16hi   __attribute__ ((vector_size(32)));
 
 typedef long long       v4di    __attribute__ ((vector_size(32)));
