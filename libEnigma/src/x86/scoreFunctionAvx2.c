@@ -42,5 +42,5 @@ static int biscoreAvx2( const struct Key* const restrict key, scoreLength_t len 
 
 static int triscoreAvx2( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartAvx2( key, len, &decodedMsgPartAvx2 );
-    return ComputeTriscoreFromDecodedMsgSse2Vex( &decodedMsgPartAvx2, len );
+    return ComputeTriscoreFromDecodedMsgAvx2( &decodedMsgPartAvx2, len );
 }

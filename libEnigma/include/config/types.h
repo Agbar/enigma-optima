@@ -74,6 +74,10 @@ typedef short           v8hi    __attribute__ ((vector_size(16)));
  */
 typedef long long       v2di    __attribute__ ((vector_size(16)));
 
+/** \brief Vector of 4 unsigned doublewords. 128 bit..
+ */
+typedef uint32_t        v4su    __attribute__ ((vector_size(16)));
+
 /** \brief Vector of 4 doublewords. 128 bit, default signedness.
  */
 typedef int             v4si    __attribute__ ((vector_size(16)));
