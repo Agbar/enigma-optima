@@ -2,6 +2,7 @@
 
 #include <tmmintrin.h>
 
+#include "config/types.h"
 #include "score.h"
 
 static inline
