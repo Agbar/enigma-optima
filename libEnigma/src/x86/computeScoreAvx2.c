@@ -34,8 +34,8 @@ uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, sco
             foo = (v16hu)_mm256_and_si256( hexFF00, (__m256i)foo );
 
     __m256i high_sum =_mm256_sad_epu8 ( (__m256i)foo, zero );
-    v16hu high = (v16hu)_mm256_slli_si256( high_sum, 1 ); // * 256
     v16hu low  = (v16hu)_mm256_sad_epu8(  bar, zero );
+    v16hu high = (v16hu)_mm256_slli_si256( high_sum, 1 ); // * 256
     v16hu vSum = high + low;
     __m256i s2 = _mm256_shuffle_epi32( (__m256i)vSum, 0b01010110 );
     __m256i s3 = _mm256_add_epi16( (__m256i)vSum, s2 );
