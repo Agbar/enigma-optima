@@ -48,7 +48,9 @@ uint16_t staticComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* m
     const v8hu low  =  ( v8hu ) _mm_sad_epu8( ( __m128i ) bar, zero );
     const v8hu high =  ( v8hu ) _mm_slli_si128( high_sum, 1 ); // * 256
     const v8hu vSum = high + low;
-    const uint16_t sum =  vSum[0] + vSum[4];
+    const __m128i vSum4 = _mm_shuffle_epi32( (__m128i)vSum, 0b01010110 );
+    const __m128i vSum14 = _mm_add_epi16( (__m128i)vSum, vSum4 );
+    const uint16_t sum = _mm_cvtsi128_si64( vSum14 );
 
     return sum;
 }
