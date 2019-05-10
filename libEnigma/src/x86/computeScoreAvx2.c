@@ -41,7 +41,11 @@ uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, sco
     __m256i s3 = _mm256_add_epi16( (__m256i)vSum, s2 );
     __m128i s4 = _mm256_extracti128_si256( s3, 1 );
     __m128i s5 = _mm_add_epi16( _mm256_castsi256_si128( s3 ), s4 );
+#ifdef __i386__
+    uint16_t sum = _mm_cvtsi128_si32( s5 );
+#else
     uint16_t sum = _mm_cvtsi128_si64( s5 );
+#endif
 
     return sum;
 }
