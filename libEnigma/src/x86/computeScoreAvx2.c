@@ -18,45 +18,61 @@ __attribute__ ((hot))
 uint32_t ComputeTriscoreFromDecodedMsgAvx2( const union ScoringDecodedMessage* msg, scoreLength_t len ) {
     int score = 0;
     int i;
-    for( i = 0; i * 16 + 15 < len - 2; ++i ) {
-        v16qu a = v16_echar_0_based_index( msg->vector16[i] );
-        v8hu aLo, aHi;
-        Unpack_v16qu( a, &aLo, &aHi );
-        aLo *= 32 * 32;
-        aHi *= 32 * 32;
-        const void* a_addr = &msg->vector16[i].vector ;
-        union v16_echar b_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 1 ) };
-        v16qu b = v16_echar_0_based_index( b_vector );
-        v8hu bLo, bHi;
-        Unpack_v16qu( b, &bLo, &bHi );
-        bLo *= 32;
-        bHi *= 32;
-        union v16_echar c_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 2 ) };
-        v16qu c = v16_echar_0_based_index( c_vector );
-        v8hu cLo, cHi;
-        Unpack_v16qu( c, &cLo, &cHi );
+    for( i = 0; i * 32 + 31 < len - 2; ++i ) {
+        v32qu a = v32_echar_0_based_index( msg->vector32[i] );
+        const __m128i al128 = _mm256_castsi256_si128( (__m256i)a );
+        const __m128i ah128 = _mm256_extracti128_si256( (__m256i)a, 1 );
+        __m256i a0 = _mm256_cvtepu8_epi32( al128 );
+        __m256i a1 = _mm256_cvtepu8_epi32( _mm_srli_si128( al128 , 8 ) );
+        __m256i a2 = _mm256_cvtepu8_epi32( ah128 );
+        __m256i a3 = _mm256_cvtepu8_epi32( _mm_srli_si128( ah128 , 8 ) );
+        a0 *= 32 * 32;
+        a1 *= 32 * 32;
+        a2 *= 32 * 32;
+        a3 *= 32 * 32;
+        const void* a_addr = &msg->vector32[i].vector;
+        union v32_echar b_vector = { .vector = (v32qs)_mm256_loadu_si256( a_addr + 1 ) };
+        v32qu b = v32_echar_0_based_index( b_vector );
+        const __m128i bl128 = _mm256_castsi256_si128( (__m256i)b );
+        const __m128i bh128 = _mm256_extracti128_si256( (__m256i)b, 1 );
+        __m256i b0 = _mm256_cvtepu8_epi32( bl128 );
+        __m256i b1 = _mm256_cvtepu8_epi32( _mm_srli_si128( bl128 , 8 ) );
+        __m256i b2 = _mm256_cvtepu8_epi32( bh128 );
+        __m256i b3 = _mm256_cvtepu8_epi32( _mm_srli_si128( bh128 , 8 ) );
+        b0 = b0 * 32 + a0;
+        b1 = b1 * 32 + a1;
+        b2 = b2 * 32 + a2;
+        b3 = b3 * 32 + a3;
+        union v32_echar c_vector = { .vector = (v32qs)_mm256_loadu_si256( a_addr + 2 ) };
+        v32qu c = v32_echar_0_based_index( c_vector );
+        const __m128i cl128 = _mm256_castsi256_si128( (__m256i)c );
+        const __m128i ch128 = _mm256_extracti128_si256( (__m256i)c, 1 );
+        __m256i c0 = _mm256_cvtepu8_epi32( cl128 );
+        __m256i c1 = _mm256_cvtepu8_epi32( _mm_srli_si128( cl128 , 8 ) );
+        __m256i c2 = _mm256_cvtepu8_epi32( ch128 );
+        __m256i c3 = _mm256_cvtepu8_epi32( _mm_srli_si128( ch128 , 8 ) );
+        c0 += b0;
+        c1 += b1;
+        c2 += b2;
+        c3 += b3;
+        v8su score0 = (v8su)_mm256_i32gather_epi32( (const int*)tridict, c0, 4 );
+        v8su score1 = (v8su)_mm256_i32gather_epi32( (const int*)tridict, c1, 4 );
+        v8su score2 = (v8su)_mm256_i32gather_epi32( (const int*)tridict, c2, 4 );
+        v8su score3 = (v8su)_mm256_i32gather_epi32( (const int*)tridict, c3, 4 );
 
-        v8hu loIdx = aLo + bLo + cLo;
-        v8hu hiIdx = aHi + bHi + cHi;
+        v8su score01   = score0 + score1;
+        v8su score23   = score2 + score3;
+        v8su score0123 = score01 + score23;
 
-        const __m128i tridx0 = _mm_cvtepu16_epi32( (__m128i) loIdx );
-        v4su score0 = (v4su)_mm_i32gather_epi32( (const int*)tridict, tridx0, 4 );
-        const __m128i tridx1 = _mm_cvtepu16_epi32( _mm_srli_si128( (__m128i) loIdx, 8 ) );
-        v4su score1 = (v4su)_mm_i32gather_epi32( (const int*)tridict, tridx1, 4);
-        const __m128i tridx2 = _mm_cvtepu16_epi32( (__m128i) hiIdx );
-        v4su score2 = (v4su)_mm_i32gather_epi32( (const int*)tridict, tridx2, 4 );
-        const __m128i tridx3 = _mm_cvtepu16_epi32( _mm_srli_si128( (__m128i) hiIdx, 8 ) );
-        v4su score3   = (v4su)_mm_i32gather_epi32( (const int*)tridict, tridx3, 4);
-
-        v4su score01   = score0 + score1;
-        v4su score23   = score2 + score3;
-        v4su score0123 = score01 + score23;
-
-        __m128i s1 = _mm_hadd_epi32( (__m128i)score0123, (__m128i)score0123 );
-        __m128i s2 = _mm_hadd_epi32( s1, s1 );
-        score += _mm_cvtsi128_si32( s2 );
+        __m256i s1 = _mm256_hadd_epi32( (__m256i)score0123, (__m256i)score0123 );
+        __m256i s2 = _mm256_hadd_epi32( s1, s1 );
+        __m128i sh = _mm256_extracti128_si256(s2,1);
+        __m128i sl = _mm256_castsi256_si128(s2);
+        __m128i s  = _mm_add_epi32(sh,sl);
+                      
+        score += _mm_cvtsi128_si64( s );
     }
-    i *= 16;
+    i *= 32;
     uint_fast8_t c0 = echar_0_based_index( msg->plain[i] );
     uint_fast8_t c1 = echar_0_based_index( msg->plain[i + 1] );
     int k = i + 2;

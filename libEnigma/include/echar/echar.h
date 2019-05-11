@@ -88,6 +88,13 @@ v16_echar_sub_delta( union v16_echar c, union v16_echar_delta sub ){
 
 CONST_FUNCTION
 static inline
+v32qu
+v32_echar_0_based_index( union v32_echar v ){
+    return (v32qu)(v.vector);
+}
+
+CONST_FUNCTION
+static inline
 union v32_echar
 v32_echar_add_delta( union v32_echar c, union v32_echar_delta add ){
     v32qs r = AddMod26_v32qs_v32qu( c.vector, add.vector );
