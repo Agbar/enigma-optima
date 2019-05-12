@@ -43,11 +43,11 @@ uint32_t ComputeTriscoreFromDecodedMsgAvx2( const union ScoringDecodedMessage* m
 
         __m256i s1 = _mm256_hadd_epi32( (__m256i)score01, (__m256i)score01 );
         __m256i s2 = _mm256_hadd_epi32( s1, s1 );
-        __m128i sh = _mm256_extracti128_si256(s2,1);
-        __m128i sl = _mm256_castsi256_si128(s2);
-        __m128i s  = _mm_add_epi32(sh,sl);
+        __m128i sh = _mm256_extracti128_si256( s2, 1 );
+        __m128i sl = _mm256_castsi256_si128( s2 );
+        __m128i s  = _mm_add_epi32( sh, sl );
 
-        score += _mm_cvtsi128_si64( s );
+        score += _mm_cvtsi128_si32( s );
     }
     i *= 16;
     uint_fast8_t c0 = echar_0_based_index( msg->plain[i] );
