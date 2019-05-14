@@ -5,6 +5,7 @@
 #include "config/types.h"
 #include "dict.h"
 #include "x86/computeScoreAvx2.h"
+#include "x86/vectorsAvx2.h"
 
 static inline
 void Unpack_v16qu( v16qu in, v8hu *lo, v8hu *hi ){
@@ -13,12 +14,11 @@ void Unpack_v16qu( v16qu in, v8hu *lo, v8hu *hi ){
     *hi = (v8hu) _mm_unpackhi_epi8( (__m128i)in, zero );
 }
 
-__attribute__ ((optimize("unroll-loops")))
 __attribute__ ((hot))
 uint32_t ComputeTriscoreFromDecodedMsgAvx2( const union ScoringDecodedMessage* msg, scoreLength_t len ) {
     int score = 0;
     int i;
-    for( i = 0; i * 16 + 15 < len - 2; ++i ) {
+    for( i = 0; i * 16 < len - 2; ++i ) {
         v16qu a = v16_echar_0_based_index( msg->vector16[i] );
         __m256i al = _mm256_cvtepu8_epi32( (__m128i)a );
         __m256i ah = _mm256_cvtepu8_epi32( _mm_srli_si128( (__m128i)a , 8 ) );
@@ -37,8 +37,17 @@ uint32_t ComputeTriscoreFromDecodedMsgAvx2( const union ScoringDecodedMessage* m
         __m256i ch = _mm256_cvtepu8_epi32( _mm_srli_si128( (__m128i)c , 8 ) );
         cl += bl;
         ch += bh;
-        v8su score0 = (v8su)_mm256_i32gather_epi32( (const int*)tridict, cl, 4 );
-        v8su score1 = (v8su)_mm256_i32gather_epi32( (const int*)tridict, ch, 4 );
+        __m256i z = _mm256_setzero_si256();
+        __m256i mask0 = _mm256_set1_epi32(~0);
+        __m256i mask1 = _mm256_set1_epi32(~0);
+        int tail =  len - 2 - 16 * i;
+        if( tail < 16 ) {
+            uint16_t bit_mask = 0xFFFF >> ( 16 - tail );
+            mask0 = m256_setmask_epi32( bit_mask );
+            mask1 = m256_setmask_epi32( bit_mask >> 8 );
+        }
+        v8su score0 = (v8su)_mm256_mask_i32gather_epi32( z, (const int*)tridict, cl, mask0, 4 );
+        v8su score1 = (v8su)_mm256_mask_i32gather_epi32( z, (const int*)tridict, ch, mask1, 4 );
         v8su score01   = score0 + score1;
 
         __m256i s1 = _mm256_hadd_epi32( (__m256i)score01, (__m256i)score01 );
@@ -48,28 +57,6 @@ uint32_t ComputeTriscoreFromDecodedMsgAvx2( const union ScoringDecodedMessage* m
         __m128i s  = _mm_add_epi32( sh, sl );
 
         score += _mm_cvtsi128_si32( s );
-    }
-    i *= 16;
-    uint_fast8_t c0 = echar_0_based_index( msg->plain[i] );
-    uint_fast8_t c1 = echar_0_based_index( msg->plain[i + 1] );
-    int k = i + 2;
-    for( ; k + 3 < len; k += 4 ) {
-        uint_fast8_t k0 = echar_0_based_index( msg->plain[k] );
-        score += tridict[ c0 ][ c1 ][ k0 ];
-        uint_fast8_t k1 = echar_0_based_index( msg->plain[k + 1] );
-        score += tridict[ c1 ][ k0 ][ k1 ];
-        uint_fast8_t k2 = echar_0_based_index( msg->plain[k + 2] );
-        score += tridict[ k0 ][ k1 ][ k2 ];
-        uint_fast8_t k3 = echar_0_based_index( msg->plain[k + 3] );
-        score += tridict[ k1 ][ k2 ][ k3 ];
-        c0 = k2;
-        c1 = k3;
-    }
-    for( ; k < len; ++k ) {
-        uint8_t c2 = echar_0_based_index( msg->plain[k] );
-        score += tridict[ c0 ][ c1 ][ c2 ];
-        c0 = c1;
-        c1 = c2;
     }
     return score;
 }
