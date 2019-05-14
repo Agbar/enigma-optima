@@ -57,14 +57,13 @@ extern enigma_score_function_t enigma_score_orig;
 
 int get_triscore(const struct Key *key, int len);
 
+#define TRISCORE_TAIL (2)
+
 union ScoringDecodedMessage
 {
-#if ((((CT)+15)/16) * 16) != (((CT)+15)&~15)
-# error Wrong ScoringDecodedMessage member sizes.
-#endif
-    union v16_echar vector16[(CT+15)/16];
-    union v32_echar vector32[(CT+31)/32];
-    struct echar plain[(CT+15)&~15];
+    union v16_echar vector16[(CT+TRISCORE_TAIL+15)/16];
+    union v32_echar vector32[(CT+TRISCORE_TAIL+31)/32];
+    struct echar plain[(CT+TRISCORE_TAIL+15)&~15];
 };
 
 void DecodeScoredMessagePartStandard(const struct Key* restrict key, int len, union ScoringDecodedMessage* restrict output);
