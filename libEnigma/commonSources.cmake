@@ -6,6 +6,7 @@ PRIVATE
     "src/cpu.c"
     "src/date.c"
     "src/dict.c"
+    "src/dict_load.c"
     "src/hillclimb.c"
     "src/hillclimb2.c"
     "src/input.c"
