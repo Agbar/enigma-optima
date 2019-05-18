@@ -49,12 +49,13 @@ uint32_t ComputeTriscoreFromDecodedMsgAvx2( const union ScoringDecodedMessage* m
         v8su score0 = (v8su)_mm256_mask_i32gather_epi32( z, (const int*)tridict, cl, mask0, 4 );
         v8su score1 = (v8su)_mm256_mask_i32gather_epi32( z, (const int*)tridict, ch, mask1, 4 );
         v8su score01   = score0 + score1;
-
-        __m256i s1 = _mm256_hadd_epi32( (__m256i)score01, (__m256i)score01 );
-        __m256i s2 = _mm256_hadd_epi32( s1, s1 );
-        __m128i sh = _mm256_extracti128_si256( s2, 1 );
-        __m128i sl = _mm256_castsi256_si128( s2 );
-        __m128i s  = _mm_add_epi32( sh, sl );
+        __m128i s2 = _mm256_extracti128_si256( (__m256i)score01, 1 );
+        __m128i s3 = _mm256_castsi256_si128( (__m256i)score01 );
+        __m128i s23 = _mm_add_epi32( s2, s3 );
+        __m128i s23h =_mm_shuffle_epi32( s23, 0b1110 );
+        __m128i s4 = _mm_add_epi32( s23, s23h );
+        __m128i s4h = _mm_shuffle_epi32( s4, 0b01 );
+        __m128i s  = _mm_add_epi32( s4, s4h );
 
         score += _mm_cvtsi128_si32( s );
     }
@@ -76,11 +77,13 @@ uint32_t ComputeTriscoreFromDecodedMsgAvx2( const union ScoringDecodedMessage* m
         __m256i mask0 = m256_setmask_epi32( bit_mask );
         __m256i score0 = _mm256_mask_i32gather_epi32( _mm256_setzero_si256(), (const int*)tridict, cl, mask0, 4 );
 
-        __m256i s1 = _mm256_hadd_epi32( score0, score0 );
-        __m256i s2 = _mm256_hadd_epi32( s1, s1 );
-        __m128i sh = _mm256_extracti128_si256( s2, 1 );
-        __m128i sl = _mm256_castsi256_si128( s2 );
-        __m128i s  = _mm_add_epi32( sh, sl );
+        __m128i s2 = _mm256_extracti128_si256( (__m256i)score0, 1 );
+        __m128i s3 = _mm256_castsi256_si128( (__m256i)score0 );
+        __m128i s23 = _mm_add_epi32( s2, s3 );
+        __m128i s23h =_mm_shuffle_epi32( s23, 0b1110 );
+        __m128i s4 = _mm_add_epi32( s23, s23h );
+        __m128i s4h = _mm_shuffle_epi32( s4, 0b01 );
+        __m128i s  = _mm_add_epi32( s4, s4h );
 
         score += _mm_cvtsi128_si32( s );
     }
