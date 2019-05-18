@@ -18,7 +18,7 @@ __attribute__ ((hot))
 uint32_t ComputeTriscoreFromDecodedMsgAvx2( const union ScoringDecodedMessage* msg, scoreLength_t len ) {
     int score = 0;
     int i;
-    for( i = 0; i * 16 < len - 2; ++i ) {
+    for( i = 0; i * 16 + 8 < len - 2; ++i ) {
         v16qu a = v16_echar_0_based_index( msg->vector16[i] );
         __m256i al = _mm256_cvtepu8_epi32( (__m128i)a );
         __m256i ah = _mm256_cvtepu8_epi32( _mm_srli_si128( (__m128i)a , 8 ) );
@@ -51,6 +51,32 @@ uint32_t ComputeTriscoreFromDecodedMsgAvx2( const union ScoringDecodedMessage* m
         v8su score01   = score0 + score1;
 
         __m256i s1 = _mm256_hadd_epi32( (__m256i)score01, (__m256i)score01 );
+        __m256i s2 = _mm256_hadd_epi32( s1, s1 );
+        __m128i sh = _mm256_extracti128_si256( s2, 1 );
+        __m128i sl = _mm256_castsi256_si128( s2 );
+        __m128i s  = _mm_add_epi32( sh, sl );
+
+        score += _mm_cvtsi128_si32( s );
+    }
+    int tail8 =  len - 2 - 16 * i;
+    if( tail8 > 0 ) {
+         v16qu a = v16_echar_0_based_index( msg->vector16[i] );
+        __m256i al = _mm256_cvtepu8_epi32( (__m128i)a );
+        al *= 32 * 32;
+        const void* a_addr = &msg->vector16[i].vector;
+        union v16_echar b_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 1 ) };
+        v16qu b = v16_echar_0_based_index( b_vector );
+        __m256i bl = _mm256_cvtepu8_epi32( (__m128i)b );
+        bl = bl * 32 + al;
+        union v16_echar c_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 2 ) };
+        v16qu c = v16_echar_0_based_index( c_vector );
+        __m256i cl = _mm256_cvtepu8_epi32( (__m128i)c );
+        cl += bl;
+        uint16_t bit_mask = 0xFFFF >> ( 16 - tail8 );
+        __m256i mask0 = m256_setmask_epi32( bit_mask );
+        __m256i score0 = _mm256_mask_i32gather_epi32( _mm256_setzero_si256(), (const int*)tridict, cl, mask0, 4 );
+
+        __m256i s1 = _mm256_hadd_epi32( score0, score0 );
         __m256i s2 = _mm256_hadd_epi32( s1, s1 );
         __m128i sh = _mm256_extracti128_si256( s2, 1 );
         __m128i sl = _mm256_castsi256_si128( s2 );
