@@ -29,23 +29,17 @@ uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, sco
         v16hu hi = (v16hu)_mm256_unpackhi_epi8( (__m256i)v, zero );
         foo = lo * ( lo + -1 ) + hi * (hi + -1);
     }
-    __m256i hexFF00 = _mm256_set1_epi16( 0xFF00 );
-    __m256i bar = _mm256_andnot_si256( hexFF00, (__m256i)foo );
-            foo = (v16hu)_mm256_and_si256( hexFF00, (__m256i)foo );
-
-    __m256i high_sum =_mm256_sad_epu8 ( (__m256i)foo, zero );
-    v16hu low  = (v16hu)_mm256_sad_epu8(  bar, zero );
-    v16hu high = (v16hu)_mm256_slli_si256( high_sum, 1 ); // * 256
-    v16hu vSum = high + low;
-    __m256i s2 = _mm256_shuffle_epi32( (__m256i)vSum, 0b01010110 );
-    __m256i s3 = _mm256_add_epi16( (__m256i)vSum, s2 );
-    __m128i s4 = _mm256_extracti128_si256( s3, 1 );
-    __m128i s5 = _mm_add_epi16( _mm256_castsi256_si128( s3 ), s4 );
-#ifdef __i386__
-    uint16_t sum = _mm_cvtsi128_si32( s5 );
-#else
-    uint16_t sum = _mm_cvtsi128_si64( s5 );
-#endif
-
-    return sum;
+    __m128i sh = _mm256_extracti128_si256( (__m256i)foo, 1 );
+    __m128i sl = _mm256_castsi256_si128( (__m256i)foo );
+    __m128i s8 = _mm_add_epi16( sh, sl );
+    __m128i s8h = _mm_shuffle_epi32( s8, 0b1110 );
+    __m128i s4  = _mm_add_epi16( s8, s8h );
+    __m128i s4h = _mm_shuffle_epi32( s4, 0b01 );
+    __m128i s2  = _mm_add_epi16( s4, s4h );
+    union
+    {
+        uint32_t epu32;
+        uint16_t epu16[2];
+    } s2x = {.epu32 = _mm_cvtsi128_si32( s2 )};
+    return s2x.epu16[0] + s2x.epu16[1];;
 }
