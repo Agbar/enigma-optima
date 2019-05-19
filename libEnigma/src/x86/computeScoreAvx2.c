@@ -126,5 +126,5 @@ uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, sco
         uint32_t epu32;
         uint16_t epu16[2];
     } s2x = {.epu32 = _mm_cvtsi128_si32( s2 )};
-    return s2x.epu16[0] + s2x.epu16[1];;
+    return s2x.epu16[0] + s2x.epu16[1];
 }

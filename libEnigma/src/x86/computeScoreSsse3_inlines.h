@@ -38,23 +38,16 @@ uint16_t staticComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* m
         bar = lo * ( lo + -1 ) + hi * (hi + -1);
     }
     foo += bar;
-    __m128i hexFF00 = _mm_set1_epi16( 0xFF00 );
 
-    bar = (v8hu)_mm_andnot_si128( hexFF00, (__m128i)foo );
-    foo = (v8hu)_mm_and_si128( hexFF00, (__m128i)foo );
-
-    const __m128i zero = {};
-    const __m128i high_sum = _mm_sad_epu8( ( __m128i ) foo, zero );
-    const v8hu low  =  ( v8hu ) _mm_sad_epu8( ( __m128i ) bar, zero );
-    const v8hu high =  ( v8hu ) _mm_slli_si128( high_sum, 1 ); // * 256
-    const v8hu vSum = high + low;
-    const __m128i vSum4 = _mm_shuffle_epi32( (__m128i)vSum, 0b01010110 );
-    const __m128i vSum14 = _mm_add_epi16( (__m128i)vSum, vSum4 );
-#ifdef __i386__
-    const uint16_t sum = _mm_cvtsi128_si32( vSum14 );
-#else
-    const uint16_t sum = _mm_cvtsi128_si64( vSum14 );
-#endif
-
-    return sum;
+    __m128i s8 =  (__m128i)foo;
+    __m128i s8h = _mm_shuffle_epi32( s8, 0b1110 );
+    __m128i s4  = _mm_add_epi16( s8, s8h );
+    __m128i s4h = _mm_shuffle_epi32( s4, 0b01 );
+    __m128i s2  = _mm_add_epi16( s4, s4h );
+    union
+    {
+        uint32_t epu32;
+        uint16_t epu16[2];
+    } s2x = {.epu32 = _mm_cvtsi128_si32( s2 )};
+    return s2x.epu16[0] + s2x.epu16[1];
 }
