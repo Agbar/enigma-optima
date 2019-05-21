@@ -104,15 +104,18 @@ uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, sco
 
     v32qi v = (v32qi) _mm256_load_si256( &u.fv );
 
-    __m256i zero  = {};
-    v16hu foo;
-    if( len <= 181 ) {
-        // short result[i] = v0[2*i] * ( v0[2*i] - 1 ) + v0[2*i+1] * ( v0[2*i+1] - 1 );
-        foo = (v16hu)_mm256_maddubs_epi16( (__m256i)v, (__m256i)( v + -1 ) );
-    } else {
-        v16hu lo = (v16hu)_mm256_unpacklo_epi8( (__m256i)v, zero );
-        v16hu hi = (v16hu)_mm256_unpackhi_epi8( (__m256i)v, zero );
-        foo = lo * ( lo + -1 ) + hi * (hi + -1);
+    // short result[i] = v0[2*i] * ( v0[2*i] - 1 ) + v0[2*i+1] * ( v0[2*i+1] - 1 );
+    v16hu foo = (v16hu)_mm256_maddubs_epi16( (__m256i)v, (__m256i)( v + -1 ) );
+    if( len > 181 ) {
+        __m256i sat_max = _mm256_srli_epi16( _mm256_set1_epi16( ~0 ), 1 );
+        __m256i foo_sat = _mm256_cmpeq_epi16( (__m256i)foo, sat_max );
+        uint32_t any_sat = _mm256_movemask_epi8( foo_sat );
+        if( any_sat ) {
+            __m256i zero  = {};
+            v16hu lo = (v16hu)_mm256_unpacklo_epi8( (__m256i)v, zero );
+            v16hu hi = (v16hu)_mm256_unpackhi_epi8( (__m256i)v, zero );
+            foo = lo * ( lo + -1 ) + hi * (hi + -1);
+        }
     }
     __m128i sh = _mm256_extracti128_si256( (__m256i)foo, 1 );
     __m128i sl = _mm256_castsi256_si128( (__m256i)foo );
@@ -126,5 +129,5 @@ uint16_t ComputeIcscoreFromDecodedMsgAvx2( union ScoringDecodedMessage* msg, sco
         uint32_t epu32;
         uint16_t epu16[2];
     } s2x = {.epu32 = _mm_cvtsi128_si32( s2 )};
-    return s2x.epu16[0] + s2x.epu16[1];;
+    return s2x.epu16[0] + s2x.epu16[1];
 }
