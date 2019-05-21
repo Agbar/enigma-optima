@@ -21,21 +21,24 @@ uint16_t staticComputeIcscoreFromDecodedMsgSsse3( union ScoringDecodedMessage* m
     for( i = 0; i < len; i++ ) {
         f[ echar_0_based_index( msg->plain[i] ) ]++;
     }
-    v8hu foo;
-    v8hu bar;
     v16qu* const v = ( v16qu* ) f; // it makes v16hi[2];
-    // pmaddubsw will overflow and saturate for 182 and higher
-    if( len <= 181 ) {
-        // short result[i] = v0[2*i] * ( v0[2*i] + minusOne ) + v0[2*i+1] * ( v0[2*i+1] + minusOne );
-        // multiply-add sign-saturated
-        foo = (v8hu)_mm_maddubs_epi16( (__m128i)v[0], (__m128i) (v[0] + -1 ) );
-        bar = (v8hu)_mm_maddubs_epi16( (__m128i)v[1], (__m128i) (v[1] + -1 ) );
-    } else {
-        v8hu lo, hi;
-        Unpack_v16qu( v[0], &lo, &hi );
-        foo = lo * ( lo + -1 ) + hi * (hi + -1);
-        Unpack_v16qu( v[1], &lo, &hi );
-        bar = lo * ( lo + -1 ) + hi * (hi + -1);
+    // short result[i] = v0[2*i] * ( v0[2*i] + minusOne ) + v0[2*i+1] * ( v0[2*i+1] + minusOne );
+    // multiply-add sign-saturated
+    v8hu foo = (v8hu)_mm_maddubs_epi16( (__m128i)v[0], (__m128i) (v[0] + -1 ) );
+    v8hu bar = (v8hu)_mm_maddubs_epi16( (__m128i)v[1], (__m128i) (v[1] + -1 ) );
+    // pmaddubsw may overflow and saturate for 182 and higher
+    if( len > 181 ) {
+        __m128i sat_max = _mm_srli_epi16( _mm_set1_epi16( ~0 ), 1 );
+        __m128i foo_sat = _mm_cmpeq_epi16( (__m128i)foo, sat_max );
+        __m128i bar_sat = _mm_cmpeq_epi16( (__m128i)bar, sat_max );
+        uint32_t any_sat = _mm_movemask_epi8( foo_sat | bar_sat );
+        if( any_sat ) {
+            v8hu lo, hi;
+            Unpack_v16qu( v[0], &lo, &hi );
+            foo = lo * ( lo + -1 ) + hi * (hi + -1);
+            Unpack_v16qu( v[1], &lo, &hi );
+            bar = lo * ( lo + -1 ) + hi * (hi + -1);
+        }
     }
     foo += bar;
 
