@@ -40,33 +40,50 @@ int staticComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* 
         aLo += bLo + cLo;
         aHi += bHi + cHi;
 
-        int j;
-        for( j=0; j< 8; j++ ){
+        for( int j = 0; j < 8; j++ ) {
             score += *( ( dict_t* ) tridict + aLo[j] );
             score += *( ( dict_t* ) tridict + aHi[j] );
         }
     }
-    i *= 16;
-    uint_fast8_t c0 = echar_0_based_index( msg->plain[i] );
-    uint_fast8_t c1 = echar_0_based_index( msg->plain[i + 1] );
-    int k = i + 2; 
-    for( ; k + 3 < len; k += 4 ) {
-        uint_fast8_t k0 = echar_0_based_index( msg->plain[k] );
-        score += tridict[ c0 ][ c1 ][ k0 ];
-        uint_fast8_t k1 = echar_0_based_index( msg->plain[k + 1] );
-        score += tridict[ c1 ][ k0 ][ k1 ];
-        uint_fast8_t k2 = echar_0_based_index( msg->plain[k + 2] );
-        score += tridict[ k0 ][ k1 ][ k2 ];
-        uint_fast8_t k3 = echar_0_based_index( msg->plain[k + 3] );
-        score += tridict[ k1 ][ k2 ][ k3 ];
-        c0 = k2;
-        c1 = k3;
-    }
-    for( ; k < len; ++k ) {
-        uint8_t c2 = echar_0_based_index( msg->plain[k] );
-        score += tridict[ c0 ][ c1 ][ c2 ];
-        c0 = c1;
-        c1 = c2;
+    const int tail =  len - 2 - 16 * i;
+    if ( tail > 0 ) {
+        v16qu a = v16_echar_0_based_index( msg->vector16[i] );
+        v8hu aLo, aHi;
+        Unpack_v16qu( a, &aLo, &aHi );
+        aLo *= 32 * 32;
+        aHi *= 32 * 32;
+        const void* a_addr = &msg->vector16[i].vector ;
+        union v16_echar b_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 1 ) };
+        v16qu b = v16_echar_0_based_index( b_vector );
+        v8hu bLo, bHi;
+        Unpack_v16qu( b, &bLo, &bHi );
+        bLo *= 32;
+        bHi *= 32;
+        union v16_echar c_vector = { .vector = (v16qs)_mm_loadu_si128( a_addr + 2 ) };
+        v16qu c = v16_echar_0_based_index( c_vector );
+        v8hu cLo, cHi;
+        Unpack_v16qu( c, &cLo, &cHi );
+
+        aLo += bLo + cLo;
+        aHi += bHi + cHi;
+
+        switch( tail ){
+        case 15: score += *( ( dict_t* ) tridict + aHi[6] ); 
+        case 14: score += *( ( dict_t* ) tridict + aHi[5] );
+        case 13: score += *( ( dict_t* ) tridict + aHi[4] );
+        case 12: score += *( ( dict_t* ) tridict + aHi[3] );
+        case 11: score += *( ( dict_t* ) tridict + aHi[2] );
+        case 10: score += *( ( dict_t* ) tridict + aHi[1] );
+        case  9: score += *( ( dict_t* ) tridict + aHi[0] );
+        case  8: score += *( ( dict_t* ) tridict + aLo[7] );
+        case  7: score += *( ( dict_t* ) tridict + aLo[6] ); 
+        case  6: score += *( ( dict_t* ) tridict + aLo[5] );
+        case  5: score += *( ( dict_t* ) tridict + aLo[4] );
+        case  4: score += *( ( dict_t* ) tridict + aLo[3] );
+        case  3: score += *( ( dict_t* ) tridict + aLo[2] );
+        case  2: score += *( ( dict_t* ) tridict + aLo[1] );
+        case  1: score += *( ( dict_t* ) tridict + aLo[0] );
+        }
     }
     return score;
 }
