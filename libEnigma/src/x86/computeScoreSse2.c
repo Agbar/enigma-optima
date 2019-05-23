@@ -5,7 +5,7 @@
 #include "computeScoreSse2_inlines.h"
 
 __attribute__ ((hot))
-int ComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, scoreLength_t len ) {
+uint32_t ComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, scoreLength_t len ) {
     return staticComputeTriscoreFromDecodedMsgSse2( msg, len );
 }
 

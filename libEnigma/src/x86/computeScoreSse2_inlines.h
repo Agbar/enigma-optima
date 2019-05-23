@@ -16,8 +16,8 @@ void Unpack_v16qu( v16qu in, v8hu *lo, v8hu *hi ){
 
 __attribute__ ((optimize("unroll-loops")))
 static inline
-int staticComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, scoreLength_t len ){
-    int score = 0;
+uint32_t staticComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, scoreLength_t len ){
+    uint32_t score = 0;
     int i;
     for( i = 0; i * 16 + 15 < len - 2; ++i ) {
         v16qu a = v16_echar_0_based_index( msg->vector16[i] );

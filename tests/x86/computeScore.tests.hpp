@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <cstring>
 #include <gtest/gtest.h>
 
@@ -13,7 +14,7 @@ void reset_tridict( dict_t (&td)[last_dim_size][dim_size][dim_size] ){
     std::memset( &td, 0, sizeof td );
 }
 
-using TriscoreFun = int (*) ( const union ScoringDecodedMessage* msg, scoreLength_t len );
+using TriscoreFun = uint32_t (*) ( const union ScoringDecodedMessage* msg, scoreLength_t len );
 
 
 class TriscoreTestSuite
