@@ -5,11 +5,14 @@
 
 #include <gtest/gtest.h>
 
+#include "../cpuFeatures.hpp"
+
 extern "C" {
 #include "x86/vectorsAvx2.h"
 }
 
 TEST( m256_setmask_epi32, 0xFF ){
+    if( !isAvx2Supported() ) return;
     __v8si result = (__v8si)m256_setmask_epi32( 0xFF );
     for(size_t i =0; i < 8; ++i){
         EXPECT_LT( result[i], 0 )
@@ -18,6 +21,7 @@ TEST( m256_setmask_epi32, 0xFF ){
 }
 
 TEST( m256_setmask_epi32, 0b10101010 ){
+    if( !isAvx2Supported() ) return;
     __v8si result = (__v8si)m256_setmask_epi32( 0b10101010 );
     for(size_t i =0; i < 4; i += 2){
         EXPECT_GE( result[i], 0 )

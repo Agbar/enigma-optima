@@ -1,37 +1,51 @@
 #include <gtest/gtest.h>
 
 #include "computeScore.tests.hpp"
+#include "../cpuFeatures.hpp"
 
 extern "C"{
     #include "x86/computeScoreSse2.h"
     #include "x86/computeScoreSse2Vex.h"
 }
 
-static auto triscoreFun    = ::testing::Values( &ComputeTriscoreFromDecodedMsgSse2 );
-static auto triscoreFunVex = ::testing::Values( &ComputeTriscoreFromDecodedMsgSse2Vex );
+using ::testing::Combine;
+using ::testing::Range;
+using ::testing::Values;
+
+static auto triscoreFun    = Values( &ComputeTriscoreFromDecodedMsgSse2 );
+static auto triscoreFunVex = Values( &ComputeTriscoreFromDecodedMsgSse2Vex );
+
 
 INSTANTIATE_TEST_CASE_P(
     TriscoreSse2,
     TriscoreTestSuite,
-    triscoreFun );
+    Combine(
+        Values( &isSse2Supported ),
+        triscoreFun )
+);
 
 INSTANTIATE_TEST_CASE_P(
     TriscoreSse2,
     LengthTriscoreTestSuite,
-    ::testing::Combine(
+    Combine(
+        Values( &isSse2Supported ),
         triscoreFun,
-        ::testing::Range<scoreLength_t>( 3, CT ) )
+        Range<scoreLength_t>( 3, CT ) )
 );
 
 INSTANTIATE_TEST_CASE_P(
     TriscoreSse2Vex,
     TriscoreTestSuite,
-    triscoreFunVex );
+    Combine(
+        Values( &isSse2VexSupported ),
+        triscoreFunVex )
+);
 
 INSTANTIATE_TEST_CASE_P(
     TriscoreSse2Vex,
     LengthTriscoreTestSuite,
-    ::testing::Combine(
+    Combine(
+        Values( &isSse2VexSupported ),
         triscoreFunVex,
-        ::testing::Range<scoreLength_t>( 3, CT ) )
+        Range<scoreLength_t>( 3, CT ) )
 );
