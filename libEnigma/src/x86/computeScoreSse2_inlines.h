@@ -14,7 +14,6 @@ void Unpack_v16qu( v16qu in, v8hu *lo, v8hu *hi ){
     *hi = (v8hu) _mm_unpackhi_epi8( (__m128i)in, zero );
 }
 
-__attribute__ ((optimize("unroll-loops")))
 static inline
 uint32_t staticComputeTriscoreFromDecodedMsgSse2( const union ScoringDecodedMessage* msg, scoreLength_t len ){
     uint32_t score = 0;

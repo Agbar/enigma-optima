@@ -47,7 +47,7 @@ CombineMaskedPartsSsse3( union v16_echar l, union v16_echar r ){
     return (union v16_echar){ .vector = l.vector | r.vector };
 }
 
-__attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
+__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=32")))
 static inline
 void staticDecodeScoredMessagePartSsse3( const struct Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {

@@ -45,7 +45,7 @@ CombineMaskedPartsAvx2( union v32_echar l, union v32_echar r ){
 }
 
 __attribute__ ((hot))
-__attribute__ ((optimize("unroll-loops,sched-stalled-insns=0,sched-stalled-insns-dep=16")))
+__attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16")))
 void DecodeScoredMessagePartAvx2( const struct Key* const restrict key, int len, union ScoringDecodedMessage* output )
 {
     uint16_t messageBite  = 0;
