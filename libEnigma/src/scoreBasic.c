@@ -212,7 +212,7 @@ int biscoreBasic( const struct Key* const key, scoreLength_t len )
 }
 
 #define TRISCORE_ADD(S,A,B,C) \
-    asm( "add  %1, %0": "+q"( (s) ): "m"( tridict[(A)][(B)][(C)] ) )
+    asm( "add  %1, %0": "+q"( (S) ): "m"( tridict[(A)][(B)][(C)] ) )
 
 __attribute__ ((optimize("sched-stalled-insns=0"
                          ",sched-stalled-insns-dep=16"
