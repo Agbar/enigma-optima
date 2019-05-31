@@ -13,12 +13,11 @@ v32qs PermuteV32qs(const union PermutationMap_t map, v32qs vec ){
     faster, but our data is always in interval [0,25] = [0,0x1A). */
     // vec &= 0x3F;
     vec += ( char ) 0x70; // For every byte push value of bit[4] to bit[7].
-    vec ^= ( v32qs ) _mm256_set_epi32( 0x80808080, 0x80808080, 0x80808080, 0x80808080, 0, 0, 0, 0 );
-    __m256i pMap = (__m256i) map.whole.vector;
     __m256i mVec = (__m256i) vec;
-    __m256i ret1 = _mm256_shuffle_epi8( pMap, mVec );
-            pMap = _mm256_permute2x128_si256( pMap, pMap , 1 ); //VPERM2I128
-    __m256i ret2 = _mm256_shuffle_epi8( pMap , mVec ^ _mm256_set1_epi8( 0x80 ) );
+    __m256i pMapLow = _mm256_broadcastsi128_si256( (__m128i)map.half[0].vector );
+    __m256i ret1 = _mm256_shuffle_epi8( pMapLow, mVec );
+    __m256i pMapHi = _mm256_broadcastsi128_si256( (__m128i)map.half[1].vector );
+    __m256i ret2 = _mm256_shuffle_epi8( pMapHi , mVec ^ _mm256_set1_epi8( 0x80 ) );
     return (v32qs) _mm256_or_si256( ret1, ret2 );
 }
 
