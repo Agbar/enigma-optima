@@ -22,6 +22,7 @@
 #include "OS/Os.h"
 
 void OptimizeIcscore2 ( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+void OptimizeUniscore2( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
 
 
 void save_state2(State state)
@@ -176,51 +177,8 @@ void hillclimb2( const struct Key* const from, const struct Key* const to, const
                /* initialize path_lookup */
                prepare_decoder_lookup( &ckey, len );
 
-               /* ic score */
-               OptimizeIcscore2( var, &ckey, len, &sf );
-
-			   bestscore = sf.uniscore( &ckey, len );
-			   for (p = 0; p < 25; p++) {
-				   for (q = p + 1; q < 26; q++) {
-					   i = var[p];
-					   k = var[q];
-					   x = ckey.stbrett.letters[ echar_0_based_index( i ) ];
-					   z = ckey.stbrett.letters[ echar_0_based_index( k ) ];
-					   u = ckey.stbrett.letters[ echar_0_based_index( x ) ];
-					   v = ckey.stbrett.letters[ echar_0_based_index( z ) ];
-
-					   if ( echar_eq( x, k ) ){
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
-					   }
-					   else {
-						   if ( echar_neq( x, i ) ){
-							   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
-							   ckey.stbrett.letters[ echar_0_based_index( x ) ] = x;
-						   };
-						   if ( echar_neq( z, k ) ){
-							   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
-							   ckey.stbrett.letters[ echar_0_based_index( z ) ] = z;
-						   };
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = k;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = i;
-					   }
-
-					   a = sf.uniscore( &ckey, len );
-
-					   if (a > bestscore) {
-						   bestscore = a;
-					   }
-					   else {
-						   ckey.stbrett.letters[ echar_0_based_index( z ) ] = v;
-						   ckey.stbrett.letters[ echar_0_based_index( x ) ] = u;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = z;
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = x;
-					   }
-
-				   }
-			   }
-
+               OptimizeIcscore2 ( var, &ckey, len, &sf );
+               OptimizeUniscore2( var, &ckey, len, &sf );
 
 			   bestscore = sf.triscore( &ckey, len );
                do {
@@ -368,6 +326,51 @@ void OptimizeIcscore2 (
     }
 }
 
+void OptimizeUniscore2 (
+      const struct echar var[26]
+    , struct Key* const ckey
+    , int len
+    , const enigma_score_function_t* const sf ) {
+    int bestuni = sf->uniscore( ckey, len );
+    struct echar i, k, x, z, u, v;
+    size_t p, q;
+    for (p = 0; p < 25; p++) {
+        for (q = p + 1; q < 26; q++) {
+            i = var[p];
+            k = var[q];
+            x = ckey->stbrett.letters[ echar_0_based_index( i ) ];
+            z = ckey->stbrett.letters[ echar_0_based_index( k ) ];
+            u = ckey->stbrett.letters[ echar_0_based_index( x ) ];
+            v = ckey->stbrett.letters[ echar_0_based_index( z ) ];
+            if ( echar_eq( x, k ) ){
+                ckey->stbrett.letters[ echar_0_based_index( i ) ] = i;
+                ckey->stbrett.letters[ echar_0_based_index( k ) ] = k;
+            }
+            else {
+                if ( echar_neq( x, i ) ){
+                    ckey->stbrett.letters[ echar_0_based_index( i ) ] = i;
+                    ckey->stbrett.letters[ echar_0_based_index( x ) ] = x;
+                };
+                if ( echar_neq( z, k ) ){
+                    ckey->stbrett.letters[ echar_0_based_index( k ) ] = k;
+                    ckey->stbrett.letters[ echar_0_based_index( z ) ] = z;
+                };
+                ckey->stbrett.letters[ echar_0_based_index( i ) ] = k;
+                ckey->stbrett.letters[ echar_0_based_index( k ) ] = i;
+            }
+            int uni = sf->uniscore( ckey, len );
+            if (uni > bestuni) {
+                bestuni = uni;
+            }
+            else {
+                ckey->stbrett.letters[ echar_0_based_index( z ) ] = v;
+                ckey->stbrett.letters[ echar_0_based_index( x ) ] = u;
+                ckey->stbrett.letters[ echar_0_based_index( k ) ] = z;
+                ckey->stbrett.letters[ echar_0_based_index( i ) ] = x;
+            }
+        }
+    }
+}
 
 /*
  * This file is part of enigma-suite, which is distributed under the terms
