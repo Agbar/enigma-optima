@@ -21,6 +21,14 @@
 
 #include "OS/Os.h"
 
+void     OptimizeIcscore2 ( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+void     OptimizeUniscore2( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+uint32_t OptimizeTriscore2( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+
+typedef int ( score_f) ( const struct Key* restrict key, scoreLength_t length );
+static uint32_t score_optimizer_loop ( const struct echar var[26], struct Key* const ckey, int len, score_f* score, uint32_t start_score );
+
+
 void save_state2(State state)
 {
   FILE *fp;
@@ -64,13 +72,10 @@ void hillclimb2( const struct Key* const from, const struct Key* const to, const
   State state;
   time_t lastsave;
   int m;
-  int p, q;
-  struct echar i, k, x, z, u, v;
   struct echar var[26];
   Fill0To25_echar(var);
   int pass;
-  int bestscore, jbestscore, a, globalscore;
-  uint16_t bestic, ic;
+  uint32_t globalscore;
   int firstloop = 1;
 
   enigma_score_function_t sf;
@@ -99,7 +104,7 @@ void hillclimb2( const struct Key* const from, const struct Key* const to, const
     state.firstpass = &firstpass;
     state.max_score = &max_score;
     state.ciphertext = ciphertext.plain;
-  
+
     InstallSighandler();
   }
 
@@ -164,7 +169,7 @@ void hillclimb2( const struct Key* const from, const struct Key* const to, const
                    break;
                  default: /* includes SINGLE_KEY */
                    break;
-               } 
+               }
 
                /* complete ckey initialization */
                Fill0To25_echar( ckey.sf.map );
@@ -174,142 +179,13 @@ void hillclimb2( const struct Key* const from, const struct Key* const to, const
                /* initialize path_lookup */
                prepare_decoder_lookup( &ckey, len );
 
-               /* ic score */
-               bestic = sf.icscore( &ckey, len );
-			   for (p = 0; p < 25; p++) {
-				   for (q = p + 1; q < 26; q++) {
-					   i = var[p];
-					   k = var[q];
-					   x = ckey.stbrett.letters[ echar_0_based_index( i ) ];
-					   z = ckey.stbrett.letters[ echar_0_based_index( k ) ];
-					   u = ckey.stbrett.letters[ echar_0_based_index( x ) ];
-					   v = ckey.stbrett.letters[ echar_0_based_index( z ) ];
-
-					   if ( echar_eq( x, k ) ){
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
-					   }
-					   else {
-						   if ( echar_neq( x, i ) ){
-							   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
-							   ckey.stbrett.letters[ echar_0_based_index( x ) ] = x;
-						   };
-						   if ( echar_neq( z, k ) ){
-							   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
-							   ckey.stbrett.letters[ echar_0_based_index( z ) ] = z;
-						   };
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = k;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = i;
-					   }
-
-					   ic = sf.icscore( &ckey, len );
-
-					   if (ic > bestic) {
-						   bestic = ic;
-					   }
-					   else {
-						   ckey.stbrett.letters[ echar_0_based_index( z ) ] = v;
-						   ckey.stbrett.letters[ echar_0_based_index( x ) ] = u;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = z;
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = x;
-					   }
-
-				   }
-			   }
-
-			   bestscore = sf.uniscore( &ckey, len );
-			   for (p = 0; p < 25; p++) {
-				   for (q = p + 1; q < 26; q++) {
-					   i = var[p];
-					   k = var[q];
-					   x = ckey.stbrett.letters[ echar_0_based_index( i ) ];
-					   z = ckey.stbrett.letters[ echar_0_based_index( k ) ];
-					   u = ckey.stbrett.letters[ echar_0_based_index( x ) ];
-					   v = ckey.stbrett.letters[ echar_0_based_index( z ) ];
-
-					   if ( echar_eq( x, k ) ){
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
-					   }
-					   else {
-						   if ( echar_neq( x, i ) ){
-							   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
-							   ckey.stbrett.letters[ echar_0_based_index( x ) ] = x;
-						   };
-						   if ( echar_neq( z, k ) ){
-							   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
-							   ckey.stbrett.letters[ echar_0_based_index( z ) ] = z;
-						   };
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = k;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = i;
-					   }
-
-					   a = sf.uniscore( &ckey, len );
-
-					   if (a > bestscore) {
-						   bestscore = a;
-					   }
-					   else {
-						   ckey.stbrett.letters[ echar_0_based_index( z ) ] = v;
-						   ckey.stbrett.letters[ echar_0_based_index( x ) ] = u;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = z;
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = x;
-					   }
-
-				   }
-			   }
-
-
-			   bestscore = sf.triscore( &ckey, len );
-               do {
-				 jbestscore = bestscore;
-                 for (p = 0; p < 25; p++) {
-                   for (q = p+1; q < 26; q++) {
-					   i = var[p];
-					   k = var[q];
-					   x = ckey.stbrett.letters[ echar_0_based_index( i ) ];
-					   z = ckey.stbrett.letters[ echar_0_based_index( k ) ];
-					   u = ckey.stbrett.letters[ echar_0_based_index( x ) ];
-					   v = ckey.stbrett.letters[ echar_0_based_index( z ) ];
-
-					   if ( echar_eq( x, k ) ){
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
-					   }
-					   else {
-						   if ( echar_neq( x, i ) ){
-							   ckey.stbrett.letters[ echar_0_based_index( i ) ] = i;
-							   ckey.stbrett.letters[ echar_0_based_index( x ) ] = x;
-						   };
-						   if ( echar_neq( z, k ) ){
-							   ckey.stbrett.letters[ echar_0_based_index( k ) ] = k;
-							   ckey.stbrett.letters[ echar_0_based_index( z ) ] = z;
-						   };
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = k;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = i;
-					   }
-
-                       a = sf.triscore( &ckey, len );
-
-                       if (a > bestscore) {                 
-						   bestscore = a;
-                       }
-					   else {
-						   ckey.stbrett.letters[ echar_0_based_index( z ) ] = v;
-						   ckey.stbrett.letters[ echar_0_based_index( x ) ] = u;
-						   ckey.stbrett.letters[ echar_0_based_index( k ) ] = z;
-						   ckey.stbrett.letters[ echar_0_based_index( i ) ] = x;
-					   }
-                     
-                   }
-                 }
-
-			   } while (bestscore > jbestscore);
-
+               OptimizeIcscore2 ( var, &ckey, len, &sf );
+               OptimizeUniscore2( var, &ckey, len, &sf );
+               uint32_t bestscore = OptimizeTriscore2( var, &ckey, len, &sf );
 
                /* record global max, if applicable */
-			   get_stecker(&ckey);
-			   if (bestscore > globalscore) {
+               get_stecker( &ckey );
+               if ( bestscore > globalscore ) {
                  globalscore = bestscore;
                  gkey = ckey;
                  gkey.score = bestscore;
@@ -321,9 +197,8 @@ void hillclimb2( const struct Key* const from, const struct Key* const to, const
                  }
                }
                /* abort if max_score is reached */
-               if (globalscore > max_score)
+               if ( globalscore > (uint32_t)max_score )
                  goto FINISHED;
-                
 
                ENDLOOP:
                if (firstloop) {
@@ -360,6 +235,89 @@ void hillclimb2( const struct Key* const from, const struct Key* const to, const
 
 }
 
+NO_INLINE
+static uint32_t score_optimizer_loop ( 
+      const struct echar var[26]
+    , struct Key* const ckey
+    , int len
+    , score_f* score
+    , uint32_t start_score ) {
+    uint32_t best_score  = start_score;
+    struct echar i, k, x, z, u, v;
+    size_t p, q;
+    for ( p = 0; p < 25; p++ ) {
+        for ( q = p + 1; q < 26; q++ ) {
+            i = var[p];
+            k = var[q];
+            x = ckey->stbrett.letters[ echar_0_based_index( i ) ];
+            z = ckey->stbrett.letters[ echar_0_based_index( k ) ];
+            u = ckey->stbrett.letters[ echar_0_based_index( x ) ];
+            v = ckey->stbrett.letters[ echar_0_based_index( z ) ];
+            if ( echar_eq( x, k ) ){
+                ckey->stbrett.letters[ echar_0_based_index( i ) ] = i;
+                ckey->stbrett.letters[ echar_0_based_index( k ) ] = k;
+            }
+            else {
+                if ( echar_neq( x, i ) ){
+                    ckey->stbrett.letters[ echar_0_based_index( i ) ] = i;
+                    ckey->stbrett.letters[ echar_0_based_index( x ) ] = x;
+                };
+                if ( echar_neq( z, k ) ){
+                    ckey->stbrett.letters[ echar_0_based_index( k ) ] = k;
+                    ckey->stbrett.letters[ echar_0_based_index( z ) ] = z;
+                };
+                ckey->stbrett.letters[ echar_0_based_index( i ) ] = k;
+                ckey->stbrett.letters[ echar_0_based_index( k ) ] = i;
+            }
+            uint32_t s = score( ckey, len );
+            if (s > best_score) {
+                best_score = s;
+            }
+            else {
+                ckey->stbrett.letters[ echar_0_based_index( z ) ] = v;
+                ckey->stbrett.letters[ echar_0_based_index( x ) ] = u;
+                ckey->stbrett.letters[ echar_0_based_index( k ) ] = z;
+                ckey->stbrett.letters[ echar_0_based_index( i ) ] = x;
+            }
+        }
+    }
+    return best_score;
+}
+
+void OptimizeIcscore2 (
+      const struct echar var[26]
+    , struct Key* const ckey
+    , int len
+    , const enigma_score_function_t* const sf ) {
+    // restult of icscore is stored in r/eax reagardless of int size
+    score_f* ic_to_int = (score_f*) sf->icscore;
+    uint16_t first_ic = sf->icscore( ckey, len );
+    score_optimizer_loop( var, ckey, len, ic_to_int, first_ic );
+}
+
+void OptimizeUniscore2 (
+      const struct echar var[26]
+    , struct Key* const ckey
+    , int len
+    , const enigma_score_function_t* const sf ) {
+    int first_uni = sf->uniscore( ckey, len );
+    score_optimizer_loop( var, ckey, len, sf->uniscore, first_uni );
+}
+
+uint32_t OptimizeTriscore2 (
+      const struct echar var[26]
+    , struct Key* const ckey
+    , int len
+    , const enigma_score_function_t* const sf ) {
+    uint32_t jbestscore;
+    uint32_t besttri = sf->triscore( ckey, len );
+    do {
+        jbestscore = besttri;
+        besttri = score_optimizer_loop( var, ckey, len, sf->triscore, besttri );
+    } while (besttri > jbestscore);
+    assert( besttri == jbestscore );
+    return jbestscore;
+}
 
 /*
  * This file is part of enigma-suite, which is distributed under the terms
