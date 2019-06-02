@@ -243,16 +243,15 @@ static uint32_t score_optimizer_loop (
     , score_f* score
     , uint32_t start_score ) {
     uint32_t best_score  = start_score;
-    struct echar i, k, x, z, u, v;
-    size_t p, q;
-    for ( p = 0; p < 25; p++ ) {
-        for ( q = p + 1; q < 26; q++ ) {
-            i = var[p];
-            k = var[q];
-            x = ckey->stbrett.letters[ echar_0_based_index( i ) ];
-            z = ckey->stbrett.letters[ echar_0_based_index( k ) ];
-            u = ckey->stbrett.letters[ echar_0_based_index( x ) ];
-            v = ckey->stbrett.letters[ echar_0_based_index( z ) ];
+    for ( size_t p = 0; p < 25; p++ ) {
+        for ( size_t q = p + 1; q < 26; q++ ) {
+            const struct echar 
+                i = var[p],
+                k = var[q],
+                x = ckey->stbrett.letters[ echar_0_based_index( i ) ],
+                z = ckey->stbrett.letters[ echar_0_based_index( k ) ],
+                u = ckey->stbrett.letters[ echar_0_based_index( x ) ],
+                v = ckey->stbrett.letters[ echar_0_based_index( z ) ];
             if ( echar_eq( x, k ) ){
                 ckey->stbrett.letters[ echar_0_based_index( i ) ] = i;
                 ckey->stbrett.letters[ echar_0_based_index( k ) ] = k;
