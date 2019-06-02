@@ -236,47 +236,45 @@ void hillclimb2( const struct Key* const from, const struct Key* const to, const
 }
 
 NO_INLINE
-static uint32_t score_optimizer_loop ( 
+static uint32_t score_optimizer_loop (
       const struct echar var[26]
     , struct Key* const ckey
     , int len
     , score_f* score
     , uint32_t start_score ) {
+    union PermutationMap_t* const stbr = &ckey->stbrett;
+    union PermutationMap_t stbr_copy = *stbr;
     uint32_t best_score  = start_score;
     for ( size_t p = 0; p < 25; p++ ) {
         for ( size_t q = p + 1; q < 26; q++ ) {
-            const struct echar 
+            const struct echar
                 i = var[p],
                 k = var[q],
-                x = ckey->stbrett.letters[ echar_0_based_index( i ) ],
-                z = ckey->stbrett.letters[ echar_0_based_index( k ) ],
-                u = ckey->stbrett.letters[ echar_0_based_index( x ) ],
-                v = ckey->stbrett.letters[ echar_0_based_index( z ) ];
+                x = stbr->letters[ echar_0_based_index( i ) ],
+                z = stbr->letters[ echar_0_based_index( k ) ];
             if ( echar_eq( x, k ) ){
-                ckey->stbrett.letters[ echar_0_based_index( i ) ] = i;
-                ckey->stbrett.letters[ echar_0_based_index( k ) ] = k;
+                stbr->letters[ echar_0_based_index( i ) ] = i;
+                stbr->letters[ echar_0_based_index( k ) ] = k;
             }
             else {
                 if ( echar_neq( x, i ) ){
-                    ckey->stbrett.letters[ echar_0_based_index( i ) ] = i;
-                    ckey->stbrett.letters[ echar_0_based_index( x ) ] = x;
+                    stbr->letters[ echar_0_based_index( i ) ] = i;
+                    stbr->letters[ echar_0_based_index( x ) ] = x;
                 };
                 if ( echar_neq( z, k ) ){
-                    ckey->stbrett.letters[ echar_0_based_index( k ) ] = k;
-                    ckey->stbrett.letters[ echar_0_based_index( z ) ] = z;
+                    stbr->letters[ echar_0_based_index( k ) ] = k;
+                    stbr->letters[ echar_0_based_index( z ) ] = z;
                 };
-                ckey->stbrett.letters[ echar_0_based_index( i ) ] = k;
-                ckey->stbrett.letters[ echar_0_based_index( k ) ] = i;
+                stbr->letters[ echar_0_based_index( i ) ] = k;
+                stbr->letters[ echar_0_based_index( k ) ] = i;
             }
             uint32_t s = score( ckey, len );
             if (s > best_score) {
                 best_score = s;
+                stbr_copy = *stbr;
             }
             else {
-                ckey->stbrett.letters[ echar_0_based_index( z ) ] = v;
-                ckey->stbrett.letters[ echar_0_based_index( x ) ] = u;
-                ckey->stbrett.letters[ echar_0_based_index( k ) ] = z;
-                ckey->stbrett.letters[ echar_0_based_index( i ) ] = x;
+                *stbr = stbr_copy;
             }
         }
     }
