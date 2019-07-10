@@ -4,7 +4,7 @@
 
 #include "score.h"
 
-int ComputeTriscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len );
+uint32_t ComputeTriscoreFromDecodedMsg( const union ScoringDecodedMessage* msg, scoreLength_t len );
 int ComputeBiscoreFromDecodedMsg( const union ScoringDecodedMessage* msg, scoreLength_t len );
-int ComputeUniscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len );
-uint16_t ComputeIcscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len );
+int ComputeUniscoreFromDecodedMsg( const union ScoringDecodedMessage* msg, scoreLength_t len );
+uint16_t ComputeIcscoreFromDecodedMsg( const union ScoringDecodedMessage* msg, scoreLength_t len );

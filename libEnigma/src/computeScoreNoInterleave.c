@@ -4,7 +4,7 @@
 #include "score.h"
 
 __attribute__ ((optimize("unroll-loops")))
-int ComputeTriscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len ){
+uint32_t ComputeTriscoreFromDecodedMsg( const union ScoringDecodedMessage* msg, scoreLength_t len ){
     int x, score = 0;
     uint_fast8_t i0 = echar_0_based_index( msg->plain[0] );
     uint_fast8_t i1 = echar_0_based_index( msg->plain[1] );
@@ -52,7 +52,7 @@ int ComputeBiscoreFromDecodedMsg( const union ScoringDecodedMessage* msg, scoreL
 }
 
 __attribute__ ((optimize("unroll-loops")))
-int ComputeUniscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len ){
+int ComputeUniscoreFromDecodedMsg( const union ScoringDecodedMessage* msg, scoreLength_t len ){
     int score = 0, i;
     for( i = 0; i < len; i++ ) {
         score += unidict[ echar_0_based_index( msg->plain[i] ) ];
@@ -61,7 +61,7 @@ int ComputeUniscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength
 }
 
 __attribute__ ((optimize("unroll-loops")))
-uint16_t ComputeIcscoreFromDecodedMsg( union ScoringDecodedMessage* msg, scoreLength_t len ){
+uint16_t ComputeIcscoreFromDecodedMsg( const union ScoringDecodedMessage* msg, scoreLength_t len ){
     uint8_t f[32] = {0};
     int i;
     for( i = 0; i < len; i++ ) {
