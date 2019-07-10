@@ -39,3 +39,13 @@ TEST_P( LengthTriscoreTestSuite, AddsAllTriplets ){
     tridict[0][0][0] = 1;
     ASSERT_EQ( ComputeTriscore(), MsgLength() - 2 );
 }
+
+TEST_P( LengthTriscoreTestSuite, DoesNotGoOverLen ){
+    if( !IsSupported() ) {
+        return;
+    }
+    tridict[0][0][0] = 1;
+    tridict[0][0][1] = 9000;
+    Message().plain[MsgLength()] = make_echar( 1 );
+    ASSERT_EQ( ComputeTriscore(), MsgLength() - 2 );
+}
