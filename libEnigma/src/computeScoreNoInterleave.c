@@ -20,6 +20,7 @@ uint32_t ComputeTriscoreFromDecodedMsg( const union ScoringDecodedMessage* msg, 
         i0 = i4;
         i1 = i5;
     }
+    x -= 2;
     for( ; x < len - 2; ++x ) {
         score += tridict[ echar_0_based_index( msg->plain[x] ) ]
                         [ echar_0_based_index( msg->plain[x + 1] ) ]
