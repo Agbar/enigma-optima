@@ -1,9 +1,5 @@
 #pragma GCC target("ssse3")
 
-// #ifndef __SSSE3__
-// # error SSSE3 not defined
-// #endif
-
 #include <algorithm>
 #include <string>
 

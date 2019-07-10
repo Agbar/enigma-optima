@@ -2,10 +2,6 @@
 
 #include <immintrin.h>
 
-#ifndef __AVX2__
-# error AVX2 not defined
-#endif
-
 #include "dict.h"
 #include "ciphertext.h"
 #include "x86/cipherAvx2.h"

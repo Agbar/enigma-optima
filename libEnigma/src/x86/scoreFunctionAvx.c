@@ -2,10 +2,6 @@
 
 #include <immintrin.h>
 
-#ifndef __AVX__
-# error AVX not defined
-#endif
-
 #include "dict.h"
 #include "ciphertext.h"
 #include "x86/computeScoreSse2Vex.h"

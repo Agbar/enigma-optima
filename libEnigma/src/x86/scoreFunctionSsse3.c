@@ -2,10 +2,6 @@
 
 #include <tmmintrin.h>
 
-#ifndef __SSSE3__
-# error SSSE3 not defined
-#endif
-
 #include "dict.h"
 #include "ciphertext.h"
 #include "x86/computeScoreSse2.h"

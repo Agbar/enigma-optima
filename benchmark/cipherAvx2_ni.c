@@ -1,8 +1,5 @@
 #pragma GCC target ("avx2")
 
-#ifndef __AVX2__
-# error AVX2 not defined
-#endif
 
 #include "cipherAvx2_ni.h"
 #include "x86/computeScoreAvx2.h"
