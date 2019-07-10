@@ -6,6 +6,7 @@ add_executable(EnigmaUnitTests "main.cpp")
 target_sources(EnigmaUnitTests
 PRIVATE
     "cipher.tests.cpp"
+    "computeScoreNoInterleave.cpp"
     "GetRSeed.tests.cpp"
 )
 include("echar/echar.cmake")

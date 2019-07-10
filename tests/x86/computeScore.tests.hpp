@@ -57,6 +57,10 @@ protected:
         std::tie( isSupportedFun, scoreFun, len ) = GetParam();
     }
 
+    ScoringDecodedMessage& Message() noexcept {
+        return msg;
+    }
+
     scoreLength_t MsgLength() const noexcept {
         return len;
     }

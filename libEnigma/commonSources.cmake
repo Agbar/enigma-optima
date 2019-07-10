@@ -32,6 +32,7 @@ PRIVATE
     "src/x86/computeScoreSsse3.c"
     "src/x86/computeScoreSsse3Vex.c"
     "src/x86/computeScoreAvx2.c"
+    "src/computeScoreNoInterleave.c"
     
     "src/x86/decodeMessageSsse3"
     "src/x86/decodeMessageSsse3Vex"

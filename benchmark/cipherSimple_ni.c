@@ -2,6 +2,7 @@
 #include "score_inlines.h"
 #include "scoreNoInterleave.h"
 #include "scoreNoInterleave_inlines.h"
+#include "computeScoreNoInterleave.h"
 
 void DecodeMessageBasicNoInterleave( const struct Key* const restrict key, int len ){
     DecodeScoredMessagePartNoInterleave( key, len, &decodedMsgPartNoInterleave );

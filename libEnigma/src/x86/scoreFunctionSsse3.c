@@ -9,7 +9,7 @@
 #include "x86/decodeMessageSsse3.h"
 #include "x86/scoreSsse3.h"
 #include "x86/cipherSsse3.h"
-#include "score_inlines.h"
+#include "computeScoreNoInterleave.h"
 
 // SSSE3 scores
 static uint16_t icscoreSsse3( const struct Key* restrict key, scoreLength_t len );
