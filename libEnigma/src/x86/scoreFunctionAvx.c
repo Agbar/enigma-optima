@@ -10,7 +10,7 @@
 #include "x86/scoreAvx.h"
 #include "x86/scoreSsse3.h"
 #include "x86/cipherSsse3.h"
-#include "score_inlines.h"
+#include "computeScoreNoInterleave.h"
 
 // AVX scores
 static uint16_t icscoreAvx( const struct Key* restrict key, scoreLength_t len );

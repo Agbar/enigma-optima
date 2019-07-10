@@ -9,7 +9,7 @@
 #include "x86/computeScoreAvx2.h"
 #include "x86/decodeMessageAvx2.h"
 #include "x86/scoreAvx2.h"
-#include "score_inlines.h"
+#include "computeScoreNoInterleave.h"
 
 // AVX2 scores
 static uint16_t icscoreAvx2( const struct Key* restrict key, scoreLength_t len );
