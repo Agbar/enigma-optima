@@ -32,19 +32,15 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
     cpu = ENIGMA_CPU_SPECIFIC;
 #endif // ENIGMA_CPU_SPECIFIC
 
-    enum EnigmaScoreFunctions_t testing __attribute__ ((unused)) = EnigmaSF_Default ;
     enigma_score_function_copy( sf, &enigmaScoreBasic );
     if (cpu & enigma_cpu_ssse3) {
         enigma_score_function_copy( sf,&enigmaScoreSsse3 );
-        testing = EnigmaSF_SSSE3;
     }
     if (cpu & enigma_cpu_avx) {
         enigma_score_function_copy( sf, &enigmaScoreAvx );
-        testing = EnigmaSF_Avx;
     }
     if( cpu & enigma_cpu_avx2 ){
         enigma_score_function_copy( sf, &enigmaScoreAvx2 );
-        testing = EnigmaSF_Avx2;
     }
 }
 
