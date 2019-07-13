@@ -17,14 +17,6 @@
 #include "x86/scoreAvx2.h"
 #include "score_inlines.h"
 
-/* declaration of internal functions */
-void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict from);
-
-inline
-void enigma_score_function_copy(enigma_score_function_t* restrict to, const enigma_score_function_t* restrict prototype)
-{
-    *to = *prototype;
-}
 
 void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
 {
@@ -32,15 +24,15 @@ void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
     cpu = ENIGMA_CPU_SPECIFIC;
 #endif // ENIGMA_CPU_SPECIFIC
 
-    enigma_score_function_copy( sf, &enigmaScoreBasic );
+    *sf = enigmaScoreBasic;
     if (cpu & enigma_cpu_ssse3) {
-        enigma_score_function_copy( sf,&enigmaScoreSsse3 );
+        *sf = enigmaScoreSsse3;
     }
     if (cpu & enigma_cpu_avx) {
-        enigma_score_function_copy( sf, &enigmaScoreAvx );
+        *sf = enigmaScoreAvx;
     }
     if( cpu & enigma_cpu_avx2 ){
-        enigma_score_function_copy( sf, &enigmaScoreAvx2 );
+        *sf = enigmaScoreAvx2;
     }
 }
 
