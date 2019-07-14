@@ -4,7 +4,7 @@
 #include "key.h"
 #include "score.h"
 
-int stbrett_optimize_krah(
+typedef int stbrett_optimize_f(
     const struct echar var[26],
     struct Key* ckey,
     int len,

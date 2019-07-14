@@ -10,7 +10,6 @@
 #include "error.h"
 #include "global.h"
 #include "hillclimb.h"
-#include "key.h"
 #include "randomNumbers.h"
 #include "result.h"
 #include "resume_out.h"
@@ -22,7 +21,6 @@
 #include "config/types.h"
 #include "OS/Os.h"
 #include "character_encoding.h"
-#include "stbrett/krah_optimizer.h"
 
 void save_state(State state)
 {
@@ -55,7 +53,7 @@ void save_state_exit(State state, int retval)
 
 void hillclimb( const struct Key* const from, const struct Key* const to, const struct Key* const ckey_res, const struct Key* const gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                FILE *outfile, int act_on_sig, int len )
+                FILE *outfile, int act_on_sig, int len, stbrett_optimize_f* optimizer )
 {
   struct Key ckey;
   struct Key gkey;
@@ -177,7 +175,7 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
                /* initialize path_lookup */
                prepare_decoder_lookup( &ckey, len );
 
-               int bestscore = stbrett_optimize_krah( var, &ckey, len, &sf );
+               int bestscore = optimizer( var, &ckey, len, &sf );
 
                /* record global max, if applicable */
                if ( bestscore > globalscore ) {

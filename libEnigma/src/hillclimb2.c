@@ -11,14 +11,12 @@
 #include "error.h"
 #include "global.h"
 #include "hillclimb2.h"
-#include "key.h"
 #include "randomNumbers.h"
 #include "result.h"
 #include "resume_out.h"
 #include "score.h"
 #include "stecker.h"
 #include "state.h"
-#include "stbrett/ve3nea_optimizer.h"
 
 #include "OS/Os.h"
 
@@ -52,7 +50,7 @@ void save_state_exit2(State state, int retval)
 
 void hillclimb2( const struct Key* const from, const struct Key* const to, const struct Key* const ckey_res, const struct Key* const gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                FILE *outfile, int act_on_sig, int len )
+                FILE *outfile, int act_on_sig, int len, stbrett_optimize_f* optimizer )
 {
   struct Key ckey;
   struct Key gkey;
@@ -172,7 +170,7 @@ void hillclimb2( const struct Key* const from, const struct Key* const to, const
                /* initialize path_lookup */
                prepare_decoder_lookup( &ckey, len );
 
-               uint32_t bestscore = stbrett_optimize_ve3nea( var, &ckey, len, &sf );
+               uint32_t bestscore = optimizer( var, &ckey, len, &sf );
 
                /* record global max, if applicable */
                if ( bestscore > globalscore ) {

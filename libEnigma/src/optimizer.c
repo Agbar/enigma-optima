@@ -5,6 +5,9 @@
 #include "dict.h"
 #include "hillclimb.h"
 #include "hillclimb2.h"
+#include "stbrett/optimizer.h"
+#include "stbrett/krah_optimizer.h"
+#include "stbrett/ve3nea_optimizer.h"
 
 typedef void OptimizerFun( const struct Key *from
                   , const struct Key *to
@@ -17,9 +20,11 @@ typedef void OptimizerFun( const struct Key *from
                   , int resume
                   , FILE *outfile
                   , int act_on_sig
-                  , int len );
+                  , int len
+                  , stbrett_optimize_f* optimizer );
 
 static OptimizerFun* selectedOptimizer = hillclimb;
+static stbrett_optimize_f* stbrettOptimzier = stbrett_optimize_krah;
 
 bool selectOptimizer( const char* const name ) {
 
@@ -27,10 +32,12 @@ bool selectOptimizer( const char* const name ) {
     if ( strncmp( name, "AV", maxCnt ) == 0) {
 
         selectedOptimizer = hillclimb2;
+        stbrettOptimzier = stbrett_optimize_ve3nea;
         return true;
     }
     if ( strncmp( name, "Krah", maxCnt ) == 0 ) {
         selectedOptimizer = hillclimb;
+        stbrettOptimzier = stbrett_optimize_krah;
         return true;
     }
     return false;
@@ -71,5 +78,6 @@ void optimizeScore( const struct Key *from
     }
     selectedOptimizer( from, to, ckey_res, gkey_res, sw_mode,
                        max_pass, firstpass, max_score,
-                       resume, outfile, act_on_sig, len );
+                       resume, outfile, act_on_sig, len,
+                       stbrettOptimzier );
 }
