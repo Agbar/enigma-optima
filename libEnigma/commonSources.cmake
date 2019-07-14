@@ -20,6 +20,7 @@ PRIVATE
     "src/scoreBasic.c"
     "src/scoreNoInterleave.c"
     "src/scoreSimple.c"
+    "src/state.c"
     "src/stecker.c"
 
     

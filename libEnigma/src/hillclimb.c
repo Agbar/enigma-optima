@@ -1,4 +1,4 @@
-#include <stdio.h>
+
 #include <stdint.h>
 #include <ctype.h>
 #include <string.h>
@@ -10,7 +10,6 @@
 #include "hillclimb.h"
 #include "randomNumbers.h"
 #include "result.h"
-#include "resume_out.h"
 #include "score.h"
 #include "stecker.h"
 #include "state.h"
@@ -18,34 +17,6 @@
 #include "OS/Os.h"
 #include "character_encoding.h"
 
-void save_state(State state)
-{
-  FILE *fp;
-
-  if ((fp = fopen("00hc.resume", "w")) == NULL)
-    err_open_fatal("00hc.resume");
-
-  print_state(fp, &state);
-  if (ferror(fp) != 0)
-    err_stream_fatal("00hc.resume");
-
-  fclose(fp);
-}
-
-NO_RETURN
-void save_state_exit(State state, int retval)
-{
-  FILE *fp;
-
-  if ((fp = fopen("00hc.resume", "w")) == NULL)
-    err_open_fatal("00hc.resume");
-
-  print_state(fp, &state);
-  if (ferror(fp) != 0)
-    err_stream_fatal("00hc.resume");
-
-  exit(retval);
-}
 
 void hillclimb( const struct Key* const from, const struct Key* const to, const struct Key* const ckey_res, const struct Key* const gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
