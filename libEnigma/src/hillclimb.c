@@ -69,8 +69,7 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
   struct echar var[26];
   Fill0To25_echar(var);
   int pass;
-  int globalscore;
-
+  uint32_t globalscore;
   int firstloop = 1;
 
   enigma_score_function_t sf;
@@ -175,7 +174,7 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
                /* initialize path_lookup */
                prepare_decoder_lookup( &ckey, len );
 
-               int bestscore = optimizer( var, &ckey, len, &sf );
+               uint32_t bestscore = optimizer( var, &ckey, len, &sf );
 
                /* record global max, if applicable */
                if ( bestscore > globalscore ) {
@@ -190,7 +189,7 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
                  }
                }
                /* abort if max_score is reached */
-               if ( globalscore > max_score )
+               if ( globalscore > (uint32_t)max_score )
                  goto FINISHED;
 
                ENDLOOP:

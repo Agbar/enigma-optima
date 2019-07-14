@@ -4,7 +4,7 @@
 #include "key.h"
 #include "score.h"
 
-int stbrett_optimize_ve3nea(
+uint32_t stbrett_optimize_ve3nea(
     const struct echar var[26],
     struct Key* ckey,
     int len,

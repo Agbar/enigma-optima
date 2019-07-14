@@ -21,7 +21,7 @@ typedef int ( score_f) ( const struct Key* restrict key, scoreLength_t length );
 static uint32_t score_optimizer_loop ( const struct echar var[26], struct Key* const ckey, int len, score_f* score, uint32_t start_score );
 
 
-int
+uint32_t
 stbrett_optimize_ve3nea(
     const struct echar var[26],
     struct Key* ckey,

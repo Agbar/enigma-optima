@@ -1,10 +1,12 @@
 #pragma once
 
+#include <stdint.h>
+
 #include "echar/echar.h"
 #include "key.h"
 #include "score.h"
 
-typedef int stbrett_optimize_f(
+typedef uint32_t stbrett_optimize_f(
     const struct echar var[26],
     struct Key* ckey,
     int len,

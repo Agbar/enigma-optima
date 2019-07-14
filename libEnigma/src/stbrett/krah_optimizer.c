@@ -30,7 +30,7 @@ static void OptimizeBiscore ( const struct echar var[26], struct Key* const ckey
 static void OptimizeTriscore( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
 
 
-int
+uint32_t
 stbrett_optimize_krah(
     const struct echar var[26],
     struct Key* ckey,
