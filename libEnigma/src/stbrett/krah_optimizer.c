@@ -20,14 +20,14 @@ typedef struct {
 } Change;
 
 
-void OptimizeIcscore ( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
-void OptimizeBiscore ( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
-void OptimizeTriscore( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+void OptimizeIcscore ( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+void OptimizeBiscore ( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+void OptimizeTriscore( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
 
 
 int
 stbrett_optimize_krah(
-    struct echar var[26],
+    const struct echar var[26],
     struct Key* ckey,
     const int len,
     const enigma_score_function_t*  scoring )
@@ -101,7 +101,12 @@ stbrett_optimize_krah(
 }
 
 
-void OptimizeIcscore( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf ){
+void OptimizeIcscore(
+    const struct echar var[26],
+    struct Key* const ckey,
+    int len,
+    const enigma_score_function_t* const sf )
+{
     int i;
     struct echar x, z;
     enum Action_t action = NONE;
@@ -266,7 +271,12 @@ void OptimizeIcscore( struct echar var[26], struct Key* const ckey, int len, con
     }
 }
 
-void OptimizeBiscore( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf ){
+void OptimizeBiscore( 
+    const struct echar var[26],
+    struct Key* const ckey,
+    int len,
+    const enigma_score_function_t* const sf )
+{
     int bestscore = sf->biscore( ckey, len );
     int i, a;
     struct echar x, z;
@@ -430,7 +440,12 @@ void OptimizeBiscore( struct echar var[26], struct Key* const ckey, int len, con
     }
 }
 
-void OptimizeTriscore( struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf ){
+void OptimizeTriscore( 
+    const struct echar var[26], 
+    struct Key* const ckey, 
+    int len,
+    const enigma_score_function_t* const sf )
+{
     int bestscore = sf->triscore( ckey, len );
     int i, a;
     struct echar x, z;
