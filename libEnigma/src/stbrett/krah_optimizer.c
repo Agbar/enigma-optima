@@ -20,9 +20,9 @@ typedef struct {
 } Change;
 
 
-void OptimizeIcscore ( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
-void OptimizeBiscore ( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
-void OptimizeTriscore( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+static void OptimizeIcscore ( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+static void OptimizeBiscore ( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
+static void OptimizeTriscore( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
 
 
 int
