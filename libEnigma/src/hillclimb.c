@@ -4,9 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include "cipher.h"
-#include "ciphertext.h"
-#include "dict.h"
+
 #include "error.h"
 #include "global.h"
 #include "hillclimb.h"
@@ -16,8 +14,6 @@
 #include "score.h"
 #include "stecker.h"
 #include "state.h"
-#include "config/array_sizes.h"
-#include "config/testing.h"
 #include "config/types.h"
 #include "OS/Os.h"
 #include "character_encoding.h"
@@ -74,16 +70,15 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
 
   enigma_score_function_t sf;
 
-  enigma_score_init(enigma_cpu_flags, &sf);
+  enigma_score_init( enigma_cpu_flags, &sf );
 
   enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup;
 
-  enigma_cipher_init(enigma_cpu_flags, from->model, &prepare_decoder_lookup);
+  enigma_cipher_init( enigma_cpu_flags, from->model, &prepare_decoder_lookup );
 
   SetupRandomGenerator();
 
   lastsave = time(NULL);
-
 
   if (resume) {
     hillclimb_log("enigma: working on range ...");
