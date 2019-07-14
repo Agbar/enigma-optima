@@ -107,10 +107,10 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
              for (ckey.mesg.r=lo.mesg.r; ckey.mesg.r.delta<=hi[m][11]; ckey.mesg.r.delta++) {
 
                if (doShutdown)
-                 save_state_exit(state, 111);
+                 save_state_exit( &state, 111 );
                if (difftime(time(NULL), lastsave) > 119) {
                  lastsave = time(NULL);
-                 save_state(state);
+                 save_state( &state );
                }
 
 
@@ -189,7 +189,7 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
   if (resume)
     hillclimb_log("enigma: finished range");
   if (act_on_sig)
-    save_state_exit(state, EXIT_SUCCESS);
+    save_state_exit( &state, EXIT_SUCCESS );
 
 }
 
