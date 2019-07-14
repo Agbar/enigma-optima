@@ -45,4 +45,5 @@ PRIVATE
     "src/echar/echar_delta.c"
 
     "src/stbrett/krah_optimizer.c"
+    "src/stbrett/ve3nea_optimizer.c"
 )
