@@ -8,7 +8,6 @@ PRIVATE
     "src/dict.c"
     "src/dict_load.c"
     "src/hillclimb.c"
-    "src/hillclimb2.c"
     "src/input.c"
     "src/key.c"
     "src/optimizer.c"

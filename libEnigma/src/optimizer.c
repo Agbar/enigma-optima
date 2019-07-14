@@ -4,7 +4,6 @@
 #include "optimizer.h"
 #include "dict.h"
 #include "hillclimb.h"
-#include "hillclimb2.h"
 #include "stbrett/optimizer.h"
 #include "stbrett/krah_optimizer.h"
 #include "stbrett/ve3nea_optimizer.h"
