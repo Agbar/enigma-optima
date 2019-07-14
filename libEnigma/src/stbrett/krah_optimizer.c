@@ -7,10 +7,7 @@
  */
 
 #include "stbrett/krah_optimizer.h"
-
-#include "key.h"
 #include "stecker.h"
-#include "echar/echar.h"
 
 
 enum Action_t { NONE,

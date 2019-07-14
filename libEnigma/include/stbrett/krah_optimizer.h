@@ -1,5 +1,7 @@
 #pragma once
 
+#include "echar/echar.h"
+#include "key.h"
 #include "score.h"
 
 int stbrett_optimize_krah(
