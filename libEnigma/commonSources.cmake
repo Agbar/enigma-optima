@@ -43,4 +43,6 @@ PRIVATE
     "src/x86/scoreFunctionSsse3.c"
 
     "src/echar/echar_delta.c"
+
+    "src/stbrett/krah_optimizer.c"
 )

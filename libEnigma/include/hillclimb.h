@@ -5,19 +5,6 @@
 #include <stdint.h>
 #include "key.h"
 
-
-typedef struct {
-        int s1;         /* positions of letters to be swapped */
-        int s2;
-        int u1;         /* positions of letters to be unswapped */
-        int u2;
-} Change;
-
-
-enum Action_t { NONE, KZ_IK, KZ_IZ, IX_KI, IX_KX, IXKZ_IK, IXKZ_IZ, IXKZ_IKXZ,
-       IXKZ_IZXK, RESWAP };
-
-
 void hillclimb( const struct Key *from, const struct Key *to, const struct Key *ckey_res, const struct Key *gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
                 FILE *outfile, int act_on_sig, int len );
