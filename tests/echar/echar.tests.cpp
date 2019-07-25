@@ -50,6 +50,7 @@ TEST( echar, to_ALPHA ){
 }
 
 TEST( echar, 0_based_index ){
+    init_charmap();
     echar a = make_echar_ascii( 'a' );
     ASSERT_EQ( echar_0_based_index( a ), 0 );
     echar z = make_echar_ascii( 'z' );
@@ -57,6 +58,7 @@ TEST( echar, 0_based_index ){
 }
 
 TEST( echar, eq ){
+    init_charmap();
     echar p = make_echar_ascii( 'p' );
     ASSERT_TRUE( echar_eq( p, p ) );
     echar q = make_echar_ascii( 'q' );
@@ -64,6 +66,7 @@ TEST( echar, eq ){
 }
 
 TEST( echar, neq ){
+    init_charmap();
     echar p = make_echar_ascii( 'p' );
     echar q = make_echar_ascii( 'q' );
     ASSERT_TRUE( echar_neq( p, q ) );
