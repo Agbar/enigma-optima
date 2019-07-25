@@ -4,6 +4,8 @@
 #include <cstring>
 #include <gtest/gtest.h>
 
+#include "../AlignedAllocationTrait.hpp"
+
 extern "C"{
     #include "dict.h"
     #include "score.h"
@@ -19,7 +21,8 @@ using TriscoreFun = uint32_t (*) ( const union ScoringDecodedMessage* msg, score
 
 
 class TriscoreTestSuite
-    : public ::testing::TestWithParam<std::tuple<IsSupportedFun, TriscoreFun>> {
+    : public ::testing::TestWithParam<std::tuple<IsSupportedFun, TriscoreFun>>
+    , public AlignedAllocationTrait<TriscoreTestSuite> {
 public:
     int ComputeTriscore( scoreLength_t len ){
         return scoreFun( &msg, len );
@@ -46,7 +49,8 @@ private:
 
 
 class LengthTriscoreTestSuite
-    : public ::testing::TestWithParam<std::tuple<IsSupportedFun, TriscoreFun, scoreLength_t>> {
+    : public ::testing::TestWithParam<std::tuple<IsSupportedFun, TriscoreFun, scoreLength_t>>
+    , public AlignedAllocationTrait<LengthTriscoreTestSuite> {
 public:
     int ComputeTriscore() {
         return scoreFun( &msg, len );
