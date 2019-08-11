@@ -8,7 +8,6 @@ PRIVATE
     "src/dict.c"
     "src/dict_load.c"
     "src/hillclimb.c"
-    "src/hillclimb2.c"
     "src/input.c"
     "src/key.c"
     "src/optimizer.c"
@@ -21,6 +20,7 @@ PRIVATE
     "src/scoreBasic.c"
     "src/scoreNoInterleave.c"
     "src/scoreSimple.c"
+    "src/state.c"
     "src/stecker.c"
 
     
@@ -43,4 +43,7 @@ PRIVATE
     "src/x86/scoreFunctionSsse3.c"
 
     "src/echar/echar_delta.c"
+
+    "src/stbrett/krah_optimizer.c"
+    "src/stbrett/ve3nea_optimizer.c"
 )

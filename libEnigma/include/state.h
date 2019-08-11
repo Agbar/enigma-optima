@@ -2,6 +2,7 @@
 
 #include "config/types.h"
 #include "character_encoding.h"
+#include "global.h"
 
 typedef struct {
   const struct Key *from;
@@ -14,6 +15,11 @@ typedef struct {
   int *max_score;
   struct echar *ciphertext;
 } State;
+
+void save_state( const State* state );
+
+NO_RETURN 
+void save_state_exit( const State* state, int retval );
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
