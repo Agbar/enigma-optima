@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.13)
 
 project(enigma_optima_suite 
     VERSION 1.1.1
@@ -53,30 +53,22 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     include(CheckCXXCompilerFlag)
     if(ENIGMA_BUILD_BITNESS STREQUAL "x86")
         add_compile_options(-m32 -march=pentium3)
+        add_link_options(-m32)
         # Disable position independent code generation
         # * default on Windows
         # * without it Linux code is significantly slower
         add_compile_options(-fno-pic -fno-pie)
-        # add_link_options in CMake 3.13
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32")
-
-        check_cxx_compiler_flag(-no-pie GCC_HAS_NO_PIE_OPTION)
-        if(GCC_HAS_NO_PIE_OPTION)
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
-        endif()
+        # Setting CMAKE_POSITION_INDEPENDENT_CODE=FALSE breaks benchmark
+        # which requires cmake 2.8; -no-pie is added by 3.14+
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
     elseif(ENIGMA_BUILD_BITNESS STREQUAL "x32")
         add_compile_options(-mx32 -march=x86-64)
+        add_link_options(-mx32)
         # Disable position independent code generation
         # * default on Windows
         # * without it Linux code is significantly slower
         add_compile_options(-fno-pic -fno-pie)
-        # add_link_options in CMake 3.13
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mx32")
-
-        check_cxx_compiler_flag(-no-pie GCC_HAS_NO_PIE_OPTION)
-        if(GCC_HAS_NO_PIE_OPTION)
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
-        endif()
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
     elseif(ENIGMA_BUILD_BITNESS STREQUAL "x64")
         # Official MinGW-w64 builds have changed arch
         add_compile_options(-m64 -march=x86-64)
