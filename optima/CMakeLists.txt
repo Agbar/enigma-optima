@@ -25,6 +25,10 @@ endif()
 target_link_libraries(EnigmaOptima Enigma)
 
 configure_file (
-    "${CMAKE_CURRENT_SOURCE_DIR}/config/releaseVersion.cpp.in"
-    "${CMAKE_CURRENT_SOURCE_DIR}/config/releaseVersion.cpp"
+    "config/releaseVersion.gen.hpp.in"
+    "config/releaseVersion.gen.hpp"
+)
+target_include_directories(EnigmaOptima
+    PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/config>
 )
