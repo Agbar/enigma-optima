@@ -6,5 +6,5 @@ endif()
 
 configure_file (
     "${APP_INFO_FOLDER}/app_info.in.xml"
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/app_info.xml"
+    "app_info.xml"
 )
