@@ -119,7 +119,12 @@ endif()
 find_package(Git REQUIRED)
 execute_process(COMMAND ${GIT_EXECUTABLE} describe --dirty 
     OUTPUT_VARIABLE ENIGMA_GIT_DESCRIBE_VERSION
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE ENIGMA_GIT_DESCRIBE_RESULT)
+if(NOT ENIGMA_GIT_DESCRIBE_RESULT EQUAL 0)
+    message(WARNING "`git describe` failed")
+endif()
+
 
 add_subdirectory(libEnigma)
 
