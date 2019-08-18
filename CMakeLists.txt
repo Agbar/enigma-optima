@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 project(enigma_optima_suite 
     VERSION 1.1.1
+    HOMEPAGE_URL https://github.com/Agbar/enigma-optima
     LANGUAGES C CXX)
 
 set(default_build_type "RelWithDebInfo")
