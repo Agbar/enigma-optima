@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.14)
 
 project(enigma_optima_suite 
     VERSION 1.1.1
@@ -31,6 +31,11 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU"
     mark_as_advanced(ENIGMA_DEFAULT_FLAGS_SET)
 endif()
 
+include(CheckPIESupported)
+check_pie_supported(
+    LANGUAGES CXX
+)
+
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     set(ENIGMA_BUILD_BITNESS "x64" CACHE STRING "Build artifacts bintess")
     set(BITNESS_TYPES x64 x86 x32)
@@ -58,7 +63,9 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         add_compile_options(-fno-pic -fno-pie)
         # Setting CMAKE_POSITION_INDEPENDENT_CODE=FALSE breaks benchmark
         # which requires cmake 2.8; -no-pie is added by 3.14+
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
+        if(CMAKE_CXX_LINK_NO_PIE_SUPPORTED)
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
+        endif()
     elseif(ENIGMA_BUILD_BITNESS STREQUAL "x32")
         add_compile_options(-mx32 -march=x86-64)
         add_link_options(-mx32)
@@ -66,7 +73,9 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         # * default on Windows
         # * without it Linux code is significantly slower
         add_compile_options(-fno-pic -fno-pie)
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
+        if(CMAKE_CXX_LINK_NO_PIE_SUPPORTED)
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
+        endif()
     elseif(ENIGMA_BUILD_BITNESS STREQUAL "x64")
         # Official MinGW-w64 builds have changed arch
         add_compile_options(-m64 -march=x86-64)
