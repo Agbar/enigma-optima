@@ -15,6 +15,24 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 
     # set +x to capture it in the archive
     execute_process(COMMAND chmod ug+x ${ENIGMA_WRAPPER_FILE})
+elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
+    set(ENIGMA_WRAPPER_FILE
+        "${CMAKE_BINARY_DIR}/wrapper/wrapper_5.32_windows_intelx86.exe")
+
+    file(DOWNLOAD
+        http://download.enigmaathome.net/wrapper_5.32_windows_intelx86.exe
+        ${ENIGMA_WRAPPER_FILE}
+        SHOW_PROGRESS
+        EXPECTED_HASH SHA256=3ef5e0f458b8cb0fdd286121db8b7c8a891db1a4789bdf6e2156443ed090f30c
+        TLS_VERIFY on
+    )
+
+    set(ENIGMA_WRAPPER_FILE_2 ${CMAKE_BINARY_DIR}/wrapper/wrapper_1.05_windows_x86_64.exe)
+    file(CREATE_LINK
+        ${ENIGMA_WRAPPER_FILE}
+        ${ENIGMA_WRAPPER_FILE_2}
+        COPY_ON_ERROR
+    )
 endif()
 
 
@@ -31,6 +49,7 @@ add_custom_target(Archive
             $<TARGET_FILE:EnigmaOptima>
             ${CMAKE_BINARY_DIR}/BOINC/*.xml
             ${ENIGMA_WRAPPER_FILE}
+            ${ENIGMA_WRAPPER_FILE_2}
             ${CMAKE_SOURCE_DIR}/LICENSE
 
     BYPRODUCTS ${ENIGMA_ARCHIVE_FILE_NAME}.7z
