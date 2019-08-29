@@ -1,5 +1,9 @@
 # Make archive to be published.
 
+find_program(ENIGMA_7Z_EXECUTABLE
+    7z
+)
+
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
     set(ENIGMA_WRAPPER_FILE
@@ -42,7 +46,7 @@ string(APPEND ENIGMA_ARCHIVE_FILE_NAME ".${CMAKE_C_COMPILER_ID}.${CMAKE_C_COMPIL
 
 
 add_custom_target(Archive
-    COMMAND 7z u
+    COMMAND ${ENIGMA_7Z_EXECUTABLE} u
         -stl -saa -ms=on -mx=9
         ${ENIGMA_ARCHIVE_FILE_NAME}
         # files
