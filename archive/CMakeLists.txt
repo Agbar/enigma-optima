@@ -1,7 +1,12 @@
 # Make archive to be published.
 
+
 find_program(ENIGMA_7Z_EXECUTABLE
     7z
+    DOC "Path to 7z archiver"
+    HINTS
+        [HKEY_LOCAL_MACHINE\\SOFTWARE\\7-Zip;Path64]
+        [HKEY_LOCAL_MACHINE\\SOFTWARE\\7-Zip;Path]
 )
 
 
