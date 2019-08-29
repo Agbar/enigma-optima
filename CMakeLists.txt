@@ -155,3 +155,5 @@ add_subdirectory(extern/gbench)
 set(INSTALL_GTEST OFF CACHE BOOL "")
 set(BUILD_GMOCK OFF CACHE BOOL "")
 add_subdirectory(extern/gtest)
+
+add_subdirectory(archive)
