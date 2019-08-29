@@ -43,7 +43,7 @@ string(APPEND ENIGMA_ARCHIVE_FILE_NAME ".${CMAKE_C_COMPILER_ID}.${CMAKE_C_COMPIL
 
 add_custom_target(Archive
     COMMAND 7z u
-        -stl -saa -ms=on
+        -stl -saa -ms=on -mx=9
         ${ENIGMA_ARCHIVE_FILE_NAME}
         # files
             $<TARGET_FILE:EnigmaOptima>
