@@ -24,6 +24,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 
     # set +x to capture it in the archive
     execute_process(COMMAND chmod ug+x ${ENIGMA_WRAPPER_FILE})
+
 elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
     set(ENIGMA_WRAPPER_FILE
         "${CMAKE_BINARY_DIR}/wrapper/wrapper_5.32_windows_intelx86.exe")
@@ -56,6 +57,7 @@ add_custom_target(Archive
         ${ENIGMA_ARCHIVE_FILE_NAME}
         # files
             $<TARGET_FILE:EnigmaOptima>
+            $<$<PLATFORM_ID:Windows>:$<TARGET_FILE_DIR:EnigmaOptima>/$<TARGET_FILE_PREFIX:EnigmaOptima>$<TARGET_FILE_BASE_NAME:EnigmaOptima>.pdb>
             ${CMAKE_BINARY_DIR}/BOINC/*.xml
             ${ENIGMA_WRAPPER_FILE}
             ${ENIGMA_WRAPPER_FILE_2}

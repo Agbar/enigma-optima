@@ -32,3 +32,32 @@ target_include_directories(EnigmaOptima
     PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/config>
 )
+
+
+if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+
+    find_program(ENIGMA_CV2PDB_EXECUTABLE
+        cv2pdb
+        DOC "Path to debugging info converter provided with Visual D."
+        HINTS
+            [HKEY_LOCAL_MACHINE\\SOFTWARE\\VisualD;]\\cv2pdb
+            [HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\VisualD;]\\cv2pdb
+    )
+
+    get_filename_component(VS10_INSTALL_DIR
+        [HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\VisualStudio\\10.0;InstallDir]
+        ABSOLUTE
+    )
+    string(REPLACE "/" "\\" VS10_INSTALL_DIR "${VS10_INSTALL_DIR}")
+
+    add_custom_command(
+        COMMENT "Convert debug info to PDB"
+        TARGET EnigmaOptima
+        POST_BUILD
+        COMMAND set "PATH=${VS10_INSTALL_DIR};%PATH%"
+            && ${ENIGMA_CV2PDB_EXECUTABLE}
+                -C
+                $<TARGET_FILE:EnigmaOptima>
+    )
+
+endif()
