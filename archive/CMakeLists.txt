@@ -11,8 +11,8 @@ find_program(ENIGMA_7Z_EXECUTABLE
 
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
-    set(ENIGMA_WRAPPER_FILE
-        "${CMAKE_BINARY_DIR}/wrapper/wrapper_5.32_i686-pc-linux-gnu")
+    set(ENIGMA_WRAPPER_BINDIR_PATH "wrapper/wrapper_5.32_i686-pc-linux-gnu")
+    set(ENIGMA_WRAPPER_FILE "${CMAKE_BINARY_DIR}/${ENIGMA_WRAPPER_BINDIR_PATH}")
 
     file(DOWNLOAD
         http://download.enigmaathome.net/wrapper_5.32_i686-pc-linux-gnu
@@ -26,8 +26,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
     execute_process(COMMAND chmod ug+x ${ENIGMA_WRAPPER_FILE})
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
-    set(ENIGMA_WRAPPER_FILE
-        "${CMAKE_BINARY_DIR}/wrapper/wrapper_5.32_windows_intelx86.exe")
+    set(ENIGMA_WRAPPER_BINDIR_PATH "wrapper/wrapper_5.32_windows_intelx86.exe")
+    set(ENIGMA_WRAPPER_FILE "${CMAKE_BINARY_DIR}/${ENIGMA_WRAPPER_BINDIR_PATH}")
 
     file(DOWNLOAD
         http://download.enigmaathome.net/wrapper_5.32_windows_intelx86.exe
@@ -37,7 +37,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL Windows)
         TLS_VERIFY on
     )
 
-    set(ENIGMA_WRAPPER_FILE_2 ${CMAKE_BINARY_DIR}/wrapper/wrapper_1.05_windows_x86_64.exe)
+    set(ENIGMA_WRAPPER_2_BINDIR_PATH "wrapper/wrapper_1.05_windows_x86_64.exe")
+    set(ENIGMA_WRAPPER_FILE_2 "${CMAKE_BINARY_DIR}/${ENIGMA_WRAPPER_2_BINDIR_PATH}")
     file(CREATE_LINK
         ${ENIGMA_WRAPPER_FILE}
         ${ENIGMA_WRAPPER_FILE_2}
