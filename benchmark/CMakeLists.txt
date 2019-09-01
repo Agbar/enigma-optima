@@ -31,3 +31,7 @@ target_link_libraries(EnigmaBenchmark
 if(WIN32)
     target_link_libraries(EnigmaBenchmark shlwapi)
 endif()
+
+configure_file(00bigr.cur 00bigr.cur COPYONLY)
+configure_file(00trigr.AVv1 00trigr.AVv1 COPYONLY)
+configure_file(00unigr.AVv1 00unigr.AVv1 COPYONLY)

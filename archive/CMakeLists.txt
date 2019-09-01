@@ -72,3 +72,53 @@ add_custom_target(Archive
 )
 
 add_dependencies(Archive EnigmaOptima)
+
+
+set(ENIGMA_ARCHIVE_ALL_FILE_NAME "enigma-optima-all-${ENIGMA_GIT_DESCRIBE_VERSION}")
+string(APPEND ENIGMA_ARCHIVE_ALL_FILE_NAME "+${CMAKE_SYSTEM_NAME}.${ENIGMA_BUILD_BITNESS}")
+string(APPEND ENIGMA_ARCHIVE_ALL_FILE_NAME ".${CMAKE_C_COMPILER_ID}.${CMAKE_C_COMPILER_VERSION}")
+
+
+set(ENIGMA_ARCHIVE_ALL_DIR "${CMAKE_BINARY_DIR}/archive-all")
+file(MAKE_DIRECTORY "${ENIGMA_ARCHIVE_ALL_DIR}")
+
+add_custom_target(ArchiveAll
+    WORKING_DIRECTORY
+        ${CMAKE_BINARY_DIR}
+    COMMAND ${ENIGMA_7Z_EXECUTABLE} u
+        -stl -saa -ms=on -mx=9
+        ${ENIGMA_ARCHIVE_ALL_DIR}/${ENIGMA_ARCHIVE_ALL_FILE_NAME}
+        # Keep a folder structure except the LICENSE file.
+        # files
+            ${CMAKE_SOURCE_DIR}/LICENSE
+        # optima
+            optima/$<TARGET_FILE_NAME:EnigmaOptima>
+            $<$<PLATFORM_ID:Windows>:optima/$<TARGET_FILE_PREFIX:EnigmaOptima>$<TARGET_FILE_BASE_NAME:EnigmaOptima>.pdb>
+        # BOINC
+            BOINC/*.xml
+        # wrapper
+            ${ENIGMA_WRAPPER_BINDIR_PATH}
+            ${ENIGMA_WRAPPER_2_BINDIR_PATH}
+        # libEnigma
+            libEnigma/$<TARGET_FILE_NAME:Enigma>
+        # tests
+            tests/$<TARGET_FILE_NAME:EnigmaUnitTests>
+        # benchmark
+            benchmark/$<TARGET_FILE_NAME:EnigmaBenchmark>
+            benchmark/00bigr.cur
+            benchmark/00trigr.AVv1
+            benchmark/00unigr.AVv1
+
+    BYPRODUCTS ${ENIGMA_ARCHIVE_ALL_DIR}/${ENIGMA_ARCHIVE_ALL_FILE_NAME}.7z
+    DEPENDS
+        ${CMAKE_BINARY_DIR}/BOINC/*.xml
+        ${ENIGMA_WRAPPER_FILE}
+        ${CMAKE_SOURCE_DIR}/LICENSE
+)
+
+add_dependencies(ArchiveAll
+    Enigma
+    EnigmaOptima
+    EnigmaUnitTests
+    EnigmaBenchmark
+)
