@@ -35,3 +35,21 @@ endif()
 configure_file(00bigr.cur 00bigr.cur COPYONLY)
 configure_file(00trigr.AVv1 00trigr.AVv1 COPYONLY)
 configure_file(00unigr.AVv1 00unigr.AVv1 COPYONLY)
+
+if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+    execute_process(
+        COMMAND
+            ${CMAKE_C_COMPILER} -print-file-name=libwinpthread-1.dll
+        OUTPUT_VARIABLE ENIGMA_WINPTHREAD_DLL_FILE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE ENIGMA_WINPTHREAD_DLL_PRINT_FILE_NAME_RESULT
+    )
+    if(NOT ENIGMA_WINPTHREAD_DLL_PRINT_FILE_NAME_RESULT EQUAL 0)
+        message(WARNING "libwinpthread-1.dll not found" )
+    endif()
+    file(CREATE_LINK
+        "${ENIGMA_WINPTHREAD_DLL_FILE}"
+        "${CMAKE_CURRENT_BINARY_DIR}/libwinpthread-1.dll"
+        COPY_ON_ERROR
+    )
+endif()

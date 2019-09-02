@@ -24,3 +24,21 @@ target_link_libraries(EnigmaUnitTests Enigma gtest Threads::Threads)
 add_test(
     NAME Units
     COMMAND EnigmaUnitTests)
+
+if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+    execute_process(
+        COMMAND
+            ${CMAKE_C_COMPILER} -print-file-name=libwinpthread-1.dll
+        OUTPUT_VARIABLE ENIGMA_WINPTHREAD_DLL_FILE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE ENIGMA_WINPTHREAD_DLL_PRINT_FILE_NAME_RESULT
+    )
+    if(NOT ENIGMA_WINPTHREAD_DLL_PRINT_FILE_NAME_RESULT EQUAL 0)
+        message(WARNING "libwinpthread-1.dll not found" )
+    endif()
+    file(CREATE_LINK
+        "${ENIGMA_WINPTHREAD_DLL_FILE}"
+        "${CMAKE_CURRENT_BINARY_DIR}/libwinpthread-1.dll"
+        COPY_ON_ERROR
+    )
+endif()
