@@ -15,9 +15,6 @@
 #define NTICKET 34
 #define NDIALOG 18
 
-#ifndef DBL_EPSILON
-#define DBL_EPSILON 0.000000001
-#endif
 
 #include <limits.h>
 #if INT_MAX < 0x7FFFFFFFL

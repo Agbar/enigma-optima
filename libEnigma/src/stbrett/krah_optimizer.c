@@ -130,7 +130,7 @@ void OptimizeIcscore(
             ){
                 SwapStbrett( ckey, var[i], var[k] );
                 ic = sf->icscore( ckey, len );
-                if( ic - bestic > DBL_EPSILON ) {
+                if( ic  > bestic ) {
                     bestic = ic;
                     continue;
                 }
@@ -145,7 +145,7 @@ void OptimizeIcscore(
 
                 SwapStbrett( ckey, var[i], var[k] );
                 ic = sf->icscore( ckey, len );
-                if( ic - bestic > DBL_EPSILON ) {
+                if( ic > bestic ) {
                     bestic = ic;
                     action = KZ_IK;
                 }
@@ -153,7 +153,7 @@ void OptimizeIcscore(
 
                 SwapStbrett( ckey, var[i], z );
                 ic = sf->icscore( ckey, len );
-                if( ic - bestic > DBL_EPSILON ) {
+                if( ic > bestic ) {
                     bestic = ic;
                     action = KZ_IZ;
                 }
@@ -182,7 +182,7 @@ void OptimizeIcscore(
 
                 SwapStbrett( ckey, var[k], var[i] );
                 ic = sf->icscore( ckey, len );
-                if( ic - bestic > DBL_EPSILON ) {
+                if( ic > bestic ) {
                     bestic = ic;
                     action = IX_KI;
                 }
@@ -190,7 +190,7 @@ void OptimizeIcscore(
 
                 SwapStbrett( ckey, var[k], x );
                 ic = sf->icscore( ckey, len );
-                if( ic - bestic > DBL_EPSILON ) {
+                if( ic > bestic ) {
                     bestic = ic;
                     action = IX_KX;
                 }
@@ -221,13 +221,13 @@ void OptimizeIcscore(
 
                 SwapStbrett( ckey, var[i], var[k] );
                 ic = sf->icscore( ckey, len );
-                if( ic - bestic > DBL_EPSILON ) {
+                if( ic > bestic ) {
                     bestic = ic;
                     action = IXKZ_IK;
                 }
                 SwapStbrett( ckey, x, z );
                 ic = sf->icscore( ckey, len );
-                if( ic - bestic > DBL_EPSILON ) {
+                if( ic > bestic ) {
                     bestic = ic;
                     action = IXKZ_IKXZ;
                 }
@@ -236,13 +236,13 @@ void OptimizeIcscore(
 
                 SwapStbrett( ckey, var[i], z );
                 ic = sf->icscore( ckey, len );
-                if( ic - bestic > DBL_EPSILON ) {
+                if( ic > bestic ) {
                     bestic = ic;
                     action = IXKZ_IZ;
                 }
                 SwapStbrett( ckey, x, var[k] );
                 ic = sf->icscore( ckey, len );
-                if( ic - bestic > DBL_EPSILON ) {
+                if( ic > bestic ) {
                     bestic = ic;
                     action = IXKZ_IZXK;
                 }
