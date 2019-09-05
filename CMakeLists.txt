@@ -5,6 +5,8 @@ project(enigma_optima_suite
     HOMEPAGE_URL https://github.com/Agbar/enigma-optima
     LANGUAGES C CXX)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
+
 set(default_build_type "RelWithDebInfo")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_CONFIGURATION_TYPES "Debug RelWithDebInfo")

@@ -24,3 +24,12 @@ target_link_libraries(EnigmaUnitTests Enigma gtest Threads::Threads)
 add_test(
     NAME Units
     COMMAND EnigmaUnitTests)
+
+if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+    include(FindLibWinThreadDll)
+    file(CREATE_LINK
+        "${ENIGMA_WINPTHREAD_DLL_FILE}"
+        "${CMAKE_CURRENT_BINARY_DIR}/libwinpthread-1.dll"
+        COPY_ON_ERROR
+    )
+endif()

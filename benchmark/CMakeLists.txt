@@ -31,3 +31,16 @@ target_link_libraries(EnigmaBenchmark
 if(WIN32)
     target_link_libraries(EnigmaBenchmark shlwapi)
 endif()
+
+configure_file(00bigr.cur 00bigr.cur COPYONLY)
+configure_file(00trigr.AVv1 00trigr.AVv1 COPYONLY)
+configure_file(00unigr.AVv1 00unigr.AVv1 COPYONLY)
+
+if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+    include(FindLibWinThreadDll)
+    file(CREATE_LINK
+        "${ENIGMA_WINPTHREAD_DLL_FILE}"
+        "${CMAKE_CURRENT_BINARY_DIR}/libwinpthread-1.dll"
+        COPY_ON_ERROR
+    )
+endif()
