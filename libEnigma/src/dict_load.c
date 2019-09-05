@@ -9,7 +9,7 @@
 
 int load_tridict(const char *filename)
 {
-  unsigned char tri[4];
+  char tri[4];
   int log;
   FILE *fp;
 
@@ -37,7 +37,7 @@ int load_tridict(const char *filename)
 
 int load_bidict(const char *filename)
 {
-  unsigned char bi[3];
+  char bi[3];
   int log;
   FILE *fp;
 
@@ -63,7 +63,7 @@ int load_bidict(const char *filename)
 
 int load_unidict(const char *filename)
 {
-  unsigned char uni[2];
+  char uni[2];
   int log;
   FILE *fp;
 
