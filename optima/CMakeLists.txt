@@ -42,14 +42,12 @@ if(CMAKE_SYSTEM_NAME STREQUAL Windows)
         POST_BUILD
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
         COMMAND
-            objcopy
-                --preserve-dates
+            ${CMAKE_COMMAND} -E copy
                 $<TARGET_FILE_NAME:EnigmaOptima>
                 $<TARGET_FILE_NAME:EnigmaOptima>.full
         COMMAND
             objcopy
                 --preserve-dates
-                --strip-debug
                 --strip-unneeded
                 $<TARGET_FILE_NAME:EnigmaOptima>
         COMMAND
