@@ -34,7 +34,7 @@ target_include_directories(EnigmaOptima
 )
 
 
-if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
 
     add_custom_command(
         COMMENT "Move debug info to separate file"

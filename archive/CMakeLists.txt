@@ -58,7 +58,7 @@ add_custom_target(Archive
         ${ENIGMA_ARCHIVE_FILE_NAME}
         # files
             $<TARGET_FILE:EnigmaOptima>
-            $<$<PLATFORM_ID:Windows>:$<TARGET_FILE:EnigmaOptima>.full>
+            $<TARGET_FILE:EnigmaOptima>.full
             ${CMAKE_BINARY_DIR}/BOINC/*.xml
             ${ENIGMA_WRAPPER_FILE}
             ${ENIGMA_WRAPPER_FILE_2}
@@ -93,7 +93,7 @@ add_custom_target(ArchiveAll
             ${CMAKE_SOURCE_DIR}/LICENSE
         # optima
             optima/$<TARGET_FILE_NAME:EnigmaOptima>
-            $<$<PLATFORM_ID:Windows>:optima/$<TARGET_FILE_NAME:EnigmaOptima>.full>
+            optima/$<TARGET_FILE_NAME:EnigmaOptima>.full
         # BOINC
             BOINC/*.xml
         # wrapper
