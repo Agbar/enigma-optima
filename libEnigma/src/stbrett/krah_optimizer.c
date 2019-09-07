@@ -30,7 +30,7 @@ static void OptimizeBiscore ( const struct echar var[26], struct Key* const ckey
 static void OptimizeTriscore( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
 
 typedef int (score_f) ( const struct Key* restrict key, scoreLength_t length );
-static uint32_t score_optimizer_loop ( const struct echar var[26], struct Key* const ckey, int len, score_f* score, uint32_t start_score );
+static void score_optimizer_loop ( const struct echar var[26], struct Key* const ckey, int len, score_f* score );
 
 
 uint32_t
@@ -109,13 +109,12 @@ stbrett_optimize_krah(
 }
 
 NO_INLINE
-static uint32_t score_optimizer_loop (
+static void score_optimizer_loop (
       const struct echar var[26]
     , struct Key* const ckey
     , int len
-    , score_f* score
-    , uint32_t start_score ) {
-    uint32_t best_score  = start_score;
+    , score_f* score ) {
+    uint32_t best_score  = score( ckey, len );
     enum Action_t action = NONE;
     for( int i = 0; i < 26; i++ ) {
         for( int k = i + 1; k < 26; k++ ) {
@@ -273,7 +272,6 @@ static uint32_t score_optimizer_loop (
             }
         }
     }
-    return best_score;
 }
 
 void OptimizeIcscore(
@@ -282,8 +280,7 @@ void OptimizeIcscore(
     int len,
     const enigma_score_function_t* const sf )
 {
-    int first_ic = sf->icscore( ckey, len );
-    score_optimizer_loop( var, ckey, len, sf->icscore, first_ic);
+    score_optimizer_loop( var, ckey, len, sf->icscore );
 }
 
 void OptimizeBiscore(
@@ -292,8 +289,7 @@ void OptimizeBiscore(
     int len,
     const enigma_score_function_t* const sf )
 {
-    int start_score = sf->biscore( ckey, len );
-    score_optimizer_loop( var, ckey, len, sf->biscore, start_score );
+    score_optimizer_loop( var, ckey, len, sf->biscore );
 }
 
 void OptimizeTriscore(
@@ -302,6 +298,5 @@ void OptimizeTriscore(
     int len,
     const enigma_score_function_t* const sf )
 {
-    int start_score = sf->triscore( ckey, len );
-    score_optimizer_loop( var, ckey, len, sf->triscore, start_score );
+    score_optimizer_loop( var, ckey, len, sf->triscore );
 }
