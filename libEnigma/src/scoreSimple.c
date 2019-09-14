@@ -5,7 +5,7 @@
 #include "cipher.h"
 
 
-uint16_t icscoreSimple( const struct Key* const restrict key, scoreLength_t len );
+int      icscoreSimple( const struct Key* const restrict key, scoreLength_t len );
 int     uniscoreSimple( const struct Key* const restrict key, scoreLength_t len );
 int      biscoreSimple( const struct Key* const restrict key, scoreLength_t len );
 int     triscoreSimple( const struct Key* const restrict key, scoreLength_t len );
@@ -13,7 +13,7 @@ int     triscoreSimple( const struct Key* const restrict key, scoreLength_t len 
 enigma_score_function_t enigmaScoreSimple = { triscoreSimple, biscoreSimple, icscoreSimple, uniscoreSimple};
 
 PURE_FUNCTION
-uint16_t icscoreSimple( const struct Key* const restrict key, scoreLength_t len )
+int icscoreSimple( const struct Key* const restrict key, scoreLength_t len )
 {
   int f[26] = {0};  
   int i;

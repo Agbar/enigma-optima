@@ -87,10 +87,8 @@ void OptimizeIcscore2 (
     , struct Key* const ckey
     , int len
     , const enigma_score_function_t* const sf ) {
-    // restult of icscore is stored in r/eax reagardless of int size
-    score_f* ic_to_int = (score_f*) sf->icscore;
-    uint16_t first_ic = sf->icscore( ckey, len );
-    score_optimizer_loop( var, ckey, len, ic_to_int, first_ic );
+    int first_ic = sf->icscore( ckey, len );
+    score_optimizer_loop( var, ckey, len, sf->icscore, first_ic );
 }
 
 void OptimizeUniscore2 (

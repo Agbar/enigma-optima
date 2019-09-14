@@ -24,7 +24,7 @@ STATIC_ASSERT ( UINT16_MAX > CT * CT, "uint16_t is to narrow for current CT valu
 typedef struct _enigma_score_function_t{
     int      (*triscore) ( const struct Key* restrict key, scoreLength_t length );
     int      (* biscore) ( const struct Key* restrict key, scoreLength_t length );
-    uint16_t (* icscore) ( const struct Key* restrict key, scoreLength_t length );
+    int      (* icscore) ( const struct Key* restrict key, scoreLength_t length );
     int      (*uniscore) ( const struct Key* restrict key, scoreLength_t length );
 } enigma_score_function_t;
 

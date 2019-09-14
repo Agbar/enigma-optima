@@ -13,7 +13,7 @@
 #include "computeScoreNoInterleave.h"
 
 // AVX scores
-static uint16_t icscoreAvx( const struct Key* restrict key, scoreLength_t len );
+static int      icscoreAvx( const struct Key* restrict key, scoreLength_t len );
 static int     uniscoreAvx( const struct Key* restrict key, scoreLength_t len );
 static int      biscoreAvx( const struct Key* restrict key, scoreLength_t len );
 static int     triscoreAvx( const struct Key* restrict key, scoreLength_t len );
@@ -22,7 +22,7 @@ enigma_score_function_t enigmaScoreAvx = { triscoreAvx,  biscoreAvx , icscoreAvx
 
 union ScoringDecodedMessage decodedMsgPartAvx;
 
-static uint16_t icscoreAvx( const struct Key* const restrict key, scoreLength_t len ) {
+static int icscoreAvx( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3Vex( key, len, &decodedMsgPartAvx );
     return ComputeIcscoreFromDecodedMsgSsse3Vex( &decodedMsgPartAvx, len );
 }
