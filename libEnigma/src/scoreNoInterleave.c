@@ -10,7 +10,7 @@
 static int     uniscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len );
 static int      biscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len );
 static int     triscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len );
-static uint16_t icscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len );
+static int      icscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len );
 
 union ScoringDecodedMessage decodedMsgPartNoInterleave;
 
@@ -27,7 +27,7 @@ int triscoreNoInterleave( const struct Key* const restrict key, scoreLength_t le
 }
 
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static uint16_t icscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len ) {
+static int icscoreNoInterleave( const struct Key* const restrict key, scoreLength_t len ) {
     if (len < 2) {
         return 0;
     }

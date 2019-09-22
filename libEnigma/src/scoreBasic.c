@@ -10,7 +10,7 @@
 #include "config/types.h"
 
 // default scores
-static uint16_t icscoreBasic( const struct Key* const restrict key, scoreLength_t length );
+static int      icscoreBasic( const struct Key* const restrict key, scoreLength_t length );
 static int     uniscoreBasic( const struct Key* const restrict key, scoreLength_t length );
 static int      biscoreBasic( const struct Key* const restrict key, scoreLength_t length );
 static int     triscoreBasic( const struct Key* const restrict key, scoreLength_t length );
@@ -23,7 +23,7 @@ union ScoringDecodedMessage decodedMsgPartBasic;
  * opti scores
  ************************/
 __attribute__ ((optimize("sched-stalled-insns=0,sched-stalled-insns-dep=16,unroll-loops")))
-static uint16_t icscoreBasic( const struct Key* const restrict key, scoreLength_t len )
+static int icscoreBasic( const struct Key* const restrict key, scoreLength_t len )
 {
   int f[26] = {0};
   int i;

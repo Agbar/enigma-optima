@@ -12,7 +12,7 @@
 #include "computeScoreNoInterleave.h"
 
 // SSSE3 scores
-static uint16_t icscoreSsse3( const struct Key* restrict key, scoreLength_t len );
+static int      icscoreSsse3( const struct Key* restrict key, scoreLength_t len );
 static int     uniscoreSsse3( const struct Key* restrict key, scoreLength_t len );
 static int      biscoreSsse3( const struct Key* restrict key, scoreLength_t len );
 static int     triscoreSsse3( const struct Key* restrict key, scoreLength_t len );
@@ -21,7 +21,7 @@ enigma_score_function_t enigmaScoreSsse3 = { triscoreSsse3,  biscoreSsse3 , icsc
 
 union ScoringDecodedMessage decodedMsgPartSsse3;
 
-static uint16_t icscoreSsse3( const struct Key* const restrict key, scoreLength_t len ) {
+static int icscoreSsse3( const struct Key* const restrict key, scoreLength_t len ) {
     DecodeScoredMessagePartSsse3( key, len, &decodedMsgPartSsse3 );
     return ComputeIcscoreFromDecodedMsgSsse3( &decodedMsgPartSsse3, len );
 }
