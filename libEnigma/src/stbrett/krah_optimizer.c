@@ -29,6 +29,9 @@ static void OptimizeIcscore ( const struct echar var[26], struct Key* const ckey
 static void OptimizeBiscore ( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
 static void OptimizeTriscore( const struct echar var[26], struct Key* const ckey, int len, const enigma_score_function_t* const sf );
 
+typedef int (score_f) ( const struct Key* restrict key, scoreLength_t length );
+static void score_optimizer_loop ( const struct echar var[26], struct Key* const ckey, int len, score_f* score );
+
 
 uint32_t
 stbrett_optimize_krah(
@@ -105,21 +108,16 @@ stbrett_optimize_krah(
     return bestscore;
 }
 
-
-void OptimizeIcscore(
-    const struct echar var[26],
-    struct Key* const ckey,
-    int len,
-    const enigma_score_function_t* const sf )
-{
-    int i;
-    struct echar x, z;
+NO_INLINE
+static void score_optimizer_loop (
+      const struct echar var[26]
+    , struct Key* const ckey
+    , int len
+    , score_f* score ) {
+    uint32_t best_score  = score( ckey, len );
     enum Action_t action = NONE;
-    uint16_t bestic = sf->icscore( ckey, len );
-    uint16_t ic;
-    for( i = 0; i < 26; i++ ) {
-        int k;
-        for( k = i + 1; k < 26; k++ ) {
+    for( int i = 0; i < 26; i++ ) {
+        for( int k = i + 1; k < 26; k++ ) {
             if(  ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
                 && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
                  )
@@ -129,9 +127,9 @@ void OptimizeIcscore(
                  )
             ){
                 SwapStbrett( ckey, var[i], var[k] );
-                ic = sf->icscore( ckey, len );
-                if( ic  > bestic ) {
-                    bestic = ic;
+                uint32_t s = score( ckey, len );
+                if( s  > best_score ) {
+                    best_score = s;
                     continue;
                 }
                 SwapStbrett( ckey, var[i], var[k] );
@@ -140,21 +138,21 @@ void OptimizeIcscore(
                     && echar_neq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
             ){
                 action = NONE;
-                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
+                struct echar z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
                 SwapStbrett( ckey, var[k], z );
 
                 SwapStbrett( ckey, var[i], var[k] );
-                ic = sf->icscore( ckey, len );
-                if( ic > bestic ) {
-                    bestic = ic;
+                uint32_t s = score( ckey, len );
+                if( s > best_score ) {
+                    best_score = s;
                     action = KZ_IK;
                 }
                 SwapStbrett( ckey, var[i], var[k] );
 
                 SwapStbrett( ckey, var[i], z );
-                ic = sf->icscore( ckey, len );
-                if( ic > bestic ) {
-                    bestic = ic;
+                s = score( ckey, len );
+                if( s > best_score ) {
+                    best_score = s;
                     action = KZ_IZ;
                 }
                 SwapStbrett( ckey, var[i], z );
@@ -177,21 +175,21 @@ void OptimizeIcscore(
                     && echar_neq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
             ){
                 action = NONE;
-                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
+                struct echar x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
                 SwapStbrett( ckey, var[i], x );
 
                 SwapStbrett( ckey, var[k], var[i] );
-                ic = sf->icscore( ckey, len );
-                if( ic > bestic ) {
-                    bestic = ic;
+                uint32_t s = score( ckey, len );
+                if( s > best_score ) {
+                    best_score = s;
                     action = IX_KI;
                 }
                 SwapStbrett( ckey, var[k], var[i] );
 
                 SwapStbrett( ckey, var[k], x );
-                ic = sf->icscore( ckey, len );
-                if( ic > bestic ) {
-                    bestic = ic;
+                s = score( ckey, len );
+                if( s > best_score ) {
+                    best_score = s;
                     action = IX_KX;
                 }
                 SwapStbrett( ckey, var[k], x );
@@ -214,36 +212,36 @@ void OptimizeIcscore(
                     && echar_neq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
             ){
                 action = NONE;
-                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
-                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
+                struct echar x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
+                struct echar z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
                 SwapStbrett( ckey, var[i], x );
                 SwapStbrett( ckey, var[k], z );
 
                 SwapStbrett( ckey, var[i], var[k] );
-                ic = sf->icscore( ckey, len );
-                if( ic > bestic ) {
-                    bestic = ic;
+                uint32_t s = score( ckey, len );
+                if( s > best_score ) {
+                    best_score = s;
                     action = IXKZ_IK;
                 }
                 SwapStbrett( ckey, x, z );
-                ic = sf->icscore( ckey, len );
-                if( ic > bestic ) {
-                    bestic = ic;
+                s = score( ckey, len );
+                if( s > best_score ) {
+                    best_score = s;
                     action = IXKZ_IKXZ;
                 }
                 SwapStbrett( ckey, x, z );
                 SwapStbrett( ckey, var[i], var[k] );
 
                 SwapStbrett( ckey, var[i], z );
-                ic = sf->icscore( ckey, len );
-                if( ic > bestic ) {
-                    bestic = ic;
+                s = score( ckey, len );
+                if( s > best_score ) {
+                    best_score = s;
                     action = IXKZ_IZ;
                 }
                 SwapStbrett( ckey, x, var[k] );
-                ic = sf->icscore( ckey, len );
-                if( ic > bestic ) {
-                    bestic = ic;
+                s = score( ckey, len );
+                if( s > best_score ) {
+                    best_score = s;
                     action = IXKZ_IZXK;
                 }
                 SwapStbrett( ckey, x, var[k] );
@@ -276,340 +274,29 @@ void OptimizeIcscore(
     }
 }
 
-void OptimizeBiscore( 
+void OptimizeIcscore(
     const struct echar var[26],
     struct Key* const ckey,
     int len,
     const enigma_score_function_t* const sf )
 {
-    int bestscore = sf->biscore( ckey, len );
-    int i, a;
-    struct echar x, z;
-    enum Action_t action;
-    for( i = 0; i < 26; i++ ) {
-        int k;
-        for( k = i + 1; k < 26; k++ ) {
-            if( ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
-               && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
-                )
-            ||
-                ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
-               && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
-                )
-            ){
-                SwapStbrett( ckey, var[i], var[k] );
-                a = sf->biscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    continue;
-                }
-                SwapStbrett( ckey, var[i], var[k] );
-            }
-            else if(    echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
-                    && echar_neq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
-            ){
-                action = NONE;
-                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
-                SwapStbrett( ckey, var[k], z );
-
-                SwapStbrett( ckey, var[i], var[k] );
-                a = sf->biscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = KZ_IK;
-                }
-                SwapStbrett( ckey, var[i], var[k] );
-
-                SwapStbrett( ckey, var[i], z );
-                a = sf->biscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = KZ_IZ;
-                }
-                SwapStbrett( ckey, var[i], z );
-
-                switch( action ) {
-                case KZ_IK:
-                    SwapStbrett( ckey, var[i], var[k] );
-                    break;
-                case KZ_IZ:
-                    SwapStbrett( ckey, var[i], z );
-                    break;
-                case NONE:
-                    SwapStbrett( ckey, var[k], z );
-                    break;
-                default:
-                    break;
-                }
-            }
-            else if(    echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
-                    && echar_neq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
-            ){
-                action = NONE;
-                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
-                SwapStbrett( ckey, var[i], x );
-
-                SwapStbrett( ckey, var[k], var[i] );
-                a = sf->biscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IX_KI;
-                }
-                SwapStbrett( ckey, var[k], var[i] );
-
-                SwapStbrett( ckey, var[k], x );
-                a = sf->biscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IX_KX;
-                }
-                SwapStbrett( ckey, var[k], x );
-
-                switch( action ) {
-                case IX_KI:
-                    SwapStbrett( ckey, var[k], var[i] );
-                    break;
-                case IX_KX:
-                    SwapStbrett( ckey, var[k], x );
-                    break;
-                case NONE:
-                    SwapStbrett( ckey, var[i], x );
-                    break;
-                default:
-                    break;
-                }
-            }
-            else if(   echar_neq(var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
-                    && echar_neq(var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
-            ){
-                action = NONE;
-                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
-                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
-                SwapStbrett( ckey, var[i], x );
-                SwapStbrett( ckey, var[k], z );
-
-                SwapStbrett( ckey, var[i], var[k] );
-                a = sf->biscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IXKZ_IK;
-                }
-                SwapStbrett( ckey, x, z );
-                a = sf->biscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IXKZ_IKXZ;
-                }
-                SwapStbrett( ckey, x, z );
-                SwapStbrett( ckey, var[i], var[k] );
-
-                SwapStbrett( ckey, var[i], z );
-                a = sf->biscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IXKZ_IZ;
-                }
-                SwapStbrett( ckey, x, var[k] );
-                a = sf->biscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IXKZ_IZXK;
-                }
-                SwapStbrett( ckey, x, var[k] );
-                SwapStbrett( ckey, var[i], z );
-
-                switch( action ) {
-                case IXKZ_IK:
-                    SwapStbrett( ckey, var[i], var[k] );
-                    break;
-                case IXKZ_IZ:
-                    SwapStbrett( ckey, var[i], z );
-                    break;
-                case IXKZ_IKXZ:
-                    SwapStbrett( ckey, var[i], var[k] );
-                    SwapStbrett( ckey, x, z );
-                    break;
-                case IXKZ_IZXK:
-                    SwapStbrett( ckey, var[i], z );
-                    SwapStbrett( ckey, x, var[k] );
-                    break;
-                case NONE:
-                    SwapStbrett( ckey, var[i], x );
-                    SwapStbrett( ckey, var[k], z );
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
-    }
+    score_optimizer_loop( var, ckey, len, sf->icscore );
 }
 
-void OptimizeTriscore( 
-    const struct echar var[26], 
-    struct Key* const ckey, 
+void OptimizeBiscore(
+    const struct echar var[26],
+    struct Key* const ckey,
     int len,
     const enigma_score_function_t* const sf )
 {
-    int bestscore = sf->triscore( ckey, len );
-    int i, a;
-    struct echar x, z;
-    enum Action_t action;
-    for( i = 0; i < 26; i++ ) {
-        int k;
-        for( k = i + 1; k < 26; k++ ) {
-            if( ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
-               && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
-                )
-            ||
-                ( echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
-               && echar_eq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
-                )
-            ){
-                SwapStbrett( ckey, var[i], var[k] );
-                a = sf->triscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    continue;
-                }
-                SwapStbrett( ckey, var[i], var[k] );
-            }
-            else if(    echar_eq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
-                    && echar_neq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
-            ){
-                action = NONE;
-                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
-                SwapStbrett( ckey, var[k], z );
+    score_optimizer_loop( var, ckey, len, sf->biscore );
+}
 
-                SwapStbrett( ckey, var[i], var[k] );
-                a = sf->triscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = KZ_IK;
-                }
-                SwapStbrett( ckey, var[i], var[k] );
-
-                SwapStbrett( ckey, var[i], z );
-                a = sf->triscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = KZ_IZ;
-                }
-                SwapStbrett( ckey, var[i], z );
-
-                switch( action ) {
-                case KZ_IK:
-                    SwapStbrett( ckey, var[i], var[k] );
-                    break;
-                case KZ_IZ:
-                    SwapStbrett( ckey, var[i], z );
-                    break;
-                case NONE:
-                    SwapStbrett( ckey, var[k], z );
-                    break;
-                default:
-                    break;
-                }
-            }
-            else if(    echar_eq(var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
-                    && echar_neq(var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
-            ){
-                action = NONE;
-                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
-                SwapStbrett( ckey, var[i], x );
-
-                SwapStbrett( ckey, var[k], var[i] );
-                a = sf->triscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IX_KI;
-                }
-                SwapStbrett( ckey, var[k], var[i] );
-
-                SwapStbrett( ckey, var[k], x );
-                a = sf->triscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IX_KX;
-                }
-                SwapStbrett( ckey, var[k], x );
-
-                switch( action ) {
-                case IX_KI:
-                    SwapStbrett( ckey, var[k], var[i] );
-                    break;
-                case IX_KX:
-                    SwapStbrett( ckey, var[k], x );
-                    break;
-                case NONE:
-                    SwapStbrett( ckey, var[i], x );
-                    break;
-                default:
-                    break;
-                }
-            }
-            else if(   echar_neq( var[i], ckey->stbrett.letters[ echar_0_based_index( var[i] ) ] )
-                    && echar_neq( var[k], ckey->stbrett.letters[ echar_0_based_index( var[k] ) ] )
-            ){
-                action = NONE;
-                x = ckey->stbrett.letters[ echar_0_based_index( var[i] ) ];
-                z = ckey->stbrett.letters[ echar_0_based_index( var[k] ) ];
-                SwapStbrett( ckey, var[i], x );
-                SwapStbrett( ckey, var[k], z );
-
-                SwapStbrett( ckey, var[i], var[k] );
-                a = sf->triscore( ckey,  len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IXKZ_IK;
-                }
-                SwapStbrett( ckey, x, z );
-                a = sf->triscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IXKZ_IKXZ;
-                }
-                SwapStbrett( ckey, x, z );
-                SwapStbrett( ckey, var[i], var[k] );
-
-                SwapStbrett( ckey, var[i], z );
-                a = sf->triscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IXKZ_IZ;
-                }
-                SwapStbrett( ckey, x, var[k] );
-                a = sf->triscore( ckey, len );
-                if( a > bestscore ) {
-                    bestscore = a;
-                    action = IXKZ_IZXK;
-                }
-                SwapStbrett( ckey, x, var[k] );
-                SwapStbrett( ckey, var[i], z );
-
-                switch( action ) {
-                case IXKZ_IK:
-                    SwapStbrett( ckey, var[i], var[k] );
-                    break;
-                case IXKZ_IZ:
-                    SwapStbrett( ckey, var[i], z );
-                    break;
-                case IXKZ_IKXZ:
-                    SwapStbrett( ckey, var[i], var[k] );
-                    SwapStbrett( ckey, x, z );
-                    break;
-                case IXKZ_IZXK:
-                    SwapStbrett( ckey, var[i], z );
-                    SwapStbrett( ckey, x, var[k] );
-                    break;
-                case NONE:
-                    SwapStbrett( ckey, var[i], x );
-                    SwapStbrett( ckey, var[k], z );
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
-    }
+void OptimizeTriscore(
+    const struct echar var[26],
+    struct Key* const ckey,
+    int len,
+    const enigma_score_function_t* const sf )
+{
+    score_optimizer_loop( var, ckey, len, sf->triscore );
 }
