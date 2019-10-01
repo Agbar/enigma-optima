@@ -102,8 +102,8 @@ add_custom_target(ArchiveAll
         # libEnigma
             libEnigma/$<TARGET_FILE_NAME:Enigma>
         # tests
-            tests/$<TARGET_FILE_NAME:EnigmaUnitTests>
-            $<$<PLATFORM_ID:Windows>:tests/libwinpthread-1.dll>
+            tests/unit/$<TARGET_FILE_NAME:EnigmaUnitTests>
+            $<$<PLATFORM_ID:Windows>:tests/unit/libwinpthread-1.dll>
         # benchmark
             benchmark/$<TARGET_FILE_NAME:EnigmaBenchmark>
             benchmark/00bigr.cur
