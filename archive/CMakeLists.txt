@@ -104,6 +104,9 @@ add_custom_target(ArchiveAll
         # tests
             tests/unit/$<TARGET_FILE_NAME:EnigmaUnitTests>
             $<$<PLATFORM_ID:Windows>:tests/unit/libwinpthread-1.dll>
+        # heavy integration
+            tests/heavy_integration/$<TARGET_FILE_NAME:EnigmaHeavyIntegrationTests>
+            $<$<PLATFORM_ID:Windows>:tests/heavy_integration/libwinpthread-1.dll>
         # benchmark
             benchmark/$<TARGET_FILE_NAME:EnigmaBenchmark>
             $<$<PLATFORM_ID:Windows>:benchmark/libwinpthread-1.dll>
@@ -119,5 +122,6 @@ add_dependencies(ArchiveAll
     Enigma
     EnigmaOptima
     EnigmaUnitTests
+    EnigmaHeavyIntegrationTests
     EnigmaBenchmark
 )
