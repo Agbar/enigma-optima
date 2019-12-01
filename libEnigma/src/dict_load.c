@@ -20,6 +20,11 @@ struct dict_loader {
     int log;
 };
 
+// 'constructors':
+struct dict_loader make_tri_dict_loader();
+struct dict_loader make_bi_dict_loader();
+struct dict_loader make_uni_dict_loader();
+
 static void load_anydict( const char *filename, struct dict_loader* impl );
 
 static bool any_read_line( struct dict_loader* self, FILE* in_file );
@@ -38,6 +43,18 @@ const struct dict_loader_vt
     tri_load_cls = { tri_store_dict_value, tri_line_format },
      bi_load_cls = {  bi_store_dict_value,  bi_line_format },
     uni_load_cls = { uni_store_dict_value, uni_line_format };
+
+struct dict_loader make_tri_dict_loader() {
+    return (struct dict_loader) { .vt = &tri_load_cls };
+}
+
+struct dict_loader make_bi_dict_loader() {
+    return (struct dict_loader) { .vt = &bi_load_cls };
+}
+
+struct dict_loader make_uni_dict_loader() {
+    return (struct dict_loader) { .vt = &uni_load_cls };
+}
 
 
 bool any_read_line( struct dict_loader* self, FILE* in_file ) {
@@ -94,15 +111,15 @@ void load_anydict( const char *filename, struct dict_loader* impl ) {
 }
 
 int load_tridict(const char *filename)
-{
-    struct dict_loader tri = { .vt = &tri_load_cls };
+{    
+    struct dict_loader tri = make_tri_dict_loader();
     load_anydict( filename, &tri );
     return 0;
 }
 
 int load_bidict(const char *filename)
 {
-    struct dict_loader bi = { .vt = &bi_load_cls };
+    struct dict_loader bi = make_bi_dict_loader();
     load_anydict( filename, &bi );
     return 0;
 }
@@ -110,7 +127,7 @@ int load_bidict(const char *filename)
 
 int load_unidict(const char *filename)
 {
-    struct dict_loader uni = { .vt = &uni_load_cls };
+    struct dict_loader uni = make_uni_dict_loader();
     load_anydict( filename, &uni );
     return 0;
 }
