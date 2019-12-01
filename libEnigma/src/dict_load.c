@@ -15,7 +15,7 @@ struct dict_loader_vt {
 };
 
 struct dict_loader {
-    struct dict_loader_vt* vt;
+    const struct dict_loader_vt* const vt;
     char chars[4];
     int log;
 };
@@ -31,7 +31,7 @@ static void bi_store_dict_value( struct dict_loader* self, const char* filename 
 static bool uni_read_line( struct dict_loader* self, FILE* in_file );
 static void uni_store_dict_value( struct dict_loader* self, const char* filename );
 
-struct dict_loader_vt
+const struct dict_loader_vt
     tri_load_cls = { tri_read_line, tri_store_dict_value },
      bi_load_cls = {  bi_read_line,  bi_store_dict_value },
     uni_load_cls = { uni_read_line, uni_store_dict_value };
