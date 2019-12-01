@@ -10,8 +10,8 @@
 struct dict_loader;
 
 struct dict_loader_vt {
-    bool (*read_line)( struct dict_loader* self, FILE* in_file );
-    void (*store_dict_value)( struct dict_loader* self, const char* filename );
+    void (* const store_dict_value)( struct dict_loader* self, const char* filename );
+    char* const line_format;
 };
 
 struct dict_loader {
@@ -22,32 +22,28 @@ struct dict_loader {
 
 static void load_anydict( const char *filename, struct dict_loader* impl );
 
-static bool tri_read_line( struct dict_loader* self, FILE* in_file );
+static bool any_read_line( struct dict_loader* self, FILE* in_file );
+
+// 'virtuals':
 static void tri_store_dict_value( struct dict_loader* self, const char* filename );
-
-static bool bi_read_line( struct dict_loader* self, FILE* in_file );
 static void bi_store_dict_value( struct dict_loader* self, const char* filename );
-
-static bool uni_read_line( struct dict_loader* self, FILE* in_file );
 static void uni_store_dict_value( struct dict_loader* self, const char* filename );
 
+static char tri_line_format[] = "%3s%d";
+static char  bi_line_format[] = "%2s%d";
+static char uni_line_format[] = "%1s%d";
+
+
 const struct dict_loader_vt
-    tri_load_cls = { tri_read_line, tri_store_dict_value },
-     bi_load_cls = {  bi_read_line,  bi_store_dict_value },
-    uni_load_cls = { uni_read_line, uni_store_dict_value };
+    tri_load_cls = { tri_store_dict_value, tri_line_format },
+     bi_load_cls = {  bi_store_dict_value,  bi_line_format },
+    uni_load_cls = { uni_store_dict_value, uni_line_format };
 
 
-bool tri_read_line( struct dict_loader* self, FILE* in_file ) {
-    return fscanf( in_file, "%3s%d", self->chars, &self->log ) != EOF;
+bool any_read_line( struct dict_loader* self, FILE* in_file ) {
+    return fscanf( in_file, self->vt->line_format , self->chars, &self->log ) != EOF;
 }
 
-bool bi_read_line( struct dict_loader* self, FILE* in_file ) {
-    return fscanf( in_file, "%2s%d", self->chars, &self->log ) != EOF;
-}
-
-bool uni_read_line( struct dict_loader* self, FILE* in_file ) {
-    return fscanf( in_file, "%1s%d", self->chars, &self->log ) != EOF;
-}
 
 void tri_store_dict_value( struct dict_loader* self, const char* filename ) {
     if ( !echar_can_make_from_ascii( self->chars[0] )
@@ -91,7 +87,7 @@ void load_anydict( const char *filename, struct dict_loader* impl ) {
     FILE* fp = fopen( filename, "r" );
     if ( !fp ) err_open_fatal( filename );
 
-    while ( impl->vt->read_line( impl, fp ) ) {
+    while ( any_read_line( impl, fp ) ) {
         impl->vt->store_dict_value( impl, filename );
     }
     if ( fp ) fclose( fp );
