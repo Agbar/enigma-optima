@@ -9,23 +9,46 @@ extern "C" {
 #include "error.h"
 }
 
-struct dict_loader {
-    bool read_line( FILE* in_file ) {
-        return fscanf( in_file, line_format() , chars, &log ) != EOF;
-    }
+struct dict_storage {
+    virtual void store_dict_value( char (&chars)[4], int log, const char* filename ) = 0;
+};
 
-    virtual void store_dict_value( const char* filename ) = 0;
-    virtual const char* line_format() const = 0;
+class dict_loader {
+public:
+    dict_loader( const char (&line_format)[6], dict_storage& storage_strategy )
+    : lf( line_format )
+    , storage( storage_strategy ) {}
+
+    void load( const char *filename );
+
+private:
+    bool read_line( FILE* in_file ) {
+        return fscanf( in_file, lf , chars, &log ) != EOF;
+    }
 
     char chars[4];
     int log;
+
+private:
+    const char (&lf)[6];
+    dict_storage& storage;
 };
 
+void dict_loader::load( const char *filename ) {
+    FILE* fp = fopen( filename, "r" );
+    if ( !fp ) err_open_fatal( filename );
 
-struct tri_dict_loader
-: dict_loader
+    while ( read_line( fp ) ) {
+        storage.store_dict_value(  chars, log, filename );
+    }
+    if ( fp ) fclose( fp );
+}
+
+
+struct tri_dict_storage
+: dict_storage
 {
-    void store_dict_value( const char* filename ) override {
+    void store_dict_value( char (&chars)[4], int log, const char* filename ) override {
         if ( !echar_can_make_from_ascii( chars[0] )
           || !echar_can_make_from_ascii( chars[1] )
           || !echar_can_make_from_ascii( chars[2] ))
@@ -40,14 +63,13 @@ struct tri_dict_loader
                [echar_0_based_index( e1 )]
                [echar_0_based_index( e2 )] = log;
     }
-
-    const char* line_format() const final { return "%3s%d"; }
 };
 
-struct bi_dict_loader
-: dict_loader
+
+struct bi_dict_storage
+: dict_storage
 {
-    void store_dict_value( const char* filename ) override {
+    void store_dict_value( char (&chars)[4], int log, const char* filename ) override {
         if ( !echar_can_make_from_ascii( chars[0] )
           || !echar_can_make_from_ascii( chars[1] ))
         {
@@ -59,14 +81,13 @@ struct bi_dict_loader
         bidict[echar_0_based_index( e0 )]
               [echar_0_based_index( e1 )] = log;
     }
-
-    const char* line_format() const final { return "%2s%d"; }
 };
 
-struct uni_dict_loader
-: dict_loader
+
+struct uni_dict_storage
+: dict_storage
 {
-    void store_dict_value( const char* filename ) override {
+    void store_dict_value( char (&chars)[4], int log, const char* filename ) override {
         if ( !echar_can_make_from_ascii( chars[0] ))
         {
             err_illegal_char_fatal( filename );
@@ -74,43 +95,31 @@ struct uni_dict_loader
         struct echar e = make_echar_ascii( chars[0] );
         unidict[echar_0_based_index( e )] = log;
     }
-
-    const char* line_format() const final { return "%1s%d"; }
 };
 
 
-static void load_anydict( const char *filename, struct dict_loader* impl );
-
-
-void load_anydict( const char *filename, struct dict_loader* impl ) {
-    FILE* fp = fopen( filename, "r" );
-    if ( !fp ) err_open_fatal( filename );
-
-    while ( impl->read_line( fp ) ) {
-        impl->store_dict_value( filename );
-    }
-    if ( fp ) fclose( fp );
-}
-
 int load_tridict(const char *filename)
 {
-    tri_dict_loader tri{};
-    load_anydict( filename, &tri );
+    tri_dict_storage storage{};
+    dict_loader tri{ "%3s%d", storage };
+    tri.load( filename );
     return 0;
 }
 
 int load_bidict(const char *filename)
 {
-    bi_dict_loader bi{};
-    load_anydict( filename, &bi );
+    bi_dict_storage storage{};
+    dict_loader bi{ "%2s%d", storage };
+    bi.load( filename );
     return 0;
 }
 
 
 int load_unidict(const char *filename)
 {
-    uni_dict_loader uni{};
-    load_anydict( filename, &uni );
+    uni_dict_storage storage{};
+    dict_loader uni{ "%1s%d", storage };
+    uni.load( filename );
     return 0;
 }
 
