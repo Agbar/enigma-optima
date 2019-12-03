@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstdbool>
 #include <cmath>
+#include <memory>
 
 extern "C" {
 #include "charmap.h"
@@ -14,35 +15,57 @@ struct dict_builder {
 };
 
 class dict_loader {
-public:
+protected:
     dict_loader( const char (&line_format)[6], dict_builder& storage_strategy )
     : lf( line_format )
     , storage( storage_strategy ) {}
 
+public:
     void load( const char *filename );
 
-private:
-    bool read_line( FILE* in_file ) {
-        return fscanf( in_file, lf , key, &value ) != EOF;
-    }
-
+protected:
+    virtual bool read_line() = 0;
+    
     char key[4];
     int value;
 
-private:
     const char (&lf)[6];
+private:
     dict_builder& storage;
 };
 
 void dict_loader::load( const char *filename ) {
-    FILE* fp = fopen( filename, "r" );
-    if ( !fp ) err_open_fatal( filename );
-
-    while ( read_line( fp ) ) {
+    while ( read_line() ) {
         storage.set_dict_value( key, value, filename );
     }
-    if ( fp ) fclose( fp );
 }
+
+
+class file_dict_loader
+: public dict_loader
+{
+public:
+    file_dict_loader( const char (&line_format)[6], dict_builder& storage_strategy, const char* filename )
+    : dict_loader( line_format, storage_strategy )
+    , file( fopen( filename, "r" ), &close_file )
+    , file_name( filename )
+    {
+        if ( !file ) err_open_fatal( filename );
+    }
+
+protected:
+    bool read_line() override {
+        return fscanf( file.get(), lf , key, &value ) != EOF;
+    }
+
+
+private:
+    static void close_file( FILE* f ) {
+        if ( f ) fclose ( f );
+    }
+    std::unique_ptr<FILE, decltype(&close_file)> file;
+    const char* file_name;
+};
 
 
 struct tri_dict_builder
@@ -101,7 +124,7 @@ struct uni_dict_builder
 int load_tridict(const char *filename)
 {
     tri_dict_builder storage{};
-    dict_loader tri{ "%3s%d", storage };
+    file_dict_loader tri{ "%3s%d", storage, filename };
     tri.load( filename );
     return 0;
 }
@@ -109,7 +132,7 @@ int load_tridict(const char *filename)
 int load_bidict(const char *filename)
 {
     bi_dict_builder storage{};
-    dict_loader bi{ "%2s%d", storage };
+    file_dict_loader bi{ "%2s%d", storage, filename };
     bi.load( filename );
     return 0;
 }
@@ -118,7 +141,7 @@ int load_bidict(const char *filename)
 int load_unidict(const char *filename)
 {
     uni_dict_builder storage{};
-    dict_loader uni{ "%1s%d", storage };
+    file_dict_loader uni{ "%1s%d", storage, filename };
     uni.load( filename );
     return 0;
 }
