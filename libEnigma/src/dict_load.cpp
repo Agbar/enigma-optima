@@ -11,7 +11,7 @@ extern "C" {
 }
 
 struct dict_builder {
-    virtual bool set_dict_value( char (&key)[4], int value, const char* filename ) = 0;
+    virtual bool set_dict_value( char (&key)[4], int value ) = 0;
 };
 
 class dict_loader {
@@ -21,7 +21,7 @@ protected:
     , storage( storage_strategy ) {}
 
 public:
-    bool load( const char *filename );
+    bool load();
 
 protected:
     virtual bool read_line() = 0;
@@ -34,9 +34,9 @@ private:
     dict_builder& storage;
 };
 
-bool dict_loader::load( const char *filename ) {
+bool dict_loader::load() {
     while ( read_line() ) {
-        if( !storage.set_dict_value( key, value, filename ) ){
+        if( !storage.set_dict_value( key, value ) ){
             return false;
         }
     }
@@ -74,7 +74,7 @@ private:
 struct tri_dict_builder
 : dict_builder
 {
-    bool set_dict_value( char (&key)[4], int value, const char* filename ) override {
+    bool set_dict_value( char (&key)[4], int value ) override {
         if ( !echar_can_make_from_ascii( key[0] )
           || !echar_can_make_from_ascii( key[1] )
           || !echar_can_make_from_ascii( key[2] ))
@@ -96,7 +96,7 @@ struct tri_dict_builder
 struct bi_dict_builder
 : dict_builder
 {
-    bool set_dict_value( char (&key)[4], int value, const char* filename ) override {
+    bool set_dict_value( char (&key)[4], int value ) override {
         if ( !echar_can_make_from_ascii( key[0] )
           || !echar_can_make_from_ascii( key[1] ))
         {
@@ -115,7 +115,7 @@ struct bi_dict_builder
 struct uni_dict_builder
 : dict_builder
 {
-    bool set_dict_value( char (&key)[4], int value, const char* filename ) override {
+    bool set_dict_value( char (&key)[4], int value ) override {
         if ( !echar_can_make_from_ascii( key[0] ))
         {
             return false;
@@ -131,7 +131,7 @@ int load_tridict(const char *filename)
 {
     tri_dict_builder storage{};
     file_dict_loader tri{ "%3s%d", storage, filename };
-    if( tri.load( filename ) ){
+    if( tri.load() ){
         return 0;
     }
     err_illegal_char_fatal( filename );
@@ -141,7 +141,7 @@ int load_bidict(const char *filename)
 {
     bi_dict_builder storage{};
     file_dict_loader bi{ "%2s%d", storage, filename };
-    if( bi.load( filename ) ){
+    if( bi.load() ){
         return 0;
     }
     err_illegal_char_fatal( filename );
@@ -152,7 +152,7 @@ int load_unidict(const char *filename)
 {
     uni_dict_builder storage{};
     file_dict_loader uni{ "%1s%d", storage, filename };
-    if( uni.load( filename ) ){
+    if( uni.load() ){
         return 0;
     }
     err_illegal_char_fatal( filename );
