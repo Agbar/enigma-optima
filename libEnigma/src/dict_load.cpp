@@ -11,7 +11,7 @@ extern "C" {
 }
 
 struct dict_builder {
-    virtual void set_dict_value( char (&key)[4], int value, const char* filename ) = 0;
+    virtual bool set_dict_value( char (&key)[4], int value, const char* filename ) = 0;
 };
 
 class dict_loader {
@@ -21,7 +21,7 @@ protected:
     , storage( storage_strategy ) {}
 
 public:
-    void load( const char *filename );
+    bool load( const char *filename );
 
 protected:
     virtual bool read_line() = 0;
@@ -34,10 +34,13 @@ private:
     dict_builder& storage;
 };
 
-void dict_loader::load( const char *filename ) {
+bool dict_loader::load( const char *filename ) {
     while ( read_line() ) {
-        storage.set_dict_value( key, value, filename );
+        if( !storage.set_dict_value( key, value, filename ) ){
+            return false;
+        }
     }
+    return true;
 }
 
 
@@ -71,12 +74,12 @@ private:
 struct tri_dict_builder
 : dict_builder
 {
-    void set_dict_value( char (&key)[4], int value, const char* filename ) override {
+    bool set_dict_value( char (&key)[4], int value, const char* filename ) override {
         if ( !echar_can_make_from_ascii( key[0] )
           || !echar_can_make_from_ascii( key[1] )
           || !echar_can_make_from_ascii( key[2] ))
         {
-            err_illegal_char_fatal( filename );
+            return false;
         }
         struct echar
             e0 = make_echar_ascii( key[0] ),
@@ -85,6 +88,7 @@ struct tri_dict_builder
         tridict[echar_0_based_index( e0 )]
                [echar_0_based_index( e1 )]
                [echar_0_based_index( e2 )] = value;
+        return true;
     }
 };
 
@@ -92,17 +96,18 @@ struct tri_dict_builder
 struct bi_dict_builder
 : dict_builder
 {
-    void set_dict_value( char (&key)[4], int value, const char* filename ) override {
+    bool set_dict_value( char (&key)[4], int value, const char* filename ) override {
         if ( !echar_can_make_from_ascii( key[0] )
           || !echar_can_make_from_ascii( key[1] ))
         {
-            err_illegal_char_fatal( filename );
+            return false;
         }
         struct echar
             e0 = make_echar_ascii( key[0] ),
             e1 = make_echar_ascii( key[1] );
         bidict[echar_0_based_index( e0 )]
               [echar_0_based_index( e1 )] = value;
+        return true;
     }
 };
 
@@ -110,13 +115,14 @@ struct bi_dict_builder
 struct uni_dict_builder
 : dict_builder
 {
-    void set_dict_value( char (&key)[4], int value, const char* filename ) override {
+    bool set_dict_value( char (&key)[4], int value, const char* filename ) override {
         if ( !echar_can_make_from_ascii( key[0] ))
         {
-            err_illegal_char_fatal( filename );
+            return false;
         }
         struct echar e = make_echar_ascii( key[0] );
         unidict[echar_0_based_index( e )] = value;
+        return true;
     }
 };
 
@@ -125,16 +131,20 @@ int load_tridict(const char *filename)
 {
     tri_dict_builder storage{};
     file_dict_loader tri{ "%3s%d", storage, filename };
-    tri.load( filename );
-    return 0;
+    if( tri.load( filename ) ){
+        return 0;
+    }
+    err_illegal_char_fatal( filename );
 }
 
 int load_bidict(const char *filename)
 {
     bi_dict_builder storage{};
     file_dict_loader bi{ "%2s%d", storage, filename };
-    bi.load( filename );
-    return 0;
+    if( bi.load( filename ) ){
+        return 0;
+    }
+    err_illegal_char_fatal( filename );
 }
 
 
@@ -142,8 +152,10 @@ int load_unidict(const char *filename)
 {
     uni_dict_builder storage{};
     file_dict_loader uni{ "%1s%d", storage, filename };
-    uni.load( filename );
-    return 0;
+    if( uni.load( filename ) ){
+        return 0;
+    }
+    err_illegal_char_fatal( filename );
 }
 
 
