@@ -10,13 +10,11 @@ extern "C" {
 #include "error.h"
 }
 
-struct dict_builder {
-    virtual bool set_dict_value( char (&key)[4], int value ) = 0;
-};
+#include "dicts/dict_builder.hpp"
 
 class dict_loader {
 protected:
-    dict_loader( const char (&line_format)[6], dict_builder& storage_strategy )
+    dict_loader( const char (&line_format)[6], enigma::dict_builder& storage_strategy )
     : lf( line_format )
     , storage( storage_strategy ) {}
 
@@ -31,7 +29,7 @@ protected:
 
     const char (&lf)[6];
 private:
-    dict_builder& storage;
+    enigma::dict_builder& storage;
 };
 
 bool dict_loader::load() {
@@ -48,7 +46,7 @@ class file_dict_loader
 : public dict_loader
 {
 public:
-    file_dict_loader( const char (&line_format)[6], dict_builder& storage_strategy, const char* filename )
+    file_dict_loader( const char (&line_format)[6], enigma::dict_builder& storage_strategy, const char* filename )
     : dict_loader( line_format, storage_strategy )
     , file( fopen( filename, "r" ), &close_file )
     , file_name( filename )
@@ -72,7 +70,7 @@ private:
 
 
 struct tri_dict_builder
-: dict_builder
+: enigma::dict_builder
 {
     bool set_dict_value( char (&key)[4], int value ) override {
         if ( !echar_can_make_from_ascii( key[0] )
@@ -94,7 +92,7 @@ struct tri_dict_builder
 
 
 struct bi_dict_builder
-: dict_builder
+: enigma::dict_builder
 {
     bool set_dict_value( char (&key)[4], int value ) override {
         if ( !echar_can_make_from_ascii( key[0] )
@@ -113,7 +111,7 @@ struct bi_dict_builder
 
 
 struct uni_dict_builder
-: dict_builder
+: enigma::dict_builder
 {
     bool set_dict_value( char (&key)[4], int value ) override {
         if ( !echar_can_make_from_ascii( key[0] ))
