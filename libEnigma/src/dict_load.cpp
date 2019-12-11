@@ -1,6 +1,5 @@
 #include <cstdio>
 #include <cstdbool>
-#include <cmath>
 #include <memory>
 
 extern "C" {
@@ -9,39 +8,11 @@ extern "C" {
 }
 
 #include "dicts/dict_builders.hpp"
-
-class dict_loader {
-protected:
-    dict_loader( const char (&line_format)[6], enigma::dict_builder& storage_strategy )
-    : lf( line_format )
-    , storage( storage_strategy ) {}
-
-public:
-    bool load();
-
-protected:
-    virtual bool read_line() = 0;
-    
-    char key[4];
-    int value;
-
-    const char (&lf)[6];
-private:
-    enigma::dict_builder& storage;
-};
-
-bool dict_loader::load() {
-    while ( read_line() ) {
-        if( !storage.set_dict_value( key, value ) ){
-            return false;
-        }
-    }
-    return true;
-}
+#include "dicts/dict_loader.hpp"
 
 
 class file_dict_loader
-: public dict_loader
+: public enigma::dict_loader
 {
 public:
     file_dict_loader( const char (&line_format)[6], enigma::dict_builder& storage_strategy, const char* filename )

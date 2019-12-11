@@ -24,6 +24,7 @@ PRIVATE
     "src/stecker.c"
 
     "src/dicts/dict_builders.cpp"
+    "src/dicts/dict_loader.cpp"
     
     "src/x86/cipherSsse3.c"
     "src/x86/cipherAvx2.c"
