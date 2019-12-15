@@ -19,10 +19,11 @@ protected:
 
 public:
     bool load();
+    virtual ~dict_loader() = default;
 
 protected:
     virtual bool read_line() = 0;
-    
+
     char key[4];
     int value;
 

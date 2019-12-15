@@ -11,6 +11,7 @@ namespace enigma {
 
 struct dict_builder {
     virtual bool set_dict_value( char (&key)[4], int value ) = 0;
+    virtual ~dict_builder() = default;
 };
 
 
