@@ -15,7 +15,7 @@ extern "C" {
 
 namespace enigma{
 
-bool tri_dict_builder:: set_dict_value( char (&key)[4], int value ) {
+bool tri_dict_builder:: set_dict_value( const char (&key)[4], int value ) {
     if ( !echar_can_make_from_ascii( key[0] )
       || !echar_can_make_from_ascii( key[1] )
       || !echar_can_make_from_ascii( key[2] ))
@@ -33,7 +33,7 @@ bool tri_dict_builder:: set_dict_value( char (&key)[4], int value ) {
 }
 
 
-bool bi_dict_builder::set_dict_value( char (&key)[4], int value ) {
+bool bi_dict_builder::set_dict_value( const char (&key)[4], int value ) {
     if ( !echar_can_make_from_ascii( key[0] )
       || !echar_can_make_from_ascii( key[1] ))
     {
@@ -47,7 +47,7 @@ bool bi_dict_builder::set_dict_value( char (&key)[4], int value ) {
     return true;
 }
 
-bool uni_dict_builder::set_dict_value( char (&key)[4], int value ) {
+bool uni_dict_builder::set_dict_value( const char (&key)[4], int value ) {
     if ( !echar_can_make_from_ascii( key[0] ))
     {
         return false;

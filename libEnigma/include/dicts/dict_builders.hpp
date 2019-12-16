@@ -10,7 +10,7 @@
 namespace enigma {
 
 struct dict_builder {
-    virtual bool set_dict_value( char (&key)[4], int value ) = 0;
+    virtual bool set_dict_value( const char (&key)[4], int value ) = 0;
     virtual ~dict_builder() = default;
 };
 
@@ -18,21 +18,21 @@ struct dict_builder {
 struct tri_dict_builder
 : dict_builder
 {
-    bool set_dict_value( char (&key)[4], int value ) override;
+    bool set_dict_value( const char (&key)[4], int value ) override;
 };
 
 
 struct bi_dict_builder
 : dict_builder
 {
-    bool set_dict_value( char (&key)[4], int value ) override;
+    bool set_dict_value( const char (&key)[4], int value ) override;
 };
 
 
 struct uni_dict_builder
 : dict_builder
 {
-    bool set_dict_value( char (&key)[4], int value ) override;
+    bool set_dict_value( const char (&key)[4], int value ) override;
 };
 
 
