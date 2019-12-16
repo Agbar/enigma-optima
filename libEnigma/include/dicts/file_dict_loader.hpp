@@ -35,6 +35,9 @@ public:
         if ( !file ) err_open_fatal( filename );
     }
 
+    file_dict_loader( file_dict_loader& ) = delete;
+    file_dict_loader& operator= ( file_dict_loader& ) = delete;
+
 protected:
     bool read_line() override {
         return std::fscanf( file.get(), lf , key, &value ) != EOF;
