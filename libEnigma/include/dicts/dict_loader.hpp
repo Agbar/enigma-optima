@@ -14,7 +14,8 @@ namespace enigma {
 class dict_loader {
 protected:
     dict_loader( const char (&line_format)[6], enigma::dict_builder& storage_strategy )
-    : lf( line_format )
+    : value( 0 )
+    ,lf( line_format )
     , storage( storage_strategy ) {}
 
 public:
