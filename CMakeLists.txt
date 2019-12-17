@@ -126,7 +126,9 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         -fcall-used-xmm15)
 
     set(ENIGMA_CXX_COMPILE_OPTIONS
-        -Wnon-virtual-dtor)
+        -Wnon-virtual-dtor
+        -Weffc++
+    )
 endif()
 
 find_package(Git REQUIRED)
@@ -155,6 +157,11 @@ set(BENCHMARK_BUILD_32_BITS ${ENIGMA_BUILD_32_BIT} CACHE BOOL "" FORCE)
 set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "")
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
 add_subdirectory(extern/gbench)
+target_include_directories(
+    benchmark 
+    SYSTEM PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extern/gbench/include>
+)
 
 set(INSTALL_GTEST OFF CACHE BOOL "")
 set(BUILD_GMOCK OFF CACHE BOOL "")
