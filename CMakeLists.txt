@@ -126,7 +126,9 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         -fcall-used-xmm15)
 
     set(ENIGMA_CXX_COMPILE_OPTIONS
-        -Wnon-virtual-dtor)
+        -Wnon-virtual-dtor
+        -Weffc++
+    )
 endif()
 
 find_package(Git REQUIRED)
