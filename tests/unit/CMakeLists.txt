@@ -8,6 +8,7 @@ PRIVATE
     "cipher.tests.cpp"
     "computeScoreNoInterleave.cpp"
     "GetRSeed.tests.cpp"
+    "string_dict_loader.tests.cpp"
 )
 include("echar/echar.cmake")
 include("x86/x86.cmake")

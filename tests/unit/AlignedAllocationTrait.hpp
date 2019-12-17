@@ -25,4 +25,7 @@ struct AlignedAllocationTrait
         free( ptr );
 #endif
     }
+
+protected:
+    ~AlignedAllocationTrait() = default;
 };

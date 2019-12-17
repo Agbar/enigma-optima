@@ -6,7 +6,7 @@ PRIVATE
     "src/cpu.c"
     "src/date.c"
     "src/dict.c"
-    "src/dict_load.c"
+    "src/dict_load.cpp"
     "src/hillclimb.c"
     "src/input.c"
     "src/key.c"
@@ -23,7 +23,10 @@ PRIVATE
     "src/state.c"
     "src/stecker.c"
 
-    
+    "src/dicts/dict_builders.cpp"
+    "src/dicts/dict_loader.cpp"
+    "src/dicts/string_dict_loader.cpp"
+
     "src/x86/cipherSsse3.c"
     "src/x86/cipherAvx2.c"
     
