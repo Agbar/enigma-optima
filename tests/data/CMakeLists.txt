@@ -3,6 +3,7 @@ add_library(EnigmaTestData "")
 target_sources(EnigmaTestData
 PRIVATE
     "bigraph.cur.S"
+    "unigraph.AVv1.S"
 )
 
 target_include_directories(EnigmaTestData

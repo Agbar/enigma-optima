@@ -30,3 +30,15 @@ TEST( test_data, bigraph_cur_facts )
     EXPECT_EQ( storage.called_cnt, 568 );
     EXPECT_EQ( bigraph_cur_size, 5113 );
 }
+
+
+TEST( test_data, unigraph_AVv1_facts )
+{
+    count_calls_storage_mock storage{};
+    enigma::string_dict_loader dl{ "%1s%d", storage, unigraph_AVv1 };
+
+    bool success = dl.load();
+    EXPECT_TRUE( success );
+    EXPECT_EQ( storage.called_cnt, 26 );
+    EXPECT_EQ( unigraph_AVv1_size, 235 );
+}

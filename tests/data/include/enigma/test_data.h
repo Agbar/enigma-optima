@@ -10,3 +10,7 @@
 
 extern const unsigned int bigraph_cur_size;
 extern const char bigraph_cur[];
+
+
+extern const unsigned int unigraph_AVv1_size;
+extern const char unigraph_AVv1[];
