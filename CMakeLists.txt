@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 project(enigma_optima_suite 
     VERSION 1.1.1
     HOMEPAGE_URL https://github.com/Agbar/enigma-optima
-    LANGUAGES C CXX)
+    LANGUAGES C CXX ASM)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
