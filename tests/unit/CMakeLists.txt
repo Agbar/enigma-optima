@@ -9,6 +9,7 @@ PRIVATE
     "computeScoreNoInterleave.cpp"
     "GetRSeed.tests.cpp"
     "string_dict_loader.tests.cpp"
+    "test_data.tests.cpp"
 )
 include("echar/echar.cmake")
 include("x86/x86.cmake")
@@ -20,7 +21,7 @@ target_compile_options(EnigmaUnitTests
         $<$<COMPILE_LANGUAGE:CXX>:${ENIGMA_CXX_COMPILE_OPTIONS}>
         ${ENIGMA_COMPILE_OPTIONS})
 
-target_link_libraries(EnigmaUnitTests Enigma gtest Threads::Threads)
+target_link_libraries(EnigmaUnitTests Enigma EnigmaTestData gtest Threads::Threads)
 
 add_test(
     NAME Units
