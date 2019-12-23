@@ -4,6 +4,7 @@
 
 extern "C" {
 #include "enigma/test_data.h"
+#include "global.h"
 }
 
 struct count_calls_storage_mock final
@@ -12,7 +13,7 @@ struct count_calls_storage_mock final
      count_calls_storage_mock()
     : called_cnt( 0 ) {}
 
-    bool set_dict_value( const char (&key)[4], int value ) override {
+    bool set_dict_value( UNUSED const char (&key)[4], UNUSED int value ) override {
         called_cnt++;
         return true;
     }
