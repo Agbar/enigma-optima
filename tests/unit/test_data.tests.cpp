@@ -17,7 +17,7 @@ struct count_calls_storage_mock final
         return true;
     }
 
-    uint called_cnt;
+    unsigned int called_cnt;
 };
 
 TEST( test_data, bigraph_cur_facts )

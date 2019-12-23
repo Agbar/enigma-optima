@@ -26,7 +26,7 @@ struct storage_mock final
 
     const std::string accepted;
     int accepted_value;
-    uint called_cnt;
+    unsigned int called_cnt;
 };
 
 }
