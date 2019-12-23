@@ -1,15 +1,39 @@
-.section .rodata
+#define BASIC_NAME bigraph_cur
+#define FILE_NAME "bigr.cur"
 
-.global bigraph_cur;
-.type   bigraph_cur,  @object;
+#define CAT2(X,Y) CATX(X,Y)
+#define CAT3(A,B,C) CAT2(CAT2(A,B),C)
+#define CATX(X,Y) X ## Y 
 
-.global bigraph_cur_size;
-.type   bigraph_cur_size,  @object;
+#if defined(__MINGW32__) && !defined(__MINGW64__)
+#define NAME_PREFIX _
+#else
+#define NAME_PREFIX
+#endif
 
-.balign 32
-bigraph_cur:        .incbin "bigr.cur"
-                    .byte   0
-bigraph_cur_end:
+#if !defined(__MINGW32__) && !defined(__MINGW64__)
+#define TYPE_IS_SUPPORTED
+#endif
 
-.balign 4, 0
-bigraph_cur_size:   .int    bigraph_cur_end - bigraph_cur
+#define RESOURCE_NAME CAT2(NAME_PREFIX,BASIC_NAME)
+#define RESOURCE_SIZE CAT3(NAME_PREFIX,BASIC_NAME,_size)
+
+    .section .rodata
+
+    .global RESOURCE_NAME;
+    .global RESOURCE_SIZE;
+
+#ifdef TYPE_IS_SUPPORTED
+    .type   RESOURCE_NAME,  @object;
+    .type   RESOURCE_SIZE,  @object;
+#endif
+
+    .balign 32
+RESOURCE_NAME:
+    .incbin FILE_NAME
+    .byte   0
+resource_end:
+
+    .balign 4, 0
+RESOURCE_SIZE:
+    .int    resource_end - RESOURCE_NAME
