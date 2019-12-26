@@ -1,7 +1,6 @@
 # GCC intermediate files
 *.i
 *.ii
-*.s
 
 #CMake
 /build/
