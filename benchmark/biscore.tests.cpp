@@ -1,8 +1,11 @@
 #include <benchmark/benchmark.h>
 #include "MessageAndKeyBasedFixture.h"
 
+#include "load/str_dict.hpp"
+#include "load/strload_error.hpp"
+
 extern "C" {
-#include "dict.h"
+#include "enigma/test_data.h"
 #include "scoreBasic.h"
 #include "scoreNoInterleave.h"
 #include "scoreSimple.h"
@@ -19,7 +22,9 @@ struct biscore
     const int expectedScore = 7913;
 protected:
     void LoadDictionary() override {
-        load_bidict( "00bigr.cur" );
+        if( !enigma::strload_bidict( bigraph_cur ) ) {
+            throw enigma::strload_error( "failed to load bigraph_cur" );
+        }
     }
 };
 
