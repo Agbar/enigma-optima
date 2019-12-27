@@ -106,9 +106,6 @@ add_custom_target(ArchiveAll
             $<$<PLATFORM_ID:Windows>:tests/unit/libwinpthread-1.dll>
         # benchmark
             benchmark/$<TARGET_FILE_NAME:EnigmaBenchmark>
-            benchmark/00bigr.cur
-            benchmark/00trigr.AVv1
-            benchmark/00unigr.AVv1
             $<$<PLATFORM_ID:Windows>:benchmark/libwinpthread-1.dll>
 
     BYPRODUCTS ${ENIGMA_ARCHIVE_ALL_DIR}/${ENIGMA_ARCHIVE_ALL_FILE_NAME}.7z
