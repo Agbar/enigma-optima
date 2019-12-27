@@ -24,4 +24,7 @@ PRIVATE
     "compute_biscore.tests.cpp"
     "compute_triscore.tests.cpp"
     "compute_uniscore.tests.cpp"
+
+    # support
+    "load/str_dict.cpp"
 )

@@ -1,8 +1,11 @@
 #include <benchmark/benchmark.h>
 #include "MessageAndKeyBasedFixture.h"
 
+#include "load/str_dict.hpp"
+#include "load/strload_error.hpp"
+
 extern "C" {
-#include "dict.h"
+#include "enigma/test_data.h"
 #include "x86/cipherSsse3.h"
 #include "x86/cipherAvx2.h"
 #include "cipherSimple_ni.h"
@@ -18,7 +21,9 @@ struct compute_triscore
     const int expectedScore = 46438;
 protected:
     void LoadDictionary() override {
-        load_tridict( "00trigr.AVv1" );
+        if( !enigma::strload_tridict( trigraph_AVv1 ) ) {
+            throw enigma::strload_error( "failed to load trigraph_AVv1" );
+        }
     }
 };
 

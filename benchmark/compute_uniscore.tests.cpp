@@ -1,8 +1,11 @@
 #include <benchmark/benchmark.h>
 #include "MessageAndKeyBasedFixture.h"
 
+#include "load/str_dict.hpp"
+#include "load/strload_error.hpp"
+
 extern "C" {
-#include "dict.h"
+#include "enigma/test_data.h"
 #include "x86/cipherSsse3.h"
 #include "x86/cipherAvx2.h"
 #include "cipherSimple_ni.h"
@@ -17,7 +20,9 @@ struct compute_uniscore
     const int expectedScore = 66593;
 protected:
     void LoadDictionary() override {
-        load_unidict( "00unigr.AVv1" );
+        if( !enigma::strload_unidict( unigraph_AVv1 ) ) {
+            throw enigma::strload_error( "failed to load unigraph_AVv1" );
+        }
     }
 };
 

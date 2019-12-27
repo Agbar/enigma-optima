@@ -23,7 +23,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
 endif()
 
 
-target_link_libraries(EnigmaBenchmark Enigma benchmark Threads::Threads)
+target_link_libraries(EnigmaBenchmark Enigma EnigmaTestData benchmark Threads::Threads)
 target_link_libraries(EnigmaBenchmark
         -static-libgcc
         -static-libstdc++)
