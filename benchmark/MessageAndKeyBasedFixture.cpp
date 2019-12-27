@@ -7,14 +7,21 @@ extern "C"{
 #include "stecker.h"
 }
 
+#include "load/strload_error.hpp"
+
 using rt = RingType::ring_type_enum;
 
 void
-MessageAndKeyBasedFixture::SetUp( benchmark::State& st UNUSED )
+MessageAndKeyBasedFixture::SetUp( benchmark::State& st )
 {
     init_charmap();
-
-    LoadDictionary();
+    try {
+        LoadDictionary();
+    }
+    catch(enigma::strload_error r) {
+        st.SkipWithError( r.what() );
+        return;
+    }
 
     // Score: 46438
     // UKW: B       // ukwnum
