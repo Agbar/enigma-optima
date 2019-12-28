@@ -2,7 +2,6 @@
 #include <limits.h>
 
 
-#include "charmap.h"
 #include "config/types.h"
 
 

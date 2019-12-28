@@ -4,7 +4,6 @@
 # include <unistd.h>
 #endif
 
-#include "charmap.h"
 #include "global.h"
 #include "key.h"
 #include "state.h"

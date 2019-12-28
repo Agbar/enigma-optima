@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "banner.h"
-#include "charmap.h"
 #include "cipher.h"
 #include "ciphertext.h"
 #include "cpu.h"

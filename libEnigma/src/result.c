@@ -8,7 +8,6 @@
 
 #include "cipher.h"
 #include "ciphertext.h"
-#include "charmap.h"
 #include "date.h"
 #include "error.h"
 #include "global.h"

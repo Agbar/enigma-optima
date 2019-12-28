@@ -1,7 +1,6 @@
 #include <ctype.h>
 
 #include "echar/echar_delta.h"
-#include "charmap.h"
 
 struct echar_delta 
 make_echar_delta_ascii( unsigned char ascii ){

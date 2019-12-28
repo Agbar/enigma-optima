@@ -2,7 +2,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "charmap.h"
 #include "error.h"
 #include "global.h"
 #include "input.h"

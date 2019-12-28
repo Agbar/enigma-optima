@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include "charmap.h"
 #include "echar_data.h"
 #include "echar_delta_data.h"
 #include "global.h"
