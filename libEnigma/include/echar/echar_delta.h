@@ -15,6 +15,14 @@ enum comparison_result
     cmp_greater = 1
 };
 
+static inline
+bool
+echar_delta_can_make_from_ascii( unsigned char ascii ){
+    if( 'a' <= ascii && ascii <= 'z') return true;
+    if( 'A' <= ascii && ascii <= 'Z') return true;
+    return false;
+}
+
 struct echar_delta
 make_echar_delta_ascii( unsigned char ascii );
 

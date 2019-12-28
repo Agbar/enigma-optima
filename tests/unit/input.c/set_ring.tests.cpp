@@ -80,7 +80,6 @@ TEST( set_ring_H_M3, fails_when_4_chars )
 
 TEST( set_ring, fails_when_not_letter )
 {
-    init_charmap();
     Key key;
     // invalid
     key.ring = RingsState{ 

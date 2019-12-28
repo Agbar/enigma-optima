@@ -125,7 +125,7 @@ int set_ring( struct Key *const key, char *s, enum ModelType_t model)
 
   x = s;
   while (*x != '\0') {
-    if (code[(unsigned char)*x] == 26)
+    if ( !echar_delta_can_make_from_ascii( *x ) )
       return 0;
     x++;
   }
