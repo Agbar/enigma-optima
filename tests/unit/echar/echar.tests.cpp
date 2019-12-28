@@ -16,7 +16,6 @@ TEST( echar, make_0_based ){
 }
 
 TEST( echar, can_make_from_ascii ){
-    init_charmap();
     for( char x = 'a'; x <= 'z'; ++x ){
         ASSERT_TRUE( echar_can_make_from_ascii( x ) );
     }
@@ -26,7 +25,6 @@ TEST( echar, can_make_from_ascii ){
 }
 
 TEST( echar, from_ascii ){
-    init_charmap();
     ASSERT_EQ( make_echar_ascii( 'a' ).encoded, 0 );
     ASSERT_EQ( make_echar_ascii( 'z' ).encoded, 25 );
 }
@@ -50,7 +48,6 @@ TEST( echar, to_ALPHA ){
 }
 
 TEST( echar, 0_based_index ){
-    init_charmap();
     echar a = make_echar_ascii( 'a' );
     ASSERT_EQ( echar_0_based_index( a ), 0 );
     echar z = make_echar_ascii( 'z' );
@@ -58,7 +55,6 @@ TEST( echar, 0_based_index ){
 }
 
 TEST( echar, eq ){
-    init_charmap();
     echar p = make_echar_ascii( 'p' );
     ASSERT_TRUE( echar_eq( p, p ) );
     echar q = make_echar_ascii( 'q' );
@@ -66,7 +62,6 @@ TEST( echar, eq ){
 }
 
 TEST( echar, neq ){
-    init_charmap();
     echar p = make_echar_ascii( 'p' );
     echar q = make_echar_ascii( 'q' );
     ASSERT_TRUE( echar_neq( p, q ) );

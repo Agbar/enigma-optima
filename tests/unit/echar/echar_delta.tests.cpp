@@ -6,8 +6,6 @@ extern "C" {
 }
 
 TEST( echar_delta, from_ascii ){
-    init_charmap();
-
     ASSERT_EQ( make_echar_delta_ascii( 'a' ).delta, 0 );
     ASSERT_EQ( make_echar_delta_ascii( 'z' ).delta, 25 );
     ASSERT_EQ( make_echar_delta_ascii( 'A' ).delta, 0 );

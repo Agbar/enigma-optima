@@ -19,12 +19,18 @@ struct echar make_echar( int8_t zero_based ){
 static inline
 bool
 echar_can_make_from_ascii( unsigned char ascii ){
-    return code[ascii] != 26;
+    if( 'a' <= ascii && ascii <= 'z') return true;
+    if( 'A' <= ascii && ascii <= 'Z') return true;
+    return false;
 }
 
 static inline
 struct echar make_echar_ascii( unsigned char ascii ){
-    return (struct echar) { .encoded = code[ascii] };
+    char enc;
+    if( 'a' <= ascii && ascii <= 'z') enc = ascii - 'a';
+    else if( 'A' <= ascii && ascii <= 'Z') enc = ascii - 'A';
+    else enc = 26;
+    return (struct echar) { .encoded = enc };
 }
 
 CONST_FUNCTION
