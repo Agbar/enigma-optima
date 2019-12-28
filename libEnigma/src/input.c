@@ -153,31 +153,9 @@ int set_ring( struct Key *const key, const char *s, enum ModelType_t model )
  * \return int
  *
  */
-int set_mesg( struct Key *const key, char *s, enum ModelType_t model)
+int set_mesg( struct Key *const key, const char *const s, enum ModelType_t model )
 {
-  char *x;
-
-  switch (model) {
-    case EnigmaModel_M4: if (strlen(s) != 4) return 0; break;
-    default: if (strlen(s) != 3) return 0; break;
-  }
-
-  x = s;
-  while (*x != '\0') {
-    if (code[(unsigned char)*x] == 26)
-      return 0;
-    x++;
-  }
-
-  x = s;
-  if ( model == EnigmaModel_M4 ){
-    key->mesg.g = make_echar_delta_ascii( *x++ );
-  }
-  key->mesg.l = make_echar_delta_ascii( *x++ );
-  key->mesg.m = make_echar_delta_ascii( *x++ );
-  key->mesg.r = make_echar_delta_ascii( *x );
-
-  return 1;
+    return set_RingsState( &key->mesg, s, model );
 }
 
 /** \brief Set steckerbrett.
