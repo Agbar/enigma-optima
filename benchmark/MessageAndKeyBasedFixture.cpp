@@ -15,7 +15,6 @@ using rt = RingType::ring_type_enum;
 void
 MessageAndKeyBasedFixture::SetUp( benchmark::State& st )
 {
-    init_charmap();
     try {
         LoadDictionary();
     }
