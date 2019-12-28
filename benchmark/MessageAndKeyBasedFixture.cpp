@@ -1,6 +1,7 @@
 #include "MessageAndKeyBasedFixture.h"
 
 extern "C"{
+#include "enigma/test_data.h"
 #include "charmap.h"
 #include "ciphertext.h"
 #include "input.h"
@@ -30,16 +31,9 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st )
     // Rings: AAA
     // Message key: AVA
 
-    const unsigned char ct[] = "pbnxasmdaxnooyhrczgvvzcbigibgwhm"
-                               "xkrrvqcfjczptunswaddstigqqcsagpk"
-                               "rxxlomgfxaphhmrfsdkytmypmvrohasq"
-                               "yrwfwvavgccudbibxxdyzsacjsyotmwu"
-                               "cnwomhhjpywdcclupgswclmbczssyxpg"
-                               "mgmqxaufulnozeqenheizzaklc";
-
-    for( size_t i = 0 ; i < sizeof ct; ++i )
+    for( size_t i = 0 ; i < benchmark_cipher_pbnxa_size ; ++i )
     {
-        ciphertext.plain[i] = make_echar_ascii( ct[i] );
+        ciphertext.plain[i] = make_echar_ascii( benchmark_cipher_pbnxa[i] );
     }
 
     key.slot = { /*.g:*/ {}, /*.l:*/ {rt::RingType_5}, /*.m:*/ {rt::RingType_3}, /*.r:*/ {rt::RingType_2} };
@@ -57,5 +51,5 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st )
     set_stecker( &key, stecker );
     get_stecker( &key );
 
-    len = sizeof ct - 1;
+    len = benchmark_cipher_pbnxa_size - 1;
 }
