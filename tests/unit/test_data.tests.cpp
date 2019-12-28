@@ -1,3 +1,4 @@
+#include <string>
 #include <gtest/gtest.h>
 
 #include "dicts/string_dict_loader.hpp"
@@ -20,6 +21,13 @@ struct count_calls_storage_mock final
 
     unsigned int called_cnt;
 };
+
+TEST( test_data, benchmark_cipher_pbnxa_facts )
+{
+    EXPECT_EQ( std::string( benchmark_cipher_pbnxa, 5 ), "pbnxa" );
+    EXPECT_EQ( benchmark_cipher_pbnxa_size, 187 );
+}
+
 
 TEST( test_data, bigraph_cur_facts )
 {
