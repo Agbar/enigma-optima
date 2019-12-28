@@ -2,6 +2,7 @@ add_library(EnigmaTestData "")
 
 target_sources(EnigmaTestData
 PRIVATE
+    "benchmark_cipher_pbnxa.S"
     "bigraph.cur.S"
     "trigraph.AVv1.S"
     "unigraph.AVv1.S"

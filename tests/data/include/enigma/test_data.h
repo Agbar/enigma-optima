@@ -8,6 +8,11 @@
 
 #include <stddef.h>
 
+
+extern const unsigned int benchmark_cipher_pbnxa_size;
+extern const char benchmark_cipher_pbnxa[];
+
+
 extern const unsigned int bigraph_cur_size;
 extern const char bigraph_cur[];
 
