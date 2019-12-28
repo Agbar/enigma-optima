@@ -8,6 +8,7 @@ PRIVATE
     "cipher.tests.cpp"
     "computeScoreNoInterleave.cpp"
     "enigma_error.cpp"
+    "input.c/set_ring.tests.cpp"
     "input.c/set_stecker.tests.cpp"
     "GetRSeed.tests.cpp"
     "string_dict_loader.tests.cpp"
