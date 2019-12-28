@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+
 #include "common.h"
 #include "key.h"
 
@@ -7,7 +9,8 @@ PURE_FUNCTION
 enum ModelType_t get_model(char *s);
 int set_ukw( struct Key *key, char *s, enum ModelType_t model);
 int set_walze( struct Key *key, char *s, enum ModelType_t model);
-int set_ring( struct Key *key, char *s, enum ModelType_t model);
+bool set_RingsState( struct RingsState* rs, const char* s, enum ModelType_t model );
+int set_ring( struct Key *key, const char *s, enum ModelType_t model );
 int set_mesg( struct Key *key, char *s, enum ModelType_t model);
 int set_stecker( struct Key *key, char *s);
 PURE_FUNCTION
