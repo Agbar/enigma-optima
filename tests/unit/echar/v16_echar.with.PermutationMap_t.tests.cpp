@@ -23,8 +23,6 @@ TEST( v16_echar__PermutationMap, map_identity ){
         map.letters[i] = make_echar(i % 26);
     }
 
-    init_charmap();
-
     const auto in1 = make_v<v16_echar>( "qwertyuiopasdfgh" );
     const auto in2 = make_v<v16_echar>( "jklzxcvbnmfedcba" );
     const v16_echar out1 = v16_echar_map( in1, map );
@@ -46,8 +44,6 @@ TEST( v16_echar__PermutationMap, map_rot1 ){
     {
         map.letters[i] = make_echar( ( i + 1 ) % 26 );
     }
-
-    init_charmap();
 
     const auto in1    = make_v<v16_echar>( "qwertyuiopasdfgh" );
     const auto expct1 = make_v<v16_echar>( "rxfsuzvjpqbteghi" );

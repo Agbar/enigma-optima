@@ -2,7 +2,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "charmap.h"
 #include "error.h"
 #include "global.h"
 #include "input.h"
@@ -106,6 +105,32 @@ int set_walze( struct Key *const key, char *s, enum ModelType_t model)
   return 1;
 }
 
+
+bool set_RingsState( struct RingsState* const rs, const char* s, enum ModelType_t model ) {
+    size_t s_len = strlen( s );
+    if ( model == EnigmaModel_M4 ) {
+        if (s_len != 4 ) return false;
+        
+    }
+    else {
+        if ( s_len != 3 ) return false;
+    }
+    for( const char *x = s; *x != '\0'; x++ ) {
+        if ( !echar_delta_can_make_from_ascii( *x ) ) {
+            return false;
+        }
+    }
+    const char* x = s;
+    if ( model == EnigmaModel_M4 ){
+        rs->g = make_echar_delta_ascii( *x++ );
+    }
+    rs->l = make_echar_delta_ascii( *x++ );
+    rs->m = make_echar_delta_ascii( *x++ );
+    rs->r = make_echar_delta_ascii( *x );
+    return true;
+}
+
+
 /** \brief Set rings.
  *
  * \param key Key*
@@ -114,31 +139,9 @@ int set_walze( struct Key *const key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_ring( struct Key *const key, char *s, enum ModelType_t model)
+int set_ring( struct Key *const key, const char *s, enum ModelType_t model )
 {
-  char *x;
-
-  switch (model) {
-    case EnigmaModel_M4: if (strlen(s) != 4) return 0; break;
-    default: if (strlen(s) != 3) return 0; break;
-  }
-
-  x = s;
-  while (*x != '\0') {
-    if (code[(unsigned char)*x] == 26)
-      return 0;
-    x++;
-  }
-
-  x = s;
-  if (model == EnigmaModel_M4){
-      key->ring.g = make_echar_delta_ascii( *x++ );
-  }
-  key->ring.l = make_echar_delta_ascii( *x++ );
-  key->ring.m = make_echar_delta_ascii( *x++ );
-  key->ring.r = make_echar_delta_ascii( *x );
-
-  return 1;
+    return set_RingsState( &key->ring, s, model );
 }
 
 /** \brief Set message keys.
@@ -149,31 +152,9 @@ int set_ring( struct Key *const key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_mesg( struct Key *const key, char *s, enum ModelType_t model)
+int set_mesg( struct Key *const key, const char *const s, enum ModelType_t model )
 {
-  char *x;
-
-  switch (model) {
-    case EnigmaModel_M4: if (strlen(s) != 4) return 0; break;
-    default: if (strlen(s) != 3) return 0; break;
-  }
-
-  x = s;
-  while (*x != '\0') {
-    if (code[(unsigned char)*x] == 26)
-      return 0;
-    x++;
-  }
-
-  x = s;
-  if ( model == EnigmaModel_M4 ){
-    key->mesg.g = make_echar_delta_ascii( *x++ );
-  }
-  key->mesg.l = make_echar_delta_ascii( *x++ );
-  key->mesg.m = make_echar_delta_ascii( *x++ );
-  key->mesg.r = make_echar_delta_ascii( *x );
-
-  return 1;
+    return set_RingsState( &key->mesg, s, model );
 }
 
 /** \brief Set steckerbrett.
@@ -201,7 +182,7 @@ int set_stecker( struct Key *const key, char *s)
   x = s;
   while (*x != '\0') {
     /* alphabetic, no repetitions */
-    if (code[(unsigned char)*x] == 26 || strrchr(x, *x) != x)
+    if ( !echar_can_make_from_ascii( *x ) || strrchr( x, *x ) != x)
       return 0;
     x++;
   }
@@ -209,7 +190,7 @@ int set_stecker( struct Key *const key, char *s)
   /* swap appropriate letters */
   x = s;
   while (*x != '\0') {
-    SwapStbrett(key, make_echar( code[(unsigned char)*x] ), make_echar( code[(unsigned char)*(x+1)] ) );
+    SwapStbrett( key, make_echar_ascii( *x ), make_echar_ascii( *( x + 1 ) ) );
     x += 2;
   }
 

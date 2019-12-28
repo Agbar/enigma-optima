@@ -7,6 +7,9 @@ target_sources(EnigmaUnitTests
 PRIVATE
     "cipher.tests.cpp"
     "computeScoreNoInterleave.cpp"
+    "enigma_error.cpp"
+    "input.c/set_RingsState.tests.cpp"
+    "input.c/set_stecker.tests.cpp"
     "GetRSeed.tests.cpp"
     "string_dict_loader.tests.cpp"
     "test_data.tests.cpp"

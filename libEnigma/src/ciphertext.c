@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "global.h"
-#include "charmap.h"
 #include "error.h"
 #include "ciphertext.h"
 #include "config/types.h"

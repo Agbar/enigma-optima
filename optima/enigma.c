@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "banner.h"
-#include "charmap.h"
 #include "cipher.h"
 #include "ciphertext.h"
 #include "cpu.h"
@@ -61,7 +60,6 @@ int main(int argc, char **argv)
   WriteStartupBanner();
 
   init_key_default(&key, model);
-  init_charmap();
 
   const struct option longOpts[] = {
   { .name = "optimizer", .has_arg = required_argument,  .val = 0x101 }

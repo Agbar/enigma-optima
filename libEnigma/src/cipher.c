@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include "ciphertext.h"
 #include "global.h"
-#include "charmap.h"
 #include "key.h"
 #include "cpu.h"
 #include "cipher.h"

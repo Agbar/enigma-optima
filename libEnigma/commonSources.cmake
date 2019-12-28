@@ -1,6 +1,5 @@
 target_sources(Enigma
 PRIVATE
-    "src/charmap.c"
     "src/cipher.c"
     "src/ciphertext.c"
     "src/cpu.c"

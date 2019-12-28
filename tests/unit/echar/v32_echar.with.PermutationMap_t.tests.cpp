@@ -21,8 +21,6 @@ TEST( v32_echar__PermutationMap, v32_echar_map ){
         map.letters[i] = make_echar( i % 26 );
     }
 
-    init_charmap();
-
     const auto in = make_v<v32_echar>( "qwertyuiopasdfghjklzxcvbnmqwerty" );
     const v32_echar out = v32_echar_map( in, map );
     for( size_t j = 0; j < sizeof(out.vector); j++ )
@@ -40,8 +38,6 @@ TEST( v32_echar__PermutationMap, map_rot1 ){
     {
         map.letters[i] = make_echar( ( i + 1 ) % 26 );
     }
-
-    init_charmap();
 
     const auto in       = make_v<v32_echar>("qwertyuiopasdfghjklzxcvbnmqazwsx");
     const auto expected = make_v<v32_echar>("rxfsuzvjpqbteghiklmaydwconrbaxty");

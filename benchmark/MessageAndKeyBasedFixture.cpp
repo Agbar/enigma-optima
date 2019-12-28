@@ -2,7 +2,6 @@
 
 extern "C"{
 #include "enigma/test_data.h"
-#include "charmap.h"
 #include "ciphertext.h"
 #include "input.h"
 #include "stecker.h"
@@ -15,7 +14,6 @@ using rt = RingType::ring_type_enum;
 void
 MessageAndKeyBasedFixture::SetUp( benchmark::State& st )
 {
-    init_charmap();
     try {
         LoadDictionary();
     }
