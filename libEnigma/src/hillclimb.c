@@ -8,7 +8,6 @@
 #include "error.h"
 #include "global.h"
 #include "hillclimb.h"
-#include "randomNumbers.h"
 #include "result.h"
 #include "score.h"
 #include "stecker.h"
@@ -46,8 +45,6 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
   enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup;
 
   enigma_cipher_init( enigma_cpu_flags, from->model, &prepare_decoder_lookup );
-
-  SetupRandomGenerator();
 
   lastsave = time(NULL);
 

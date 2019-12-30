@@ -14,6 +14,7 @@
 #include "input.h"
 #include "key.h"
 #include "optimizer.h"
+#include "randomNumbers.h"
 #include "result.h"
 #include "resume_in.h"
 #include "resume_out.h"
@@ -127,6 +128,7 @@ int main(int argc, char **argv)
 
     clen = (len < CT) ? len : CT;
 
+    SetupRandomGenerator();
     optimizeScore( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
                    max_score, resume, outfile, 1, clen );
 

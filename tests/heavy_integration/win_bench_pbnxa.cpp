@@ -90,7 +90,8 @@ TEST( win_bench_pbnxa, krah_basic )
     }
     int len = benchmark_cipher_pbnxa_size - 1;
     if( len > CT ) len = CT;
-
+    // make the test deterministic
+    srand( 42 );
     hillclimb(
         &from,
         &to,
