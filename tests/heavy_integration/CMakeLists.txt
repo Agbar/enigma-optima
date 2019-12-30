@@ -6,7 +6,7 @@ include(FindThreads)
 add_executable(EnigmaHeavyIntegrationTests "main.cpp")
 target_sources(EnigmaHeavyIntegrationTests
 PRIVATE
-
+    "win_bench_pbnxa.cpp"
 )
 
 
@@ -19,7 +19,10 @@ target_compile_options(EnigmaHeavyIntegrationTests
 
 
 target_link_libraries(EnigmaHeavyIntegrationTests
-    Enigma gtest Threads::Threads)
+    Enigma 
+    EnigmaTestData
+    gtest
+    Threads::Threads)
 
 add_test(
     NAME "Heavy_Integration"
