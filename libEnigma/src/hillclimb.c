@@ -180,12 +180,13 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
 
   }
 
-  FINISHED:
-  if (resume)
-    hillclimb_log("enigma: finished range");
-  if (act_on_sig)
-    save_state_exit( &state, EXIT_SUCCESS );
-
+FINISHED:
+    if( resume ){
+      hillclimb_log( "enigma: finished range" );
+    }
+    if( act_on_sig ){
+      save_state( &state );
+    }
 }
 
 

@@ -133,10 +133,10 @@ int main(int argc, char **argv)
     optimizeScore( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
                    max_score, resume, outfile, 1, clen );
 
-  if (outfile != stdout)
-    fclose(outfile);
-  return 0;
-
+    if ( outfile != stdout ){
+        fclose( outfile );
+    }
+    return EXIT_SUCCESS;
 }
 
 
