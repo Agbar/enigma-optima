@@ -12,7 +12,7 @@
 static
 void print_key_rings( const struct Key * key, char buffer[16] );
 
-void print_state(FILE *fp, const State *state)
+void print_state(FILE *fp, const struct State *state)
 {
   char stecker[27];
   int i;

@@ -4,7 +4,7 @@
 #include "resume_out.h"
 #include "state.h"
 
-void save_state( const State* state )
+void save_state( const struct State* state )
 {
     FILE *fp = fopen( "00hc.resume", "w" );
     if ( fp  == NULL ){
@@ -18,7 +18,7 @@ void save_state( const State* state )
 }
 
 NO_RETURN
-void save_state_exit( const State* state, int retval )
+void save_state_exit( const struct State* state, int retval )
 {
     save_state( state );
     exit( retval );

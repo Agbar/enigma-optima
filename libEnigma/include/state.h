@@ -4,7 +4,7 @@
 #include "character_encoding.h"
 #include "global.h"
 
-typedef struct {
+struct State {
   const struct Key *from;
   const struct Key *to;
   struct Key *ckey;
@@ -14,12 +14,12 @@ typedef struct {
   int *firstpass;
   int *max_score;
   struct echar *ciphertext;
-} State;
+};
 
-void save_state( const State* state );
+void save_state( const struct State* state );
 
 NO_RETURN 
-void save_state_exit( const State* state, int retval );
+void save_state_exit( const struct State* state, int retval );
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms

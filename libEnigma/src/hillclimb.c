@@ -29,7 +29,7 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
     {EnigmaModel_M3,2, 0,8,8,8,25,25, 0,25,25,25},
     {EnigmaModel_M4,4,10,8,8,8,25,25,25,25,25,25}
   };
-  State state;
+  struct State state;
   time_t lastsave;
   int m;
   struct echar var[26];
