@@ -131,7 +131,7 @@ int main(int argc, char **argv)
     InstallSighandler();
     SetupRandomGenerator();
     optimizeScore( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
-                   max_score, resume, outfile, 1, clen );
+                   max_score, resume, outfile, clen );
 
     if ( outfile != stdout ){
         fclose( outfile );

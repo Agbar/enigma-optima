@@ -51,7 +51,6 @@ void optimizeScore( const struct Key *from
                   , int max_score
                   , int resume
                   , FILE *outfile
-                  , int act_on_sig
                   , int len ) {
 
     if( stbrettOptimzier == NULL ) {
@@ -59,6 +58,6 @@ void optimizeScore( const struct Key *from
     }
     hillclimb( from, to, ckey_res, gkey_res, sw_mode,
                max_pass, firstpass, max_score,
-               resume, outfile, act_on_sig, len,
+               resume, outfile, len,
                stbrettOptimzier );
 }

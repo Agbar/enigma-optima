@@ -99,7 +99,6 @@ TEST( win_bench_pbnxa, krah_basic )
         /* max_score */     INT_MAX - 1,
         /* resume */        false,
         /* outfile */       stderr,
-        /* act_on_sig */    false,
         len,
         stbrett_optimize_krah
     );

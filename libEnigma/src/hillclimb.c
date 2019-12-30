@@ -19,7 +19,7 @@
 
 void hillclimb( const struct Key* const from, const struct Key* const to, const struct Key* const ckey_res, const struct Key* const gkey_res,
                 int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                FILE *outfile, int act_on_sig, int len, stbrett_optimize_f* optimizer )
+                FILE *outfile, int len, stbrett_optimize_f* optimizer )
 {
   struct Key ckey;
   struct Key gkey;
@@ -52,7 +52,7 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
     hillclimb_log("enigma: working on range ...");
   }
 
-  if (act_on_sig) {
+
     state.from = from;
     state.to = to;
     state.ckey = &ckey;
@@ -62,7 +62,7 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
     state.firstpass = &firstpass;
     state.max_score = &max_score;
     state.ciphertext = ciphertext.plain;
-  }
+
 
   m = from->model;
   ckey = lo = (resume) ? *ckey_res : *from;
@@ -184,9 +184,7 @@ FINISHED:
     if( resume ){
       hillclimb_log( "enigma: finished range" );
     }
-    if( act_on_sig ){
-      save_state( &state );
-    }
+    save_state( &state );
 }
 
 

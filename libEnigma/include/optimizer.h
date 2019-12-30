@@ -18,5 +18,4 @@ void optimizeScore( const struct Key *from
                   , int max_score
                   , int resume
                   , FILE *outfile
-                  , int act_on_sig
                   , int len );
