@@ -64,10 +64,6 @@ void hillclimb_log( const char *s ) {
     fprintf( stderr, "%s\n", s );
 }
 
-void InstallSighandler() {
-    hillclimb_log( "installing handler " );
-}
-
 volatile sig_atomic_t doShutdown;
 
 

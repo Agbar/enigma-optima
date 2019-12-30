@@ -62,8 +62,6 @@ void hillclimb( const struct Key* const from, const struct Key* const to, const 
     state.firstpass = &firstpass;
     state.max_score = &max_score;
     state.ciphertext = ciphertext.plain;
-
-    InstallSighandler();
   }
 
   m = from->model;
