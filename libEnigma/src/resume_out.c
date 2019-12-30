@@ -21,11 +21,6 @@ void print_state(FILE *fp, const struct State *state)
   const struct Key *to = state->to;
   struct Key *ckey = state->ckey;
   struct Key *gkey = state->gkey;
-  int *sw_mode = state->sw_mode;
-  int *pass = state->pass;
-  int *firstpass = state->firstpass;
-  int *max_score = state->max_score;
-
 
   /* general state */
   if (from->model == EnigmaModel_H) fprintf(fp, "H=");
@@ -40,10 +35,10 @@ void print_state(FILE *fp, const struct State *state)
     print_key_rings( ckey, ckey_buffer );
     fprintf( fp, "%s%s%s", from_buffer, to_buffer, ckey_buffer );
 
-  fprintf(fp, "%d=", *sw_mode);
-  fprintf(fp, "%d=", *pass);
-  fprintf(fp, "%d=", *firstpass);
-  fprintf(fp, "%d\n", *max_score);
+    fprintf( fp, "%d=", state->sw_mode );
+    fprintf( fp, "%d=", state->pass );
+    fprintf( fp, "%d=", state->firstpass );
+    fprintf( fp, "%d\n", state->max_score );
 
 
   /* global key */

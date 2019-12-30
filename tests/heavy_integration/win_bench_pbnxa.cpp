@@ -88,18 +88,27 @@ TEST( win_bench_pbnxa, krah_basic )
     if( len > CT ) len = CT;
     // make the test deterministic
     srand( 42 );
+
+    Key ckey = from;
+    Key gkey = from;
+    State state = {
+        from :  &from,
+        to : &to,
+        ckey : &ckey, // not a resume
+        gkey : &gkey, // not a resume
+        sw_mode : SW_ONSTART,
+        pass : 0,
+        firstpass : true,
+        max_score : INT_MAX - 1,
+        ciphertext : ciphertext.plain
+    };
     hillclimb(
-        &from,
-        &to,
-        /* ckey_res */      nullptr, // not a resume
-        /* gkey_res */      nullptr, // not a resume
-        /* sw_mode */       SW_ONSTART,
+        &state,
         /* max_pass */      1,
-        /* firstpass */     true,
-        /* max_score */     INT_MAX - 1,
         /* resume */        false,
         /* outfile */       stderr,
         len,
         stbrett_optimize_krah
     );
+    EXPECT_EQ( gkey.score, 17930 );
 }

@@ -4,6 +4,7 @@
 #include "optimizer.h"
 #include "dict.h"
 #include "hillclimb.h"
+#include "state.h"
 #include "stbrett/optimizer.h"
 #include "stbrett/krah_optimizer.h"
 #include "stbrett/ve3nea_optimizer.h"
@@ -56,8 +57,24 @@ void optimizeScore( const struct Key *from
     if( stbrettOptimzier == NULL ) {
         exit( 1 );
     }
-    hillclimb( from, to, ckey_res, gkey_res, sw_mode,
-               max_pass, firstpass, max_score,
-               resume, outfile, len,
+
+    struct Key ckey = resume ? *ckey_res : *from;
+    struct Key gkey = resume ? *gkey_res : *from;
+
+    struct State state = {
+        .from = from,
+        .to = to,
+        .ckey = &ckey,
+        .gkey = &gkey,
+        .sw_mode = sw_mode,
+        .firstpass = firstpass,
+        .max_score = max_score,
+        .ciphertext = ciphertext.plain
+    };
+
+
+    hillclimb( &state,
+               max_pass, resume,
+               outfile, len,
                stbrettOptimzier );
 }

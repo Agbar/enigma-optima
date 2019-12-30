@@ -1,19 +1,24 @@
 #pragma once
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #include "config/types.h"
 #include "character_encoding.h"
+#include "echar/echar.h"
 #include "global.h"
+#include "key.h"
 
 struct State {
-  const struct Key *from;
-  const struct Key *to;
-  struct Key *ckey;
-  struct Key *gkey;
-  int *sw_mode;
-  int *pass;
-  int *firstpass;
-  int *max_score;
-  struct echar *ciphertext;
+    const struct Key *const from;
+    const struct Key *const to;
+    struct Key *const ckey;
+    struct Key *const gkey;
+    int sw_mode;
+    int pass;
+    bool firstpass;
+    uint32_t max_score;
+    const struct echar * const ciphertext;
 };
 
 void save_state( const struct State* state );
