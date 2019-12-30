@@ -53,6 +53,18 @@ TEST( test_data, trigraph_AVv1_facts )
 }
 
 
+TEST( test_data, trigraph_cur_facts )
+{
+    count_calls_storage_mock storage{};
+    enigma::string_dict_loader dl{ "%3s%d", storage, trigraph_cur };
+
+    bool success = dl.load();
+    EXPECT_TRUE( success );
+    EXPECT_EQ( storage.called_cnt, 3514 );
+    EXPECT_EQ( trigraph_cur_size, 28558 );
+}
+
+
 TEST( test_data, unigraph_AVv1_facts )
 {
     count_calls_storage_mock storage{};

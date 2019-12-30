@@ -5,6 +5,7 @@ PRIVATE
     "benchmark_cipher_pbnxa.S"
     "bigraph.cur.S"
     "trigraph.AVv1.S"
+    "trigraph.cur.S"
     "unigraph.AVv1.S"
 )
 
