@@ -8,8 +8,7 @@ TEST( set_stecker, loads_example )
 {
     Key k = {};
     Fill0To25_echar( k.stbrett.letters );
-    char stin[] = "AXBZCNDPEOJMLSQV";
-    int result = set_stecker( &k, stin );
+    int result = set_stecker( &k, "AXBZCNDPEOJMLSQV" );
 
     ASSERT_EQ( result, 1 );
 
@@ -47,8 +46,7 @@ TEST( set_stecker, fails_if_input_over_26_chars )
 {
     Key k = {};
     Fill0To25_echar( k.stbrett.letters );
-    char stin[] = "ABCDEFGHIJKLMNOPRSTUVWXYZ01";
-    int result = set_stecker( &k, stin );
+    int result = set_stecker( &k, "ABCDEFGHIJKLMNOPRSTUVWXYZ01" );
     ASSERT_FALSE( result );
 }
 
@@ -57,8 +55,7 @@ TEST( set_stecker, fails_if_input_count_is_odd )
 {
     Key k = {};
     Fill0To25_echar( k.stbrett.letters );
-    char stin[] = "ABC";
-    int result = set_stecker( &k, stin );
+    int result = set_stecker( &k, "ABC" );
     ASSERT_FALSE( result );
 }
 
@@ -67,8 +64,7 @@ TEST( set_stecker, fails_if_input_contains_not_letter )
 {
     Key k = {};
     Fill0To25_echar( k.stbrett.letters );
-    char stin[] = "ABC1";
-    int result = set_stecker( &k, stin );
+    int result = set_stecker( &k, "ABC1" );
     ASSERT_FALSE( result );
 }
 
@@ -77,7 +73,6 @@ TEST( set_stecker, fails_if_input_contains_repetition )
 {
     Key k = {};
     Fill0To25_echar( k.stbrett.letters );
-    char stin[] = "ABCA";
-    int result = set_stecker( &k, stin );
+    int result = set_stecker( &k, "ABCA" );
     ASSERT_FALSE( result );
 }
