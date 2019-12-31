@@ -161,22 +161,17 @@ int set_mesg( struct Key *const key, const char *const s, enum ModelType_t model
  * \return int
  *
  */
-int set_stecker( struct Key *const key, char *s)
-{
-  size_t len;
-  char *x;
+int set_stecker( struct Key* const key, const char stecker[ const restrict ] ) {
+    size_t len = strlen( stecker );
+    /* max 26 chars, even number */
+    if( len > 26 || len % 2 != 0 ) return 0;
+    char s[ len + 1 ];
+    for( size_t i = 0; i < len; ++i ) {
+        s[ i ] = tolower( stecker[ i ] );
+    }
+    s[ len ] = 0;
 
-  /* max 26 chars, even number */
-  if ((len = strlen(s)) > 26 || len%2 != 0)
-        return 0;
-
-  x = s;
-  while (*x != '\0') {
-    *x = tolower((unsigned char)*x);
-    x++;
-  }
-
-  x = s;
+  const char* x = s;
   while (*x != '\0') {
     /* alphabetic, no repetitions */
     if ( !echar_can_make_from_ascii( *x ) || strrchr( x, *x ) != x)

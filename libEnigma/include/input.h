@@ -12,7 +12,7 @@ int set_walze( struct Key* key, const char* s, enum ModelType_t model );
 bool set_RingsState( struct RingsState* rs, const char* s, enum ModelType_t model );
 int set_ring( struct Key *key, const char *s, enum ModelType_t model );
 int set_mesg( struct Key *key, const char *s, enum ModelType_t model );
-int set_stecker( struct Key *key, char *s);
+int set_stecker( struct Key* key, const char s[] );
 PURE_FUNCTION
 int get_sw_mode( const char* s );
 PURE_FUNCTION
