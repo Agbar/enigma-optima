@@ -21,7 +21,7 @@ struct State {
     const struct echar * const ciphertext;
 };
 
-void save_state( const struct State* state );
+void save_state( const struct State* state, bool force_save );
 
 
 /*

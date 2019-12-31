@@ -16,7 +16,7 @@
 
 struct HillclimbersKnapsack {
     stbrett_optimize_f* optimizer;
-    void (*save_state)( const struct State* state );
+    void (*save_state)( const struct State* state, bool force_save );
 };
 
 

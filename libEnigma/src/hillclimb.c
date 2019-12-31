@@ -3,7 +3,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
 
 #include "error.h"
 #include "global.h"
@@ -32,7 +31,6 @@ void hillclimb( struct State* state,
     {EnigmaModel_M3,2, 0,8,8,8,25,25, 0,25,25,25},
     {EnigmaModel_M4,4,10,8,8,8,25,25,25,25,25,25}
   };
-  time_t lastsave;
 
   struct echar var[26];
   Fill0To25_echar(var);
@@ -45,8 +43,6 @@ void hillclimb( struct State* state,
   enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup;
 
   enigma_cipher_init( enigma_cpu_flags, state->from->model, &prepare_decoder_lookup );
-
-  lastsave = time(NULL);
 
   if (resume) {
     hillclimb_log("enigma: working on range ...");
@@ -91,14 +87,12 @@ void hillclimb( struct State* state,
              for (ckey->mesg.r=lo.mesg.r; ckey->mesg.r.delta<=hi[m][11]; ckey->mesg.r.delta++) {
 
                 if( doShutdown ) {
-                     knapsack->save_state( state );
-                     exit( 111 );
+                    knapsack->save_state( state, true );
+                    exit( 111 );
                 }
-               if (difftime(time(NULL), lastsave) > 119) {
-                 lastsave = time(NULL);
-                 knapsack->save_state( state );
-               }
-
+                else {
+                    knapsack->save_state( state, false );
+                }
 
                /* avoid duplicate scrambler states */
                switch( state->sw_mode ){
@@ -175,7 +169,7 @@ FINISHED:
     if( resume ){
       hillclimb_log( "enigma: finished range" );
     }
-    knapsack->save_state( state );
+    knapsack->save_state( state, true );
 }
 
 
