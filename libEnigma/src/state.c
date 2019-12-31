@@ -16,10 +16,3 @@ void save_state( const struct State* state )
     }
     fclose(fp);
 }
-
-NO_RETURN
-void save_state_exit( const struct State* state, int retval )
-{
-    save_state( state );
-    exit( retval );
-}

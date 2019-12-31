@@ -23,8 +23,6 @@ struct State {
 
 void save_state( const struct State* state );
 
-NO_RETURN 
-void save_state_exit( const struct State* state, int retval );
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
