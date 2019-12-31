@@ -13,7 +13,7 @@ GreekRingType_to_ALPHA( struct GreekRingType rt ){
 
 char
 UkwType_to_ALPHA( struct UkwType u ){
-    return "ABCAB"[u.type];
+    return "ABCBC"[u.type];
 }
 
 /* initialize key to defaults */
