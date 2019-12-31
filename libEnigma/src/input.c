@@ -9,8 +9,7 @@
 
 /** \brief Determine model.
  */
-enum ModelType_t get_model(char *s)
-{
+enum ModelType_t get_model( const char *s ){
   if (strcmp(s, "H") == 0 || strcmp(s, "h") == 0)
     return EnigmaModel_H;
   if (strcmp(s, "M3") == 0 || strcmp(s, "m3") == 0)
@@ -22,8 +21,7 @@ enum ModelType_t get_model(char *s)
 }
 
 /* set UKW */
-int set_ukw( struct Key *const key, char *s, enum ModelType_t model)
-{
+int set_ukw( struct Key *const key, const char *s, enum ModelType_t model ){
   if (strcmp(s, "A") == 0 || strcmp(s, "a") == 0) {
     switch (model) {
       case EnigmaModel_H: key->ukwnum.type = UkwType_A; break;
@@ -57,9 +55,8 @@ int set_ukw( struct Key *const key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_walze( struct Key *const key, char *s, enum ModelType_t model)
-{
-  char *x;
+int set_walze( struct Key *const key, const char *s, enum ModelType_t model ){
+    const char* x;
 
   switch (model) {
     case EnigmaModel_M4: if (strlen(s) != 4) return 0; break;
@@ -203,8 +200,7 @@ int set_stecker( struct Key *const key, char *s)
  * \return int
  *
  */
-int get_sw_mode(char *s)
-{
+int get_sw_mode( const char *s ){
   if (strcmp(s, "0") == 0)
     return SW_ONSTART;
   if (strcmp(s, "1") == 0)
@@ -221,8 +217,7 @@ int get_sw_mode(char *s)
  * \return int
  *
  */
-int get_firstpass(char *s)
-{
+int get_firstpass( const char *s ){
   if (strcmp(s, "0") == 0)
     return 0;
   if (strcmp(s, "1") == 0)
