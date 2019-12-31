@@ -6,17 +6,17 @@
 #include "key.h"
 
 PURE_FUNCTION
-enum ModelType_t get_model(char *s);
-int set_ukw( struct Key *key, char *s, enum ModelType_t model);
-int set_walze( struct Key *key, char *s, enum ModelType_t model);
+enum ModelType_t get_model( const char* s );
+int set_ukw( struct Key* key, const char* s, enum ModelType_t model );
+int set_walze( struct Key* key, const char* s, enum ModelType_t model );
 bool set_RingsState( struct RingsState* rs, const char* s, enum ModelType_t model );
 int set_ring( struct Key *key, const char *s, enum ModelType_t model );
 int set_mesg( struct Key *key, const char *s, enum ModelType_t model );
-int set_stecker( struct Key *key, char *s);
+int set_stecker( struct Key* key, const char s[] );
 PURE_FUNCTION
-int get_sw_mode(char *s);
+int get_sw_mode( const char* s );
 PURE_FUNCTION
-int get_firstpass(char *s);
+int get_firstpass( const char* s );
 int set_key( struct Key *key, const char *keystring, enum ModelType_t model, int adjust);
 int set_range( struct Key *restrict from, struct Key *restrict to, const char *kf, const char *kt, enum ModelType_t model );
 

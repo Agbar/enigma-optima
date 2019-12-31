@@ -9,8 +9,7 @@
 
 /** \brief Determine model.
  */
-enum ModelType_t get_model(char *s)
-{
+enum ModelType_t get_model( const char *s ){
   if (strcmp(s, "H") == 0 || strcmp(s, "h") == 0)
     return EnigmaModel_H;
   if (strcmp(s, "M3") == 0 || strcmp(s, "m3") == 0)
@@ -22,8 +21,7 @@ enum ModelType_t get_model(char *s)
 }
 
 /* set UKW */
-int set_ukw( struct Key *const key, char *s, enum ModelType_t model)
-{
+int set_ukw( struct Key *const key, const char *s, enum ModelType_t model ){
   if (strcmp(s, "A") == 0 || strcmp(s, "a") == 0) {
     switch (model) {
       case EnigmaModel_H: key->ukwnum.type = UkwType_A; break;
@@ -57,9 +55,8 @@ int set_ukw( struct Key *const key, char *s, enum ModelType_t model)
  * \return int
  *
  */
-int set_walze( struct Key *const key, char *s, enum ModelType_t model)
-{
-  char *x;
+int set_walze( struct Key *const key, const char *s, enum ModelType_t model ){
+    const char* x;
 
   switch (model) {
     case EnigmaModel_M4: if (strlen(s) != 4) return 0; break;
@@ -164,22 +161,17 @@ int set_mesg( struct Key *const key, const char *const s, enum ModelType_t model
  * \return int
  *
  */
-int set_stecker( struct Key *const key, char *s)
-{
-  size_t len;
-  char *x;
+int set_stecker( struct Key* const key, const char stecker[ const restrict ] ) {
+    size_t len = strlen( stecker );
+    /* max 26 chars, even number */
+    if( len > 26 || len % 2 != 0 ) return 0;
+    char s[ len + 1 ];
+    for( size_t i = 0; i < len; ++i ) {
+        s[ i ] = tolower( stecker[ i ] );
+    }
+    s[ len ] = 0;
 
-  /* max 26 chars, even number */
-  if ((len = strlen(s)) > 26 || len%2 != 0)
-        return 0;
-
-  x = s;
-  while (*x != '\0') {
-    *x = tolower((unsigned char)*x);
-    x++;
-  }
-
-  x = s;
+  const char* x = s;
   while (*x != '\0') {
     /* alphabetic, no repetitions */
     if ( !echar_can_make_from_ascii( *x ) || strrchr( x, *x ) != x)
@@ -203,8 +195,7 @@ int set_stecker( struct Key *const key, char *s)
  * \return int
  *
  */
-int get_sw_mode(char *s)
-{
+int get_sw_mode( const char *s ){
   if (strcmp(s, "0") == 0)
     return SW_ONSTART;
   if (strcmp(s, "1") == 0)
@@ -221,8 +212,7 @@ int get_sw_mode(char *s)
  * \return int
  *
  */
-int get_firstpass(char *s)
-{
+int get_firstpass( const char *s ){
   if (strcmp(s, "0") == 0)
     return 0;
   if (strcmp(s, "1") == 0)

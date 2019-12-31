@@ -45,8 +45,7 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st )
 
     Fill0To25_echar( key.stbrett.letters );
     Fill0To25_echar( key.sf.map );
-    char stecker[] = "AXBZCNDPEOJMLSQV";
-    set_stecker( &key, stecker );
+    set_stecker( &key, "AXBZCNDPEOJMLSQV" );
     get_stecker( &key );
 
     len = benchmark_cipher_pbnxa_size - 1;
