@@ -71,9 +71,9 @@ void optimizeScore( const struct Key *from
         .max_score = max_score,
         .ciphertext = ciphertext.plain
     };
-
     struct HillclimbersKnapsack knapsack = {
-        .optimizer = stbrettOptimzier
+        .optimizer = stbrettOptimzier,
+        .save_state = save_state,
     };
     hillclimb( &state,
                max_pass, resume,

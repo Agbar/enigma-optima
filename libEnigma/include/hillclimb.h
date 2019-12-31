@@ -16,6 +16,7 @@
 
 struct HillclimbersKnapsack {
     stbrett_optimize_f* optimizer;
+    void (*save_state)( const struct State* state );
 };
 
 
@@ -23,3 +24,6 @@ void hillclimb( struct State *state,
                 int max_pass, bool resume,
                 FILE *outfile, int len,
                 const struct HillclimbersKnapsack* knapsack );
+
+
+bool check_knapsack( const struct HillclimbersKnapsack* knapsack );

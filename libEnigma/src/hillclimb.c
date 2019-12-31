@@ -25,6 +25,8 @@ void hillclimb( struct State* state,
                 int len,
                 const struct HillclimbersKnapsack* knapsack )
 {
+    if( !check_knapsack( knapsack ) ) exit( 911 );
+
   text_t hi[3][12] = {
     {EnigmaModel_H ,2, 0,5,5,5,25,25, 0,25,25,25},
     {EnigmaModel_M3,2, 0,8,8,8,25,25, 0,25,25,25},
@@ -88,11 +90,13 @@ void hillclimb( struct State* state,
             for (ckey->mesg.m=lo.mesg.m; ckey->mesg.m.delta<=hi[m][10]; ckey->mesg.m.delta++) {
              for (ckey->mesg.r=lo.mesg.r; ckey->mesg.r.delta<=hi[m][11]; ckey->mesg.r.delta++) {
 
-               if (doShutdown)
-                 save_state_exit( state, 111 );
+                if( doShutdown ) {
+                     knapsack->save_state( state );
+                     exit( 111 );
+                }
                if (difftime(time(NULL), lastsave) > 119) {
                  lastsave = time(NULL);
-                 save_state( state );
+                 knapsack->save_state( state );
                }
 
 
@@ -171,7 +175,14 @@ FINISHED:
     if( resume ){
       hillclimb_log( "enigma: finished range" );
     }
-    save_state( state );
+    knapsack->save_state( state );
+}
+
+
+bool check_knapsack( const struct HillclimbersKnapsack* knapsack ) {
+    if( !knapsack->optimizer ) return false;
+    if( !knapsack->save_state ) return false;
+    return true;
 }
 
 

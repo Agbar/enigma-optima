@@ -8,14 +8,15 @@
 #include "dicts/string_dict_loader.hpp"
 
 extern "C" {
+#include "OS/Os.h"
 #include "ciphertext.h"
 #include "echar/echar.h"
 #include "enigma/test_data.h"
 #include "error.h"
 #include "hillclimb.h"
 #include "input.h"
-#include "OS/Os.h"
 #include "randomNumbers.h"
+#include "state.h"
 #include "stbrett/krah_optimizer.h"
 }
 
@@ -57,10 +58,7 @@ void err_open_fatal( UNUSED const char *s ) {
     throw std::exception();
 }
 
-void err_stream_fatal( UNUSED const char *s ) {
-    hillclimb_log( s );
-    throw std::exception();
-}
+
 void hillclimb_log( const char *s ) {
     fprintf( stderr, "%s\n", s );
 }
@@ -105,6 +103,7 @@ TEST( win_bench_pbnxa, krah_basic )
     };
     HillclimbersKnapsack knapsack = {
         optimizer : stbrett_optimize_krah,
+        save_state : []( const State* ) { /*NOP*/ },
     };
     hillclimb(
         &state,
