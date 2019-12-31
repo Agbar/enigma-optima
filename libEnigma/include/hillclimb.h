@@ -13,7 +13,13 @@
 #include "state.h"
 #include "stbrett/optimizer.h"
 
+
+struct HillclimbersKnapsack {
+    stbrett_optimize_f* optimizer;
+};
+
+
 void hillclimb( struct State *state,
                 int max_pass, bool resume,
                 FILE *outfile, int len,
-                stbrett_optimize_f* optimizer );
+                const struct HillclimbersKnapsack* knapsack );

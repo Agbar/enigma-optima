@@ -23,7 +23,7 @@ void hillclimb( struct State* state,
                 bool resume,
                 FILE *outfile,
                 int len,
-                stbrett_optimize_f* optimizer )
+                const struct HillclimbersKnapsack* knapsack )
 {
   text_t hi[3][12] = {
     {EnigmaModel_H ,2, 0,5,5,5,25,25, 0,25,25,25},
@@ -122,7 +122,7 @@ void hillclimb( struct State* state,
                /* initialize path_lookup */
                prepare_decoder_lookup( ckey, len );
 
-               uint32_t bestscore = optimizer( var, ckey, len, &sf );
+               uint32_t bestscore = knapsack->optimizer( var, ckey, len, &sf );
 
                /* record global max, if applicable */
                if ( bestscore > globalscore ) {

@@ -103,13 +103,16 @@ TEST( win_bench_pbnxa, krah_basic )
         max_score : INT_MAX - 1,
         ciphertext : ciphertext.plain
     };
+    HillclimbersKnapsack knapsack = {
+        optimizer : stbrett_optimize_krah,
+    };
     hillclimb(
         &state,
         /* max_pass */      1,
         /* resume */        false,
         /* outfile */       stderr,
         len,
-        stbrett_optimize_krah
+        &knapsack
     );
     EXPECT_EQ( gkey.score, 17930 );
 

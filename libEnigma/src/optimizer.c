@@ -72,9 +72,11 @@ void optimizeScore( const struct Key *from
         .ciphertext = ciphertext.plain
     };
 
-
+    struct HillclimbersKnapsack knapsack = {
+        .optimizer = stbrettOptimzier
+    };
     hillclimb( &state,
                max_pass, resume,
                outfile, len,
-               stbrettOptimzier );
+               &knapsack );
 }
