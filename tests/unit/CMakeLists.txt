@@ -10,6 +10,8 @@ PRIVATE
     "enigma_error.cpp"
     "input.c/set_RingsState.tests.cpp"
     "input.c/set_stecker.tests.cpp"
+    "input.c/set_ukw.tests.cpp"
+    "key.c/UkwType_to_ALPHA.tests.cpp"
     "GetRSeed.tests.cpp"
     "string_dict_loader.tests.cpp"
     "test_data.tests.cpp"
