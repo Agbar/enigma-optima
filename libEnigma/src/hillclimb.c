@@ -10,7 +10,6 @@
 #include "global.h"
 #include "hillclimb.h"
 #include "key.h"
-#include "result.h"
 #include "score.h"
 #include "state.h"
 #include "stecker.h"
@@ -18,7 +17,6 @@
 
 void hillclimb( struct State* state,
                 int max_pass,
-                FILE *outfile,
                 int len,
                 const struct HillclimbersKnapsack* knapsack )
 {
@@ -115,12 +113,7 @@ void hillclimb( struct State* state,
                  globalscore = bestscore;
                  *gkey = *ckey;
                  gkey->score = bestscore;
-                 print_key( outfile, gkey );
-                 print_plaintext( outfile, gkey, len );
-                 if (ferror(outfile) != 0) {
-                   fputs("enigma: error: writing to result file failed\n", stderr);
-                   exit(EXIT_FAILURE);
-                 }
+                 knapsack->on_new_best( gkey, len );
                }
                /* abort if max_score is reached */
                if ( globalscore > state->max_score )
@@ -161,6 +154,7 @@ FINISHED:
 
 bool check_knapsack( const struct HillclimbersKnapsack* knapsack ) {
     if( !knapsack->optimizer ) return false;
+    if( !knapsack->on_new_best ) return false;
     if( !knapsack->save_state ) return false;
     if( !knapsack->log ) return false;
     return true;

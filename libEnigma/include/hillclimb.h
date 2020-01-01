@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "key.h"
 #include "state.h"
 #include "stbrett/optimizer.h"
 
@@ -23,6 +24,7 @@ struct ScoreOptimizer {
 
 struct HillclimbersKnapsack {
     struct ScoreOptimizer* optimizer;
+    void ( *on_new_best )( const struct Key* gkey, int len );
     void (*save_state)( const struct State* state, bool force_save );
     void ( *log )( const char msg[] );
 };
@@ -30,7 +32,7 @@ struct HillclimbersKnapsack {
 
 void hillclimb( struct State *state,
                 int max_pass,
-                FILE *outfile, int len,
+                int len,
                 const struct HillclimbersKnapsack* knapsack );
 
 

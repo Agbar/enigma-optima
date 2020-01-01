@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -5,6 +6,7 @@
 #include "error.h"
 #include "hillclimb.h"
 #include "optimizer.h"
+#include "result.h"
 #include "state.h"
 #include "stbrett/krah_optimizer.h"
 #include "stbrett/optimizer.h"
@@ -15,6 +17,16 @@ static stbrett_optimize_f* stbrettOptimzier = stbrett_optimize_krah;
 
 static void nop_log( UNUSED const char msg[] ) {
     // NOP
+}
+
+
+static void on_new_best( FILE* outfile, const struct Key* gkey, int len ) {
+    print_key( outfile, gkey );
+    print_plaintext( outfile, gkey, len );
+    if( ferror( outfile ) ) {
+        fputs( "enigma: error: writing to result file failed\n", stderr );
+        exit( EXIT_FAILURE );
+    }
 }
 
 
@@ -86,13 +98,17 @@ void optimizeScore( const struct Key *from
     enigma_cipher_init( enigma_cpu_flags, from->model,
                         &optimizer.prepare_decoder_lookup );
 
+    void onb_capture( const struct Key* k, int l ) {
+        on_new_best( outfile, k, l );
+    };
     struct HillclimbersKnapsack knapsack = {
         .optimizer = &optimizer,
+        .on_new_best = onb_capture,
         .save_state = save_state,
         .log = resume ? hillclimb_log : nop_log,
     };
     hillclimb( &state,
                max_pass,
-               outfile, len,
+               len,
                &knapsack );
 }

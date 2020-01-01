@@ -46,12 +46,6 @@ void err_input_fatal( UNUSED int type ) {
 }
 
 
-void err_open_fatal( UNUSED const char *s ) {
-    hillclimb_log( s );
-    throw std::exception();
-}
-
-
 void hillclimb_log( const char *s ) {
     fprintf( stderr, "%s\n", s );
 }
@@ -101,13 +95,13 @@ TEST( win_bench_pbnxa, krah_basic )
     };
     HillclimbersKnapsack knapsack = {
         optimizer : &scOptimizer,
+        on_new_best : []( const struct Key*, int ) {},
         save_state : []( const State*, bool ) { /*NOP*/ },
         log : []( const char[] ) {},
     };
     hillclimb(
         &state,
         /* max_pass */      1,
-        /* outfile */       stderr,
         len,
         &knapsack
     );
