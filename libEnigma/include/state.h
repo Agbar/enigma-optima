@@ -14,10 +14,10 @@ struct State {
     const struct Key *const to;
     struct Key *const ckey;
     struct Key *const gkey;
-    int sw_mode;
+    const int sw_mode;
     int pass;
     bool firstpass;
-    uint32_t max_score;
+    const uint32_t max_score;
     const struct echar * const ciphertext;
 };
 
