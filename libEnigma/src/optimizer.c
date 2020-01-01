@@ -78,8 +78,16 @@ void optimizeScore( const struct Key *from
         .max_score = max_score,
         .ciphertext = ciphertext.plain
     };
+
+    struct ScoreOptimizer optimizer = {
+        .optimize_score = stbrettOptimzier,
+    };
+    enigma_score_init( enigma_cpu_flags, optimizer.score_impl );
+    enigma_cipher_init( enigma_cpu_flags, from->model,
+                        &optimizer.prepare_decoder_lookup );
+
     struct HillclimbersKnapsack knapsack = {
-        .optimizer = stbrettOptimzier,
+        .optimizer = &optimizer,
         .save_state = save_state,
         .log = resume ? hillclimb_log : nop_log,
     };

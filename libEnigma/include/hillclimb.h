@@ -14,8 +14,15 @@
 #include "stbrett/optimizer.h"
 
 
+struct ScoreOptimizer {
+    stbrett_optimize_f* optimize_score;
+    enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup;
+    enigma_score_function_t* score_impl;
+};
+
+
 struct HillclimbersKnapsack {
-    stbrett_optimize_f* optimizer;
+    struct ScoreOptimizer* optimizer;
     void (*save_state)( const struct State* state, bool force_save );
     void ( *log )( const char msg[] );
 };

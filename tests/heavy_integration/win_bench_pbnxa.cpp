@@ -16,6 +16,7 @@ extern "C" {
 #include "hillclimb.h"
 #include "input.h"
 #include "randomNumbers.h"
+#include "scoreBasic.h"
 #include "state.h"
 #include "stbrett/krah_optimizer.h"
 }
@@ -101,8 +102,13 @@ TEST( win_bench_pbnxa, krah_basic )
         max_score : INT_MAX - 1,
         ciphertext : ciphertext.plain
     };
+    ScoreOptimizer scOptimizer = {
+        optimize_score : stbrett_optimize_krah,
+        prepare_decoder_lookup : enigma_cipher_decoder_lookup.prepare_decoder_lookup_M_H3,
+        score_impl : &enigmaScoreBasic,
+    };
     HillclimbersKnapsack knapsack = {
-        optimizer : stbrett_optimize_krah,
+        optimizer : &scOptimizer,
         save_state : []( const State*, bool ) { /*NOP*/ },
         log : []( const char[] ) {},
     };

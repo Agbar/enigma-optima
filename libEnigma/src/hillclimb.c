@@ -34,14 +34,6 @@ void hillclimb( struct State* state,
   Fill0To25_echar(var);
   int firstloop = 1;
 
-  enigma_score_function_t sf;
-
-  enigma_score_init( enigma_cpu_flags, &sf );
-
-  enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup;
-
-  enigma_cipher_init( enigma_cpu_flags, state->from->model, &prepare_decoder_lookup );
-
     knapsack->log( "enigma: working on range ..." );
 
     struct Key* ckey = state->ckey;
@@ -113,10 +105,10 @@ void hillclimb( struct State* state,
                Fill0To25_echar( ckey->stbrett.letters );
                ckey->count = 0;
 
+               struct ScoreOptimizer* opt = knapsack->optimizer;
                /* initialize path_lookup */
-               prepare_decoder_lookup( ckey, len );
-
-               uint32_t bestscore = knapsack->optimizer( var, ckey, len, &sf );
+               opt->prepare_decoder_lookup( ckey, len );
+               uint32_t bestscore = opt->optimize_score( var, ckey, len, opt->score_impl );
 
                /* record global max, if applicable */
                if ( bestscore > globalscore ) {
