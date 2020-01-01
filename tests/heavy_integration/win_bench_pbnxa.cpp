@@ -39,20 +39,12 @@ static void load_message( size_t s,  const char text[] ){
     }
 }
 
-void err_illegal_char_fatal( UNUSED const char *s ) {
-    hillclimb_log( s );
-    throw std::exception();
-}
 
 void err_input_fatal( UNUSED int type ) {
     fprintf( stderr, "%d\n", type );
     throw std::exception();
 }
 
-void err_open_fatal_resume( UNUSED const char *s ) {
-    hillclimb_log( s );
-    throw std::exception();
-}
 
 void err_open_fatal( UNUSED const char *s ) {
     hillclimb_log( s );
