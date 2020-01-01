@@ -104,11 +104,11 @@ TEST( win_bench_pbnxa, krah_basic )
     HillclimbersKnapsack knapsack = {
         optimizer : stbrett_optimize_krah,
         save_state : []( const State*, bool ) { /*NOP*/ },
+        log : []( const char[] ) {},
     };
     hillclimb(
         &state,
         /* max_pass */      1,
-        /* resume */        false,
         /* outfile */       stderr,
         len,
         &knapsack

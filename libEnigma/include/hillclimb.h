@@ -17,11 +17,12 @@
 struct HillclimbersKnapsack {
     stbrett_optimize_f* optimizer;
     void (*save_state)( const struct State* state, bool force_save );
+    void ( *log )( const char msg[] );
 };
 
 
 void hillclimb( struct State *state,
-                int max_pass, bool resume,
+                int max_pass,
                 FILE *outfile, int len,
                 const struct HillclimbersKnapsack* knapsack );
 

@@ -1,15 +1,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "optimizer.h"
 #include "dict.h"
+#include "error.h"
 #include "hillclimb.h"
+#include "optimizer.h"
 #include "state.h"
-#include "stbrett/optimizer.h"
 #include "stbrett/krah_optimizer.h"
+#include "stbrett/optimizer.h"
 #include "stbrett/ve3nea_optimizer.h"
 
 static stbrett_optimize_f* stbrettOptimzier = stbrett_optimize_krah;
+
+
+static void nop_log( UNUSED const char msg[] ) {
+    // NOP
+}
+
 
 bool selectOptimizer( const char* const name ) {
 
@@ -74,9 +81,10 @@ void optimizeScore( const struct Key *from
     struct HillclimbersKnapsack knapsack = {
         .optimizer = stbrettOptimzier,
         .save_state = save_state,
+        .log = resume ? hillclimb_log : nop_log,
     };
     hillclimb( &state,
-               max_pass, resume,
+               max_pass,
                outfile, len,
                &knapsack );
 }

@@ -1,25 +1,23 @@
 
-#include <stdint.h>
 #include <ctype.h>
-#include <string.h>
+#include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "error.h"
+#include "OS/Os.h"
+#include "character_encoding.h"
+#include "config/types.h"
 #include "global.h"
 #include "hillclimb.h"
 #include "key.h"
 #include "result.h"
 #include "score.h"
-#include "stecker.h"
 #include "state.h"
-#include "config/types.h"
-#include "OS/Os.h"
-#include "character_encoding.h"
+#include "stecker.h"
 
 
 void hillclimb( struct State* state,
                 int max_pass,
-                bool resume,
                 FILE *outfile,
                 int len,
                 const struct HillclimbersKnapsack* knapsack )
@@ -44,9 +42,7 @@ void hillclimb( struct State* state,
 
   enigma_cipher_init( enigma_cpu_flags, state->from->model, &prepare_decoder_lookup );
 
-  if (resume) {
-    hillclimb_log("enigma: working on range ...");
-  }
+    knapsack->log( "enigma: working on range ..." );
 
     struct Key* ckey = state->ckey;
     struct Key* gkey = state->gkey;
@@ -166,9 +162,7 @@ void hillclimb( struct State* state,
   }
 
 FINISHED:
-    if( resume ){
-      hillclimb_log( "enigma: finished range" );
-    }
+    knapsack->log( "enigma: finished range" );
     knapsack->save_state( state, true );
 }
 
@@ -176,6 +170,7 @@ FINISHED:
 bool check_knapsack( const struct HillclimbersKnapsack* knapsack ) {
     if( !knapsack->optimizer ) return false;
     if( !knapsack->save_state ) return false;
+    if( !knapsack->log ) return false;
     return true;
 }
 
