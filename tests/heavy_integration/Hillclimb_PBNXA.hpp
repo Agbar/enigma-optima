@@ -10,7 +10,7 @@ extern "C"{
 
 class Hillclimb_PBNXA
     : public ::testing::TestWithParam<
-          std::tuple< enigma_prepare_decoder_lookup_function_pt,
+          std::tuple< enigma_cipher_function_t*,
                       enigma_score_function_t* > > {
 
     ScoreOptimizer scOptimizer = {

@@ -57,7 +57,9 @@ void Hillclimb_PBNXA::SetUpTestCase(){
 
 
 void Hillclimb_PBNXA::SetUp() {
-    std::tie( scOptimizer.prepare_decoder_lookup, scOptimizer.score_impl ) =GetParam();
+    enigma_cipher_function_t* cipher_fun;
+    std::tie( cipher_fun, scOptimizer.score_impl ) = GetParam();
+    scOptimizer.prepare_decoder_lookup = cipher_fun->prepare_decoder_lookup_M_H3;
 }
 
 
