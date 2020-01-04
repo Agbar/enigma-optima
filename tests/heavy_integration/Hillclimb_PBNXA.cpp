@@ -36,23 +36,29 @@ static void load_message( size_t s,  const char text[] ){
 }
 
 
-void Hillclimb_PBNXA::SetUpTestCase(){
+void Hillclimb_PBNXA::LoadDicts(){
     // command line is:
     // enigma.exe -M M3 -c -o bench-result.txt -f "B:532:AA:AAA" -t
     // "B:532:AH:ZZZ" 00trigr.cur 00bigr.cur benchmark_cipher
 
     ASSERT_TRUE( load_tridict( trigraph_cur ) );
     ASSERT_TRUE( load_bidict( bigraph_cur ) );
+}
 
+
+void Hillclimb_PBNXA::LoadMessage( int& length ) {
     load_message( benchmark_cipher_pbnxa_size, benchmark_cipher_pbnxa );
+    length = benchmark_cipher_pbnxa_size - 1;
+    if( length > CT ) length = CT;
+}
 
+
+void Hillclimb_PBNXA::SetKeyRange( Key& from, Key& to ) {
     ASSERT_TRUE( set_range( &from,
                             &to,
                             "B:532:AA:AAA",
                             "B:532:AH:ZZZ",
                             EnigmaModel_M3 ) );
-    len = benchmark_cipher_pbnxa_size - 1;
-    if( len > CT ) len = CT;
 }
 
 

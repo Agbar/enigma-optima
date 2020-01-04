@@ -37,10 +37,17 @@ class Hillclimb_PBNXA
     static int len;
 
 public:
-    static void SetUpTestCase();
+    static void SetUpTestCase(){
+        LoadDicts();
+        LoadMessage( len );
+        SetKeyRange( from, to );
+    }
 
 protected:
     void SetUp() final;
+    static void LoadDicts();
+    static void LoadMessage( int& length );
+    static void SetKeyRange( Key& from, Key& to );
 
 public:
     bool IsSupported() const noexcept {
