@@ -1,4 +1,4 @@
-#include "Hillclimb_PBNXA.hpp"
+#include "HillclimbTestBase.hpp"
 
 #include <algorithm>
 #include <cstring>
@@ -41,7 +41,7 @@ static void load_message( size_t s,  const char text[] ){
 }
 
 
-void Hillclimb_PBNXA::LoadDicts(){
+void HillclimbTestBase::LoadDicts(){
     // command line is:
     // enigma.exe -M M3 -c -o bench-result.txt -f "B:532:AA:AAA" -t
     // "B:532:AH:ZZZ" 00trigr.cur 00bigr.cur benchmark_cipher
@@ -51,25 +51,25 @@ void Hillclimb_PBNXA::LoadDicts(){
 }
 
 
-void Hillclimb_PBNXA::ClearDicts(){
+void HillclimbTestBase::ClearDicts(){
     std::memset( &tridict, 0, sizeof tridict );
     std::memset( bidict, 0, sizeof bidict );
 }
 
 
-void Hillclimb_PBNXA::LoadMessage( int& length ) {
+void HillclimbTestBase::LoadMessage( int& length ) {
     heavy_test::load_message( benchmark_cipher_pbnxa_size, benchmark_cipher_pbnxa );
     length = benchmark_cipher_pbnxa_size - 1;
     if( length > CT ) length = CT;
 }
 
 
-void Hillclimb_PBNXA::ClearMessage( ) {
+void HillclimbTestBase::ClearMessage( ) {
     std::memset( ciphertext.plain, 0, sizeof ciphertext.plain );
 }
 
 
-void Hillclimb_PBNXA::SetKeyRange( Key& from, Key& to ) {
+void HillclimbTestBase::SetKeyRange( Key& from, Key& to ) {
     ASSERT_TRUE( set_range( &from,
                             &to,
                             "B:532:AA:AAA",
@@ -78,14 +78,14 @@ void Hillclimb_PBNXA::SetKeyRange( Key& from, Key& to ) {
 }
 
 
-void Hillclimb_PBNXA::SetUp() {
+void HillclimbTestBase::SetUp() {
     enigma_cipher_function_t* cipher_fun;
     std::tie( cipher_fun, scOptimizer.score_impl, isSupportedFun ) = GetParam();
     scOptimizer.prepare_decoder_lookup = cipher_fun->prepare_decoder_lookup_M_H3;
 }
 
 
-void Hillclimb_PBNXA::RunHillclimb() {
+void HillclimbTestBase::RunHillclimb() {
     // make the test deterministic
     srand( 42 );
 
@@ -109,7 +109,7 @@ void Hillclimb_PBNXA::RunHillclimb() {
 }
 
 
-void Hillclimb_PBNXA::RunAssertions() {
+void HillclimbTestBase::RunAssertions() {
     EXPECT_EQ( gkey.score, 17930 );
 
     EXPECT_EQ( gkey.ukwnum.type, UkwType::UkwType_B );
@@ -140,6 +140,6 @@ void Hillclimb_PBNXA::RunAssertions() {
 }
 
 
-Key Hillclimb_PBNXA::from;
-Key Hillclimb_PBNXA::to;
-int Hillclimb_PBNXA::len;
+Key HillclimbTestBase::from;
+Key HillclimbTestBase::to;
+int HillclimbTestBase::len;

@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <tuple>
 
-#include "Hillclimb_PBNXA.hpp"
+#include "HillclimbTestBase.hpp"
 
 extern "C" {
 #include "error.h"
@@ -25,6 +25,9 @@ void err_input_fatal( UNUSED int type ) {
 
 
 volatile sig_atomic_t doShutdown;
+
+
+using  Hillclimb_PBNXA = HillclimbTestBase ;
 
 
 TEST_P( Hillclimb_PBNXA, KrahOptimizesAsOriginal ) {

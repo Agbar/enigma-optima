@@ -15,7 +15,7 @@ using ScoringImplParams = std::tuple< enigma_cipher_function_t*,
                                       IsSupportedFun >;
 
 
-class Hillclimb_PBNXA
+class HillclimbTestBase
     : public ::testing::TestWithParam< ScoringImplParams > {
 
     ScoreOptimizer scOptimizer = {
