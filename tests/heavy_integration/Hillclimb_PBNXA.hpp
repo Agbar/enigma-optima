@@ -43,11 +43,18 @@ public:
         SetKeyRange( from, to );
     }
 
+    static void TearDownTestCase(){
+        ClearDicts();
+        ClearMessage();
+    }
+
 protected:
     void SetUp() final;
     static void LoadDicts();
     static void LoadMessage( int& length );
     static void SetKeyRange( Key& from, Key& to );
+    static void ClearDicts();
+    static void ClearMessage();
 
 public:
     bool IsSupported() const noexcept {

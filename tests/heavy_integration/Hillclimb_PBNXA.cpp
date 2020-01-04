@@ -1,6 +1,7 @@
 #include "Hillclimb_PBNXA.hpp"
 
 #include <algorithm>
+#include <cstring>
 #include <gtest/gtest.h>
 
 
@@ -10,10 +11,12 @@
 
 extern "C"{
 #include "ciphertext.h"
+#include "dict.h"
 #include "enigma/test_data.h"
 #include "input.h"
 }
 
+namespace heavy_test {
 
 static bool load_tridict( const char text[] ){
     enigma::tri_dict_builder storage{};
@@ -35,21 +38,34 @@ static void load_message( size_t s,  const char text[] ){
     }
 }
 
+}
+
 
 void Hillclimb_PBNXA::LoadDicts(){
     // command line is:
     // enigma.exe -M M3 -c -o bench-result.txt -f "B:532:AA:AAA" -t
     // "B:532:AH:ZZZ" 00trigr.cur 00bigr.cur benchmark_cipher
 
-    ASSERT_TRUE( load_tridict( trigraph_cur ) );
-    ASSERT_TRUE( load_bidict( bigraph_cur ) );
+    ASSERT_TRUE( heavy_test::load_tridict( trigraph_cur ) );
+    ASSERT_TRUE( heavy_test::load_bidict( bigraph_cur ) );
+}
+
+
+void Hillclimb_PBNXA::ClearDicts(){
+    std::memset( &tridict, 0, sizeof tridict );
+    std::memset( bidict, 0, sizeof bidict );
 }
 
 
 void Hillclimb_PBNXA::LoadMessage( int& length ) {
-    load_message( benchmark_cipher_pbnxa_size, benchmark_cipher_pbnxa );
+    heavy_test::load_message( benchmark_cipher_pbnxa_size, benchmark_cipher_pbnxa );
     length = benchmark_cipher_pbnxa_size - 1;
     if( length > CT ) length = CT;
+}
+
+
+void Hillclimb_PBNXA::ClearMessage( ) {
+    std::memset( ciphertext.plain, 0, sizeof ciphertext.plain );
 }
 
 
