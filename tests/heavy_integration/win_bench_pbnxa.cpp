@@ -35,10 +35,30 @@ TEST_P( Hillclimb_PBNXA, KrahOptimizesAsOriginal ) {
 
 static auto basic = std::make_tuple( &enigma_cipher_decoder_lookup, &enigmaScoreBasic );
 static auto simple = std::make_tuple( &enigma_cipher_decoder_lookup, &enigmaScoreSimple );
-auto noInterleave = std::make_tuple ( &enigma_cipher_decoder_lookup, &enigmaScoreOptNoInterleave );
-auto ssse3 = std::make_tuple( &enigma_cipher_decoder_lookup_ssse3, &enigmaScoreSsse3 );
-auto avx = std::make_tuple( &enigma_cipher_decoder_lookup_ssse3, &enigmaScoreAvx );
-auto avx2 = std::make_tuple( &enigma_cipher_DecoderLookupAvx2, &enigmaScoreAvx2 );
+static auto noInterleave = std::make_tuple ( &enigma_cipher_decoder_lookup, &enigmaScoreOptNoInterleave );
+static auto ssse3 = std::make_tuple( &enigma_cipher_decoder_lookup_ssse3, &enigmaScoreSsse3 );
+static auto avx = std::make_tuple( &enigma_cipher_decoder_lookup_ssse3, &enigmaScoreAvx );
+static auto avx2 = std::make_tuple( &enigma_cipher_DecoderLookupAvx2, &enigmaScoreAvx2 );
+
+
+namespace testing {
+
+template<>
+::std::string PrintToString< ScoringImplParams >( const ScoringImplParams& value ) {
+    enigma_score_function_t* score_fun;
+    std::tie( std::ignore, score_fun ) = value;
+    if( value == basic ) return "basic";
+    if( value == simple ) return "simple";
+    if( value == noInterleave ) return "basic_no_interleave";
+    if( value == ssse3 ) return "ssse3";
+    if( value == avx ) return "avx";
+    if( value == avx2 ) return "avx2";
+    throw std::invalid_argument( "value not recognized as enigma_score_function_t" );
+}
+
+}
+
 
 INSTANTIATE_TEST_CASE_P( WinBench, Hillclimb_PBNXA,
-                         ::testing::Values( basic, simple, noInterleave, ssse3, avx, avx2 ) );
+                         ::testing::Values( basic, simple, noInterleave, ssse3, avx, avx2 ),
+                         ::testing::PrintToStringParamName() );
