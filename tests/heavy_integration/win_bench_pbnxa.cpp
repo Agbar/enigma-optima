@@ -28,17 +28,36 @@ volatile sig_atomic_t doShutdown;
 
 
 TEST_P( Hillclimb_PBNXA, KrahOptimizesAsOriginal ) {
+    if( !IsSupported() ) return;
     RunHillclimb();
     RunAssertions();
 }
 
 
-static auto basic = std::make_tuple( &enigma_cipher_decoder_lookup, &enigmaScoreBasic );
-static auto simple = std::make_tuple( &enigma_cipher_decoder_lookup, &enigmaScoreSimple );
-static auto noInterleave = std::make_tuple ( &enigma_cipher_decoder_lookup, &enigmaScoreOptNoInterleave );
-static auto ssse3 = std::make_tuple( &enigma_cipher_decoder_lookup_ssse3, &enigmaScoreSsse3 );
-static auto avx = std::make_tuple( &enigma_cipher_decoder_lookup_ssse3, &enigmaScoreAvx );
-static auto avx2 = std::make_tuple( &enigma_cipher_DecoderLookupAvx2, &enigmaScoreAvx2 );
+static ScoringImplParams basic =
+    std::make_tuple( &enigma_cipher_decoder_lookup,
+                     &enigmaScoreBasic,
+                     []() { return true; } );
+static ScoringImplParams simple =
+    std::make_tuple( &enigma_cipher_decoder_lookup,
+                     &enigmaScoreSimple,
+                     []() { return true; } );
+static ScoringImplParams noInterleave =
+    std::make_tuple( &enigma_cipher_decoder_lookup,
+                     &enigmaScoreOptNoInterleave,
+                     []() { return true; } );
+static ScoringImplParams ssse3 =
+    std::make_tuple( &enigma_cipher_decoder_lookup_ssse3,
+                     &enigmaScoreSsse3,
+                     []() -> bool { return __builtin_cpu_supports( "ssse3" ); } );
+static ScoringImplParams avx =
+    std::make_tuple( &enigma_cipher_decoder_lookup_ssse3,
+                     &enigmaScoreAvx,
+                     []() -> bool { return __builtin_cpu_supports( "avx" ); } );
+static ScoringImplParams avx2 =
+    std::make_tuple( &enigma_cipher_DecoderLookupAvx2,
+                     &enigmaScoreAvx2,
+                     []() -> bool { return __builtin_cpu_supports( "avx2" ); } );
 
 
 namespace testing {
@@ -46,7 +65,7 @@ namespace testing {
 template<>
 ::std::string PrintToString< ScoringImplParams >( const ScoringImplParams& value ) {
     enigma_score_function_t* score_fun;
-    std::tie( std::ignore, score_fun ) = value;
+    std::tie( std::ignore, score_fun, std::ignore ) = value;
     if( value == basic ) return "basic";
     if( value == simple ) return "simple";
     if( value == noInterleave ) return "basic_no_interleave";

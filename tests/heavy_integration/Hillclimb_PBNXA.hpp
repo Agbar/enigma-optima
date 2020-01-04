@@ -9,8 +9,10 @@ extern "C"{
 }
 
 
+using IsSupportedFun = bool ( * )();
 using ScoringImplParams = std::tuple< enigma_cipher_function_t*,
-                                      enigma_score_function_t* >;
+                                      enigma_score_function_t*,
+                                      IsSupportedFun >;
 
 
 class Hillclimb_PBNXA
@@ -28,6 +30,7 @@ class Hillclimb_PBNXA
         log : []( const char[] ) {},
     };
     Key gkey{};
+    IsSupportedFun isSupportedFun {};
 
     static Key from;
     static Key to;
@@ -40,6 +43,9 @@ protected:
     void SetUp() final;
 
 public:
+    bool IsSupported() const noexcept {
+        return isSupportedFun();
+    }
     void RunHillclimb();
     void RunAssertions();
 };
