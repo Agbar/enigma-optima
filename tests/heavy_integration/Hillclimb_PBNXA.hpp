@@ -8,10 +8,13 @@ extern "C"{
 #include "stbrett/krah_optimizer.h"
 }
 
+
+using ScoringImplParams = std::tuple< enigma_cipher_function_t*,
+                                      enigma_score_function_t* >;
+
+
 class Hillclimb_PBNXA
-    : public ::testing::TestWithParam<
-          std::tuple< enigma_cipher_function_t*,
-                      enigma_score_function_t* > > {
+    : public ::testing::TestWithParam< ScoringImplParams > {
 
     ScoreOptimizer scOptimizer = {
         optimize_score : stbrett_optimize_krah,
