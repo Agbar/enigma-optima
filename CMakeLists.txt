@@ -127,6 +127,11 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
 
     set(ENIGMA_CXX_COMPILE_OPTIONS
         -Wnon-virtual-dtor)
+
+    link_libraries(
+        -static-libgcc
+        -static-libstdc++
+    )
 endif()
 
 find_package(Git REQUIRED)
