@@ -3,7 +3,8 @@
 #include <gtest/gtest.h>
 #include <tuple>
 
-#include "HillclimbTestBase.hpp"
+#include "DictsPolicy.hpp"
+#include "HillclimbTest.hpp"
 
 extern "C" {
 #include "error.h"
@@ -27,7 +28,11 @@ void err_input_fatal( UNUSED int type ) {
 volatile sig_atomic_t doShutdown;
 
 
-using  Hillclimb_PBNXA = HillclimbTestBase ;
+using Hillclimb_PBNXA = HillclimbTest< Krah1941DictsPolicy >;
+
+// WinBench's command line is:
+// enigma.exe -M M3 -c -o bench-result.txt -f "B:532:AA:AAA" -t
+// "B:532:AH:ZZZ" 00trigr.cur 00bigr.cur benchmark_cipher
 
 
 TEST_P( Hillclimb_PBNXA, KrahOptimizesAsOriginal ) {

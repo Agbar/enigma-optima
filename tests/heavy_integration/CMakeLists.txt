@@ -7,6 +7,7 @@ add_executable(EnigmaHeavyIntegrationTests "main.cpp")
 target_sources(EnigmaHeavyIntegrationTests
 PRIVATE
     "win_bench_pbnxa.cpp"
+    "DictsPolicy.cpp"
     "HillclimbTestBase.cpp"
 )
 

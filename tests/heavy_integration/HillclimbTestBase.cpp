@@ -5,32 +5,13 @@
 #include <gtest/gtest.h>
 
 
-#include "dicts/dict_builders.hpp"
-#include "dicts/string_dict_loader.hpp"
-
-
 extern "C"{
 #include "ciphertext.h"
-#include "dict.h"
 #include "enigma/test_data.h"
 #include "input.h"
 }
 
 namespace heavy_test {
-
-static bool load_tridict( const char text[] ){
-    enigma::tri_dict_builder storage{};
-    enigma::string_dict_loader tri{ "%3s%d", storage, text };
-    return tri.load();
-}
-
-
-static bool load_bidict( const char text[] ){
-    enigma::bi_dict_builder storage{};
-    enigma::string_dict_loader bi{ "%2s%d", storage, text };
-    return bi.load();
-}
-
 
 static void load_message( size_t s,  const char text[] ){
     for( size_t i = 0 ; i < s ; ++i ) {
@@ -38,22 +19,6 @@ static void load_message( size_t s,  const char text[] ){
     }
 }
 
-}
-
-
-void HillclimbTestBase::LoadDicts(){
-    // command line is:
-    // enigma.exe -M M3 -c -o bench-result.txt -f "B:532:AA:AAA" -t
-    // "B:532:AH:ZZZ" 00trigr.cur 00bigr.cur benchmark_cipher
-
-    ASSERT_TRUE( heavy_test::load_tridict( trigraph_cur ) );
-    ASSERT_TRUE( heavy_test::load_bidict( bigraph_cur ) );
-}
-
-
-void HillclimbTestBase::ClearDicts(){
-    std::memset( &tridict, 0, sizeof tridict );
-    std::memset( bidict, 0, sizeof bidict );
 }
 
 
