@@ -29,12 +29,27 @@ bool load_bidict( const char text[] ) {
     return bi.load();
 }
 
+
+bool load_unidict( const char text[] ) {
+    enigma::uni_dict_builder storage{};
+    enigma::string_dict_loader uni{"%1s%d", storage, text};
+    return uni.load();
+}
+
+
 void clear_tridict() {
     std::memset( tridict, 0, sizeof tridict );
 }
 
+
 void clear_bidict() {
     std::memset( bidict, 0, sizeof bidict );
 }
+
+
+void clear_unidict() {
+    std::memset( unidict, 0, sizeof unidict );
+}
+
 
 } // namespace heavy_test
