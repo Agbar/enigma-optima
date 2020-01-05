@@ -7,6 +7,7 @@
 #include "HillclimbTest.hpp"
 
 extern "C" {
+#include "enigma/test_data.h"
 #include "error.h"
 #include "scoreBasic.h"
 #include "scoreNoInterleave.h"
@@ -27,7 +28,7 @@ void err_input_fatal( UNUSED int type ) {
 
 volatile sig_atomic_t doShutdown;
 
-
+using Krah1941DictsPolicy = KrahDictsPolicy< trigraph_cur, bigraph_cur >;
 using Hillclimb_PBNXA = HillclimbTest< Krah1941DictsPolicy >;
 
 // WinBench's command line is:
