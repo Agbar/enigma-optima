@@ -20,6 +20,13 @@ target_compile_options(EnigmaOptima
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     set_target_properties(EnigmaOptima PROPERTIES C_EXTENSIONS ON)
+    target_link_options(EnigmaOptima BEFORE
+        PRIVATE
+            -static
+    )
+    set_target_properties(EnigmaOptima
+        PROPERTIES 
+            LINK_SEARCH_START_STATIC On)
 endif()
 
 target_link_libraries(EnigmaOptima Enigma)

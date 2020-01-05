@@ -129,6 +129,11 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
         -Wnon-virtual-dtor
         -Weffc++
     )
+
+    link_libraries(
+        -static-libgcc
+        -static-libstdc++
+    )
 endif()
 
 find_package(Git REQUIRED)
