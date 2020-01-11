@@ -28,7 +28,7 @@ void err_input_fatal( UNUSED int type ) {
 
 volatile sig_atomic_t doShutdown;
 
-using Krah1941DictsPolicy = KrahDictsPolicy< trigraph_cur, bigraph_cur >;
+using Krah1941DictsPolicy = KrahDictsPolicy< trigraph_1941, bigraph_1941 >;
 using PBNXA_Krah1941 = HillclimbTest< Krah1941DictsPolicy >;
 
 // WinBench's command line is:

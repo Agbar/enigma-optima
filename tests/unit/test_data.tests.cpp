@@ -29,15 +29,15 @@ TEST( test_data, benchmark_cipher_pbnxa_facts )
 }
 
 
-TEST( test_data, bigraph_cur_facts )
+TEST( test_data, bigraph_1941_facts )
 {
     count_calls_storage_mock storage{};
-    enigma::string_dict_loader dl{ "%2s%d", storage, bigraph_cur };
+    enigma::string_dict_loader dl{ "%2s%d", storage, bigraph_1941 };
 
     bool success = dl.load();
     EXPECT_TRUE( success );
     EXPECT_EQ( storage.called_cnt, 568 );
-    EXPECT_EQ( bigraph_cur_size, 5113 );
+    EXPECT_EQ( bigraph_1941_size, 5113 );
 }
 
 
@@ -53,15 +53,15 @@ TEST( test_data, trigraph_AVv1_facts )
 }
 
 
-TEST( test_data, trigraph_cur_facts )
+TEST( test_data, trigraph_1941_facts )
 {
     count_calls_storage_mock storage{};
-    enigma::string_dict_loader dl{ "%3s%d", storage, trigraph_cur };
+    enigma::string_dict_loader dl{ "%3s%d", storage, trigraph_1941 };
 
     bool success = dl.load();
     EXPECT_TRUE( success );
     EXPECT_EQ( storage.called_cnt, 3514 );
-    EXPECT_EQ( trigraph_cur_size, 28558 );
+    EXPECT_EQ( trigraph_1941_size, 28558 );
 }
 
 
