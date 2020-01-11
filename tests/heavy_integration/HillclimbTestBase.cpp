@@ -47,6 +47,7 @@ void HillclimbTestBase::SetUp() {
     enigma_cipher_function_t* cipher_fun;
     std::tie( cipher_fun, scOptimizer.score_impl, isSupportedFun ) = GetParam();
     scOptimizer.prepare_decoder_lookup = cipher_fun->prepare_decoder_lookup_M_H3;
+    scOptimizer.optimize_score = &GetStbrettOptimizer();
 }
 
 

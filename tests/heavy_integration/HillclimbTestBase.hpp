@@ -5,7 +5,6 @@
 extern "C"{
 #include "cipher.h"
 #include "hillclimb.h"
-#include "stbrett/krah_optimizer.h"
 }
 
 
@@ -18,11 +17,7 @@ using ScoringImplParams = std::tuple< enigma_cipher_function_t*,
 class HillclimbTestBase
     : public ::testing::TestWithParam< ScoringImplParams > {
 
-    ScoreOptimizer scOptimizer = {
-        optimize_score : stbrett_optimize_krah,
-        prepare_decoder_lookup : nullptr,
-        score_impl : nullptr,
-    };
+    ScoreOptimizer scOptimizer = {};
     const HillclimbersKnapsack knapsack = {
         optimizer : &scOptimizer,
         on_new_best : []( const struct Key*, int ) {},
@@ -38,6 +33,7 @@ class HillclimbTestBase
 
 protected:
     void SetUp() final;
+    virtual const stbrett_optimize_f& GetStbrettOptimizer() = 0;
     static void LoadMessage( int& length );
     static void SetKeyRange( Key& from, Key& to );
     static void ClearMessage();
