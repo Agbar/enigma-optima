@@ -4,10 +4,11 @@
 #include "HillclimbTestBase.hpp"
 
 
-template< class DictsOptPolicy >
+template< class DictsOptPolicy, template< class > class AssertionPolicy >
 class HillclimbTest
     : public HillclimbTestBase
-    , DictsOptPolicy {
+    , DictsOptPolicy
+    , AssertionPolicy< DictsOptPolicy > {
 
 public:
     static void SetUpTestCase() {
@@ -26,5 +27,7 @@ protected:
         return DictsOptPolicy::stbrett_optimizer;
     }
 
-    void RunFinalAssertions() final;
+    void RunFinalAssertions() final {
+        AssertionPolicy<DictsOptPolicy>::RunFinalAssertions( GKey() );
+    }
 };

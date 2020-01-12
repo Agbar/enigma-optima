@@ -4,10 +4,11 @@
 #include <tuple>
 
 #include "DictsPolicy.hpp"
+#include "HillclimbAssertions.hpp"
 #include "HillclimbTest.hpp"
+#include "Krah1941Policies.hpp"
 
 extern "C" {
-#include "enigma/test_data.h"
 #include "error.h"
 #include "scoreBasic.h"
 #include "scoreNoInterleave.h"
@@ -28,8 +29,8 @@ void err_input_fatal( UNUSED int type ) {
 
 volatile sig_atomic_t doShutdown;
 
-using Krah1941DictsPolicy = KrahDictsPolicy< trigraph_1941, bigraph_1941 >;
-using PBNXA_Krah1941 = HillclimbTest< Krah1941DictsPolicy >;
+
+using PBNXA_Krah1941 = HillclimbTest< Krah1941DictsPolicy, Assertions >;
 
 // WinBench's command line is:
 // enigma.exe -M M3 -c -o bench-result.txt -f "B:532:AA:AAA" -t
@@ -40,38 +41,6 @@ TEST_P( PBNXA_Krah1941, Hillclimb ) {
     if( !IsSupported() ) return;
     RunHillclimb();
     RunAssertions();
-}
-
-
-template< class DictsOptPolicy >
-void HillclimbTest< DictsOptPolicy >::RunFinalAssertions() {
-    EXPECT_EQ( GKey().score, 17930 );
-
-    EXPECT_EQ( GKey().ukwnum.type, UkwType::UkwType_B );
-    auto& slot = GKey().slot;
-    EXPECT_EQ( slot.l.type, RingType::RingType_5 );
-    EXPECT_EQ( slot.m.type, RingType::RingType_3 );
-    EXPECT_EQ( slot.r.type, RingType::RingType_2 );
-
-    std::string stecker;
-    std::transform(
-        std::begin( GKey().sf.map ),
-        std::begin( GKey().sf.map ) + GKey().count,
-        std::back_inserter( stecker ),
-        []( const echar& e ) { return echar_to_ALPHA( e ); } 
-    );
-    EXPECT_EQ( stecker, "AIBECJDRFYGOHZMUNQPVST" );
-
-    char ring[]{
-        echar_delta_to_ALPHA( GKey().ring.l ),
-        echar_delta_to_ALPHA( GKey().ring.m ),
-        echar_delta_to_ALPHA( GKey().ring.r ), '\0' };
-    EXPECT_STREQ( ring, "AAC" );
-    char mesg[]{
-        echar_delta_to_ALPHA( GKey().mesg.l ),
-        echar_delta_to_ALPHA( GKey().mesg.m ),
-        echar_delta_to_ALPHA( GKey().mesg.r ), '\0' };
-    EXPECT_STREQ( mesg, "HVS" );
 }
 
 
