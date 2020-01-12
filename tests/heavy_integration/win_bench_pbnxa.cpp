@@ -43,6 +43,38 @@ TEST_P( PBNXA_Krah1941, Hillclimb ) {
 }
 
 
+template< class DictsOptPolicy >
+void HillclimbTest< DictsOptPolicy >::RunFinalAssertions() {
+    EXPECT_EQ( GKey().score, 17930 );
+
+    EXPECT_EQ( GKey().ukwnum.type, UkwType::UkwType_B );
+    auto& slot = GKey().slot;
+    EXPECT_EQ( slot.l.type, RingType::RingType_5 );
+    EXPECT_EQ( slot.m.type, RingType::RingType_3 );
+    EXPECT_EQ( slot.r.type, RingType::RingType_2 );
+
+    std::string stecker;
+    std::transform(
+        std::begin( GKey().sf.map ),
+        std::begin( GKey().sf.map ) + GKey().count,
+        std::back_inserter( stecker ),
+        []( const echar& e ) { return echar_to_ALPHA( e ); } 
+    );
+    EXPECT_EQ( stecker, "AIBECJDRFYGOHZMUNQPVST" );
+
+    char ring[]{
+        echar_delta_to_ALPHA( GKey().ring.l ),
+        echar_delta_to_ALPHA( GKey().ring.m ),
+        echar_delta_to_ALPHA( GKey().ring.r ), '\0' };
+    EXPECT_STREQ( ring, "AAC" );
+    char mesg[]{
+        echar_delta_to_ALPHA( GKey().mesg.l ),
+        echar_delta_to_ALPHA( GKey().mesg.m ),
+        echar_delta_to_ALPHA( GKey().mesg.r ), '\0' };
+    EXPECT_STREQ( mesg, "HVS" );
+}
+
+
 static ScoringImplParams basic =
     std::make_tuple( &enigma_cipher_decoder_lookup,
                      &enigmaScoreBasic,

@@ -25,4 +25,6 @@ protected:
     const stbrett_optimize_f& GetStbrettOptimizer() final {
         return DictsOptPolicy::stbrett_optimizer;
     }
+
+    void RunFinalAssertions() final;
 };

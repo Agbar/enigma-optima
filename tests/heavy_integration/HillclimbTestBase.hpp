@@ -38,6 +38,11 @@ protected:
     static void SetKeyRange( Key& from, Key& to );
     static void ClearMessage();
 
+    virtual void RunFinalAssertions() = 0;
+
+    // properties:
+    const Key& GKey() const { return gkey; }
+
 public:
     bool IsSupported() const noexcept {
         return isSupportedFun();
