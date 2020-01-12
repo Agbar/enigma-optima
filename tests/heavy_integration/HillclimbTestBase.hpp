@@ -1,6 +1,7 @@
 #pragma once
 
 #include <gtest/gtest.h>
+#include <stdexcept>
 
 extern "C"{
 #include "cipher.h"
@@ -18,9 +19,9 @@ class HillclimbTestBase
     : public ::testing::TestWithParam< ScoringImplParams > {
 
     ScoreOptimizer scOptimizer = {};
-    const HillclimbersKnapsack knapsack = {
+    HillclimbersKnapsack knapsack = {
         optimizer : &scOptimizer,
-        on_new_best : []( const struct Key*, int ) {},
+        on_new_best : &OnNewBestCallback,
         save_state : []( const State*, bool ) { /*NOP*/ },
         log : []( const char[] ) {},
     };
@@ -30,15 +31,23 @@ class HillclimbTestBase
     static Key from;
     static Key to;
     static int len;
+    static HillclimbTestBase* active;
+
+    static void OnNewBestCallback( const struct Key*, int ) {
+        if( !active ) throw std::logic_error( "active test not set." );
+        active->AssertOnNewBest();
+    }
 
 protected:
     void SetUp() final;
+    void TearDown() final;
     virtual const stbrett_optimize_f& GetStbrettOptimizer() = 0;
     static void LoadMessage( int& length );
     static void SetKeyRange( Key& from, Key& to );
     static void ClearMessage();
 
     virtual void RunFinalAssertions() = 0;
+    virtual void AssertOnNewBest() const {}
 
     // properties:
     const Key& GKey() const { return gkey; }

@@ -44,10 +44,18 @@ void HillclimbTestBase::SetKeyRange( Key& from, Key& to ) {
 
 
 void HillclimbTestBase::SetUp() {
+    if( active ) throw std::logic_error( "another test is active." );
+    active = this;
+
     enigma_cipher_function_t* cipher_fun;
     std::tie( cipher_fun, scOptimizer.score_impl, isSupportedFun ) = GetParam();
     scOptimizer.prepare_decoder_lookup = cipher_fun->prepare_decoder_lookup_M_H3;
     scOptimizer.optimize_score = &GetStbrettOptimizer();
+}
+
+
+void HillclimbTestBase::TearDown() {
+    active = nullptr;
 }
 
 
@@ -83,3 +91,4 @@ void HillclimbTestBase::RunAssertions() {
 Key HillclimbTestBase::from;
 Key HillclimbTestBase::to;
 int HillclimbTestBase::len;
+HillclimbTestBase* HillclimbTestBase::active;
