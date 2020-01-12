@@ -83,7 +83,7 @@ void HillclimbTestBase::RunHillclimb() {
 }
 
 
-void HillclimbTestBase::RunAssertions() {
+void HillclimbTestBase::RunAssertions() const {
     RunFinalAssertions();
 }
 

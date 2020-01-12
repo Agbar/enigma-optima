@@ -9,7 +9,7 @@ extern "C" {
 
 template< class DictOptPlicy >
 struct HillclimbAssertions {
-    void RunFinalAssertions( const Key& gkey );
+    void RunFinalAssertions( const Key& gkey ) const;
     void OnNewBest( const Key& gkey ) const;
 };
 

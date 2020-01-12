@@ -46,7 +46,7 @@ protected:
     static void SetKeyRange( Key& from, Key& to );
     static void ClearMessage();
 
-    virtual void RunFinalAssertions() = 0;
+    virtual void RunFinalAssertions() const = 0;
     virtual void AssertOnNewBest() const {}
 
     // properties:
@@ -57,5 +57,5 @@ public:
         return isSupportedFun();
     }
     void RunHillclimb();
-    void RunAssertions();
+    void RunAssertions() const ;
 };

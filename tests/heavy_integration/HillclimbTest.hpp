@@ -27,7 +27,7 @@ protected:
         return DictsOptPolicy::stbrett_optimizer;
     }
 
-    void RunFinalAssertions() final {
+    void RunFinalAssertions() const final {
         AssertionPolicy<DictsOptPolicy>::RunFinalAssertions( GKey() );
     }
 
