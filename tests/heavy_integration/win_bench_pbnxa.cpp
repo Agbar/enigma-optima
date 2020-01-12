@@ -30,7 +30,7 @@ void err_input_fatal( UNUSED int type ) {
 volatile sig_atomic_t doShutdown;
 
 
-using PBNXA_Krah1941 = HillclimbTest< Krah1941DictsPolicy, Assertions >;
+using PBNXA_Krah1941 = HillclimbTest< Krah1941DictsPolicy, HillclimbAssertions >;
 
 // WinBench's command line is:
 // enigma.exe -M M3 -c -o bench-result.txt -f "B:532:AA:AAA" -t

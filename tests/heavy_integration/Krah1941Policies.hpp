@@ -14,7 +14,7 @@ using Krah1941DictsPolicy = KrahDictsPolicy< trigraph_1941, bigraph_1941 >;
 
 
 template<>
-void Assertions< Krah1941DictsPolicy >::RunFinalAssertions( const Key& gkey ) {
+void HillclimbAssertions< Krah1941DictsPolicy >::RunFinalAssertions( const Key& gkey ) {
     EXPECT_EQ( gkey.score, 17930 );
 
     EXPECT_EQ( gkey.ukwnum.type, UkwType::UkwType_B );
