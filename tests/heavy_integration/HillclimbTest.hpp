@@ -30,4 +30,8 @@ protected:
     void RunFinalAssertions() final {
         AssertionPolicy<DictsOptPolicy>::RunFinalAssertions( GKey() );
     }
+
+    void AssertOnNewBest() const final {
+        AssertionPolicy< DictsOptPolicy >::OnNewBest( GKey() );
+    }
 };
