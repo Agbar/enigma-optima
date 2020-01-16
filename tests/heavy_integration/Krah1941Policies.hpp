@@ -21,13 +21,11 @@ template<>
 void HillclimbAssertions< Krah1941DictsPolicy >::RunFinalAssertions( const Key& gkey ) const {
     ASSERT_EQ( new_best_cnt, 12 );
 
-    const ExpectedKey expected = {
+    using namespace heavy_test;
+    const heavy_test::ExpectedKey expected = {
         .score = 17930,
         .ukw = {.type = UkwType::UkwType_B},
-        .slot = {{GreekRingType::GreekRingType_None},
-                 {RingType::RingType_5},
-                 {RingType::RingType_3},
-                 {RingType::RingType_2}},
+        .slot = "532"_ringTypes,
         .stecker = "AIBECJDRFYGOHZMUNQPVST",
         .ring = "AAC",
         .mesg = "HVS"};

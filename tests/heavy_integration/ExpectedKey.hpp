@@ -7,6 +7,8 @@ extern "C" {
 #include "key.h"
 }
 
+namespace heavy_test {
+
 struct ExpectedKey {
     int32_t score;
     UkwType ukw;
@@ -17,3 +19,7 @@ struct ExpectedKey {
 
     void AssertMatch( const Key& gkey ) const;
 };
+
+RingTypes operator"" _ringTypes( const char*, std::size_t );
+
+} // namespace heavy_test
