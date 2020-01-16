@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 
 extern "C" {
@@ -21,5 +22,17 @@ struct ExpectedKey {
 };
 
 RingTypes operator"" _ringTypes( const char*, std::size_t );
+
+
+constexpr UkwType operator"" _ukw( const char v ) {
+    return UkwType{
+        v == 'A'
+            ? UkwType::UkwType_A
+            : v == 'B'
+                  ? UkwType::UkwType_B
+                  : v == 'C'
+                        ? UkwType::UkwType_B
+                        : throw std::logic_error( "Unexpected UKW literal." )};
+}
 
 } // namespace heavy_test

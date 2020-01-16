@@ -24,7 +24,7 @@ void HillclimbAssertions< Krah1941DictsPolicy >::RunFinalAssertions( const Key& 
     using namespace heavy_test;
     const heavy_test::ExpectedKey expected = {
         .score = 17930,
-        .ukw = {.type = UkwType::UkwType_B},
+        .ukw = 'B'_ukw,
         .slot = "532"_ringTypes,
         .stecker = "AIBECJDRFYGOHZMUNQPVST",
         .ring = "AAC",
