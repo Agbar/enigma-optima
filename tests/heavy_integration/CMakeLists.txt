@@ -9,6 +9,7 @@ PRIVATE
     "win_bench_pbnxa.cpp"
     "DictsPolicy.cpp"
     "HillclimbTestBase.cpp"
+    "ExpectedKey.cpp"
 )
 
 
