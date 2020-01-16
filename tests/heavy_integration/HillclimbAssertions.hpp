@@ -10,9 +10,12 @@ extern "C" {
 template< class DictOptPlicy >
 struct HillclimbAssertions {
     void RunFinalAssertions( const Key& gkey ) const;
-    void OnNewBest( const Key& gkey ) const;
+    void OnNewBest( const Key& gkey );
+
+private:
+    unsigned int new_best_cnt = 0;
 };
 
 
 template< class D >
-void HillclimbAssertions< D >::OnNewBest( UNUSED const Key& gkey ) const {}
+void HillclimbAssertions< D >::OnNewBest( UNUSED const Key& gkey ) {}

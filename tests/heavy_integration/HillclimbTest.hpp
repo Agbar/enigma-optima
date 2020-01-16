@@ -31,7 +31,7 @@ protected:
         AssertionPolicy<DictsOptPolicy>::RunFinalAssertions( GKey() );
     }
 
-    void AssertOnNewBest() const final {
+    void AssertOnNewBest() final {
         AssertionPolicy< DictsOptPolicy >::OnNewBest( GKey() );
     }
 };

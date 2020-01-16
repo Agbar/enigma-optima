@@ -47,7 +47,7 @@ protected:
     static void ClearMessage();
 
     virtual void RunFinalAssertions() const = 0;
-    virtual void AssertOnNewBest() const {}
+    virtual void AssertOnNewBest() {}
 
     // properties:
     const Key& GKey() const { return gkey; }
