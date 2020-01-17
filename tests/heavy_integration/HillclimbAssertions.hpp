@@ -15,6 +15,7 @@ struct HillclimbAssertions {
 
 private:
     static const heavy_test::ExpectedRings expected_rings;
+    static const std::vector< heavy_test::ExpectedKeyState > best_score_keys;
     unsigned int new_best_cnt = 0;
 };
 
