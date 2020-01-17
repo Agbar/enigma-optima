@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ExpectedKey.hpp"
 
 extern "C" {
 #include "global.h"
@@ -13,6 +14,7 @@ struct HillclimbAssertions {
     void OnNewBest( const Key& gkey );
 
 private:
+    static const heavy_test::ExpectedRings expected_rings;
     unsigned int new_best_cnt = 0;
 };
 

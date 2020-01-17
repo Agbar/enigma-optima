@@ -17,20 +17,29 @@ extern "C" {
 using Krah1941DictsPolicy = KrahDictsPolicy< trigraph_1941, bigraph_1941 >;
 
 
+namespace heavy_test {
+const ExpectedRings rings1941 = {
+    .ukw = 'B'_ukw,
+    .slot = "532"_ringTypes,
+};
+} // namespace heavy_test
+
+
+template<>
+const heavy_test::ExpectedRings
+    HillclimbAssertions< Krah1941DictsPolicy >::
+        expected_rings{heavy_test::rings1941};
+
+
 template<>
 void HillclimbAssertions< Krah1941DictsPolicy >::RunFinalAssertions( const Key& gkey ) const {
     ASSERT_EQ( new_best_cnt, 12 );
-
-    using namespace heavy_test;
-    const heavy_test::ExpectedKey expected = {
+    const heavy_test::ExpectedKeyState xkey{
         .score = 17930,
-        .ukw = 'B'_ukw,
-        .slot = "532"_ringTypes,
         .stecker = "AIBECJDRFYGOHZMUNQPVST",
         .ring = "AAC",
         .mesg = "HVS"};
-
-    expected.AssertMatch( gkey );
+    AssertMatch( gkey, xkey, expected_rings );
 }
 
 

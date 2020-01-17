@@ -10,16 +10,25 @@ extern "C" {
 
 namespace heavy_test {
 
-struct ExpectedKey {
-    int32_t score;
+
+struct ExpectedRings {
     UkwType ukw;
     RingTypes slot;
+};
+
+
+struct ExpectedKeyState {
+    int32_t score;
     std::string stecker;
     std::string ring;
     std::string mesg;
-
-    void AssertMatch( const Key& gkey ) const;
 };
+
+
+void AssertMatch( const Key& actual_key,
+                  const ExpectedKeyState& x_state,
+                  const ExpectedRings& x_rings );
+
 
 RingTypes operator"" _ringTypes( const char*, std::size_t );
 
