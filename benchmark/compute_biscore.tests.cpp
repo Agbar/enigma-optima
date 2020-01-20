@@ -21,8 +21,8 @@ struct compute_biscore
     const int expectedScore = 7913;
 protected:
     void LoadDictionary() override {
-        if( !enigma::strload_bidict( bigraph_cur ) ) {
-            throw enigma::strload_error( "failed to load bigraph_cur" );
+        if( !enigma::strload_bidict( bigraph_1941 ) ) {
+            throw enigma::strload_error( "failed to load bigraph_1941" );
         }
     }
 };

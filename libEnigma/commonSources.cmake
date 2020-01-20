@@ -9,6 +9,7 @@ PRIVATE
     "src/hillclimb.c"
     "src/input.c"
     "src/key.c"
+    "src/load_ciphertext.c"
     "src/optimizer.c"
     "src/randomNumbers.c"
     "src/result.c"

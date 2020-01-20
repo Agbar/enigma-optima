@@ -7,12 +7,33 @@
  *
  */
 
+#include <stdbool.h>
 #include <stdio.h>
-#include <stdint.h>
+
 #include "key.h"
+#include "state.h"
 #include "stbrett/optimizer.h"
 
-void hillclimb( const struct Key *from, const struct Key *to, const struct Key *ckey_res, const struct Key *gkey_res,
-                int sw_mode, int max_pass, int firstpass, int max_score, int resume,
-                FILE *outfile, int act_on_sig, int len,
-                stbrett_optimize_f* optimizer );
+
+struct ScoreOptimizer {
+    stbrett_optimize_f* optimize_score;
+    enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup;
+    enigma_score_function_t* score_impl;
+};
+
+
+struct HillclimbersKnapsack {
+    struct ScoreOptimizer* optimizer;
+    void ( *on_new_best )( const struct Key* gkey, int len );
+    void (*save_state)( const struct State* state, bool force_save );
+    void ( *log )( const char msg[] );
+};
+
+
+void hillclimb( struct State *state,
+                int max_pass,
+                int len,
+                const struct HillclimbersKnapsack* knapsack );
+
+
+bool check_knapsack( const struct HillclimbersKnapsack* knapsack );

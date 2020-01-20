@@ -1,14 +1,34 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "optimizer.h"
 #include "dict.h"
+#include "error.h"
 #include "hillclimb.h"
-#include "stbrett/optimizer.h"
+#include "optimizer.h"
+#include "result.h"
+#include "state.h"
 #include "stbrett/krah_optimizer.h"
+#include "stbrett/optimizer.h"
 #include "stbrett/ve3nea_optimizer.h"
 
 static stbrett_optimize_f* stbrettOptimzier = stbrett_optimize_krah;
+
+
+static void nop_log( UNUSED const char msg[] ) {
+    // NOP
+}
+
+
+static void on_new_best( FILE* outfile, const struct Key* gkey, int len ) {
+    print_key( outfile, gkey );
+    print_plaintext( outfile, gkey, len );
+    if( ferror( outfile ) ) {
+        fputs( "enigma: error: writing to result file failed\n", stderr );
+        exit( EXIT_FAILURE );
+    }
+}
+
 
 bool selectOptimizer( const char* const name ) {
 
@@ -51,14 +71,44 @@ void optimizeScore( const struct Key *from
                   , int max_score
                   , int resume
                   , FILE *outfile
-                  , int act_on_sig
                   , int len ) {
 
     if( stbrettOptimzier == NULL ) {
         exit( 1 );
     }
-    hillclimb( from, to, ckey_res, gkey_res, sw_mode,
-               max_pass, firstpass, max_score,
-               resume, outfile, act_on_sig, len,
-               stbrettOptimzier );
+
+    struct Key ckey = resume ? *ckey_res : *from;
+    struct Key gkey = resume ? *gkey_res : *from;
+
+    struct State state = {
+        .from = from,
+        .to = to,
+        .ckey = &ckey,
+        .gkey = &gkey,
+        .sw_mode = sw_mode,
+        .firstpass = firstpass,
+        .max_score = max_score,
+        .ciphertext = ciphertext.plain
+    };
+
+    struct ScoreOptimizer optimizer = {
+        .optimize_score = stbrettOptimzier,
+    };
+    enigma_score_init( enigma_cpu_flags, optimizer.score_impl );
+    enigma_cipher_init( enigma_cpu_flags, from->model,
+                        &optimizer.prepare_decoder_lookup );
+
+    void onb_capture( const struct Key* k, int l ) {
+        on_new_best( outfile, k, l );
+    };
+    struct HillclimbersKnapsack knapsack = {
+        .optimizer = &optimizer,
+        .on_new_best = onb_capture,
+        .save_state = save_state,
+        .log = resume ? hillclimb_log : nop_log,
+    };
+    hillclimb( &state,
+               max_pass,
+               len,
+               &knapsack );
 }

@@ -1,25 +1,28 @@
 #pragma once
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #include "config/types.h"
 #include "character_encoding.h"
+#include "echar/echar.h"
 #include "global.h"
+#include "key.h"
 
-typedef struct {
-  const struct Key *from;
-  const struct Key *to;
-  struct Key *ckey;
-  struct Key *gkey;
-  int *sw_mode;
-  int *pass;
-  int *firstpass;
-  int *max_score;
-  struct echar *ciphertext;
-} State;
+struct State {
+    const struct Key *const from;
+    const struct Key *const to;
+    struct Key *const ckey;
+    struct Key *const gkey;
+    const int sw_mode;
+    int pass;
+    bool firstpass;
+    const uint32_t max_score;
+    const struct echar * const ciphertext;
+};
 
-void save_state( const State* state );
+void save_state( const struct State* state, bool force_save );
 
-NO_RETURN 
-void save_state_exit( const State* state, int retval );
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
