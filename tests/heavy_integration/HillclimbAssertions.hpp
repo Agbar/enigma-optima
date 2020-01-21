@@ -21,4 +21,6 @@ private:
 
 
 template< class D >
-void HillclimbAssertions< D >::OnNewBest( UNUSED const Key& gkey ) {}
+void HillclimbAssertions< D >::OnNewBest( UNUSED const Key& gkey ) {
+    new_best_cnt++;
+}
