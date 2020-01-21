@@ -7,6 +7,7 @@
 #include "HillclimbAssertions.hpp"
 #include "HillclimbTest.hpp"
 #include "Krah1941Policies.hpp"
+#include "Ve3neaAv1Policies.hpp"
 
 extern "C" {
 #include "error.h"
@@ -31,6 +32,7 @@ volatile sig_atomic_t doShutdown;
 
 
 using PBNXA_Krah1941 = HillclimbTest< Krah1941DictsPolicy, HillclimbAssertions >;
+using PBNXA_Ve3neaAv1 = HillclimbTest< Ve3neaAv1DictsPolicy, HillclimbAssertions >;
 
 // WinBench's command line is:
 // enigma.exe -M M3 -c -o bench-result.txt -f "B:532:AA:AAA" -t
@@ -38,6 +40,13 @@ using PBNXA_Krah1941 = HillclimbTest< Krah1941DictsPolicy, HillclimbAssertions >
 
 
 TEST_P( PBNXA_Krah1941, Hillclimb ) {
+    if( !IsSupported() ) return;
+    RunHillclimb();
+    RunAssertions();
+}
+
+
+TEST_P( PBNXA_Ve3neaAv1, Hillclimb ) {
     if( !IsSupported() ) return;
     RunHillclimb();
     RunAssertions();
@@ -85,9 +94,14 @@ template<>
     throw std::invalid_argument( "value not recognized as enigma_score_function_t" );
 }
 
-}
+} // namespace testing
 
 
 INSTANTIATE_TEST_CASE_P( WinBench, PBNXA_Krah1941,
+                         ::testing::Values( basic, simple, noInterleave, ssse3, avx, avx2 ),
+                         ::testing::PrintToStringParamName() );
+
+
+INSTANTIATE_TEST_CASE_P( WinBench, PBNXA_Ve3neaAv1,
                          ::testing::Values( basic, simple, noInterleave, ssse3, avx, avx2 ),
                          ::testing::PrintToStringParamName() );
