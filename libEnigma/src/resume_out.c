@@ -38,7 +38,7 @@ void print_state(FILE *fp, const struct State *state)
     fprintf( fp, "%d=", state->sw_mode );
     fprintf( fp, "%d=", state->pass );
     fprintf( fp, "%d=", state->firstpass );
-    fprintf( fp, "%d\n", state->max_score );
+    fprintf( fp, "%d\n", MAX_SCORE );
 
 
   /* global key */

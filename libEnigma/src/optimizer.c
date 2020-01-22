@@ -88,7 +88,6 @@ void optimizeScore( const struct Key *from
         .gkey = &gkey,
         .sw_mode = sw_mode,
         .firstpass = firstpass,
-        .max_score = MAX_SCORE,
         .ciphertext = ciphertext.plain
     };
 

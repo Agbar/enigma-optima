@@ -73,7 +73,6 @@ void HillclimbTestBase::RunHillclimb() {
         sw_mode : SW_ONSTART,
         pass : 0,
         firstpass : true,
-        max_score : INT_MAX - 1,
         ciphertext : ciphertext.plain
     };
     hillclimb( &state,

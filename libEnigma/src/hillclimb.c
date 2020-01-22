@@ -116,7 +116,7 @@ void hillclimb( struct State* state,
                  knapsack->on_new_best( gkey, len );
                }
                /* abort if max_score is reached */
-               if ( globalscore > state->max_score )
+               if ( globalscore > MAX_SCORE )
                  goto FINISHED;
 
                ENDLOOP:
