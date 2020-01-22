@@ -143,7 +143,6 @@ void hillclimb( struct State* state,
 
   }
 
-FINISHED:
     knapsack->log( "enigma: finished range" );
     knapsack->save_state( state, true );
 }
