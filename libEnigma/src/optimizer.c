@@ -4,6 +4,7 @@
 
 #include "dict.h"
 #include "error.h"
+#include "global.h"
 #include "hillclimb.h"
 #include "optimizer.h"
 #include "result.h"
@@ -69,7 +70,6 @@ void optimizeScore( const struct Key *from
                   , int sw_mode
                   , int max_pass
                   , int firstpass
-                  , int max_score
                   , int resume
                   , FILE *outfile
                   , int len ) {
@@ -88,7 +88,7 @@ void optimizeScore( const struct Key *from
         .gkey = &gkey,
         .sw_mode = sw_mode,
         .firstpass = firstpass,
-        .max_score = max_score,
+        .max_score = MAX_SCORE,
         .ciphertext = ciphertext.plain
     };
 
