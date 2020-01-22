@@ -120,7 +120,7 @@ int main(int argc, char **argv)
       int maxargs = (outfile == stdout) ? 5 : 7;
       if ( optimizerOptionPresent ) maxargs += 2;
       if (argc != maxargs) usage();
-      if (!set_state(&from, &to, &ckey_res, &gkey_res, &sw_mode, &max_pass, &firstpass, &max_score)) {
+      if( !set_state( &from, &to, &ckey_res, &gkey_res, &sw_mode, &max_pass, &firstpass ) ) {
         fputs("enigma: error: resume file is not in the right format\n", stderr);
         exit(EXIT_FAILURE);
       }
