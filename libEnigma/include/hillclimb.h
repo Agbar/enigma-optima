@@ -27,6 +27,7 @@ struct HillclimbersKnapsack {
     void ( *on_new_best )( const struct Key* gkey, int len );
     void (*save_state)( const struct State* state, bool force_save );
     void ( *log )( const char msg[] );
+    bool ( *scrambler_state_is_endloop )( const struct State* state, const struct Key* ckey, int len );
 };
 
 
@@ -37,3 +38,8 @@ void hillclimb( struct State *state,
 
 
 bool check_knapsack( const struct HillclimbersKnapsack* knapsack );
+
+
+bool check_scrambler_state_is_endloop( const struct State* state,
+                                       const struct Key* ckey,
+                                       int len );

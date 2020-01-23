@@ -108,6 +108,7 @@ void optimizeScore( const struct Key *from
         .on_new_best = onb_capture,
         .save_state = save_state,
         .log = resume ? hillclimb_log : nop_log,
+        .scrambler_state_is_endloop = &check_scrambler_state_is_endloop
     };
     hillclimb( &state,
                max_pass,

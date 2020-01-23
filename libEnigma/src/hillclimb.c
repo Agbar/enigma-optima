@@ -81,22 +81,9 @@ void hillclimb( struct State* state,
                 }
 
                /* avoid duplicate scrambler states */
-               switch( state->sw_mode ){
-                 case SW_ONSTART:
-                   if (scrambler_state( ckey, len ) != SW_ONSTART)
-                     goto ENDLOOP;
-                   break;
-                 case SW_OTHER:
-                   if (scrambler_state( ckey, len ) != SW_OTHER)
-                     goto ENDLOOP;
-                   break;
-                 case SW_ALL:
-                   if (scrambler_state( ckey, len ) == SW_NONE)
-                     goto ENDLOOP;
-                   break;
-                 default: /* includes SINGLE_KEY */
-                   break;
-               }
+                if( knapsack->scrambler_state_is_endloop( state, ckey, len ) ) {
+                    goto ENDLOOP;
+                }
 
                /* complete ckey initialization */
                Fill0To25_echar( ckey->sf.map );
@@ -153,7 +140,27 @@ bool check_knapsack( const struct HillclimbersKnapsack* knapsack ) {
     if( !knapsack->on_new_best ) return false;
     if( !knapsack->save_state ) return false;
     if( !knapsack->log ) return false;
+    if( !knapsack->scrambler_state_is_endloop ) return false;
     return true;
+}
+
+
+bool check_scrambler_state_is_endloop( const struct State* state, const struct Key* ckey, int len ) {
+    switch( state->sw_mode ) {
+    case SW_ONSTART:
+        if( scrambler_state( ckey, len ) != SW_ONSTART ) return true;
+        break;
+    case SW_OTHER:
+        if( scrambler_state( ckey, len ) != SW_OTHER ) return true;
+        break;
+    case SW_ALL:
+        if( scrambler_state( ckey, len ) == SW_NONE ) return true;
+        break;
+    case SINGLE_KEY:
+    default:
+        break;
+    }
+    return false;
 }
 
 
