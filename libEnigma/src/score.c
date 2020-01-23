@@ -1,5 +1,7 @@
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
+
 #include "cpu.h"
 #include "cipher.h"
 #include "dict.h"
@@ -20,6 +22,8 @@
 
 void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* sf)
 {
+    if( !sf ) exit( 111 );
+
 #ifdef ENIGMA_CPU_SPECIFIC
     cpu = ENIGMA_CPU_SPECIFIC;
 #endif // ENIGMA_CPU_SPECIFIC
