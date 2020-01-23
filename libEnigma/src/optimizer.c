@@ -7,6 +7,7 @@
 #include "hillclimb.h"
 #include "optimizer.h"
 #include "result.h"
+#include "score.h"
 #include "state.h"
 #include "stbrett/krah_optimizer.h"
 #include "stbrett/optimizer.h"
@@ -91,8 +92,10 @@ void optimizeScore( const struct Key *from
         .ciphertext = ciphertext.plain
     };
 
+    enigma_score_function_t scoring = {};
     struct ScoreOptimizer optimizer = {
         .optimize_score = stbrettOptimzier,
+        .score_impl = &scoring,
     };
     enigma_score_init( enigma_cpu_flags, optimizer.score_impl );
     enigma_cipher_init( enigma_cpu_flags, from->model,
