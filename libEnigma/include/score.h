@@ -49,7 +49,8 @@ enum EnigmaScoreFunctions_t {
  * \return void
  *
  */
-void enigma_score_init(enigma_cpu_flags_t cpu, enigma_score_function_t* restrict sf);
+NON_NULL
+void enigma_score_init( enigma_cpu_flags_t cpu, enigma_score_function_t* restrict sf );
 
 
 #define TRISCORE_TAIL (2)

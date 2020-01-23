@@ -41,6 +41,7 @@ enum { SW_ONSTART, SW_OTHER, SW_ALL, SW_NONE, SINGLE_KEY };
 #define PURE_FUNCTION __attribute__((pure))
 #define UNUSED __attribute__ ((unused))
 #define NO_INLINE __attribute__ ((noinline))
+#define NON_NULL __attribute__(( nonnull ))
 
 #if __GNUC__ >= 7
 # define FALLTHROUGH() __attribute__((fallthrough))
