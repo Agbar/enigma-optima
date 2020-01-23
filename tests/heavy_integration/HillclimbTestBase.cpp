@@ -75,6 +75,7 @@ void HillclimbTestBase::RunHillclimb() {
         firstpass : true,
         ciphertext : ciphertext.plain
     };
+    knapsack.scrambler_state_is_endloop = select_scrambler_state_is_endloop_impl( &state );
     hillclimb( &state,
                 /* max_pass */   1,
                 len,

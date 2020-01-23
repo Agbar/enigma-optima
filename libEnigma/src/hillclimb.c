@@ -81,7 +81,7 @@ void hillclimb( struct State* state,
                 }
 
                /* avoid duplicate scrambler states */
-                if( knapsack->scrambler_state_is_endloop( state, ckey, len ) ) {
+                if( knapsack->scrambler_state_is_endloop( ckey, len ) ) {
                     goto ENDLOOP;
                 }
 
@@ -145,24 +145,39 @@ bool check_knapsack( const struct HillclimbersKnapsack* knapsack ) {
 }
 
 
-bool check_scrambler_state_is_endloop( const struct State* state, const struct Key* ckey, int len ) {
-    switch( state->sw_mode ) {
-    case SW_ONSTART:
-        if( scrambler_state( ckey, len ) != SW_ONSTART ) return true;
-        break;
-    case SW_OTHER:
-        if( scrambler_state( ckey, len ) != SW_OTHER ) return true;
-        break;
-    case SW_ALL:
-        if( scrambler_state( ckey, len ) == SW_NONE ) return true;
-        break;
-    case SINGLE_KEY:
-    default:
-        break;
-    }
+static bool endloop_check_sw_onstart( const struct Key* ckey, int len ) {
+    return scrambler_state( ckey, len ) != SW_ONSTART;
+}
+
+
+static bool endloop_check_sw_other( const struct Key* ckey, int len ) {
+    return scrambler_state( ckey, len ) != SW_OTHER;
+}
+
+
+static bool endloop_check_sw_all( const struct Key* ckey, int len ) {
+    return scrambler_state( ckey, len ) == SW_NONE;
+}
+
+
+static bool endloop_check_always_false( UNUSED const struct Key* ckey, UNUSED int len ) {
     return false;
 }
 
+
+scrambler_state_is_endloop_f* select_scrambler_state_is_endloop_impl( const struct State* state ) {
+    switch( state->sw_mode ) {
+    case SW_ONSTART:
+        return &endloop_check_sw_onstart;
+    case SW_OTHER:
+        return &endloop_check_sw_other;
+    case SW_ALL:
+        return &endloop_check_sw_all;
+    case SINGLE_KEY:
+    default:
+        return &endloop_check_always_false;
+    }
+}
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms

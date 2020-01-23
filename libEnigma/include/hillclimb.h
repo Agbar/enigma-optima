@@ -15,6 +15,10 @@
 #include "stbrett/optimizer.h"
 
 
+typedef bool scrambler_state_is_endloop_f( const struct Key* ckey,
+                                           int len );
+
+
 struct ScoreOptimizer {
     stbrett_optimize_f* optimize_score;
     enigma_prepare_decoder_lookup_function_pt prepare_decoder_lookup;
@@ -27,7 +31,7 @@ struct HillclimbersKnapsack {
     void ( *on_new_best )( const struct Key* gkey, int len );
     void (*save_state)( const struct State* state, bool force_save );
     void ( *log )( const char msg[] );
-    bool ( *scrambler_state_is_endloop )( const struct State* state, const struct Key* ckey, int len );
+    scrambler_state_is_endloop_f* scrambler_state_is_endloop;
 };
 
 
@@ -40,6 +44,4 @@ void hillclimb( struct State *state,
 bool check_knapsack( const struct HillclimbersKnapsack* knapsack );
 
 
-bool check_scrambler_state_is_endloop( const struct State* state,
-                                       const struct Key* ckey,
-                                       int len );
+scrambler_state_is_endloop_f* select_scrambler_state_is_endloop_impl( const struct State* state );
