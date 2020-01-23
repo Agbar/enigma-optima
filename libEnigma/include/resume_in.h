@@ -5,7 +5,7 @@
 
 char *getline_resume(char *dest, int n, FILE *fp);
 int set_state( struct Key *restrict from, struct Key *restrict to, struct Key *restrict ckey_res, struct Key *restrict gkey_res, int *sw_mode,
-               int *max_pass, int *firstpass, int *max_score );
+               int *max_pass, int *firstpass );
 
 
 

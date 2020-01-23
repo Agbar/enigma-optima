@@ -42,7 +42,7 @@ int main(int argc, char **argv)
   int hc = 0;
   int sw_mode = SW_ONSTART;
   int max_pass = 1, firstpass = 1;
-  int max_score = INT_MAX-1, resume = 0;
+  int resume = 0;
   FILE *outfile = stdout;
   char *f = NULL, *t = NULL;
   char *fmin[3] = {
@@ -120,7 +120,7 @@ int main(int argc, char **argv)
       int maxargs = (outfile == stdout) ? 5 : 7;
       if ( optimizerOptionPresent ) maxargs += 2;
       if (argc != maxargs) usage();
-      if (!set_state(&from, &to, &ckey_res, &gkey_res, &sw_mode, &max_pass, &firstpass, &max_score)) {
+      if( !set_state( &from, &to, &ckey_res, &gkey_res, &sw_mode, &max_pass, &firstpass ) ) {
         fputs("enigma: error: resume file is not in the right format\n", stderr);
         exit(EXIT_FAILURE);
       }
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
     InstallSighandler();
     SetupRandomGenerator();
     optimizeScore( &from, &to, &ckey_res, &gkey_res, sw_mode, max_pass, firstpass,
-                   max_score, resume, outfile, clen );
+                   resume, outfile, clen );
 
     if ( outfile != stdout ){
         fclose( outfile );

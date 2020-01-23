@@ -15,7 +15,6 @@ void optimizeScore( const struct Key *from
                   , int sw_mode
                   , int max_pass
                   , int firstpass
-                  , int max_score
                   , int resume
                   , FILE *outfile
                   , int len );

@@ -17,7 +17,6 @@ struct State {
     const int sw_mode;
     int pass;
     bool firstpass;
-    const uint32_t max_score;
     const struct echar * const ciphertext;
 };
 

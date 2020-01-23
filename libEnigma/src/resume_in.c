@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <string.h>
+
 #include "error.h"
 #include "global.h"
 #include "input.h"
 #include "key.h"
+#include "resume_in.h"
 #include "scan.h"
 #include "stecker.h"
-#include "resume_in.h"
 
 
 char *getline_resume(char *dest, int n, FILE *fp)
@@ -26,7 +27,7 @@ char *getline_resume(char *dest, int n, FILE *fp)
 
 /* sets state according to 00hc.resume */
 int set_state( struct Key *const restrict from, struct Key *const restrict to, struct Key *const restrict ckey_res, struct Key *const restrict gkey_res, int *sw_mode,
-               int *max_pass, int *firstpass, int *max_score )
+               int *max_pass, int *firstpass )
 {
   FILE *fp;
   char *kf, *kt, *kc, *kg, *x; 
@@ -80,8 +81,8 @@ int set_state( struct Key *const restrict from, struct Key *const restrict to, s
   if ((*firstpass = get_firstpass(x)) == -1) return 0;
 
   while (*x++) ;
-  if ((*max_score = scan_posint(x)) == -1 ) return 0;
-  
+  if( scan_posint( x ) != MAX_SCORE ) return 0;
+
 
   if (!set_range(from, to, kf, kt, model)) return 0;
   

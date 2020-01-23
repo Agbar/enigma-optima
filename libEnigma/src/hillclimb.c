@@ -115,9 +115,6 @@ void hillclimb( struct State* state,
                  gkey->score = bestscore;
                  knapsack->on_new_best( gkey, len );
                }
-               /* abort if max_score is reached */
-               if ( globalscore > state->max_score )
-                 goto FINISHED;
 
                ENDLOOP:
                if (firstloop) {
@@ -146,7 +143,6 @@ void hillclimb( struct State* state,
 
   }
 
-FINISHED:
     knapsack->log( "enigma: finished range" );
     knapsack->save_state( state, true );
 }

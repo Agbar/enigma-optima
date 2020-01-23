@@ -1,5 +1,8 @@
-#ifndef GLOBAL_H
-#define GLOBAL_H
+#pragma once
+
+
+#include <stdint.h>
+
 
 // _WIN32 is defined on both win32 and win64 platforms. More info:
 // http://msdn.microsoft.com/en-us/library/b0084kay.aspx
@@ -63,7 +66,8 @@ enum { SW_ONSTART, SW_OTHER, SW_ALL, SW_NONE, SINGLE_KEY };
 #endif
 
 
-#endif
+#define MAX_SCORE 2147483646
+STATIC_ASSERT( MAX_SCORE == INT32_MAX - 1, "Value required for backward compatibility with default enigma.exe." );
 
 
 /*
