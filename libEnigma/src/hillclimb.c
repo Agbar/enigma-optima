@@ -15,18 +15,40 @@
 #include "stecker.h"
 
 
+static const struct Key hi_h = {
+    .model = EnigmaModel_H,
+    .ukwnum = {2},
+    .slot = {.l = {5}, .m = {5}, .r = {5}},
+    .ring = {.m = {25}, .r = {25}},
+    .mesg = {.l = {25}, .m = {25}, .r = {25}},
+};
+
+static const struct Key hi_m3 = {
+    .model = EnigmaModel_M3,
+    .ukwnum = {2},
+    .slot = {.l = {8}, .m = {8}, .r = {8}},
+    .ring = {.m = {25}, .r = {25}},
+    .mesg = {.l = {25}, .m = {25}, .r = {25}},
+};
+
+static const struct Key hi_m4 = {
+    .model = EnigmaModel_M4,
+    .ukwnum = {4},
+    .slot = {.g = {10}, .l = {8}, .m = {8}, .r = {8}},
+    .ring = {.m = {25}, .r = {25}},
+    .mesg = {.g = {25}, .l = {25}, .m = {25}, .r = {25}},
+};
+
+PURE_FUNCTION
+const struct Key* get_hi_key( enum ModelType_t model );
+
+
 void hillclimb( struct State* state,
                 int max_pass,
                 int len,
                 const struct HillclimbersKnapsack* knapsack )
 {
     if( !check_knapsack( knapsack ) ) exit( 911 );
-
-  text_t hi[3][12] = {
-    {EnigmaModel_H ,2, 0,5,5,5,25,25, 0,25,25,25},
-    {EnigmaModel_M3,2, 0,8,8,8,25,25, 0,25,25,25},
-    {EnigmaModel_M4,4,10,8,8,8,25,25,25,25,25,25}
-  };
 
   struct echar var[26];
   Fill0To25_echar(var);
@@ -37,8 +59,8 @@ void hillclimb( struct State* state,
     struct Key* ckey = state->ckey;
     struct Key* gkey = state->gkey;
     int* pass = &state->pass;
-    int m = state->from->model;
     struct Key lo = *state->ckey;
+    const struct Key* const restrict hi = get_hi_key( state->from->model );
     uint32_t globalscore = gkey->score;
 
   if( state->firstpass )
@@ -56,21 +78,21 @@ void hillclimb( struct State* state,
 
    firstloop = 1;
 
-   for (ckey->ukwnum=lo.ukwnum; ckey->ukwnum.type<=hi[m][1]; ckey->ukwnum.type++) {
-    for (ckey->slot.g=lo.slot.g; ckey->slot.g.type<=hi[m][2]; ckey->slot.g.type++) {
-     for (ckey->slot.l=lo.slot.l; ckey->slot.l.type<=hi[m][3]; ckey->slot.l.type++) {
-      for (ckey->slot.m=lo.slot.m; ckey->slot.m.type<=hi[m][4]; ckey->slot.m.type++) {
+   for (ckey->ukwnum=lo.ukwnum; ckey->ukwnum.type<=hi->ukwnum.type; ckey->ukwnum.type++) {
+    for (ckey->slot.g=lo.slot.g; ckey->slot.g.type<=hi->slot.g.type; ckey->slot.g.type++) {
+     for (ckey->slot.l=lo.slot.l; ckey->slot.l.type<=hi->slot.l.type; ckey->slot.l.type++) {
+      for (ckey->slot.m=lo.slot.m; ckey->slot.m.type<=hi->slot.m.type; ckey->slot.m.type++) {
         if (ckey->slot.m.type == ckey->slot.l.type) continue;
-       for (ckey->slot.r=lo.slot.r; ckey->slot.r.type<=hi[m][5]; ckey->slot.r.type++) {
+       for (ckey->slot.r=lo.slot.r; ckey->slot.r.type<=hi->slot.r.type; ckey->slot.r.type++) {
          if (ckey->slot.r.type == ckey->slot.l.type || ckey->slot.r.type == ckey->slot.m.type) continue;
-        for (ckey->ring.m=lo.ring.m; ckey->ring.m.delta<=hi[m][6]; ckey->ring.m.delta++) {
+        for (ckey->ring.m=lo.ring.m; ckey->ring.m.delta<=hi->ring.m.delta; ckey->ring.m.delta++) {
           if (ckey->slot.m.type > 5 && ckey->ring.m.delta > 12) continue;
-         for (ckey->ring.r=lo.ring.r; ckey->ring.r.delta<=hi[m][7]; ckey->ring.r.delta++) {
+         for (ckey->ring.r=lo.ring.r; ckey->ring.r.delta<=hi->ring.r.delta; ckey->ring.r.delta++) {
            if (ckey->slot.r.type > 5 && ckey->ring.r.delta > 12) continue;
-          for (ckey->mesg.g=lo.mesg.g; ckey->mesg.g.delta<=hi[m][8]; ckey->mesg.g.delta++) {
-           for (ckey->mesg.l=lo.mesg.l; ckey->mesg.l.delta<=hi[m][9]; ckey->mesg.l.delta++) {
-            for (ckey->mesg.m=lo.mesg.m; ckey->mesg.m.delta<=hi[m][10]; ckey->mesg.m.delta++) {
-             for (ckey->mesg.r=lo.mesg.r; ckey->mesg.r.delta<=hi[m][11]; ckey->mesg.r.delta++) {
+          for (ckey->mesg.g=lo.mesg.g; ckey->mesg.g.delta<=hi->mesg.g.delta; ckey->mesg.g.delta++) {
+           for (ckey->mesg.l=lo.mesg.l; ckey->mesg.l.delta<=hi->mesg.l.delta; ckey->mesg.l.delta++) {
+            for (ckey->mesg.m=lo.mesg.m; ckey->mesg.m.delta<=hi->mesg.m.delta; ckey->mesg.m.delta++) {
+             for (ckey->mesg.r=lo.mesg.r; ckey->mesg.r.delta<=hi->mesg.r.delta; ckey->mesg.r.delta++) {
 
                 if( doShutdown ) {
                     knapsack->save_state( state, true );
@@ -106,7 +128,7 @@ void hillclimb( struct State* state,
                ENDLOOP:
                if (firstloop) {
                  firstloop = 0;
-                 init_key_low(&lo, m);
+                 init_key_low( &lo, state->from->model );
                }
                if( keycmp( ckey, state->to ) == cmp_equal ) {
                    goto RESTART;
@@ -177,6 +199,20 @@ scrambler_state_is_endloop_f* select_scrambler_state_is_endloop_impl( const stru
     case SINGLE_KEY:
     default:
         return &endloop_check_always_false;
+    }
+}
+
+
+const struct Key* get_hi_key( enum ModelType_t model ) {
+    switch( model ) {
+    case EnigmaModel_H:
+        return &hi_h;
+    case EnigmaModel_M3:
+        return &hi_m3;
+    case EnigmaModel_M4:
+        return &hi_m4;
+    default:
+        UNREACHABLE();
     }
 }
 
