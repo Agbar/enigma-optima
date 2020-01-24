@@ -26,8 +26,13 @@ char *getline_resume(char *dest, int n, FILE *fp)
 }
 
 /* sets state according to 00hc.resume */
-int set_state( struct Key *const restrict from, struct Key *const restrict to, struct Key *const restrict ckey_res, struct Key *const restrict gkey_res, int *sw_mode,
-               int *max_pass, int *firstpass )
+int set_state( struct Key *const restrict from, 
+               struct Key *const restrict to, 
+               struct Key *const restrict ckey_res,
+               struct Key *const restrict gkey_res,
+               struct SwMode *sw_mode,
+               int *max_pass,
+               int *firstpass )
 {
   FILE *fp;
   char *kf, *kt, *kc, *kg, *x; 
@@ -72,7 +77,7 @@ int set_state( struct Key *const restrict from, struct Key *const restrict to, s
   kc = x;
   
   while (*x++) ;
-  if ((*sw_mode = get_sw_mode(x)) == -1) return 0;
+  if( ( *sw_mode = get_sw_mode( x ) ).mode == -1 ) return 0;
 
   while (*x++) ;
   if ((*max_pass = scan_posint(x)) == -1 ) return 0;

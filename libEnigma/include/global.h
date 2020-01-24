@@ -25,9 +25,6 @@
 #endif
 
 
-enum { SW_ONSTART, SW_OTHER, SW_ALL, SW_NONE, SINGLE_KEY };
-
-
 // copy from x264
 #ifdef __ICL
 #define DECLARE_ALIGNED( var, n ) __declspec(align(n)) var

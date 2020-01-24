@@ -24,6 +24,7 @@ class HillclimbTestBase
         on_new_best : &OnNewBestCallback,
         save_state : []( const State*, bool ) { /*NOP*/ },
         log : []( const char[] ) {},
+        scrambler_state_is_endloop: nullptr,
     };
     Key gkey{};
     IsSupportedFun isSupportedFun {};

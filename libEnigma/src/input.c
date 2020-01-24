@@ -2,6 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "SwMode.h"
 #include "error.h"
 #include "global.h"
 #include "input.h"
@@ -195,15 +196,14 @@ int set_stecker( struct Key* const key, const char stecker[ const restrict ] ) {
  * \return int
  *
  */
-int get_sw_mode( const char *s ){
-  if (strcmp(s, "0") == 0)
-    return SW_ONSTART;
-  if (strcmp(s, "1") == 0)
-    return SW_OTHER;
-  if (strcmp(s, "2") == 0)
-    return SW_ALL;
-
-  return -1;
+struct SwMode get_sw_mode( const char* s ) {
+    if( strcmp( s, "0" ) == 0 )
+        return ( struct SwMode ){SW_ONSTART};
+    if( strcmp( s, "1" ) == 0 )
+        return ( struct SwMode ){SW_OTHER};
+    if( strcmp( s, "2" ) == 0 )
+        return ( struct SwMode ){SW_ALL};
+    return ( struct SwMode ){-1};
 }
 
 /** \brief Get firstpass.

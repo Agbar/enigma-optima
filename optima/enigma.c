@@ -1,12 +1,16 @@
 #include <assert.h>
 #include <getopt.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
+
+#include "OS/Os.h"
+#include "SwMode.h"
 #include "banner.h"
 #include "cipher.h"
 #include "ciphertext.h"
+#include "config/types.h"
 #include "cpu.h"
 #include "display.h"
 #include "error.h"
@@ -19,8 +23,6 @@
 #include "resume_in.h"
 #include "resume_out.h"
 #include "scan.h"
-#include "config/types.h"
-#include "OS/Os.h"
 
 
 void SetupOsThingsAndStuff( void ) {
@@ -40,7 +42,7 @@ int main(int argc, char **argv)
   bool first = true;
   bool optimizerOptionPresent = false;
   int hc = 0;
-  int sw_mode = SW_ONSTART;
+  struct SwMode sw_mode = {SW_ONSTART};
   int max_pass = 1, firstpass = 1;
   int resume = 0;
   FILE *outfile = stdout;

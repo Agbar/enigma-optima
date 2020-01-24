@@ -81,22 +81,9 @@ void hillclimb( struct State* state,
                 }
 
                /* avoid duplicate scrambler states */
-               switch( state->sw_mode ){
-                 case SW_ONSTART:
-                   if (scrambler_state( ckey, len ) != SW_ONSTART)
-                     goto ENDLOOP;
-                   break;
-                 case SW_OTHER:
-                   if (scrambler_state( ckey, len ) != SW_OTHER)
-                     goto ENDLOOP;
-                   break;
-                 case SW_ALL:
-                   if (scrambler_state( ckey, len ) == SW_NONE)
-                     goto ENDLOOP;
-                   break;
-                 default: /* includes SINGLE_KEY */
-                   break;
-               }
+                if( knapsack->scrambler_state_is_endloop( ckey, len ) ) {
+                    goto ENDLOOP;
+                }
 
                /* complete ckey initialization */
                Fill0To25_echar( ckey->sf.map );
@@ -153,9 +140,44 @@ bool check_knapsack( const struct HillclimbersKnapsack* knapsack ) {
     if( !knapsack->on_new_best ) return false;
     if( !knapsack->save_state ) return false;
     if( !knapsack->log ) return false;
+    if( !knapsack->scrambler_state_is_endloop ) return false;
     return true;
 }
 
+
+static bool endloop_check_sw_onstart( const struct Key* ckey, int len ) {
+    return scrambler_state( ckey, len ).mode != SW_ONSTART;
+}
+
+
+static bool endloop_check_sw_other( const struct Key* ckey, int len ) {
+    return scrambler_state( ckey, len ).mode != SW_OTHER;
+}
+
+
+static bool endloop_check_sw_all( const struct Key* ckey, int len ) {
+    return scrambler_state( ckey, len ).mode == SW_NONE;
+}
+
+
+static bool endloop_check_always_false( UNUSED const struct Key* ckey, UNUSED int len ) {
+    return false;
+}
+
+
+scrambler_state_is_endloop_f* select_scrambler_state_is_endloop_impl( const struct State* state ) {
+    switch( state->sw_mode.mode ) {
+    case SW_ONSTART:
+        return &endloop_check_sw_onstart;
+    case SW_OTHER:
+        return &endloop_check_sw_other;
+    case SW_ALL:
+        return &endloop_check_sw_all;
+    case SINGLE_KEY:
+    default:
+        return &endloop_check_always_false;
+    }
+}
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms

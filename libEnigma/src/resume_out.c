@@ -35,7 +35,7 @@ void print_state(FILE *fp, const struct State *state)
     print_key_rings( ckey, ckey_buffer );
     fprintf( fp, "%s%s%s", from_buffer, to_buffer, ckey_buffer );
 
-    fprintf( fp, "%d=", state->sw_mode );
+    fprintf( fp, "%d=", state->sw_mode.mode );
     fprintf( fp, "%d=", state->pass );
     fprintf( fp, "%d=", state->firstpass );
     fprintf( fp, "%d\n", MAX_SCORE );

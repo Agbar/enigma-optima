@@ -4,15 +4,16 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "ModMath.h"
+#include "SwMode.h"
+#include "character_encoding.h"
 #include "ciphertext.h"
 #include "common.h"
+#include "config/array_sizes.h"
+#include "config/types.h"
 #include "cpu.h"
 #include "global.h"
 #include "key.h"
-#include "ModMath.h"
-#include "config/array_sizes.h"
-#include "config/types.h"
-#include "character_encoding.h"
 
 struct Turnovers_t {
     struct turnover r,
@@ -22,7 +23,7 @@ struct Turnovers_t {
 };
 
 PURE_FUNCTION
-int scrambler_state(const struct Key *restrict key, int len);
+struct SwMode scrambler_state(const struct Key *restrict key, int len);
 
 typedef void (*enigma_prepare_decoder_lookup_function_pt) (const struct Key *key, int len);
 
