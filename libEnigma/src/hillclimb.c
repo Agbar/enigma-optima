@@ -108,8 +108,9 @@ void hillclimb( struct State* state,
                  firstloop = 0;
                  init_key_low(&lo, m);
                }
-               if( keycmp( ckey, state->to ) == 0 )
-                 goto RESTART;
+               if( keycmp( ckey, state->to ) == cmp_equal ) {
+                   goto RESTART;
+               }
 
              }
             }

@@ -143,8 +143,10 @@ struct Key {
 
 int init_key_default( struct Key *key, enum ModelType_t model);
 int init_key_low( struct Key *key, enum ModelType_t model);
+
 PURE_FUNCTION
-int keycmp(const struct Key *k1, const struct Key *k2);
+enum comparison_result
+keycmp( const struct Key* k1, const struct Key* k2 );
 
 #endif
 

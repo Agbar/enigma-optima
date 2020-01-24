@@ -78,26 +78,27 @@ int init_key_low( struct Key *const key, enum ModelType_t model )
 
 /* compares ukwnum thru r_mesg, omits g_ring, l_ring        */
 /* returns -1 for k1 < k2, 0 for k1 == k2, 1 for k1 > k2    */
-int keycmp(const struct Key *k1, const struct Key *k2)
+enum comparison_result
+keycmp( const struct Key* k1, const struct Key* k2 )
 {
   enum comparison_result cr;
   cr = UkwType_cmp( k1->ukwnum, k2->ukwnum );
   if( cr != cmp_equal ) return cr;
   if (   k1->slot.g.type != k2->slot.g.type ) {
-    if ( k1->slot.g.type >  k2->slot.g.type ) return 1;
-    else return -1;
+    if ( k1->slot.g.type >  k2->slot.g.type ) return cmp_greater;
+    else return cmp_less;
   }
   if (   k1->slot.l.type != k2->slot.l.type ) {
-    if ( k1->slot.l.type >  k2->slot.l.type ) return 1;
-    else return -1;
+    if ( k1->slot.l.type >  k2->slot.l.type ) return cmp_greater;
+    else return cmp_less;
   }
   if (   k1->slot.m.type != k2->slot.m.type ) {
-    if ( k1->slot.m.type >  k2->slot.m.type ) return 1;
-    else return -1;
+    if ( k1->slot.m.type >  k2->slot.m.type ) return cmp_greater;
+    else return cmp_less;
   }
   if (   k1->slot.r.type != k2->slot.r.type ) {
-    if ( k1->slot.r.type >  k2->slot.r.type ) return 1;
-    else return -1;
+    if ( k1->slot.r.type >  k2->slot.r.type ) return cmp_greater;
+    else return cmp_less;
   }
   cr = echar_delta_cmp( k1->ring.m, k2->ring.m );
   if( cr != cmp_equal ) return cr;

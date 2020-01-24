@@ -93,8 +93,8 @@ int set_state( struct Key *const restrict from,
   
   if (!set_key(ckey_res, kc, model, 0)) return 0;
 
-  if (keycmp(from, ckey_res) == 1) return 0;
-  if (keycmp(ckey_res, to) == 1) return 0;
+  if( keycmp( from, ckey_res ) == cmp_greater ) return 0;
+  if( keycmp( ckey_res, to ) == cmp_greater ) return 0;
 
 
   /* line2 */

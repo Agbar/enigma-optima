@@ -313,7 +313,7 @@ int set_range( struct Key *const restrict from, struct Key *const restrict to, c
 {
   if (!set_key(from, kf, model, 0)) return 0;
   if (!set_key(to, kt, model, 0)) return 0;
-  if (keycmp(from, to) == 1) return 0;
+  if( keycmp( from, to ) == cmp_greater ) return 0;
 
   return 1;
 
