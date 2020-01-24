@@ -3,8 +3,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "config/types.h"
+#include "SwMode.h"
 #include "character_encoding.h"
+#include "config/types.h"
 #include "echar/echar.h"
 #include "global.h"
 #include "key.h"
@@ -14,7 +15,7 @@ struct State {
     const struct Key *const to;
     struct Key *const ckey;
     struct Key *const gkey;
-    const int sw_mode;
+    const struct SwMode sw_mode;
     int pass;
     bool firstpass;
     const struct echar * const ciphertext;

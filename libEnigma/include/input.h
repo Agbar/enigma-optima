@@ -14,8 +14,6 @@ int set_ring( struct Key *key, const char *s, enum ModelType_t model );
 int set_mesg( struct Key *key, const char *s, enum ModelType_t model );
 int set_stecker( struct Key* key, const char s[] );
 PURE_FUNCTION
-int get_sw_mode( const char* s );
-PURE_FUNCTION
 int get_firstpass( const char* s );
 int set_key( struct Key *key, const char *keystring, enum ModelType_t model, int adjust);
 int set_range( struct Key *restrict from, struct Key *restrict to, const char *kf, const char *kt, enum ModelType_t model );

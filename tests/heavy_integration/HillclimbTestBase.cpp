@@ -6,6 +6,7 @@
 
 
 extern "C"{
+#include "SwMode.h"
 #include "ciphertext.h"
 #include "enigma/test_data.h"
 #include "input.h"
@@ -70,7 +71,7 @@ void HillclimbTestBase::RunHillclimb() {
         to : &to,
         ckey : &ckey, // not a resume
         gkey : &gkey, // not a resume
-        sw_mode : SW_ONSTART,
+        sw_mode : {SwMode::SW_ONSTART},
         pass : 0,
         firstpass : true,
         ciphertext : ciphertext.plain

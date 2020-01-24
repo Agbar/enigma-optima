@@ -146,17 +146,17 @@ bool check_knapsack( const struct HillclimbersKnapsack* knapsack ) {
 
 
 static bool endloop_check_sw_onstart( const struct Key* ckey, int len ) {
-    return scrambler_state( ckey, len ) != SW_ONSTART;
+    return scrambler_state( ckey, len ).mode != SW_ONSTART;
 }
 
 
 static bool endloop_check_sw_other( const struct Key* ckey, int len ) {
-    return scrambler_state( ckey, len ) != SW_OTHER;
+    return scrambler_state( ckey, len ).mode != SW_OTHER;
 }
 
 
 static bool endloop_check_sw_all( const struct Key* ckey, int len ) {
-    return scrambler_state( ckey, len ) == SW_NONE;
+    return scrambler_state( ckey, len ).mode == SW_NONE;
 }
 
 
@@ -166,7 +166,7 @@ static bool endloop_check_always_false( UNUSED const struct Key* ckey, UNUSED in
 
 
 scrambler_state_is_endloop_f* select_scrambler_state_is_endloop_impl( const struct State* state ) {
-    switch( state->sw_mode ) {
+    switch( state->sw_mode.mode ) {
     case SW_ONSTART:
         return &endloop_check_sw_onstart;
     case SW_OTHER:

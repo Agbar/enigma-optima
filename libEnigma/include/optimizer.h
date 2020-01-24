@@ -1,8 +1,13 @@
 #pragma once
 
+
 #include <stdbool.h>
 #include <stdio.h>
+
+
+#include "SwMode.h"
 #include "key.h"
+
 
 bool selectOptimizer( const char* const name );
 
@@ -12,7 +17,7 @@ void optimizeScore( const struct Key *from
                   , const struct Key *to
                   , const struct Key *ckey_res
                   , const struct Key *gkey_res
-                  , int sw_mode
+                  , struct SwMode sw_mode
                   , int max_pass
                   , int firstpass
                   , int resume

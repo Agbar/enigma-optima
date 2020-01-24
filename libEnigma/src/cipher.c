@@ -136,7 +136,7 @@ void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, e
 }
 
 /* Check for slow wheel movement */
-int scrambler_state(const struct Key* const key, int len)
+struct SwMode scrambler_state( const struct Key* const key, int len )
 {
   int i;
 
@@ -182,9 +182,9 @@ int scrambler_state(const struct Key* const key, int len)
       p3 = 1;
       p2 = 1;
       if (i == 0)
-        return SW_ONSTART;
+          return ( struct SwMode ){SW_ONSTART};
       else
-        return SW_OTHER;
+          return ( struct SwMode ){SW_OTHER};
     }
 
     echar_delta_rot_1( &r_offset );
@@ -199,8 +199,7 @@ int scrambler_state(const struct Key* const key, int len)
 
   }
 
-  return SW_NONE;
-
+  return ( struct SwMode ){SW_NONE};
 }
 
 /* initialize lookup table for paths through scramblers, models H, M3 */
