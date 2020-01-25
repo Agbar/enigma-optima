@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "OS/Os.h"
 #include "character_encoding.h"
 #include "config/types.h"
 #include "global.h"
@@ -94,13 +93,7 @@ void hillclimb( struct State* state,
             for (ckey->mesg.m=lo.mesg.m; ckey->mesg.m.delta<=hi->mesg.m.delta; ckey->mesg.m.delta++) {
              for (ckey->mesg.r=lo.mesg.r; ckey->mesg.r.delta<=hi->mesg.r.delta; ckey->mesg.r.delta++) {
 
-                if( doShutdown ) {
-                    knapsack->save_state( state, true );
-                    exit( 111 );
-                }
-                else {
-                    knapsack->save_state( state, false );
-                }
+                knapsack->check_shutdown( state );
 
                /* avoid duplicate scrambler states */
                 if( knapsack->scrambler_state_is_endloop( ckey, len ) ) {
@@ -162,6 +155,7 @@ bool check_knapsack( const struct HillclimbersKnapsack* knapsack ) {
     if( !knapsack->optimizer ) return false;
     if( !knapsack->on_new_best ) return false;
     if( !knapsack->save_state ) return false;
+    if( !knapsack->check_shutdown ) return false;
     if( !knapsack->log ) return false;
     if( !knapsack->scrambler_state_is_endloop ) return false;
     return true;
