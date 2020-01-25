@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "OS/Os.h"
 #include "dict.h"
 #include "error.h"
 #include "global.h"
@@ -28,6 +29,16 @@ static void on_new_best( FILE* outfile, const struct Key* gkey, int len ) {
     if( ferror( outfile ) ) {
         fputs( "enigma: error: writing to result file failed\n", stderr );
         exit( EXIT_FAILURE );
+    }
+}
+
+
+static void check_shutdown( const struct State* state ) {
+    if( doShutdown ) {
+        save_state( state, true );
+        exit( 111 );
+    } else {
+        save_state( state, false );
     }
 }
 
@@ -107,6 +118,7 @@ void optimizeScore( const struct Key *from
         .optimizer = &optimizer,
         .on_new_best = onb_capture,
         .save_state = save_state,
+        .check_shutdown = &check_shutdown,
         .log = resume ? hillclimb_log : nop_log,
         .scrambler_state_is_endloop = select_scrambler_state_is_endloop_impl( &state ),
     };

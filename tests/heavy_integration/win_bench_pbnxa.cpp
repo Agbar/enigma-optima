@@ -28,9 +28,6 @@ void err_input_fatal( UNUSED int type ) {
 }
 
 
-volatile sig_atomic_t doShutdown;
-
-
 using PBNXA_Krah1941 = HillclimbTest< Krah1941DictsPolicy, HillclimbAssertions >;
 using PBNXA_Ve3neaAv1 = HillclimbTest< Ve3neaAv1DictsPolicy, HillclimbAssertions >;
 

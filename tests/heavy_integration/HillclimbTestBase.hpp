@@ -23,6 +23,7 @@ class HillclimbTestBase
         optimizer : &scOptimizer,
         on_new_best : &OnNewBestCallback,
         save_state : []( const State*, bool ) { /*NOP*/ },
+        check_shutdown : []( const State* ) { /*NOP*/ },
         log : []( const char[] ) {},
         scrambler_state_is_endloop: nullptr,
     };

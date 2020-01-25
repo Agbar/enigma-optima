@@ -30,6 +30,7 @@ struct HillclimbersKnapsack {
     struct ScoreOptimizer* optimizer;
     void ( *on_new_best )( const struct Key* gkey, int len );
     void (*save_state)( const struct State* state, bool force_save );
+    void ( *check_shutdown )( const struct State* state );
     void ( *log )( const char msg[] );
     scrambler_state_is_endloop_f* scrambler_state_is_endloop;
 };
