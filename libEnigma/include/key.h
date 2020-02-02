@@ -1,6 +1,7 @@
 #ifndef KEY_H
 #define KEY_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "global.h"
@@ -82,6 +83,14 @@ enum ring_type_enum {
 } __attribute__(( packed ));
 STATIC_ASSERT( sizeof( enum ring_type_enum ) == 1, "ring_type_enum should fit in a single byte." );
 
+
+static inline bool
+RingsState_equ( struct RingsState l, struct RingsState r ) {
+    return l.g.delta == r.g.delta
+           && l.l.delta == r.l.delta
+           && l.m.delta == r.m.delta
+           && l.r.delta == r.r.delta;
+}
 
 struct RingType {
     enum ring_type_enum type;

@@ -8,6 +8,7 @@
 #include "config/types.h"
 #include "global.h"
 #include "hillclimb.h"
+#include "iterators/mesg_iterator.h"
 #include "key.h"
 #include "score.h"
 #include "state.h"
@@ -88,11 +89,11 @@ void hillclimb( struct State* state,
           if (ckey->slot.m.type > 5 && ckey->ring.m.delta > 12) continue;
          for (ckey->ring.r=lo.ring.r; ckey->ring.r.delta<=hi->ring.r.delta; ckey->ring.r.delta++) {
            if (ckey->slot.r.type > 5 && ckey->ring.r.delta > 12) continue;
-          for (ckey->mesg.g=lo.mesg.g; ckey->mesg.g.delta<=hi->mesg.g.delta; ckey->mesg.g.delta++) {
-           for (ckey->mesg.l=lo.mesg.l; ckey->mesg.l.delta<=hi->mesg.l.delta; ckey->mesg.l.delta++) {
-            for (ckey->mesg.m=lo.mesg.m; ckey->mesg.m.delta<=hi->mesg.m.delta; ckey->mesg.m.delta++) {
-             for (ckey->mesg.r=lo.mesg.r; ckey->mesg.r.delta<=hi->mesg.r.delta; ckey->mesg.r.delta++) {
 
+            const struct MesgIterator mesg_end = {.overflow = true};
+            struct MesgIterator mesg_iter = {.state = &ckey->mesg};
+            for( ; !MesgIterator_equ( mesg_end, mesg_iter );
+                 mesg_iter = next_mesg( mesg_iter, state->from->model ) ) {
                 knapsack->check_shutdown( state );
 
                /* avoid duplicate scrambler states */
@@ -127,9 +128,6 @@ void hillclimb( struct State* state,
                    goto RESTART;
                }
 
-             }
-            }
-           }
           }
          }
         }
