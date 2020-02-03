@@ -9,6 +9,7 @@
 #include "global.h"
 #include "hillclimb.h"
 #include "iterators/mesg_iterator.h"
+#include "iterators/ring_iterator.h"
 #include "key.h"
 #include "score.h"
 #include "state.h"
@@ -85,11 +86,11 @@ void hillclimb( struct State* state,
         if (ckey->slot.m.type == ckey->slot.l.type) continue;
        for (ckey->slot.r=lo.slot.r; ckey->slot.r.type<=hi->slot.r.type; ckey->slot.r.type++) {
          if (ckey->slot.r.type == ckey->slot.l.type || ckey->slot.r.type == ckey->slot.m.type) continue;
-        for (ckey->ring.m=lo.ring.m; ckey->ring.m.delta<=hi->ring.m.delta; ckey->ring.m.delta++) {
-          if (ckey->slot.m.type > 5 && ckey->ring.m.delta > 12) continue;
-         for (ckey->ring.r=lo.ring.r; ckey->ring.r.delta<=hi->ring.r.delta; ckey->ring.r.delta++) {
-           if (ckey->slot.r.type > 5 && ckey->ring.r.delta > 12) continue;
 
+        const struct RingIterator ring_end = {.overflow = true};
+        struct RingIterator ring_iter = {.state = &ckey->ring, .m = ckey->slot.m, .r = ckey->slot.r};
+        for( ; !RingIterator_equ( ring_end, ring_iter );
+             next_ring( &ring_iter ) ) {
             const struct MesgIterator mesg_end = {.overflow = true};
             struct MesgIterator mesg_iter = {.state = &ckey->mesg};
             for( ; !MesgIterator_equ( mesg_end, mesg_iter );
@@ -128,7 +129,6 @@ void hillclimb( struct State* state,
                    goto RESTART;
                }
 
-          }
          }
         }
        }
