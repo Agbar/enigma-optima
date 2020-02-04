@@ -49,13 +49,13 @@ int init_key_default( struct Key *const key, enum ModelType_t model )
 /* initializes each key element to the lowest possible value */
 int init_key_low( struct Key *const key, enum ModelType_t model )
 {
-    struct Key low_H  = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+    struct Key low_H  = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
                           .ukwnum.type = UkwType_A,
                           .model=EnigmaModel_H  };
-    struct Key low_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+    struct Key low_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
                           .ukwnum.type = UkwType_B,
                           .model=EnigmaModel_M3 };
-    struct Key low_M4 = { .slot={ { GreekRingType_Beta }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+    struct Key low_M4 = { .slot={ { GreekRingType_Beta }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
                           .ukwnum.type = UkwType_B_Thin,
                           .model=EnigmaModel_M4 };
     switch( model ) {

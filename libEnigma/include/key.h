@@ -126,6 +126,15 @@ struct RingTypes
 };
 
 
+static inline bool
+RingTypes_equ( struct RingTypes l, struct RingTypes r ) {
+    return l.g.type == r.g.type
+           && l.l.type == r.l.type
+           && l.m.type == r.m.type
+           && l.r.type == r.r.type;
+}
+
+
 enum ukw_type_enum {
     UkwType_A,
     UkwType_B,

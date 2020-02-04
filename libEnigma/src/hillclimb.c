@@ -10,6 +10,7 @@
 #include "hillclimb.h"
 #include "iterators/mesg_iterator.h"
 #include "iterators/ringstellung_iterator.h"
+#include "iterators/slot_iterator.h"
 #include "key.h"
 #include "score.h"
 #include "state.h"
@@ -80,13 +81,10 @@ void hillclimb( struct State* state,
    firstloop = 1;
 
    for (ckey->ukwnum=lo.ukwnum; ckey->ukwnum.type<=hi->ukwnum.type; ckey->ukwnum.type++) {
-    for (ckey->slot.g=lo.slot.g; ckey->slot.g.type<=hi->slot.g.type; ckey->slot.g.type++) {
-     for (ckey->slot.l=lo.slot.l; ckey->slot.l.type<=hi->slot.l.type; ckey->slot.l.type++) {
-      for (ckey->slot.m=lo.slot.m; ckey->slot.m.type<=hi->slot.m.type; ckey->slot.m.type++) {
-        if (ckey->slot.m.type == ckey->slot.l.type) continue;
-       for (ckey->slot.r=lo.slot.r; ckey->slot.r.type<=hi->slot.r.type; ckey->slot.r.type++) {
-         if (ckey->slot.r.type == ckey->slot.l.type || ckey->slot.r.type == ckey->slot.m.type) continue;
 
+       struct SlotIterator slot_iter = init_SlotIterator( ckey );
+       for( ; !SlotIterator_equ( slot_end, slot_iter );
+            slot_iter.next( &slot_iter ) ) {
         const struct RingstellungIterator ring_end = {.overflow = true};
         struct RingstellungIterator ring_iter = {.state = &ckey->ring, .m = ckey->slot.m, .r = ckey->slot.r};
         for( ; !RingstellungIterator_equ( ring_end, ring_iter );
@@ -128,10 +126,6 @@ void hillclimb( struct State* state,
                if( Key_equ( ckey, state->to ) ) {
                    goto RESTART;
                }
-
-         }
-        }
-       }
       }
      }
     }
