@@ -12,7 +12,7 @@ int set_state( struct Key* restrict from,
                struct Key* restrict gkey_res,
                struct SwMode* sw_mode,
                int* max_pass,
-               int* firstpass );
+               bool* firstpass );
 
 
 /*
