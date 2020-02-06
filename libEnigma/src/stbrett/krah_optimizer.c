@@ -60,7 +60,7 @@ stbrett_optimize_krah(
     get_stecker( ckey );
     int bestscore = scoring->triscore( ckey, len );
 
-    int newtop = 1;
+    bool newtop = 1;
     enum Action_t action;
     while ( newtop ) {
         newtop = 0;

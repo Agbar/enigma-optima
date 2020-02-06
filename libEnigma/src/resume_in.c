@@ -32,7 +32,7 @@ int set_state( struct Key *const restrict from,
                struct Key *const restrict gkey_res,
                struct SwMode *sw_mode,
                int *max_pass,
-               int *firstpass )
+               bool *firstpass )
 {
   FILE *fp;
   char *kf, *kt, *kc, *kg, *x; 
@@ -83,7 +83,9 @@ int set_state( struct Key *const restrict from,
   if ((*max_pass = scan_posint(x)) == -1 ) return 0;
 
   while (*x++) ;
-  if ((*firstpass = get_firstpass(x)) == -1) return 0;
+  int fipas = get_firstpass( x );
+  if( fipas == -1 ) return 0;
+  *firstpass = fipas;
 
   while (*x++) ;
   if( scan_posint( x ) != MAX_SCORE ) return 0;

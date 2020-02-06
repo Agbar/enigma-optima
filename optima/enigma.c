@@ -43,8 +43,9 @@ int main(int argc, char **argv)
   bool optimizerOptionPresent = false;
   int hc = 0;
   struct SwMode sw_mode = {SW_ONSTART};
-  int max_pass = 1, firstpass = 1;
-  int resume = 0;
+  int max_pass = 1;
+  bool firstpass = 1;
+  bool resume = 0;
   FILE *outfile = stdout;
   char *f = NULL, *t = NULL;
   char *fmin[3] = {

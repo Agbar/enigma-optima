@@ -153,7 +153,7 @@ struct SwMode scrambler_state( const struct Key* const key, int len )
   struct echar_delta l_offset, m_offset, r_offset;
   struct turnover m_turn, r_turn;
   struct turnover m_turn2 = turnover_absent(), r_turn2 = turnover_absent();
-  int p2 = 0, p3 = 0;
+  bool p2 = 0, p3 = 0;
 
 
   /* calculate effective offset from ring and message settings */
@@ -220,7 +220,7 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
 
   struct turnover m_turn, r_turn;
   struct turnover m_turn2 = turnover_absent(), r_turn2 = turnover_absent();
-  int p2 = 0, p3 = 0;
+  bool p2 = 0, p3 = 0;
 
 
     /* calculate effective offset from ring and message settings */
@@ -303,7 +303,7 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
 
   struct turnover m_turn, r_turn;
   struct turnover m_turn2 = turnover_absent(), r_turn2 = turnover_absent();
-  int p2 = 0, p3 = 0;
+  bool p2 = 0, p3 = 0;
 
     /* calculate effective offset from ring and message settings */
     struct echar_delta

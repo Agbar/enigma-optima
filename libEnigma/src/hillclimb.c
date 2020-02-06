@@ -51,7 +51,7 @@ void hillclimb( struct State* state,
 
   struct echar var[26];
   Fill0To25_echar(var);
-  int firstloop = 1;
+  bool firstloop = 1;
 
     knapsack->log( "enigma: working on range ..." );
 
