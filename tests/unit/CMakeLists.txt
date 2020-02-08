@@ -8,6 +8,7 @@ PRIVATE
     "cipher.tests.cpp"
     "computeScoreNoInterleave.cpp"
     "enigma_error.cpp"
+    "cipher.c/scrambler_state.tests.cpp"
     "input.c/set_RingsState.tests.cpp"
     "input.c/set_stecker.tests.cpp"
     "input.c/set_ukw.tests.cpp"
