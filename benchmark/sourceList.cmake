@@ -3,6 +3,7 @@ PRIVATE
     "main.cpp"
     "MessageAndKeyBasedFixture.cpp"
     "enigmaError.c"
+    "scrambler_state.benchmark.cpp"
 
     # "No Inline"
     "cipherAvx_ni.c"
