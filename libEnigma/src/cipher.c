@@ -138,35 +138,30 @@ void enigma_cipher_init(enigma_cpu_flags_t cpu, enum ModelType_t machine_type, e
 /* Check for slow wheel movement */
 struct SwMode scrambler_state( const struct Key* const key, int len )
 {
-  int i;
-
-  bool p2 = 0, p3 = 0;
-
   /* calculate effective offset from ring and message settings */
-    struct echar_delta offset_r = echar_delta_sub( key->mesg.r, key->ring.r );
-    struct echar_delta offset_m = echar_delta_sub( key->mesg.m, key->ring.m );
-    struct echar_delta offset_l = echar_delta_sub( key->mesg.l, key->ring.l );
-
-    /* calculate turnover points from ring settings */
-
-    struct turnover turn_r = turnover_sub_echar_delta( wal_turn[ key->slot.r.type ], key->ring.r );
-    struct turnover turn_m = turnover_sub_echar_delta( wal_turn[ key->slot.m.type ], key->ring.m );
-
-    /* second turnover points for wheels 6,7,8 */
-    struct turnover turn_r2 = key->slot.r.type > 5
-                                  ? turnover_sub_echar_delta( turnover_second_notch(), key->ring.r )
-                                  : turnover_absent();
-    struct turnover turn_m2 = key->slot.m.type > 5
-                                  ? turnover_sub_echar_delta( turnover_second_notch(), key->ring.m )
-                                  : turnover_absent();
-
-  for (i = 0; i < len; i++) {
+    struct RingsState offset = {
+       .r = echar_delta_sub( key->mesg.r, key->ring.r ),
+       .m = echar_delta_sub( key->mesg.m, key->ring.m ),
+       .l = echar_delta_sub( key->mesg.l, key->ring.l ),
+    };
+    struct Turnovers_t turn = {
+        /* calculate turnover points from ring settings */
+        .r = turnover_sub_echar_delta( wal_turn[ key->slot.r.type ], key->ring.r ),
+        .m = turnover_sub_echar_delta( wal_turn[ key->slot.m.type ], key->ring.m ),
+        /* second turnover points for wheels 6,7,8 */
+        .r2 = key->slot.r.type > 5 ? turnover_sub_echar_delta( turnover_second_notch(), key->ring.r )
+                                   : turnover_absent(),
+        .m2 = key->slot.m.type > 5 ? turnover_sub_echar_delta( turnover_second_notch(), key->ring.m )
+                                   : turnover_absent(),
+    };
+  bool p2 = 0, p3 = 0;
+  for ( int i = 0; i < len; i++ ) {
 
     /* determine if pawls are engaged */
-    if ( turnover_eq_echar_delta( turn_r, offset_r ) || turnover_eq_echar_delta( turn_r2, offset_r ) )
+    if ( turnover_eq_echar_delta( turn.r, offset.r ) || turnover_eq_echar_delta( turn.r2, offset.r ) )
       p2 = 1;
     /* in reality pawl 3 steps both m_wheel and l_wheel */
-    if ( turnover_eq_echar_delta( turn_m, offset_m ) || turnover_eq_echar_delta( turn_m2, offset_m ) ) {
+    if ( turnover_eq_echar_delta( turn.m, offset.m ) || turnover_eq_echar_delta( turn.m2, offset.m ) ) {
       p3 = 1;
       p2 = 1;
       if (i == 0)
@@ -175,13 +170,13 @@ struct SwMode scrambler_state( const struct Key* const key, int len )
           return ( struct SwMode ){SW_OTHER};
     }
 
-    echar_delta_rot_1( &offset_r );
+    echar_delta_rot_1( &offset.r );
     if (p2) {
-      echar_delta_rot_1( &offset_m );
+      echar_delta_rot_1( &offset.m );
       p2 = 0;
     }
     if (p3) {
-      echar_delta_rot_1( &offset_l );
+      echar_delta_rot_1( &offset.l );
       p3 = 0;
     }
 
