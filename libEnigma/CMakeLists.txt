@@ -14,6 +14,7 @@ target_include_directories(Enigma PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURC
 target_compile_features(Enigma PUBLIC c_std_99 cxx_std_11)
 target_compile_options(Enigma
     PRIVATE
+        $<$<COMPILE_LANGUAGE:CXX>:${ENIGMA_CXX_COMPILE_OPTIONS}>
         ${ENIGMA_COMPILE_OPTIONS})
 
 
