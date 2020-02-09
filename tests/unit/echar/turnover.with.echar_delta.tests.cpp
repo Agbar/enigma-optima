@@ -79,3 +79,40 @@ TEST( turnover__echar_delta, select_next ){
         EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 25 );
     }
 }
+
+
+TEST( turnover__echar_delta, select_next_single_notch ){
+    turnover t1{notch : 4};
+    const turnover t2 = turnover_absent();
+    echar_delta edt;
+    {
+        edt.delta = 1;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 4 );
+        edt.delta = 3;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 4 );
+        edt.delta = 4;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 4 );
+        edt.delta = 25;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 4 );
+    }
+    {
+        t1.notch = 24;
+        edt.delta = 0;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 24 );
+        edt.delta = 25;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 24 );
+        edt.delta = 24;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 24 );
+        edt.delta = 23;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 24 );
+    }
+    {
+        t1.notch = 0;
+        edt.delta = 0;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 0 );
+        edt.delta = 1;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 0 );
+        edt.delta = 25;
+        EXPECT_EQ( turnover_select_next( edt, t1, t2 ).notch, 0 );
+    }
+}

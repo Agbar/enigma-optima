@@ -32,7 +32,7 @@ turnover_select_next( struct echar_delta ed, struct turnover t1, struct turnover
     {
         return t1;
     }
-    else if ( ed.delta <= t2.notch )
+    else if( (int8_t)ed.delta <= (int8_t)t2.notch )
     {
         return t2;
     }
