@@ -155,14 +155,10 @@ struct SwMode scrambler_state( const struct Key* const key, int len )
                                    : turnover_absent(),
     };
 
-    struct turnover next_m_turn = turnover_eq_absent( turn.m2 )
-                                      ? turn.m
-                                      : turnover_select_next( offset.m, turn.m, turn.m2 );
+    struct turnover next_m_turn = turnover_select_next( offset.m, turn.m, turn.m2 );
     struct echar_delta m_to_rotate = make_echar_delta_turnover( turnover_sub_echar_delta( next_m_turn, offset.m ) );
 
-    struct turnover next_r_turn = turnover_eq_absent( turn.r2 )
-                                      ? turn.r
-                                      : turnover_select_next( offset.r, turn.r, turn.r2 );
+    struct turnover next_r_turn = turnover_select_next( offset.r, turn.r, turn.r2 ) ;
     struct echar_delta r_to_rotate = make_echar_delta_turnover( turnover_sub_echar_delta( next_r_turn, offset.r ) );
 
     int between_m_rots = turnover_eq_absent( turn.r2 ) ? 26 : 13;
