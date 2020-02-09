@@ -154,35 +154,28 @@ struct SwMode scrambler_state( const struct Key* const key, int len )
         .m2 = key->slot.m.type > 5 ? turnover_sub_echar_delta( turnover_second_notch(), key->ring.m )
                                    : turnover_absent(),
     };
-  bool p2 = 0, p3 = 0;
-  for ( int i = 0; i < len; i++ ) {
 
-    /* determine if pawls are engaged */
-    if ( turnover_eq_echar_delta( turn.r, offset.r ) || turnover_eq_echar_delta( turn.r2, offset.r ) )
-      p2 = 1;
-    /* in reality pawl 3 steps both m_wheel and l_wheel */
-    if ( turnover_eq_echar_delta( turn.m, offset.m ) || turnover_eq_echar_delta( turn.m2, offset.m ) ) {
-      p3 = 1;
-      p2 = 1;
-      if (i == 0)
-          return ( struct SwMode ){SW_ONSTART};
-      else
-          return ( struct SwMode ){SW_OTHER};
+    struct turnover next_m_turn = turnover_eq_absent( turn.m2 )
+                                      ? turn.m
+                                      : turnover_select_next( offset.m, turn.m, turn.m2 );
+    struct echar_delta m_to_rotate = make_echar_delta_turnover( turnover_sub_echar_delta( next_m_turn, offset.m ) );
+
+    struct turnover next_r_turn = turnover_eq_absent( turn.r2 )
+                                      ? turn.r
+                                      : turnover_select_next( offset.r, turn.r, turn.r2 );
+    struct echar_delta r_to_rotate = make_echar_delta_turnover( turnover_sub_echar_delta( next_r_turn, offset.r ) );
+
+    int between_m_rots = turnover_eq_absent( turn.r2 ) ? 26 : 13;
+
+    int steps_to_l_rot = 0;
+    if( m_to_rotate.delta > 0 ){
+        steps_to_l_rot = r_to_rotate.delta + 1;
+        steps_to_l_rot += between_m_rots * ( m_to_rotate.delta - 1 );
     }
 
-    echar_delta_rot_1( &offset.r );
-    if (p2) {
-      echar_delta_rot_1( &offset.m );
-      p2 = 0;
-    }
-    if (p3) {
-      echar_delta_rot_1( &offset.l );
-      p3 = 0;
-    }
-
-  }
-
-  return ( struct SwMode ){SW_NONE};
+    if( m_to_rotate.delta == 0 ) return ( struct SwMode ){SW_ONSTART};
+    if( steps_to_l_rot >= len ) return ( struct SwMode ){SW_NONE};
+    else return ( struct SwMode ){SW_OTHER};
 }
 
 /* initialize lookup table for paths through scramblers, models H, M3 */
