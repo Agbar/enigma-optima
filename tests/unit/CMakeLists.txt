@@ -12,6 +12,7 @@ PRIVATE
     "input.c/set_RingsState.tests.cpp"
     "input.c/set_stecker.tests.cpp"
     "input.c/set_ukw.tests.cpp"
+    "iterators/mesg_iterator.tests.cpp"
     "key.c/Key_equ.tests.cpp"
     "key.c/UkwType_to_ALPHA.tests.cpp"
     "GetRSeed.tests.cpp"
