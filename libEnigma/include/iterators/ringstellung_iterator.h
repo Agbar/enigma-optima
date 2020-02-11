@@ -5,7 +5,7 @@
 #include "key.h"
 
 
-struct RingIterator {
+struct RingstellungIterator {
     struct RingsState* const state;
     const struct RingType m, r;
     bool overflow;
@@ -13,14 +13,14 @@ struct RingIterator {
 
 PURE_FUNCTION
 static inline bool
-RingIterator_equ( struct RingIterator l, struct RingIterator r ) {
+RingstellungIterator_equ( struct RingstellungIterator l, struct RingstellungIterator r ) {
     if( l.overflow || r.overflow ) return l.overflow == r.overflow;
     return RingsState_equ( *l.state, *r.state );
 }
 
 
 static inline void
-next_ring( struct RingIterator* i ) {
+next_ringstellung( struct RingstellungIterator* i ) {
     i->state->r.delta++;
     if( i->state->r.delta < ( i->r.type > 5 ) ? 13 : 26 ) return;
     i->state->r.delta = 0;
