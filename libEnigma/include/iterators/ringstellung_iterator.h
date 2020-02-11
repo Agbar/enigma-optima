@@ -22,11 +22,13 @@ RingstellungIterator_equ( struct RingstellungIterator l, struct RingstellungIter
 static inline void
 next_ringstellung( struct RingstellungIterator* i ) {
     i->state->r.delta++;
-    if( i->state->r.delta < ( i->r.type > 5 ) ? 13 : 26 ) return;
+    const uint8_t r_limit = ( i->r.type > 5 ) ? 13 : 26;
+    if( i->state->r.delta < r_limit ) return;
     i->state->r.delta = 0;
 
     i->state->m.delta++;
-    if( i->state->m.delta < ( i->m.type > 5 ) ? 13 : 26 ) return;
+    const uint8_t m_limit = ( i->m.type > 5 ) ? 13 : 26;
+    if( i->state->m.delta < m_limit ) return;
     i->state->m.delta = 0;
 
     i->overflow = true;
