@@ -114,6 +114,21 @@ keycmp( const struct Key* k1, const struct Key* k2 )
   return cr;
 }
 
+bool Key_equ( const struct Key* k1, const struct Key* k2 ) {
+    return k1->ukwnum.type == k2->ukwnum.type
+           && k1->slot.g.type == k2->slot.g.type
+           && k1->slot.l.type == k2->slot.l.type
+           && k1->slot.m.type == k2->slot.m.type
+           && k1->slot.r.type == k2->slot.r.type
+           && echar_delta_cmp( k1->ring.m, k2->ring.m ) == cmp_equal
+           && echar_delta_cmp( k1->ring.r, k2->ring.r ) == cmp_equal
+           && echar_delta_cmp( k1->mesg.g, k2->mesg.g ) == cmp_equal
+           && echar_delta_cmp( k1->mesg.l, k2->mesg.l ) == cmp_equal
+           && echar_delta_cmp( k1->mesg.m, k2->mesg.m ) == cmp_equal
+           && echar_delta_cmp( k1->mesg.r, k2->mesg.r ) == cmp_equal;
+}
+
+
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
  * of the General Public License (GPL), version 2. See doc/COPYING for details.

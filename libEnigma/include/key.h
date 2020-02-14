@@ -148,6 +148,12 @@ PURE_FUNCTION
 enum comparison_result
 keycmp( const struct Key* k1, const struct Key* k2 );
 
+
+PURE_FUNCTION
+bool
+Key_equ( const struct Key* k1, const struct Key* k2 );
+
+
 #endif
 
 

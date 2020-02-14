@@ -123,7 +123,7 @@ void hillclimb( struct State* state,
                  firstloop = 0;
                  init_key_low( &lo, state->from->model );
                }
-               if( keycmp( ckey, state->to ) == cmp_equal ) {
+               if( Key_equ( ckey, state->to ) ) {
                    goto RESTART;
                }
 
