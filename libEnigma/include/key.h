@@ -58,36 +58,45 @@ struct RingsState
 {
     struct echar_delta g, l, m, r;
 };
+STATIC_ASSERT( sizeof( struct RingsState ) == 4, "4" );
+
+enum ring_type_enum {
+    RingType_None = 0,
+    RingType_1 = 1,
+    RingType_2 = 2,
+    RingType_3 = 3,
+    RingType_4 = 4,
+    RingType_5 = 5,
+    RingType_6 = 6,
+    RingType_7 = 7,
+    RingType_8 = 8,
+    __RingType__enforce_signed_type = -1,
+};
 
 struct RingType {
-    enum ring_type_enum {
-        RingType_None = 0,
-        RingType_1    = 1,
-        RingType_2    = 2,
-        RingType_3    = 3,
-        RingType_4    = 4,
-        RingType_5    = 5,
-        RingType_6    = 6,
-        RingType_7    = 7,
-        RingType_8    = 8,
-        __RingType__enforce_signed_type = -1, 
-    } type;
+    int8_t type;
 };
+STATIC_ASSERT( sizeof( struct RingType ) == 1, "RingType should be a single byte." );
 
 char
 RingType_to_ALPHA( struct RingType rt );
 
-struct GreekRingType {
-    enum greek_ring_type_enum {
-        GreekRingType_None = 0,
-        GreekRingType_Beta    = 9,
-        GreekRingType_Gamma    = 10,
-        __GreekRingType__enforce_signed_type = -1, 
-    } type;
+
+enum greek_ring_type_enum {
+    GreekRingType_None = 0,
+    GreekRingType_Beta = 9,
+    GreekRingType_Gamma = 10,
+    __GreekRingType__enforce_signed_type = -1,
 };
+
+struct GreekRingType {
+    int8_t type;
+};
+STATIC_ASSERT( sizeof( struct GreekRingType ) == 1, "GreekRingType should be a single byte." );
 
 char
 GreekRingType_to_ALPHA( struct GreekRingType rt );
+
 
 struct RingTypes 
 {

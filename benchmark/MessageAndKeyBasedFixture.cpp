@@ -9,7 +9,7 @@ extern "C"{
 
 #include "load/strload_error.hpp"
 
-using rt = RingType::ring_type_enum;
+using rt = ::ring_type_enum;
 
 void
 MessageAndKeyBasedFixture::SetUp( benchmark::State& st )
