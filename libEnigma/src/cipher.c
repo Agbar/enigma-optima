@@ -142,7 +142,6 @@ struct SwMode scrambler_state( const struct Key* const key, int len )
     struct RingsState offset = {
        .r = echar_delta_sub( key->mesg.r, key->ring.r ),
        .m = echar_delta_sub( key->mesg.m, key->ring.m ),
-       .l = echar_delta_sub( key->mesg.l, key->ring.l ),
     };
     struct Turnovers_t turn = {
         /* calculate turnover points from ring settings */
@@ -182,7 +181,6 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
   struct RingType l_slot = key->slot.l;
   struct RingType m_slot = key->slot.m;
   struct RingType r_slot = key->slot.r;
-  struct echar_delta l_ring = key->ring.l;
   struct echar_delta m_ring = key->ring.m;
   struct echar_delta r_ring = key->ring.r;
   struct echar_delta l_mesg = key->mesg.l;
@@ -199,7 +197,7 @@ void init_path_lookup_H_M3(const struct Key* const key, int len)
     struct echar_delta
         r_offset = echar_delta_sub( r_mesg, r_ring ),
         m_offset = echar_delta_sub( m_mesg, m_ring ),
-        l_offset = echar_delta_sub( l_mesg, l_ring );
+        l_offset = l_mesg;
 
   /* calculate turnover points from ring settings */
   r_turn = turnover_sub_echar_delta( wal_turn[r_slot.type], r_ring );
@@ -264,8 +262,6 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
 
   struct UkwType ukwnum = key->ukwnum;
   struct RingTypes slot = key->slot;
-  struct echar_delta g_ring = key->ring.g;
-  struct echar_delta l_ring = key->ring.l;
   struct echar_delta m_ring = key->ring.m;
   struct echar_delta r_ring = key->ring.r;
   struct echar_delta g_mesg = key->mesg.g;
@@ -281,8 +277,8 @@ void init_path_lookup_ALL(const struct Key* const key, int len)
     struct echar_delta
       r_offset = echar_delta_sub( r_mesg, r_ring ),
       m_offset = echar_delta_sub( m_mesg, m_ring ),
-      l_offset = echar_delta_sub( l_mesg, l_ring ),
-      g_offset = echar_delta_sub( g_mesg, g_ring );
+      l_offset = l_mesg,
+      g_offset = g_mesg;
 
   /* calculate turnover points from ring settings */
   r_turn = turnover_sub_echar_delta( wal_turn[slot.r.type], r_ring );

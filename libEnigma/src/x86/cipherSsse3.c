@@ -62,8 +62,8 @@ void PrepareDecoderLookup( CalculatePermutationMap_f* calculateMap, const struct
     struct RingsState rings = {
         .r = echar_delta_sub( key->mesg.r, key->ring.r ),
         .m = echar_delta_sub( key->mesg.m, key->ring.m ),
-        .l = echar_delta_sub( key->mesg.l, key->ring.l ),
-        .g = echar_delta_sub( key->mesg.g, key->ring.g ),
+        .l = key->mesg.l,
+        .g = key->mesg.g,
     };
 
     /* calculate turnover points from ring settings */

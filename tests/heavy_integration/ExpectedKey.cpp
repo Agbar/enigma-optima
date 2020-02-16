@@ -24,7 +24,7 @@ void AssertMatch( const Key& actual_key,
     EXPECT_EQ( actual_stecker, x_state.stecker );
 
     char actual_ring[]{
-        echar_delta_to_ALPHA( actual_key.ring.l ),
+        'A',
         echar_delta_to_ALPHA( actual_key.ring.m ),
         echar_delta_to_ALPHA( actual_key.ring.r ), '\0'};
     EXPECT_EQ( actual_ring, x_state.ring );
