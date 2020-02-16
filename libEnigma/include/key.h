@@ -71,10 +71,12 @@ enum ring_type_enum {
     RingType_7 = 7,
     RingType_8 = 8,
     __RingType__enforce_signed_type = -1,
-};
+} __attribute__(( packed ));
+STATIC_ASSERT( sizeof( enum ring_type_enum ) == 1, "ring_type_enum should fit in a single byte." );
+
 
 struct RingType {
-    int8_t type;
+    enum ring_type_enum type;
 };
 STATIC_ASSERT( sizeof( struct RingType ) == 1, "RingType should be a single byte." );
 
@@ -87,10 +89,12 @@ enum greek_ring_type_enum {
     GreekRingType_Beta = 9,
     GreekRingType_Gamma = 10,
     __GreekRingType__enforce_signed_type = -1,
-};
+} __attribute__(( packed ));
+STATIC_ASSERT( sizeof( enum greek_ring_type_enum ) == 1, "greek_ring_type_enum should be one byte." );
+
 
 struct GreekRingType {
-    int8_t type;
+    enum greek_ring_type_enum type;
 };
 STATIC_ASSERT( sizeof( struct GreekRingType ) == 1, "GreekRingType should be a single byte." );
 
