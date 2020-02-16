@@ -108,17 +108,23 @@ struct RingTypes
     struct RingType l, m, r;
 };
 
-struct UkwType
-{
-    enum ukw_type_enum{
-        UkwType_A,
-        UkwType_B,
-        UkwType_C,
-        UkwType_B_Thin,
-        UkwType_C_Thin,
-        __UkwType__enforce_signed_type = -1, 
-    } type;
+
+enum ukw_type_enum {
+    UkwType_A,
+    UkwType_B,
+    UkwType_C,
+    UkwType_B_Thin,
+    UkwType_C_Thin,
+    __UkwType__enforce_signed_type = -1,
+} __attribute__(( packed ));
+STATIC_ASSERT( sizeof( enum ukw_type_enum ) == 1, "ukw_type_enum should be one byte." );
+
+
+struct UkwType {
+    enum ukw_type_enum type;
 };
+STATIC_ASSERT( sizeof( struct UkwType ) == 1, "UkwType should be one byte." );
+
 
 static inline
 enum comparison_result
