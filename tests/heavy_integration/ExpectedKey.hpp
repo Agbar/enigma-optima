@@ -40,7 +40,7 @@ constexpr UkwType operator"" _ukw( const char v ) {
             : v == 'B'
                   ? UkwType::UkwType_B
                   : v == 'C'
-                        ? UkwType::UkwType_B
+                        ? UkwType::UkwType_C
                         : throw std::logic_error( "Unexpected UKW literal." )};
 }
 
