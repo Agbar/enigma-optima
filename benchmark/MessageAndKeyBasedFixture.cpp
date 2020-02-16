@@ -9,7 +9,7 @@ extern "C"{
 
 #include "load/strload_error.hpp"
 
-using rt = RingType::ring_type_enum;
+using rt = ::ring_type_enum;
 
 void
 MessageAndKeyBasedFixture::SetUp( benchmark::State& st )
@@ -40,7 +40,7 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st )
         dV = make_echar_delta_ascii( 'V' );
     key.ring = { /*.g:*/ {}, /*.l:*/ dA, /*.m:*/ dA, /*.r:*/ dA }; // AAA
     key.mesg = { /*.g:*/ {}, /*.l:*/ dA, /*.m:*/ dV, /*.r:*/ dA }; // AVA
-    key.ukwnum.type = UkwType::UkwType_B;
+    key.ukwnum.type = UkwType_B;
     key.model = EnigmaModel_M3;
 
     Fill0To25_echar( key.stbrett.letters );

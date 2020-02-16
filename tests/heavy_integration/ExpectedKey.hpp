@@ -36,11 +36,11 @@ RingTypes operator"" _ringTypes( const char*, std::size_t );
 constexpr UkwType operator"" _ukw( const char v ) {
     return UkwType{
         v == 'A'
-            ? UkwType::UkwType_A
+            ? UkwType_A
             : v == 'B'
-                  ? UkwType::UkwType_B
+                  ? UkwType_B
                   : v == 'C'
-                        ? UkwType::UkwType_C
+                        ? UkwType_C
                         : throw std::logic_error( "Unexpected UKW literal." )};
 }
 

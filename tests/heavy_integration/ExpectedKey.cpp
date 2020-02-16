@@ -38,11 +38,11 @@ void AssertMatch( const Key& actual_key,
 RingTypes operator"" _ringTypes( const char* txt, std::size_t len ) {
     auto alpha_to_RingType = []( const char c ) -> RingType {
         if( '0' > c || c > '8' ) throw std::logic_error( "Invalid rings literal." );
-        return RingType{static_cast< RingType::ring_type_enum >( c - '0' )};
+        return RingType{static_cast< ring_type_enum >( c - '0' )};
     };
 
     if( len == 3 ) {
-        return RingTypes{.g = {GreekRingType::GreekRingType_None},
+        return RingTypes{.g = {GreekRingType_None},
                          .l = alpha_to_RingType( txt[ 0 ] ),
                          .m = alpha_to_RingType( txt[ 1 ] ),
                          .r = alpha_to_RingType( txt[ 2 ] )};

@@ -58,36 +58,49 @@ struct RingsState
 {
     struct echar_delta g, l, m, r;
 };
+STATIC_ASSERT( sizeof( struct RingsState ) == 4, "4" );
+
+enum ring_type_enum {
+    RingType_None = 0,
+    RingType_1 = 1,
+    RingType_2 = 2,
+    RingType_3 = 3,
+    RingType_4 = 4,
+    RingType_5 = 5,
+    RingType_6 = 6,
+    RingType_7 = 7,
+    RingType_8 = 8,
+    __RingType__enforce_signed_type = -1,
+} __attribute__(( packed ));
+STATIC_ASSERT( sizeof( enum ring_type_enum ) == 1, "ring_type_enum should fit in a single byte." );
+
 
 struct RingType {
-    enum ring_type_enum {
-        RingType_None = 0,
-        RingType_1    = 1,
-        RingType_2    = 2,
-        RingType_3    = 3,
-        RingType_4    = 4,
-        RingType_5    = 5,
-        RingType_6    = 6,
-        RingType_7    = 7,
-        RingType_8    = 8,
-        __RingType__enforce_signed_type = -1, 
-    } type;
+    enum ring_type_enum type;
 };
+STATIC_ASSERT( sizeof( struct RingType ) == 1, "RingType should be a single byte." );
 
 char
 RingType_to_ALPHA( struct RingType rt );
 
+
+enum greek_ring_type_enum {
+    GreekRingType_None = 0,
+    GreekRingType_Beta = 9,
+    GreekRingType_Gamma = 10,
+    __GreekRingType__enforce_signed_type = -1,
+} __attribute__(( packed ));
+STATIC_ASSERT( sizeof( enum greek_ring_type_enum ) == 1, "greek_ring_type_enum should be one byte." );
+
+
 struct GreekRingType {
-    enum greek_ring_type_enum {
-        GreekRingType_None = 0,
-        GreekRingType_Beta    = 9,
-        GreekRingType_Gamma    = 10,
-        __GreekRingType__enforce_signed_type = -1, 
-    } type;
+    enum greek_ring_type_enum type;
 };
+STATIC_ASSERT( sizeof( struct GreekRingType ) == 1, "GreekRingType should be a single byte." );
 
 char
 GreekRingType_to_ALPHA( struct GreekRingType rt );
+
 
 struct RingTypes 
 {
@@ -95,17 +108,23 @@ struct RingTypes
     struct RingType l, m, r;
 };
 
-struct UkwType
-{
-    enum ukw_type_enum{
-        UkwType_A,
-        UkwType_B,
-        UkwType_C,
-        UkwType_B_Thin,
-        UkwType_C_Thin,
-        __UkwType__enforce_signed_type = -1, 
-    } type;
+
+enum ukw_type_enum {
+    UkwType_A,
+    UkwType_B,
+    UkwType_C,
+    UkwType_B_Thin,
+    UkwType_C_Thin,
+    __UkwType__enforce_signed_type = -1,
+} __attribute__(( packed ));
+STATIC_ASSERT( sizeof( enum ukw_type_enum ) == 1, "ukw_type_enum should be one byte." );
+
+
+struct UkwType {
+    enum ukw_type_enum type;
 };
+STATIC_ASSERT( sizeof( struct UkwType ) == 1, "UkwType should be one byte." );
+
 
 static inline
 enum comparison_result
@@ -147,6 +166,12 @@ int init_key_low( struct Key *key, enum ModelType_t model);
 PURE_FUNCTION
 enum comparison_result
 keycmp( const struct Key* k1, const struct Key* k2 );
+
+
+PURE_FUNCTION
+bool
+Key_equ( const struct Key* k1, const struct Key* k2 );
+
 
 #endif
 
