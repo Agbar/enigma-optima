@@ -152,7 +152,7 @@ UkwType_to_ALPHA( struct UkwType u );
     EnigmaModel_H       =  0,
     EnigmaModel_M3      =  1,
     EnigmaModel_M4      =  2,
- };
+ } __attribute__(( packed ));
 
 /* Key
  * * * */
