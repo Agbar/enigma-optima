@@ -63,8 +63,12 @@ STATIC_ASSERT( sizeof( struct Ringstellung ) == 2, "Ringstellung should be only 
 
 static inline bool
 Ringstellung_equ( struct Ringstellung l, struct Ringstellung r ) {
-    return l.m.delta == r.m.delta
-           && l.r.delta == r.r.delta;
+    const union {
+        struct Ringstellung rs;
+        uint16_t bits;
+    } ringl = {.rs = l},
+      ringr = {.rs = r};
+    return ringl.bits == ringr.bits;
 }
 
 
