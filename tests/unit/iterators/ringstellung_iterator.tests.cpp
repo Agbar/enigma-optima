@@ -8,23 +8,21 @@ extern "C" {
 
 
 TEST( ringstellung_iterator, count_all_rings_I_and_V ) {
-    RingsState ringstellung{
-        g : make_echar_delta_ascii( 'A' ),
-        l : make_echar_delta_ascii( 'A' ),
+    Ringstellung ringstellung{
         m : make_echar_delta_ascii( 'A' ),
         r : make_echar_delta_ascii( 'A' ),
     };
 
     struct RingstellungIterator ring_iter = {
         state : &ringstellung,
-        m : RingType{RingType::RingType_1},
-        r : RingType{RingType::RingType_5},
+        m : RingType{RingType_1},
+        r : RingType{RingType_5},
         overflow : false,
     };
     const struct RingstellungIterator ring_end = {
         state : nullptr,
-        m : {RingType::RingType_None},
-        r : {RingType::RingType_None},
+        m : {RingType_None},
+        r : {RingType_None},
         overflow : true,
     };
     uint64_t loop_count = 0;
@@ -38,23 +36,21 @@ TEST( ringstellung_iterator, count_all_rings_I_and_V ) {
 
 
 TEST( ringstellung_iterator, count_all_rings_I_and_VI ) {
-    RingsState ringstellung{
-        g : make_echar_delta_ascii( 'A' ),
-        l : make_echar_delta_ascii( 'A' ),
+    Ringstellung ringstellung{
         m : make_echar_delta_ascii( 'A' ),
         r : make_echar_delta_ascii( 'A' ),
     };
 
     struct RingstellungIterator ring_iter = {
         state : &ringstellung,
-        m : RingType{RingType::RingType_1},
-        r : RingType{RingType::RingType_6},
+        m : RingType{RingType_1},
+        r : RingType{RingType_6},
         overflow : false,
     };
     const struct RingstellungIterator ring_end = {
         state : nullptr,
-        m : {RingType::RingType_None},
-        r : {RingType::RingType_None},
+        m : {RingType_None},
+        r : {RingType_None},
         overflow : true,
     };
     uint64_t loop_count = 0;
@@ -68,23 +64,21 @@ TEST( ringstellung_iterator, count_all_rings_I_and_VI ) {
 
 
 TEST( ringstellung_iterator, count_all_rings_VI_and_V ) {
-    RingsState ringstellung{
-        g : make_echar_delta_ascii( 'A' ),
-        l : make_echar_delta_ascii( 'A' ),
+    Ringstellung ringstellung{
         m : make_echar_delta_ascii( 'A' ),
         r : make_echar_delta_ascii( 'A' ),
     };
 
     struct RingstellungIterator ring_iter = {
         state : &ringstellung,
-        m : RingType{RingType::RingType_6},
-        r : RingType{RingType::RingType_5},
+        m : RingType{RingType_6},
+        r : RingType{RingType_5},
         overflow : false,
     };
     const struct RingstellungIterator ring_end = {
         state : nullptr,
-        m : {RingType::RingType_None},
-        r : {RingType::RingType_None},
+        m : {RingType_None},
+        r : {RingType_None},
         overflow : true,
     };
     uint64_t loop_count = 0;
@@ -98,23 +92,21 @@ TEST( ringstellung_iterator, count_all_rings_VI_and_V ) {
 
 
 TEST( ringstellung_iterator, count_all_rings_VI_and_VIII ) {
-    RingsState ringstellung{
-        g : make_echar_delta_ascii( 'A' ),
-        l : make_echar_delta_ascii( 'A' ),
+    Ringstellung ringstellung{
         m : make_echar_delta_ascii( 'A' ),
         r : make_echar_delta_ascii( 'A' ),
     };
 
     struct RingstellungIterator ring_iter = {
         state : &ringstellung,
-        m : RingType{RingType::RingType_6},
-        r : RingType{RingType::RingType_8},
+        m : RingType{RingType_6},
+        r : RingType{RingType_8},
         overflow : false,
     };
     const struct RingstellungIterator ring_end = {
         state : nullptr,
-        m : {RingType::RingType_None},
-        r : {RingType::RingType_None},
+        m : {RingType_None},
+        r : {RingType_None},
         overflow : true,
     };
     uint64_t loop_count = 0;

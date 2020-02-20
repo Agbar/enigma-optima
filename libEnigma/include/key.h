@@ -61,6 +61,13 @@ struct Ringstellung
 STATIC_ASSERT( sizeof( struct Ringstellung ) == 2, "Ringstellung should be only 2 bytes long." );
 
 
+static inline bool
+Ringstellung_equ( struct Ringstellung l, struct Ringstellung r ) {
+    return l.m.delta == r.m.delta
+           && l.r.delta == r.r.delta;
+}
+
+
 /* RingsState
  * * * * * * */
 struct RingsState

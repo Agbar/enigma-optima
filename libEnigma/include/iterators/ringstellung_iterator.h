@@ -6,7 +6,7 @@
 
 
 struct RingstellungIterator {
-    struct RingsState* const state;
+    struct Ringstellung* const state;
     const struct RingType m, r;
     bool overflow;
 };
@@ -15,7 +15,7 @@ PURE_FUNCTION
 static inline bool
 RingstellungIterator_equ( struct RingstellungIterator l, struct RingstellungIterator r ) {
     if( l.overflow || r.overflow ) return l.overflow == r.overflow;
-    return RingsState_equ( *l.state, *r.state );
+    return Ringstellung_equ( *l.state, *r.state );
 }
 
 
