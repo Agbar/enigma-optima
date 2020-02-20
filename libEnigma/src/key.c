@@ -122,16 +122,11 @@ static inline void do_not_use_cmov() {
 
 bool Key_equ( const struct Key* k1, const struct Key* k2 ) {
     const union {
-        struct RingsState rs;
-        uint32_t bits;
-    } mesg1 = {.rs = k1->mesg},
-      mesg2 = {.rs = k2->mesg};
-    const union {
         struct Ringstellung rs;
         uint16_t bits;
     } ring1 = {.rs = k1->ring},
       ring2 = {.rs = k2->ring};
-    if ( mesg1.bits != mesg2.bits) return false;
+    if( !RingsState_equ( k1->mesg, k2->mesg ) ) return false;
     do_not_use_cmov();
     if( ring1.bits != ring2.bits) return false;
     do_not_use_cmov();

@@ -76,6 +76,18 @@ struct RingsState
 };
 STATIC_ASSERT( sizeof( struct RingsState ) == 4, "4" );
 
+
+static inline bool
+RingsState_equ( struct RingsState l, struct RingsState r ) {
+    const union {
+        struct RingsState rs;
+        uint32_t bits;
+    } rsl = {.rs = l},
+      rsr = {.rs = r};
+    return rsl.bits == rsr.bits;
+}
+
+
 enum ring_type_enum {
     RingType_None = 0,
     RingType_1 = 1,
@@ -90,14 +102,6 @@ enum ring_type_enum {
 } __attribute__(( packed ));
 STATIC_ASSERT( sizeof( enum ring_type_enum ) == 1, "ring_type_enum should fit in a single byte." );
 
-
-static inline bool
-RingsState_equ( struct RingsState l, struct RingsState r ) {
-    return l.g.delta == r.g.delta
-           && l.l.delta == r.l.delta
-           && l.m.delta == r.m.delta
-           && l.r.delta == r.r.delta;
-}
 
 struct RingType {
     enum ring_type_enum type;
