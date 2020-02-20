@@ -115,6 +115,11 @@ keycmp( const struct Key* k1, const struct Key* k2 )
 }
 
 
+static inline void do_not_use_cmov() {
+    asm volatile( "" ::: "memory" );
+}
+
+
 bool Key_equ( const struct Key* k1, const struct Key* k2 ) {
     const union {
         struct RingTypes rt;
@@ -126,12 +131,19 @@ bool Key_equ( const struct Key* k1, const struct Key* k2 ) {
         uint32_t bits;
     } mesg1 = {.rs = k1->mesg},
       mesg2 = {.rs = k2->mesg};
-
-    return k1->ukwnum.type == k2->ukwnum.type
-           && slot1.bits == slot2.bits
-           && echar_delta_cmp( k1->ring.m, k2->ring.m ) == cmp_equal
-           && echar_delta_cmp( k1->ring.r, k2->ring.r ) == cmp_equal
-           && mesg1.bits == mesg2.bits;
+    const union {
+        struct Ringstellung rs;
+        uint16_t bits;
+    } ring1 = {.rs = k1->ring},
+      ring2 = {.rs = k2->ring};
+    if ( mesg1.bits != mesg2.bits) return false;
+    do_not_use_cmov();
+    if( ring1.bits != ring2.bits) return false;
+    do_not_use_cmov();
+    if( slot1.bits != slot2.bits) return false;
+    do_not_use_cmov();
+    if( k1->ukwnum.type != k2->ukwnum.type) return false;
+    return true;
 }
 
 

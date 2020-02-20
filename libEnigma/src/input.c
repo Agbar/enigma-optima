@@ -108,7 +108,6 @@ bool set_RingsState( struct RingsState* const rs, const char* s, enum ModelType_
     size_t s_len = strlen( s );
     if ( model == EnigmaModel_M4 ) {
         if (s_len != 4 ) return false;
-        
     }
     else {
         if ( s_len != 3 ) return false;
@@ -139,7 +138,11 @@ bool set_RingsState( struct RingsState* const rs, const char* s, enum ModelType_
  */
 int set_ring( struct Key *const key, const char *s, enum ModelType_t model )
 {
-    return set_RingsState( &key->ring, s, model );
+    struct RingsState rings;
+    bool result = set_RingsState( &rings, s, model );
+    key->ring.m = rings.m;
+    key->ring.r = rings.r;
+    return result;
 }
 
 /** \brief Set message keys.

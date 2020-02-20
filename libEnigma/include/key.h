@@ -52,6 +52,14 @@ void Fill0To25_echar( struct echar array[26] ){
     Fill0To25( &array[0].encoded );
 }
 
+
+struct Ringstellung
+{
+    struct echar_delta m, r;
+};
+STATIC_ASSERT( sizeof( struct Ringstellung ) == 2, "Ringstellung should be only 2 bytes long." );
+
+
 /* RingsState
  * * * * * * */
 struct RingsState
@@ -144,15 +152,15 @@ UkwType_to_ALPHA( struct UkwType u );
     EnigmaModel_H       =  0,
     EnigmaModel_M3      =  1,
     EnigmaModel_M4      =  2,
- };
+ } __attribute__(( packed ));
 
 /* Key
  * * * */
 struct Key {
     ALIGNED_16(union PermutationMap_t stbrett);
-    struct RingTypes  slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
-    struct RingsState ring; ///< ringstellungen
     struct RingsState mesg; ///< message settings
+    struct RingTypes  slot; ///< Contains numbers of rings in slots. /* greek, left, middle, right slot */
+    struct Ringstellung ring; ///< ringstellungen
     struct UkwType ukwnum;
     enum ModelType_t model;
     struct PermutationMap26 sf; //< swapped/free letters
