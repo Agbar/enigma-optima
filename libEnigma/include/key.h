@@ -135,10 +135,12 @@ struct RingTypes
 
 static inline bool
 RingTypes_equ( struct RingTypes l, struct RingTypes r ) {
-    return l.g.type == r.g.type
-           && l.l.type == r.l.type
-           && l.m.type == r.m.type
-           && l.r.type == r.r.type;
+    const union {
+        struct RingTypes rt;
+        uint32_t bits;
+    } rtl = {.rt = l},
+      rtr = {.rt = r};
+    return rtl.bits == rtr.bits;
 }
 
 
