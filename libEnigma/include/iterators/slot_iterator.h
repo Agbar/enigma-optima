@@ -3,7 +3,7 @@
 
 #include "key.h"
 
-const uint8_t SlotIterator_bits_overflow = 0x80;
+#define SlotIterator_bits_overflow 0x80
 
 struct SlotIterator {
     struct {
@@ -14,7 +14,7 @@ struct SlotIterator {
 };
 
 
-const struct SlotIterator slot_end = {.bits = {.og = 0x80}};
+const struct SlotIterator slot_end = {.bits = {.og = SlotIterator_bits_overflow}};
 
 
 PURE_FUNCTION
