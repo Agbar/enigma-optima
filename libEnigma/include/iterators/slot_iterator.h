@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include "global.h"
 #include "key.h"
 
 #define SlotIterator_bits_overflow 0x80
@@ -14,7 +15,11 @@ struct SlotIterator {
 };
 
 
-const struct SlotIterator slot_end = {.bits = {.og = SlotIterator_bits_overflow}};
+CONST_FUNCTION
+static inline struct SlotIterator
+slot_overflow() {
+    return ( struct SlotIterator ){.bits = {.og = SlotIterator_bits_overflow}};
+}
 
 
 PURE_FUNCTION

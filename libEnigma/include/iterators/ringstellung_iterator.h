@@ -11,6 +11,19 @@ struct RingstellungIterator {
     bool overflow;
 };
 
+
+CONST_FUNCTION
+static inline struct RingstellungIterator
+ring_overflow() {
+    return ( struct RingstellungIterator ){
+        .state = NULL,
+        .m = {RingType_None},
+        .r = {RingType_None},
+        .overflow = true,
+    };
+}
+
+
 PURE_FUNCTION
 static inline bool
 RingstellungIterator_equ( struct RingstellungIterator l, struct RingstellungIterator r ) {

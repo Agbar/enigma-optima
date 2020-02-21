@@ -83,15 +83,15 @@ void hillclimb( struct State* state,
    for (ckey->ukwnum=lo.ukwnum; ckey->ukwnum.type<=hi->ukwnum.type; ckey->ukwnum.type++) {
 
        struct SlotIterator slot_iter = init_SlotIterator( ckey );
-       for( ; !SlotIterator_equ( slot_end, slot_iter );
+       for( ; !SlotIterator_equ( slot_overflow(), slot_iter );
             slot_iter.next( &slot_iter ) ) {
-        const struct RingstellungIterator ring_end = {.overflow = true};
+
         struct RingstellungIterator ring_iter = {.state = &ckey->ring, .m = ckey->slot.m, .r = ckey->slot.r};
-        for( ; !RingstellungIterator_equ( ring_end, ring_iter );
+        for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
              next_ringstellung( &ring_iter ) ) {
-            const struct MesgIterator mesg_end = {.overflow = true};
+
             struct MesgIterator mesg_iter = {.state = &ckey->mesg};
-            for( ; !MesgIterator_equ( mesg_end, mesg_iter );
+            for( ; !MesgIterator_equ( mesg_overflow(), mesg_iter );
                  mesg_iter = next_mesg( mesg_iter, state->from->model ) ) {
                 knapsack->check_shutdown( state );
 

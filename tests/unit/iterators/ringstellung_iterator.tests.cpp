@@ -19,14 +19,8 @@ TEST( ringstellung_iterator, count_all_rings_I_and_V ) {
         r : RingType{RingType_5},
         overflow : false,
     };
-    const struct RingstellungIterator ring_end = {
-        state : nullptr,
-        m : {RingType_None},
-        r : {RingType_None},
-        overflow : true,
-    };
     uint64_t loop_count = 0;
-    for( ; !RingstellungIterator_equ( ring_end, ring_iter );
+    for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
          next_ringstellung( &ring_iter ) ) {
         loop_count++;
     }
@@ -47,14 +41,8 @@ TEST( ringstellung_iterator, count_all_rings_I_and_VI ) {
         r : RingType{RingType_6},
         overflow : false,
     };
-    const struct RingstellungIterator ring_end = {
-        state : nullptr,
-        m : {RingType_None},
-        r : {RingType_None},
-        overflow : true,
-    };
     uint64_t loop_count = 0;
-    for( ; !RingstellungIterator_equ( ring_end, ring_iter );
+    for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
          next_ringstellung( &ring_iter ) ) {
         loop_count++;
     }
@@ -75,14 +63,8 @@ TEST( ringstellung_iterator, count_all_rings_VI_and_V ) {
         r : RingType{RingType_5},
         overflow : false,
     };
-    const struct RingstellungIterator ring_end = {
-        state : nullptr,
-        m : {RingType_None},
-        r : {RingType_None},
-        overflow : true,
-    };
     uint64_t loop_count = 0;
-    for( ; !RingstellungIterator_equ( ring_end, ring_iter );
+    for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
          next_ringstellung( &ring_iter ) ) {
         loop_count++;
     }
@@ -103,14 +85,8 @@ TEST( ringstellung_iterator, count_all_rings_VI_and_VIII ) {
         r : RingType{RingType_8},
         overflow : false,
     };
-    const struct RingstellungIterator ring_end = {
-        state : nullptr,
-        m : {RingType_None},
-        r : {RingType_None},
-        overflow : true,
-    };
     uint64_t loop_count = 0;
-    for( ; !RingstellungIterator_equ( ring_end, ring_iter );
+    for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
          next_ringstellung( &ring_iter ) ) {
         loop_count++;
     }

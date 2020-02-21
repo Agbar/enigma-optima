@@ -10,6 +10,16 @@ struct MesgIterator {
 };
 
 
+CONST_FUNCTION
+static inline struct MesgIterator
+mesg_overflow() {
+    return ( struct MesgIterator ){
+        .state = NULL,
+        .overflow = true,
+    };
+}
+
+
 PURE_FUNCTION
 static inline bool
 MesgIterator_equ( struct MesgIterator l, struct MesgIterator r ) {

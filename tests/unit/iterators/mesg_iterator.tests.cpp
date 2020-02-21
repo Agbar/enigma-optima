@@ -15,9 +15,8 @@ TEST( mesg_iterator, count_all_m3 ) {
         r : make_echar_delta_ascii( 'A' ),
     };
     struct MesgIterator mesg_iter = {state : &mesg, overflow : false};
-    const struct MesgIterator mesg_end = {state : nullptr, overflow : true};
     uint64_t loop_count = 0;
-    for( ; !MesgIterator_equ( mesg_end, mesg_iter );
+    for( ; !MesgIterator_equ( mesg_overflow(), mesg_iter );
          mesg_iter = next_mesg( mesg_iter, EnigmaModel_M3 ) ) {
         loop_count++;
     }
@@ -33,9 +32,8 @@ TEST( mesg_iterator, count_all_m4 ) {
         r : make_echar_delta_ascii( 'A' ),
     };
     struct MesgIterator mesg_iter = {state : &mesg, overflow : false};
-    const struct MesgIterator mesg_end = {state : nullptr, overflow : true};
     uint64_t loop_count = 0;
-    for( ; !MesgIterator_equ( mesg_end, mesg_iter );
+    for( ; !MesgIterator_equ( mesg_overflow(), mesg_iter );
          mesg_iter = next_mesg( mesg_iter, EnigmaModel_M4 ) ) {
         loop_count++;
     }
