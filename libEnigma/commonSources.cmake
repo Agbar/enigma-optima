@@ -27,6 +27,8 @@ PRIVATE
     "src/dicts/dict_loader.cpp"
     "src/dicts/string_dict_loader.cpp"
 
+    "src/iterators/slot_iterator.c"
+
     "src/x86/cipherSsse3.c"
     "src/x86/cipherAvx2.c"
     
