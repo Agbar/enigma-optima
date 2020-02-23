@@ -18,7 +18,12 @@ struct SlotIterator {
 CONST_FUNCTION
 static inline struct SlotIterator
 slot_overflow() {
-    return ( struct SlotIterator ){.bits = {.og = SlotIterator_bits_overflow}};
+    return ( struct SlotIterator ){.bits = {.og = SlotIterator_bits_overflow,
+                                            .l = 0,
+                                            .m = 0,
+                                            .r = 0},
+                                   .state = NULL,
+                                   .next = NULL};
 }
 
 
