@@ -23,7 +23,7 @@ static Ringstellung operator"" _ringstellung( const char txt[ 4 ], std::size_t l
 }
 
 
-TEST( ringstellung_iterator, count_all_rings_I_and_V ) {
+TEST( ringstellung_iterator_I_and_V, count_all ) {
     Ringstellung ringstellung = "AA"_ringstellung;
 
     struct RingstellungIterator ring_iter = {
@@ -42,6 +42,7 @@ TEST( ringstellung_iterator, count_all_rings_I_and_V ) {
 }
 
 
+TEST( ringstellung_iterator_I_and_VI, count_all ) {
     Ringstellung ringstellung = "AA"_ringstellung;
 
     struct RingstellungIterator ring_iter = {
@@ -60,6 +61,7 @@ TEST( ringstellung_iterator, count_all_rings_I_and_V ) {
 }
 
 
+TEST( ringstellung_iterator_VI_and_V, count_all ) {
     Ringstellung ringstellung = "AA"_ringstellung;
 
     struct RingstellungIterator ring_iter = {
@@ -78,6 +80,7 @@ TEST( ringstellung_iterator, count_all_rings_I_and_V ) {
 }
 
 
+TEST( ringstellung_iterator_VI_and_VIII, count_all ) {
     Ringstellung ringstellung = "AA"_ringstellung;
 
     struct RingstellungIterator ring_iter = {
