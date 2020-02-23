@@ -23,15 +23,25 @@ static Ringstellung operator"" _ringstellung( const char txt[ 4 ], std::size_t l
 }
 
 
-TEST( ringstellung_iterator_I_and_V, count_all ) {
-    Ringstellung ringstellung = "AA"_ringstellung;
+static inline bool operator==( const Ringstellung lhs, const Ringstellung rhs ) {
+    return Ringstellung_equ( lhs, rhs );
+}
 
-    struct RingstellungIterator ring_iter = {
+
+class ringstellung_iterator_I_and_V
+    : public ::testing::Test {
+protected:
+    Ringstellung ringstellung = "AA"_ringstellung;
+    RingstellungIterator ring_iter = {
         state : &ringstellung,
         m : RingType{RingType_1},
         r : RingType{RingType_5},
         overflow : false,
     };
+};
+
+
+TEST_F( ringstellung_iterator_I_and_V, count_all ) {
     uint64_t loop_count = 0;
     for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
          next_ringstellung( &ring_iter ) ) {
@@ -39,6 +49,47 @@ TEST( ringstellung_iterator_I_and_V, count_all ) {
     }
 
     ASSERT_EQ( loop_count, 26 * 26 );
+}
+
+
+TEST_F( ringstellung_iterator_I_and_V, next_after_AA_is_AB ) {
+    ringstellung = "AA"_ringstellung;
+    next_ringstellung( &ring_iter );
+
+    ASSERT_EQ( *ring_iter.state, "AB"_ringstellung );
+}
+
+
+TEST_F( ringstellung_iterator_I_and_V, next_after_AM_is_AN ) {
+    ringstellung = "AM"_ringstellung;
+    next_ringstellung( &ring_iter );
+
+    ASSERT_EQ( *ring_iter.state, "AN"_ringstellung );
+}
+
+
+TEST_F( ringstellung_iterator_I_and_V, next_after_AZ_is_BA ) {
+    ringstellung = "AZ"_ringstellung;
+    next_ringstellung( &ring_iter );
+
+    ASSERT_EQ( *ring_iter.state, "BA"_ringstellung );
+}
+
+
+TEST_F( ringstellung_iterator_I_and_V, next_after_MZ_is_NA ) {
+    ringstellung = "MZ"_ringstellung;
+    next_ringstellung( &ring_iter );
+
+    ASSERT_EQ( *ring_iter.state, "NA"_ringstellung );
+}
+
+
+TEST_F( ringstellung_iterator_I_and_V, next_after_ZZ_is_AA_with_overflow ) {
+    ringstellung = "ZZ"_ringstellung;
+    next_ringstellung( &ring_iter );
+
+    ASSERT_EQ( *ring_iter.state, "AA"_ringstellung );
+    ASSERT_TRUE( ring_iter.overflow );
 }
 
 
