@@ -130,4 +130,4 @@ next_slot_m4( struct SlotIterator* const i ) {
     }
 }
 
-struct SlotIterator init_SlotIterator( struct Key* k );
+struct SlotIterator init_SlotIterator( struct RingTypes* key_slot, enum ModelType_t model );

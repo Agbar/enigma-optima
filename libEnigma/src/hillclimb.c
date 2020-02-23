@@ -82,7 +82,7 @@ void hillclimb( struct State* state,
 
    for (ckey->ukwnum=lo.ukwnum; ckey->ukwnum.type<=hi->ukwnum.type; ckey->ukwnum.type++) {
 
-       struct SlotIterator slot_iter = init_SlotIterator( ckey );
+       struct SlotIterator slot_iter = init_SlotIterator( &ckey->slot, ckey->model );
        for( ; !SlotIterator_equ( slot_overflow(), slot_iter );
             slot_iter.next( &slot_iter ) ) {
 
