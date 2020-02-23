@@ -7,11 +7,24 @@ extern "C" {
 }
 
 
-TEST( ringstellung_iterator, count_all_rings_I_and_V ) {
-    Ringstellung ringstellung{
-        m : make_echar_delta_ascii( 'A' ),
-        r : make_echar_delta_ascii( 'A' ),
+static Ringstellung operator"" _ringstellung( const char txt[ 4 ], std::size_t len ) {
+    auto alpha_to_echar_delta = []( const char c ) -> echar_delta {
+        if( !echar_delta_can_make_from_ascii( c ) ) throw std::logic_error( "Invalid rings literal." );
+        return make_echar_delta_ascii( c );
     };
+
+    if( len == 2 ) {
+        return Ringstellung{
+            .m = alpha_to_echar_delta( txt[ 0 ] ),
+            .r = alpha_to_echar_delta( txt[ 1 ] )};
+    } else {
+        throw std::logic_error( "Invalid ringstellung literal. Length=" + std::to_string( len ) );
+    }
+}
+
+
+TEST( ringstellung_iterator, count_all_rings_I_and_V ) {
+    Ringstellung ringstellung = "AA"_ringstellung;
 
     struct RingstellungIterator ring_iter = {
         state : &ringstellung,
@@ -29,11 +42,7 @@ TEST( ringstellung_iterator, count_all_rings_I_and_V ) {
 }
 
 
-TEST( ringstellung_iterator, count_all_rings_I_and_VI ) {
-    Ringstellung ringstellung{
-        m : make_echar_delta_ascii( 'A' ),
-        r : make_echar_delta_ascii( 'A' ),
-    };
+    Ringstellung ringstellung = "AA"_ringstellung;
 
     struct RingstellungIterator ring_iter = {
         state : &ringstellung,
@@ -51,11 +60,7 @@ TEST( ringstellung_iterator, count_all_rings_I_and_VI ) {
 }
 
 
-TEST( ringstellung_iterator, count_all_rings_VI_and_V ) {
-    Ringstellung ringstellung{
-        m : make_echar_delta_ascii( 'A' ),
-        r : make_echar_delta_ascii( 'A' ),
-    };
+    Ringstellung ringstellung = "AA"_ringstellung;
 
     struct RingstellungIterator ring_iter = {
         state : &ringstellung,
@@ -73,11 +78,7 @@ TEST( ringstellung_iterator, count_all_rings_VI_and_V ) {
 }
 
 
-TEST( ringstellung_iterator, count_all_rings_VI_and_VIII ) {
-    Ringstellung ringstellung{
-        m : make_echar_delta_ascii( 'A' ),
-        r : make_echar_delta_ascii( 'A' ),
-    };
+    Ringstellung ringstellung = "AA"_ringstellung;
 
     struct RingstellungIterator ring_iter = {
         state : &ringstellung,
