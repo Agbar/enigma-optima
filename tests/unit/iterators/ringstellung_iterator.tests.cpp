@@ -207,15 +207,20 @@ TEST_F( ringstellung_iterator_VI_and_V, next_after_MZ_is_AA_with_overflow ) {
 }
 
 
-TEST( ringstellung_iterator_VI_and_VIII, count_all ) {
+class ringstellung_iterator_VI_and_VIII
+    : public ::testing::Test {
+protected:
     Ringstellung ringstellung = "AA"_ringstellung;
-
-    struct RingstellungIterator ring_iter = {
+    RingstellungIterator ring_iter = {
         state : &ringstellung,
         m : RingType{RingType_6},
         r : RingType{RingType_8},
         overflow : false,
     };
+};
+
+
+TEST_F( ringstellung_iterator_VI_and_VIII, count_all ) {
     uint64_t loop_count = 0;
     for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
          next_ringstellung( &ring_iter ) ) {
@@ -223,4 +228,37 @@ TEST( ringstellung_iterator_VI_and_VIII, count_all ) {
     }
 
     ASSERT_EQ( loop_count, 13 * 13 );
+}
+
+
+TEST_F( ringstellung_iterator_VI_and_VIII, next_after_AA_is_AB ) {
+    ringstellung = "AA"_ringstellung;
+    next_ringstellung( &ring_iter );
+
+    ASSERT_EQ( *ring_iter.state, "AB"_ringstellung );
+}
+
+
+TEST_F( ringstellung_iterator_VI_and_VIII, next_after_AM_is_BA ) {
+    ringstellung = "AM"_ringstellung;
+    next_ringstellung( &ring_iter );
+
+    ASSERT_EQ( *ring_iter.state, "BA"_ringstellung );
+}
+
+
+TEST_F( ringstellung_iterator_VI_and_VIII, next_after_MA_is_MB ) {
+    ringstellung = "MA"_ringstellung;
+    next_ringstellung( &ring_iter );
+
+    ASSERT_EQ( *ring_iter.state, "MB"_ringstellung );
+}
+
+
+TEST_F( ringstellung_iterator_VI_and_VIII, next_after_MM_is_AA_with_overflow ) {
+    ringstellung = "MM"_ringstellung;
+    next_ringstellung( &ring_iter );
+
+    ASSERT_EQ( *ring_iter.state, "AA"_ringstellung );
+    ASSERT_TRUE( ring_iter.overflow );
 }
