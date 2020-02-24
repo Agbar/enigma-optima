@@ -46,6 +46,18 @@ static inline bool operator==( const RingTypes lhs, const RingTypes rhs ) {
 }
 
 
+TEST( SlotIterator_equ_H, 132_equ_132 ) {
+    const ModelType_t model = EnigmaModel_H;
+    RingTypes slot = "125"_ringTypes_H;
+    SlotIterator slot_iter = init_SlotIterator( &slot, model );
+    slot_iter.next( &slot_iter );
+
+    RingTypes expected_132 = "132"_ringTypes_H;
+    EXPECT_EQ( *slot_iter.state, expected_132 );
+    ASSERT_TRUE( SlotIterator_equ( slot_iter, init_SlotIterator( &expected_132, model ) ) );
+}
+
+
 class slot_iterator_h
     : public ::testing::Test {
 protected:
@@ -141,6 +153,19 @@ TEST_F( slot_iterator_h, next_after_543_is_123_with_overflow ) {
 }
 
 //============================
+
+
+TEST( SlotIterator_equ_M3, 132_equ_132 ) {
+    const ModelType_t model = EnigmaModel_M3;
+    RingTypes slot = "128"_ringTypes_M3;
+    SlotIterator slot_iter = init_SlotIterator( &slot, model );
+    slot_iter.next( &slot_iter );
+
+    RingTypes expected_132 = "132"_ringTypes_M3;
+    EXPECT_EQ( *slot_iter.state, expected_132 );
+    ASSERT_TRUE( SlotIterator_equ( slot_iter, init_SlotIterator( &expected_132, model ) ) );
+}
+
 
 class slot_iterator_m3
     : public ::testing::Test {
