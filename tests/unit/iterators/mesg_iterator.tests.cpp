@@ -59,6 +59,7 @@ TEST( mesg_iterator_m3, count_all ) {
          mesg_iter = next_mesg( mesg_iter, EnigmaModel_M3 ) ) {
         loop_count++;
     }
+    EXPECT_EQ( *mesg_iter.state, "AAA"_mesg_m3 );
     ASSERT_EQ( loop_count, 26 * 26 * 26 );
 }
 
@@ -70,6 +71,17 @@ TEST( mesg_iterator_m3, next_mesg_after_AAA_is_AAB ) {
     MesgIterator result = next_mesg( mesg_iter, EnigmaModel_M3 );
 
     const RingsState expected = "AAB"_mesg_m3;
+    ASSERT_EQ( *result.state, expected );
+}
+
+
+TEST( mesg_iterator_m3, next_mesg_after_AAY_is_AAZ ) {
+    RingsState mesg = "AAY"_mesg_m3;
+    const MesgIterator mesg_iter{state : &mesg, overflow : false};
+
+    MesgIterator result = next_mesg( mesg_iter, EnigmaModel_M3 );
+
+    const RingsState expected = "AAZ"_mesg_m3;
     ASSERT_EQ( *result.state, expected );
 }
 
@@ -107,6 +119,17 @@ TEST( mesg_iterator_m3, next_mesg_after_AZZ_is_BAA ) {
 }
 
 
+TEST( mesg_iterator_m3, next_mesg_after_ZAZ_is_ZBA ) {
+    RingsState mesg = "ZAZ"_mesg_m3;
+    const MesgIterator mesg_iter{state : &mesg, overflow : false};
+
+    MesgIterator result = next_mesg( mesg_iter, EnigmaModel_M3 );
+
+    const RingsState expected = "ZBA"_mesg_m3;
+    ASSERT_EQ( *result.state, expected );
+}
+
+
 TEST( mesg_iterator_m3, next_mesg_after_ZZZ_is_AAA_with_overflow ) {
     RingsState mesg = "ZZZ"_mesg_m3;
     const MesgIterator mesg_iter{state : &mesg, overflow : false};
@@ -128,6 +151,7 @@ TEST( mesg_iterator_m4, count_all_m4 ) {
          mesg_iter = next_mesg( mesg_iter, EnigmaModel_M4 ) ) {
         loop_count++;
     }
+    EXPECT_EQ( *mesg_iter.state, "AAAA"_mesg_m4 );
     ASSERT_EQ( loop_count, 26 * 26 * 26 * 26 );
 }
 
@@ -187,6 +211,17 @@ TEST( mesg_iterator_m4, next_mesg_after_ABAA_is_ABAB ) {
 }
 
 
+TEST( mesg_iterator_m4, next_mesg_after_AZAZ_is_AZBA ) {
+    RingsState mesg = "AZAZ"_mesg_m4;
+    const MesgIterator mesg_iter{state : &mesg, overflow : false};
+
+    MesgIterator result = next_mesg( mesg_iter, EnigmaModel_M4 );
+
+    const RingsState expected = "AZBA"_mesg_m4;
+    ASSERT_EQ( *result.state, expected );
+}
+
+
 TEST( mesg_iterator_m4, next_mesg_after_AZZZ_is_BAAA ) {
     RingsState mesg = "AZZZ"_mesg_m4;
     const MesgIterator mesg_iter{state : &mesg, overflow : false};
@@ -194,6 +229,17 @@ TEST( mesg_iterator_m4, next_mesg_after_AZZZ_is_BAAA ) {
     MesgIterator result = next_mesg( mesg_iter, EnigmaModel_M4 );
 
     const RingsState expected = "BAAA"_mesg_m4;
+    ASSERT_EQ( *result.state, expected );
+}
+
+
+TEST( mesg_iterator_m4, next_mesg_after_ZAAZ_is_ZABA ) {
+    RingsState mesg = "ZAAZ"_mesg_m4;
+    const MesgIterator mesg_iter{state : &mesg, overflow : false};
+
+    MesgIterator result = next_mesg( mesg_iter, EnigmaModel_M4 );
+
+    const RingsState expected = "ZABA"_mesg_m4;
     ASSERT_EQ( *result.state, expected );
 }
 
