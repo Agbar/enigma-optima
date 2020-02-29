@@ -46,6 +46,9 @@ TEST_F( ringstellung_iterator_I_and_V, count_all ) {
     for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
          next_ringstellung( &ring_iter ) ) {
         loop_count++;
+
+        // defend against infinite loops
+        if( loop_count > 2 * ( 26 * 26 ) ) break;
     }
 
     ASSERT_EQ( loop_count, 26 * 26 );
@@ -111,6 +114,9 @@ TEST_F( ringstellung_iterator_I_and_VI, count_all ) {
     for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
          next_ringstellung( &ring_iter ) ) {
         loop_count++;
+
+        // defend against infinite loops
+        if( loop_count > 2 * ( 26 * 13 ) ) break;
     }
 
     ASSERT_EQ( loop_count, 26 * 13 );
@@ -168,6 +174,9 @@ TEST_F( ringstellung_iterator_VI_and_V, count_all ) {
     for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
          next_ringstellung( &ring_iter ) ) {
         loop_count++;
+
+        // defend against infinite loops
+        if( loop_count > 2 * ( 13 * 26 ) ) break;
     }
 
     ASSERT_EQ( loop_count, 13 * 26 );
@@ -225,6 +234,9 @@ TEST_F( ringstellung_iterator_VI_and_VIII, count_all ) {
     for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
          next_ringstellung( &ring_iter ) ) {
         loop_count++;
+
+        // defend against infinite loops
+        if( loop_count > 2 * ( 13 * 13 ) ) break;
     }
 
     ASSERT_EQ( loop_count, 13 * 13 );

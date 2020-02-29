@@ -58,6 +58,9 @@ TEST( mesg_iterator_m3, count_all ) {
     for( ; !MesgIterator_equ( mesg_overflow(), mesg_iter );
          mesg_iter = next_mesg( mesg_iter, EnigmaModel_M3 ) ) {
         loop_count++;
+
+        // defend against infinite loops
+        if( loop_count > 2 * ( 26 * 26 * 26 ) ) break;
     }
     EXPECT_EQ( *mesg_iter.state, "AAA"_mesg_m3 );
     ASSERT_EQ( loop_count, 26 * 26 * 26 );
@@ -150,6 +153,9 @@ TEST( mesg_iterator_m4, count_all_m4 ) {
     for( ; !MesgIterator_equ( mesg_overflow(), mesg_iter );
          mesg_iter = next_mesg( mesg_iter, EnigmaModel_M4 ) ) {
         loop_count++;
+
+        // defend against infinite loops
+        if( loop_count > 2 * ( 26 * 26 * 26 * 26 ) ) break;
     }
     EXPECT_EQ( *mesg_iter.state, "AAAA"_mesg_m4 );
     ASSERT_EQ( loop_count, 26 * 26 * 26 * 26 );

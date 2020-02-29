@@ -112,6 +112,10 @@ TEST_F( slot_iterator_h, count_all ) {
          !SlotIterator_equ( slot_overflow(), slot_iter );
          slot_iter.next( &slot_iter ) ) {
         loop_count++;
+
+
+        // defend against infinite loops
+        if( loop_count > 2 * ( 5 * 4 * 3 ) ) break;
     }
 
     ASSERT_EQ( loop_count, 5 * 4 * 3 );
@@ -221,6 +225,9 @@ TEST_F( slot_iterator_m3, count_all ) {
          !SlotIterator_equ( slot_overflow(), slot_iter );
          slot_iter.next( &slot_iter ) ) {
         loop_count++;
+
+        // defend against infinite loops
+        if( loop_count > 2 * ( 8 * 7 * 6 ) ) break;
     }
 
     ASSERT_EQ( loop_count, 8 * 7 * 6 );
@@ -341,6 +348,9 @@ TEST_F( slot_iterator_m4, count_all ) {
          !SlotIterator_equ( slot_overflow(), slot_iter );
          slot_iter.next( &slot_iter ) ) {
         loop_count++;
+
+        // defend against infinite loops
+        if( loop_count > 2 * ( 2 * 8 * 7 * 6 ) ) break;
     }
 
     ASSERT_EQ( loop_count, 2 * 8 * 7 * 6 );
