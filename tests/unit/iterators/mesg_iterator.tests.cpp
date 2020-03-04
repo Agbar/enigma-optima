@@ -75,6 +75,7 @@ TEST( mesg_iterator_m3, next_mesg_after_AAA_is_AAB ) {
 
     const RingsState expected = "AAB"_mesg_m3;
     ASSERT_EQ( *result.state, expected );
+    EXPECT_FALSE( result.overflow );
 }
 
 
@@ -170,6 +171,7 @@ TEST( mesg_iterator_m4, next_mesg_after_AAAA_is_AAAB ) {
 
     const RingsState expected = "AAAB"_mesg_m4;
     ASSERT_EQ( *result.state, expected );
+    EXPECT_FALSE( result.overflow );
 }
 
 
