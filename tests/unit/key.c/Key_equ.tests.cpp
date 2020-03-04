@@ -10,10 +10,12 @@ class Key_equ_test
 protected:
     Key m4{
         stbrett : {},
-        mesg : {g : make_echar_delta_ascii( 'T' ),
-                l : make_echar_delta_ascii( 'Y' ),
-                m : make_echar_delta_ascii( 'U' ),
-                r : make_echar_delta_ascii( 'I' )},
+        mesg : {
+            r : make_echar_delta_ascii( 'I' ),
+            m : make_echar_delta_ascii( 'U' ),
+            l : make_echar_delta_ascii( 'Y' ),
+            g : make_echar_delta_ascii( 'T' ),
+        },
         slot : {g : {GreekRingType_Beta},
                 l : {RingType_3},
                 m : {RingType_8},

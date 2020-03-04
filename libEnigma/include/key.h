@@ -76,7 +76,7 @@ Ringstellung_equ( struct Ringstellung l, struct Ringstellung r ) {
  * * * * * * */
 struct RingsState
 {
-    struct echar_delta g, l, m, r;
+    struct echar_delta r, m, l, g;
 };
 STATIC_ASSERT( sizeof( struct RingsState ) == 4, "4" );
 

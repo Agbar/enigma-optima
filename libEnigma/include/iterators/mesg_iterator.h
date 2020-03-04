@@ -32,23 +32,22 @@ MesgIterator_equ( struct MesgIterator l, struct MesgIterator r ) {
 
 PURE_FUNCTION
 static inline struct MesgIterator next_mesg( struct MesgIterator i, const enum ModelType_t model ) {
-    STATIC_ASSERT( offsetof( struct RingsState, r ) == 3, "r is the last member." );
+    STATIC_ASSERT( offsetof( struct RingsState, r ) == 0, "r is the last member." );
     union x {
         struct RingsState rs;
         uint32_t bits;
     } in = {.rs = *i.state};
 
-    const uint32_t reordered = _bswap( in.bits );
     uint32_t pushed;
     uint32_t result;
     if( model == EnigmaModel_M4 ) {
-        const uint32_t pushers = reordered | 0x60E0E0E0u;
+        const uint32_t pushers = in.bits | 0x60E0E0E0u;
         pushed = pushers + 0x06060607u;
         const uint32_t masked_out_6s = ( pushed >> 4 ) & 0x06060606u; // 0 if overflow else 6
         const uint32_t normal_range_with_pushers = pushed - masked_out_6s;
         result = normal_range_with_pushers & 0x1F1F1F1F;
     } else if( model == EnigmaModel_M3 || model == EnigmaModel_H ) {
-        const uint32_t pushers = reordered | 0x7FE0E0E0u;
+        const uint32_t pushers = in.bits | 0x7FE0E0E0u;
         pushed = pushers + 0x060607u;
         const uint32_t masked_out_6s = ( pushed >> 4 ) & 0x060606u; // 0 if overflow else 6
         const uint32_t normal_range_with_pushers = pushed - masked_out_6s;
@@ -56,7 +55,7 @@ static inline struct MesgIterator next_mesg( struct MesgIterator i, const enum M
     } else {
         UNREACHABLE();
     }
-    union x out = {.bits = _bswap( result )};
+    union x out = {.bits = result};
     *i.state = out.rs;
     i.overflow = (int32_t)pushed < 0;
 

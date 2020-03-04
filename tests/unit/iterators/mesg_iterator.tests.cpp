@@ -16,10 +16,12 @@ static RingsState operator"" _mesg_m3( const char txt[ 4 ], std::size_t len ) {
     };
 
     if( len == 3 ) {
-        return RingsState{.g = {0},
-                          .l = alpha_to_echar_delta( txt[ 0 ] ),
-                          .m = alpha_to_echar_delta( txt[ 1 ] ),
-                          .r = alpha_to_echar_delta( txt[ 2 ] )};
+        return RingsState{
+            .r = alpha_to_echar_delta( txt[ 2 ] ),
+            .m = alpha_to_echar_delta( txt[ 1 ] ),
+            .l = alpha_to_echar_delta( txt[ 0 ] ),
+            .g = {0},
+        };
     } else {
         throw std::logic_error( "Invalid rings literal. Length=" + std::to_string( len ) );
     }
@@ -33,10 +35,12 @@ static RingsState operator"" _mesg_m4( const char txt[ 5 ], std::size_t len ) {
     };
 
     if( len == 4 ) {
-        return RingsState{.g = alpha_to_echar_delta( txt[ 0 ] ),
-                          .l = alpha_to_echar_delta( txt[ 1 ] ),
-                          .m = alpha_to_echar_delta( txt[ 2 ] ),
-                          .r = alpha_to_echar_delta( txt[ 3 ] )};
+        return RingsState{
+            .r = alpha_to_echar_delta( txt[ 3 ] ),
+            .m = alpha_to_echar_delta( txt[ 2 ] ),
+            .l = alpha_to_echar_delta( txt[ 1 ] ),
+            .g = alpha_to_echar_delta( txt[ 0 ] ),
+        };
     } else {
         throw std::logic_error( "Invalid rings literal. Length=" + std::to_string( len ) );
     }
