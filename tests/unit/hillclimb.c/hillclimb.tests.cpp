@@ -45,11 +45,11 @@ TEST( hillclimb, m3_keys_iteration ) {
         log : []( const char[] ) {},
         scrambler_state_is_endloop : []( const struct Key*, int ) { cnt++; return true; },
     };
-    constexpr int max_pass = 1;
+    constexpr int max_pass = 2;
     constexpr int len = 100;
 
     hillclimb( &state, max_pass, len, &knapsack );
-    ASSERT_EQ( cnt, 3223668 );
+    ASSERT_EQ( cnt, max_pass * 3223668 );
 }
 
 
@@ -87,9 +87,9 @@ TEST( hillclimb, m4_keys_iteration ) {
         log : []( const char[] ) {},
         scrambler_state_is_endloop : []( const struct Key*, int ) { cnt++; return true; },
     };
-    constexpr int max_pass = 1;
+    constexpr int max_pass = 2;
     constexpr int len = 100;
 
     hillclimb( &state, max_pass, len, &knapsack );
-    ASSERT_EQ( cnt, 5063297 );
+    ASSERT_EQ( cnt, max_pass * 5063297 );
 }

@@ -77,7 +77,7 @@ void hillclimb( struct State* state,
    * from each other
    */
   for( *pass = max_pass; *pass > 0; --*pass, lo = *state->from ) {
-
+   *ckey = lo;
    firstloop = 1;
 
    for (ckey->ukwnum=lo.ukwnum; ckey->ukwnum.type<=hi->ukwnum.type; ckey->ukwnum.type++) {
