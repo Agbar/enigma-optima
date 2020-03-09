@@ -11,6 +11,7 @@
 #include "iterators/mesg_iterator.h"
 #include "iterators/ringstellung_iterator.h"
 #include "iterators/slot_iterator.h"
+#include "iterators/ukw_iterator.h"
 #include "key.h"
 #include "score.h"
 #include "state.h"
@@ -80,7 +81,10 @@ void hillclimb( struct State* state,
    *ckey = lo;
    firstloop = 1;
 
-   for (ckey->ukwnum=lo.ukwnum; ckey->ukwnum.type<=hi->ukwnum.type; ckey->ukwnum.type++) {
+    struct UkwIterator ukw_iter = {.ukw= lo.ukwnum };
+    for( ; !UkwIterator_equ( ukw_overflow(), ukw_iter );
+         ukw_iter = next_ukw( ukw_iter, ckey->model ) ) {
+        ckey->ukwnum = ukw_iter.ukw;
 
        struct SlotIterator slot_iter = init_SlotIterator( &ckey->slot, ckey->model );
        for( ; !SlotIterator_equ( slot_overflow(), slot_iter );
