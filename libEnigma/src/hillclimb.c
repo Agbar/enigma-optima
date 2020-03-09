@@ -18,34 +18,6 @@
 #include "stecker.h"
 
 
-static const struct Key hi_h = {
-    .model = EnigmaModel_H,
-    .ukwnum = {2},
-    .slot = {.l = {5}, .m = {5}, .r = {5}},
-    .ring = {.m = {25}, .r = {25}},
-    .mesg = {.l = {25}, .m = {25}, .r = {25}},
-};
-
-static const struct Key hi_m3 = {
-    .model = EnigmaModel_M3,
-    .ukwnum = {2},
-    .slot = {.l = {8}, .m = {8}, .r = {8}},
-    .ring = {.m = {25}, .r = {25}},
-    .mesg = {.l = {25}, .m = {25}, .r = {25}},
-};
-
-static const struct Key hi_m4 = {
-    .model = EnigmaModel_M4,
-    .ukwnum = {4},
-    .slot = {.g = {10}, .l = {8}, .m = {8}, .r = {8}},
-    .ring = {.m = {25}, .r = {25}},
-    .mesg = {.g = {25}, .l = {25}, .m = {25}, .r = {25}},
-};
-
-PURE_FUNCTION
-const struct Key* get_hi_key( enum ModelType_t model );
-
-
 void hillclimb( struct State* state,
                 int max_pass,
                 int len,
@@ -63,7 +35,6 @@ void hillclimb( struct State* state,
     struct Key* gkey = state->gkey;
     int* pass = &state->pass;
     struct Key lo = *state->ckey;
-    const struct Key* const restrict hi = get_hi_key( state->from->model );
     uint32_t globalscore = gkey->score;
 
   if( state->firstpass )
@@ -192,19 +163,6 @@ scrambler_state_is_endloop_f* select_scrambler_state_is_endloop_impl( const stru
     }
 }
 
-
-const struct Key* get_hi_key( enum ModelType_t model ) {
-    switch( model ) {
-    case EnigmaModel_H:
-        return &hi_h;
-    case EnigmaModel_M3:
-        return &hi_m3;
-    case EnigmaModel_M4:
-        return &hi_m4;
-    default:
-        UNREACHABLE();
-    }
-}
 
 /*
  * This file is part of enigma-suite-0.76, which is distributed under the terms
