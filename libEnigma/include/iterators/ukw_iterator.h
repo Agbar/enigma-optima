@@ -14,7 +14,7 @@ CONST_FUNCTION
 static inline struct UkwIterator
 ukw_overflow() {
     return ( struct UkwIterator ){
-        .ukw = {0},
+        .ukw = {UkwType_A}, // any
         .overflow = true,
     };
 }
@@ -29,7 +29,8 @@ UkwIterator_equ( struct UkwIterator l, struct UkwIterator r ) {
 
 static inline struct UkwIterator
 next_ukw( struct UkwIterator i, enum ModelType_t model ) {
-    i.ukw.type++;
+    // C is more permisive than C++ regarding enums
+    i.ukw.type = ( enum ukw_type_enum )( (int)i.ukw.type + 1 ); 
     if( model == EnigmaModel_H && i.ukw.type > UkwType_C ) {
         i.overflow = true;
         i.ukw.type = UkwType_A;
