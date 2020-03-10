@@ -16,6 +16,7 @@ PRIVATE
     "iterators/mesg_iterator.tests.cpp"
     "iterators/ringstellung_iterator.tests.cpp"
     "iterators/slot_iterator.tests.cpp"
+    "iterators/ukw_iterator.tests.cpp"
     "key.c/Key_equ.tests.cpp"
     "key.c/UkwType_to_ALPHA.tests.cpp"
     "GetRSeed.tests.cpp"
