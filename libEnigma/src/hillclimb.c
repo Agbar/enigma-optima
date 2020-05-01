@@ -8,6 +8,9 @@
 #include "config/types.h"
 #include "global.h"
 #include "hillclimb.h"
+#include "iterators/mesg_iterator.h"
+#include "iterators/ringstellung_iterator.h"
+#include "iterators/slot_iterator.h"
 #include "key.h"
 #include "score.h"
 #include "state.h"
@@ -78,21 +81,18 @@ void hillclimb( struct State* state,
    firstloop = 1;
 
    for (ckey->ukwnum=lo.ukwnum; ckey->ukwnum.type<=hi->ukwnum.type; ckey->ukwnum.type++) {
-    for (ckey->slot.g=lo.slot.g; ckey->slot.g.type<=hi->slot.g.type; ckey->slot.g.type++) {
-     for (ckey->slot.l=lo.slot.l; ckey->slot.l.type<=hi->slot.l.type; ckey->slot.l.type++) {
-      for (ckey->slot.m=lo.slot.m; ckey->slot.m.type<=hi->slot.m.type; ckey->slot.m.type++) {
-        if (ckey->slot.m.type == ckey->slot.l.type) continue;
-       for (ckey->slot.r=lo.slot.r; ckey->slot.r.type<=hi->slot.r.type; ckey->slot.r.type++) {
-         if (ckey->slot.r.type == ckey->slot.l.type || ckey->slot.r.type == ckey->slot.m.type) continue;
-        for (ckey->ring.m=lo.ring.m; ckey->ring.m.delta<=hi->ring.m.delta; ckey->ring.m.delta++) {
-          if (ckey->slot.m.type > 5 && ckey->ring.m.delta > 12) continue;
-         for (ckey->ring.r=lo.ring.r; ckey->ring.r.delta<=hi->ring.r.delta; ckey->ring.r.delta++) {
-           if (ckey->slot.r.type > 5 && ckey->ring.r.delta > 12) continue;
-          for (ckey->mesg.g=lo.mesg.g; ckey->mesg.g.delta<=hi->mesg.g.delta; ckey->mesg.g.delta++) {
-           for (ckey->mesg.l=lo.mesg.l; ckey->mesg.l.delta<=hi->mesg.l.delta; ckey->mesg.l.delta++) {
-            for (ckey->mesg.m=lo.mesg.m; ckey->mesg.m.delta<=hi->mesg.m.delta; ckey->mesg.m.delta++) {
-             for (ckey->mesg.r=lo.mesg.r; ckey->mesg.r.delta<=hi->mesg.r.delta; ckey->mesg.r.delta++) {
 
+       struct SlotIterator slot_iter = init_SlotIterator( &ckey->slot, ckey->model );
+       for( ; !SlotIterator_equ( slot_overflow(), slot_iter );
+            slot_iter.next( &slot_iter ) ) {
+
+        struct RingstellungIterator ring_iter = {.state = &ckey->ring, .m = ckey->slot.m, .r = ckey->slot.r};
+        for( ; !RingstellungIterator_equ( ring_overflow(), ring_iter );
+             next_ringstellung( &ring_iter ) ) {
+
+            struct MesgIterator mesg_iter = {.state = &ckey->mesg};
+            for( ; !MesgIterator_equ( mesg_overflow(), mesg_iter );
+                 mesg_iter = next_mesg( mesg_iter, state->from->model ) ) {
                 knapsack->check_shutdown( state );
 
                /* avoid duplicate scrambler states */
@@ -126,14 +126,6 @@ void hillclimb( struct State* state,
                if( Key_equ( ckey, state->to ) ) {
                    goto RESTART;
                }
-
-             }
-            }
-           }
-          }
-         }
-        }
-       }
       }
      }
     }

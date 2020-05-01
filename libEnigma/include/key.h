@@ -1,6 +1,7 @@
 #ifndef KEY_H
 #define KEY_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "global.h"
@@ -60,13 +61,36 @@ struct Ringstellung
 STATIC_ASSERT( sizeof( struct Ringstellung ) == 2, "Ringstellung should be only 2 bytes long." );
 
 
+static inline bool
+Ringstellung_equ( struct Ringstellung l, struct Ringstellung r ) {
+    const union {
+        struct Ringstellung rs;
+        uint16_t bits;
+    } ringl = {.rs = l},
+      ringr = {.rs = r};
+    return ringl.bits == ringr.bits;
+}
+
+
 /* RingsState
  * * * * * * */
 struct RingsState
 {
-    struct echar_delta g, l, m, r;
+    struct echar_delta r, m, l, g;
 };
 STATIC_ASSERT( sizeof( struct RingsState ) == 4, "4" );
+
+
+static inline bool
+RingsState_equ( struct RingsState l, struct RingsState r ) {
+    const union {
+        struct RingsState rs;
+        uint32_t bits;
+    } rsl = {.rs = l},
+      rsr = {.rs = r};
+    return rsl.bits == rsr.bits;
+}
+
 
 enum ring_type_enum {
     RingType_None = 0,
@@ -115,6 +139,17 @@ struct RingTypes
     struct GreekRingType g;
     struct RingType l, m, r;
 };
+
+
+static inline bool
+RingTypes_equ( struct RingTypes l, struct RingTypes r ) {
+    const union {
+        struct RingTypes rt;
+        uint32_t bits;
+    } rtl = {.rt = l},
+      rtr = {.rt = r};
+    return rtl.bits == rtr.bits;
+}
 
 
 enum ukw_type_enum {

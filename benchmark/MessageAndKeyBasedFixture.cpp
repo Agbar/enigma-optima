@@ -39,7 +39,7 @@ MessageAndKeyBasedFixture::SetUp( benchmark::State& st )
         dA = make_echar_delta_ascii( 'A' ),
         dV = make_echar_delta_ascii( 'V' );
     key.ring = {m : dA, r : dA};                    // AAA
-    key.mesg = {g : {}, l : dA, m : dV, r : dA};    // AVA
+    key.mesg = {r : dA, m : dV, l : dA, g : {}};    // AVA
     key.ukwnum.type = UkwType_B;
     key.model = EnigmaModel_M3;
 

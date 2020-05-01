@@ -49,13 +49,13 @@ int init_key_default( struct Key *const key, enum ModelType_t model )
 /* initializes each key element to the lowest possible value */
 int init_key_low( struct Key *const key, enum ModelType_t model )
 {
-    struct Key low_H  = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+    struct Key low_H  = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
                           .ukwnum.type = UkwType_A,
                           .model=EnigmaModel_H  };
-    struct Key low_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+    struct Key low_M3 = { .slot={ { RingType_None }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
                           .ukwnum.type = UkwType_B,
                           .model=EnigmaModel_M3 };
-    struct Key low_M4 = { .slot={ { GreekRingType_Beta }, { RingType_1 }, { RingType_1 }, { RingType_1 } },
+    struct Key low_M4 = { .slot={ { GreekRingType_Beta }, { RingType_1 }, { RingType_2 }, { RingType_3 } },
                           .ukwnum.type = UkwType_B_Thin,
                           .model=EnigmaModel_M4 };
     switch( model ) {
@@ -121,26 +121,11 @@ static inline void do_not_use_cmov() {
 
 
 bool Key_equ( const struct Key* k1, const struct Key* k2 ) {
-    const union {
-        struct RingTypes rt;
-        uint32_t bits;
-    } slot1 = {.rt = k1->slot},
-      slot2 = {.rt = k2->slot};
-    const union {
-        struct RingsState rs;
-        uint32_t bits;
-    } mesg1 = {.rs = k1->mesg},
-      mesg2 = {.rs = k2->mesg};
-    const union {
-        struct Ringstellung rs;
-        uint16_t bits;
-    } ring1 = {.rs = k1->ring},
-      ring2 = {.rs = k2->ring};
-    if ( mesg1.bits != mesg2.bits) return false;
+    if( !RingsState_equ( k1->mesg, k2->mesg ) ) return false;
     do_not_use_cmov();
-    if( ring1.bits != ring2.bits) return false;
+    if( !Ringstellung_equ( k1->ring, k2->ring ) ) return false;
     do_not_use_cmov();
-    if( slot1.bits != slot2.bits) return false;
+    if( !RingTypes_equ( k1->slot, k2->slot ) ) return false;
     do_not_use_cmov();
     if( k1->ukwnum.type != k2->ukwnum.type) return false;
     return true;
