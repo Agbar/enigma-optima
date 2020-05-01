@@ -177,6 +177,13 @@ UkwType_cmp( struct UkwType l, struct UkwType r ){
     else return cmp_less;
 }
 
+
+static inline bool
+UkwType_equ( struct UkwType l, struct UkwType r ) {
+    return l.type == r.type ;
+}
+
+
 char
 UkwType_to_ALPHA( struct UkwType u );
 
